@@ -1,0 +1,47 @@
+[ {
+  "Name" : "Movement",
+  "Items" : [ "Mothwing_Cloak", "Shade_Cloak", "Mantis_Claw", "Crystal_Heart", "Monarch_Wings", "Swim", "Isma's_Tear" ],
+  "Comment" : "TODO: support split claw/dash/superdash"
+}, {
+  "Name" : "Spells",
+  "Items" : [ "Vengeful_Spirit", "Shade_Soul", "Desolate_Dive", "Descending_Dark", "Howling_Wraiths", "Abyss_Shriek" ]
+}, {
+  "Name" : "Stags",
+  "Items" : [ "City_Storerooms_Stag", "Crossroads_Stag", "Dirtmouth_Stag", "Switch-Dirtmouth_Stag", "Distant_Village_Stag", "Greenpath_Stag", "Hidden_Station_Stag", "King's_Station_Stag", "Queen's_Gardens_Stag", "Queen's_Station_Stag", "Resting_Grounds_Stag", "Lever-Resting_Grounds_Stag", "Stag_Nest_Stag" ]
+}, { 
+  "Name" : "True Ending",
+  "Items" : [ "Lurien", "Monomon", "Herrah", "Dreamer", "Queen_Fragment", "King_Fragment", "Void_Heart", "Dream_Nail", "Dream_Gate", "Awoken_Dream_Nail" ]
+}, {
+  "Name" : "Upgrades",
+  "Items" : [ "Vessel_Fragment", "Mask_Shard", "Charm_Notch", "Pale_Ore" ] 
+}, {
+  "Name" : "Keys",
+  "Items" : [ "City_Crest", "Elegant_Key", "King's_Brand", "Shopkeeper's_Key", "Simple_Key", "Love_Key", "Tram_Pass", "Elevator_Pass", "Lumafly_Lantern", "Godtuner", "Collector's_Map" ]
+}, { 
+	"Name" : "Levers",
+	"Regex" : "^(Lever-|Switch-).+$"
+}, {
+  "Name" : "Essence",
+  "EffectTerm" : "ESSENCE"
+}, {
+  "Name" : "Charms",
+  "Items" : [ "Gathering_Swarm", "Wayward_Compass", "Grubsong", "Stalwart_Shell", "Baldur_Shell", "Fury_of_the_Fallen", "Quick_Focus", "Lifeblood_Heart", "Lifeblood_Core", "Defender's_Crest", "Flukenest", "Thorns_of_Agony", "Mark_of_Pride", "Steady_Body", "Heavy_Blow", "Sharp_Shadow", "Spore_Shroom", "Longnail", "Shaman_Stone", "Soul_Catcher", "Soul_Eater", "Glowing_Womb", "Fragile_Heart", "Unbreakable_Heart", "Fragile_Greed", "Unbreakable_Green", "Fragile_Strength", "Unbreakable_Strength", "Nailmaster's_Glory", "Joni's_Blessing", "Shape_of_Unn", "Hiveblood", "Dream_Wielder", "Dashmaster", "Quick_Slash", "Spell_Twister", "Deep_Focus", "Grubberfly's_Elegy", "Queen_Fragment", "King_Fragment", "Void_Heart", "Sprintmaster", "Dreamshield", "Weaversong", "Grimmchild2" ]
+}, {
+  "Name" : "Rancid Eggs",
+  "Items" : [ "Rancid_Egg" ]
+}, {
+  "Name" : "Grubs",
+  "Items" : [ "Grub" ]
+}, {
+  "Name" : "Mimics",
+  "Items" : [ "Mimic_Grub" ]
+}, {
+  "Name" : "Geo",
+  "EffectTerm" : "GEO"
+}, {
+  "Name" : "Relics",
+  "Items" : [ "Wanderer's_Journal", "Hallownest_Seal", "King's_Idol", "Arcane_Egg" ]
+}, {
+  "Name" : "Shops",
+  "Locations" : [ "Sly", "Sly_(Key)", "Salubra", "Leg_Eater", "Grubfather", "Seer", "Egg_Shop", "Unbreakable_Heart", "Unbreakable_Greed", "Unbreakable_Strength" ]
+} ]
