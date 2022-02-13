@@ -14,7 +14,7 @@ import hollow.knight.logic.ParseException;
 import hollow.knight.util.JsonUtil;
 
 // Canonical filters with check box toggles.
-public final class ItemCategoryFilters implements SearchEngine.ResultFilter {
+public final class ItemCategoryFilters implements SearchResult.Filter {
   private final ImmutableMap<String, ItemCategoryFilter> filters;
   private final Set<String> selectedFilters;
 
@@ -38,8 +38,8 @@ public final class ItemCategoryFilters implements SearchEngine.ResultFilter {
   }
 
   @Override
-  public boolean accept(SearchEngine.Result r) {
-    return selectedFilters.stream().anyMatch(f -> filters.get(f).accept(r.itemCheck()));
+  public boolean accept(SearchResult result) {
+    return selectedFilters.stream().anyMatch(f -> filters.get(f).accept(result.itemCheck()));
   }
 
   public static ItemCategoryFilters load() throws ParseException {

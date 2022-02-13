@@ -3,10 +3,9 @@ package hollow.knight.gui;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JList;
-import hollow.knight.gui.SearchEngine.Result;
 import hollow.knight.logic.RoomLabels;
 
-public final class RoomFilters implements SearchEngine.ResultFilter {
+public final class RoomFilters implements SearchResult.Filter {
 
   private final RoomLabels roomLabels;
   private final Map<RoomLabels.Type, JList<String>> selectionLists;
@@ -23,8 +22,8 @@ public final class RoomFilters implements SearchEngine.ResultFilter {
   }
 
   @Override
-  public boolean accept(Result r) {
-    String scene = r.location().scene();
+  public boolean accept(SearchResult result) {
+    String scene = result.location().scene();
     String label = roomLabels.get(scene, activeType);
     JList<String> list = selectionLists.get(activeType);
     return list.getSelectedValuesList().contains(label);

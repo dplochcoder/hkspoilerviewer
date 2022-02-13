@@ -6,17 +6,16 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
-import hollow.knight.gui.SearchEngine.Result;
 import hollow.knight.logic.RoomLabels;
 
-public final class ExclusionFilters implements SearchEngine.ResultFilter {
+public final class ExclusionFilters implements SearchResult.Filter {
   @AutoValue
   abstract static class Filter {
     public abstract String name();
 
-    public abstract SearchEngine.ResultFilter filter();
+    public abstract SearchResult.Filter filter();
 
-    public static Filter create(String name, SearchEngine.ResultFilter filter) {
+    public static Filter create(String name, SearchResult.Filter filter) {
       return new AutoValue_ExclusionFilters_Filter(name, filter);
     }
   }
@@ -27,9 +26,9 @@ public final class ExclusionFilters implements SearchEngine.ResultFilter {
   private ImmutableList<Filter> createFilters(RoomLabels roomLabels) {
     return ImmutableList.of(Filter.create("Vanilla (#)", r -> r.itemCheck().vanilla()),
         Filter.create("Out of Logic (*)",
-            r -> r.logicType() == SearchEngine.Result.LogicType.OUT_OF_LOGIC),
+            r -> r.logicType() == SearchResult.LogicType.OUT_OF_LOGIC),
         Filter.create("Purchase Logic ($)",
-            r -> r.logicType() == SearchEngine.Result.LogicType.COST_ACCESSIBLE));
+            r -> r.logicType() == SearchResult.LogicType.COST_ACCESSIBLE));
   }
 
   public ExclusionFilters(RoomLabels roomLabels) {
@@ -51,9 +50,9 @@ public final class ExclusionFilters implements SearchEngine.ResultFilter {
   }
 
   @Override
-  public boolean accept(Result r) {
+  public boolean accept(SearchResult result) {
     for (int i = 0; i < filters.size(); i++) {
-      if (enabled.get(i) && filters.get(i).filter().accept(r)) {
+      if (enabled.get(i) && filters.get(i).filter().accept(result)) {
         return false;
       }
     }

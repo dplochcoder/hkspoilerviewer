@@ -19,8 +19,8 @@ public final class SearchResultsListModel implements ListModel<String> {
   private final Set<ItemCheck> hiddenResultsSet = new HashSet<>();
 
   private final List<ItemCheck> bookmarks = new ArrayList<>();
-  private final List<SearchEngine.Result> results = new ArrayList<>();
-  private final List<SearchEngine.Result> hiddenResults = new ArrayList<>();
+  private final List<SearchResult> results = new ArrayList<>();
+  private final List<SearchResult> hiddenResults = new ArrayList<>();
   private final List<String> resultStrings = new ArrayList<>();
 
   public int numBookmarks() {
@@ -31,7 +31,7 @@ public final class SearchResultsListModel implements ListModel<String> {
 
   private static final String SEPARATOR = "----------------------------------------";
 
-  public void updateResults(State state, List<SearchEngine.Result> newResults) {
+  public void updateResults(State state, List<SearchResult> newResults) {
     List<ListDataListener> listenersCopy;
     int oldSize, newSize;
     synchronized (mutex) {
@@ -41,7 +41,7 @@ public final class SearchResultsListModel implements ListModel<String> {
       results.clear();
       resultStrings.clear();
       hiddenResults.clear();
-      for (SearchEngine.Result r : newResults) {
+      for (SearchResult r : newResults) {
         if (hiddenResultsSet.contains(r.itemCheck())) {
           hiddenResults.add(r);
         } else if (!bookmarksSet.contains(r.itemCheck())) {
@@ -49,7 +49,7 @@ public final class SearchResultsListModel implements ListModel<String> {
         }
       }
 
-      bookmarks.forEach(b -> resultStrings.add(SearchEngine.Result.create(b, state).render()));
+      bookmarks.forEach(b -> resultStrings.add(SearchResult.create(b, state).render()));
       resultStrings.add(SEPARATOR);
       results.forEach(r -> resultStrings.add(r.render()));
       resultStrings.add(SEPARATOR);
@@ -73,10 +73,10 @@ public final class SearchResultsListModel implements ListModel<String> {
     }
   }
 
-  public SearchEngine.Result getResult(State state, int index) {
+  public SearchResult getResult(State state, int index) {
     synchronized (mutex) {
       if (index < bookmarks.size()) {
-        return SearchEngine.Result.create(bookmarks.get(index), state);
+        return SearchResult.create(bookmarks.get(index), state);
       }
 
       index -= bookmarks.size() + 1;
@@ -99,7 +99,7 @@ public final class SearchResultsListModel implements ListModel<String> {
 
   public void addBookmark(State state, int index) {
     synchronized (mutex) {
-      SearchEngine.Result result = getResult(state, index);
+      SearchResult result = getResult(state, index);
       if (result == null) {
         return;
       }
@@ -141,7 +141,7 @@ public final class SearchResultsListModel implements ListModel<String> {
 
   public void hideResult(State state, int index) {
     synchronized (mutex) {
-      SearchEngine.Result result = getResult(state, index);
+      SearchResult result = getResult(state, index);
 
       hiddenResultsSet.add(result.itemCheck());
       if (bookmarksSet.remove(result.itemCheck())) {
@@ -152,7 +152,7 @@ public final class SearchResultsListModel implements ListModel<String> {
 
   public void unhideResult(State state, int index) {
     synchronized (mutex) {
-      SearchEngine.Result result = getResult(state, index);
+      SearchResult result = getResult(state, index);
       hiddenResultsSet.remove(result.itemCheck());
     }
   }

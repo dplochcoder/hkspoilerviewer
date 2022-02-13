@@ -24,7 +24,7 @@ public final class RouteListModel implements ListModel<String> {
 
   private final State initialState;
   private State currentState;
-  private final List<SearchEngine.Result> route = new ArrayList<>();
+  private final List<SearchResult> route = new ArrayList<>();
   private final List<String> resultStrings = new ArrayList<>();
 
   private final Set<ListDataListener> listeners = new HashSet<>();
@@ -83,7 +83,7 @@ public final class RouteListModel implements ListModel<String> {
     }
   }
 
-  public void addToRoute(SearchEngine.Result result) {
+  public void addToRoute(SearchResult result) {
     List<ListDataListener> listenersCopy;
     int newSize;
     synchronized (mutex) {
@@ -123,8 +123,8 @@ public final class RouteListModel implements ListModel<String> {
       newState2.acquireItemCheck(a);
       newState2.normalize();
 
-      route.set(before, SearchEngine.Result.create(b, prevState));
-      route.set(after, SearchEngine.Result.create(a, newState1));
+      route.set(before, SearchResult.create(b, prevState));
+      route.set(after, SearchResult.create(a, newState1));
       resultStrings.set(before, (before + 1) + ": " + route.get(before).render());
       resultStrings.set(after, (after + 1) + ": " + route.get(after).render());
     }
@@ -149,7 +149,7 @@ public final class RouteListModel implements ListModel<String> {
         currentState.acquireItemCheck(check);
         currentState.normalize();
 
-        route.set(i - 1, SearchEngine.Result.create(check, currentState));
+        route.set(i - 1, SearchResult.create(check, currentState));
         resultStrings.set(i - 1, i + ": " + route.get(i - 1).render());
       }
 

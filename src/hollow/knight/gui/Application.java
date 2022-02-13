@@ -66,7 +66,7 @@ public final class Application extends JFrame {
     JPanel left = new JPanel();
     BoxLayout layout = new BoxLayout(left, BoxLayout.PAGE_AXIS);
     left.setLayout(layout);
-    List<SearchEngine.ResultFilter> resultFilters = addFilters(left);
+    List<SearchResult.Filter> resultFilters = addFilters(left);
 
     this.searchEngine = new SearchEngine(state.roomLabels(), resultFilters);
     this.searchResultsListModel = new SearchResultsListModel();
@@ -166,8 +166,8 @@ public final class Application extends JFrame {
     return bar;
   }
 
-  private List<SearchEngine.ResultFilter> addFilters(JPanel parent) throws ParseException {
-    List<SearchEngine.ResultFilter> resultFilters = new ArrayList<>();
+  private List<SearchResult.Filter> addFilters(JPanel parent) throws ParseException {
+    List<SearchResult.Filter> resultFilters = new ArrayList<>();
 
     TextFilter textFilter = new TextFilter(currentState().roomLabels());
     resultFilters.add(textFilter);
@@ -292,7 +292,7 @@ public final class Application extends JFrame {
     parent.add(filters);
   }
 
-  private SearchEngine.ResultFilter addRoomFilters(JPanel parent) {
+  private SearchResult.Filter addRoomFilters(JPanel parent) {
     JButton all = new JButton("All Areas");
     parent.add(all);
 
@@ -410,7 +410,7 @@ public final class Application extends JFrame {
         } else if (e.getKeyCode() == KeyEvent.VK_U) {
           searchResultsListModel.unhideResult(currentState(), resultsList.getSelectedIndex());
         } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-          SearchEngine.Result result =
+          SearchResult result =
               searchResultsListModel.getResult(currentState(), resultsList.getSelectedIndex());
           if (result == null) {
             return;
@@ -454,8 +454,7 @@ public final class Application extends JFrame {
   }
 
   private void repopulateSearchResults() {
-    ImmutableList<SearchEngine.Result> results =
-        this.searchEngine.getSearchResults(this.currentState());
+    ImmutableList<SearchResult> results = this.searchEngine.getSearchResults(this.currentState());
     this.searchResultsListModel.updateResults(this.currentState(), results);
 
     if (needsExpansion(this.resultsPane) || needsExpansion(this.routePane)) {
@@ -464,7 +463,7 @@ public final class Application extends JFrame {
     repaint();
   }
 
-  private void addToRoute(SearchEngine.Result result) {
+  private void addToRoute(SearchResult result) {
     this.searchResultsListModel.removeBookmark(this.routeListModel.currentState(),
         result.itemCheck());
     this.searchResultsListModel.unhideResult(this.routeListModel.currentState(),
