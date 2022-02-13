@@ -350,23 +350,17 @@ public final class Application extends JFrame {
 
   private void addExclusionFilters(ExclusionFilters filters, JPanel parent) {
     parent.add(new JLabel("Exclusions"));
-    ImmutableList<String> names = filters.filterNames().collect(ImmutableList.toImmutableList());
-    for (int i = 0; i < names.size(); i++) {
-      JCheckBox jcb = new JCheckBox(names.get(i));
-      jcb.setSelected(i < 2);
-      filters.enableFilter(i, i < 2);
+    ActionListener exFilterChanged = new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        repopulateSearchResults();
+      }
+    };
 
-      final int index = i;
-      jcb.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          filters.enableFilter(index, jcb.isSelected());
-          repopulateSearchResults();
-        }
-      });
-
-      parent.add(jcb);
-    }
+    filters.gui().forEach(cb -> {
+      parent.add(cb);
+      cb.addActionListener(exFilterChanged);
+    });
   }
 
   private JList<String> createSearchResults() {
