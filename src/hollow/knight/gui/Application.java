@@ -147,6 +147,9 @@ public final class Application extends JFrame {
     about.add(new JSeparator());
     JMenuItem ks = new JMenuItem("Keyboard Shortcuts");
     about.add(ks);
+    about.add(new JSeparator());
+    JMenuItem v = new JMenuItem("Version");
+    about.add(v);
     bar.add(about);
 
     saveToTxt.addActionListener(new ActionListener() {
@@ -161,6 +164,9 @@ public final class Application extends JFrame {
 
     pl.addActionListener(infoListener("Purchase Logic ($)", PL_INFO));
     ks.addActionListener(infoListener("Keyboard Shortcuts", KS_INFO));
+    v.addActionListener(
+        infoListener("Version", ImmutableList.of("HKSpoilerViewer Version " + Main.VERSION, "-",
+            "https://github.com/dplochcoder/hkspoilerviewer")));
 
     return bar;
   }

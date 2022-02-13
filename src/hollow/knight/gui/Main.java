@@ -8,6 +8,8 @@ import javax.swing.filechooser.FileFilter;
 import hollow.knight.logic.State;
 
 public final class Main {
+  public static String VERSION = "0.1";
+
   private static Config loadConfig(String[] args) {
     if (args.length > 0) {
       return Config.load(Paths.get(args[0]));
