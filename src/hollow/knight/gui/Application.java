@@ -6,25 +6,36 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.ListSelectionModel;
+import javax.swing.filechooser.FileFilter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.internal.Streams;
+import com.google.gson.stream.JsonWriter;
 import hollow.knight.logic.ParseException;
+import hollow.knight.logic.SaveInterface;
 import hollow.knight.logic.State;
+import hollow.knight.util.JsonUtil;
 
 public final class Application extends JFrame {
   private static final long serialVersionUID = 1L;
@@ -32,6 +43,7 @@ public final class Application extends JFrame {
   private final SearchResult.FilterChangedListener filterChangedListener;
   private final SearchResultsListModel searchResultsListModel;
   private final RouteListModel routeListModel;
+  private final ImmutableList<SaveInterface> saveInterfaces;
 
   private final SearchEngine searchEngine;
 
@@ -44,6 +56,7 @@ public final class Application extends JFrame {
     this.filterChangedListener = () -> repopulateSearchResults();
     this.searchResultsListModel = new SearchResultsListModel();
     this.routeListModel = new RouteListModel(state);
+    this.saveInterfaces = ImmutableList.of(searchResultsListModel, routeListModel);
 
     setTitle("HKSpoilerViewer");
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -122,6 +135,11 @@ public final class Application extends JFrame {
     JMenuBar bar = new JMenuBar();
 
     JMenu file = new JMenu("File");
+    JMenuItem open = new JMenuItem("Open (*.hks)");
+    file.add(open);
+    JMenuItem save = new JMenuItem("Save (*.hks)");
+    file.add(save);
+    file.add(new JSeparator());
     JMenuItem saveToTxt = new JMenuItem("Save Route as *.txt");
     file.add(saveToTxt);
     bar.add(file);
@@ -136,6 +154,32 @@ public final class Application extends JFrame {
     JMenuItem v = new JMenuItem("Version");
     about.add(v);
     bar.add(about);
+
+    open.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        try {
+          openFile();
+        } catch (Exception ex) {
+          JOptionPane.showMessageDialog(Application.this, "Failed to open file: " + ex.getMessage(),
+              "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        repopulateSearchResults();
+      }
+    });
+
+    save.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        try {
+          saveFile();
+        } catch (Exception ex) {
+          JOptionPane.showMessageDialog(Application.this, "Failed to save file: " + ex.getMessage(),
+              "Error", JOptionPane.ERROR_MESSAGE);
+        }
+      }
+    });
 
     saveToTxt.addActionListener(new ActionListener() {
       @Override
@@ -154,6 +198,58 @@ public final class Application extends JFrame {
             "https://github.com/dplochcoder/hkspoilerviewer")));
 
     return bar;
+  }
+
+  private static final FileFilter HKS_FILTER = new FileFilter() {
+    @Override
+    public String getDescription() {
+      return "Hollow Knight Spoiler (*.hks)";
+    }
+
+    @Override
+    public boolean accept(File f) {
+      return f.isDirectory() || f.getName().endsWith(".hks");
+    }
+  };
+
+  private void openFile() throws ParseException {
+    JFileChooser c = new JFileChooser("Open");
+    c.setFileFilter(HKS_FILTER);
+
+    if (c.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) {
+      return;
+    }
+
+    JsonObject saveData = JsonUtil.loadPath(c.getSelectedFile().toPath()).getAsJsonObject();
+    String version = saveData.get("Version").getAsString();
+    State newState = State.parse(saveData.get("RawSpoiler").getAsJsonObject());
+    newState.normalize();
+    saveInterfaces.forEach(i -> i.open(version, newState, saveData.get(i.saveName())));
+
+    repopulateSearchResults();
+  }
+
+  private void saveFile() throws IOException {
+    JFileChooser c = new JFileChooser("Save");
+    c.setFileFilter(HKS_FILTER);
+
+    if (c.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) {
+      return;
+    }
+
+    JsonObject saveData = new JsonObject();
+    saveData.add("Version", new JsonPrimitive(Main.VERSION));
+    saveData.add("RawSpoiler", currentState().originalJson());
+    saveInterfaces.forEach(i -> saveData.add(i.saveName(), i.save()));
+
+    String path = c.getSelectedFile().getAbsolutePath();
+    if (!path.endsWith(".hks")) {
+      path = path + ".hks";
+    }
+
+    try (JsonWriter w = new JsonWriter(new FileWriter(path))) {
+      Streams.write(saveData, w);
+    }
   }
 
   private List<SearchResult.Filter> addFilters(JPanel parent) throws ParseException {

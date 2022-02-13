@@ -15,14 +15,18 @@ import javax.swing.ListModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import javax.swing.filechooser.FileFilter;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import hollow.knight.logic.ItemCheck;
+import hollow.knight.logic.SaveInterface;
 import hollow.knight.logic.State;
 
-public final class RouteListModel implements ListModel<String> {
+public final class RouteListModel implements ListModel<String>, SaveInterface {
 
   private final Object mutex = new Object();
 
-  private final State initialState;
+  private State initialState;
   private State currentState;
   private final List<SearchResult> route = new ArrayList<>();
   private final List<String> resultStrings = new ArrayList<>();
@@ -164,6 +168,35 @@ public final class RouteListModel implements ListModel<String> {
   }
 
   @Override
+  public String saveName() {
+    return "RouteListModel";
+  }
+
+  @Override
+  public JsonElement save() {
+    JsonObject obj = new JsonObject();
+
+    JsonArray arr = new JsonArray();
+    route.forEach(r -> arr.add(r.itemCheck().id()));
+    obj.add("Route", arr);
+
+    return obj;
+  }
+
+  @Override
+  public void open(String version, State initialState, JsonElement json) {
+    this.initialState = initialState.deepCopy();
+    this.currentState = initialState.deepCopy();
+    this.route.clear();
+    this.resultStrings.clear();
+
+    for (JsonElement id : json.getAsJsonObject().get("Route").getAsJsonArray()) {
+      ItemCheck check = initialState.items().get(id.getAsInt());
+      addToRoute(SearchResult.create(check, currentState));
+    }
+  }
+
+  @Override
   public void addListDataListener(ListDataListener listener) {
     synchronized (mutex) {
       listeners.add(listener);
@@ -190,5 +223,4 @@ public final class RouteListModel implements ListModel<String> {
       listeners.remove(listener);
     }
   }
-
 }

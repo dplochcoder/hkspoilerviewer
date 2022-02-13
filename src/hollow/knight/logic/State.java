@@ -1,7 +1,5 @@
 package hollow.knight.logic;
 
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -10,10 +8,11 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import hollow.knight.util.JsonUtil;
 
 /** Mutable state of a run; can be deep-copied. */
 public class State {
+  private final JsonObject originalJson;
+
   private final MutableTermMap termValues = new MutableTermMap();
   private final MutableTermMap costValuesWithTolerances = new MutableTermMap();
   private final Set<ItemCheck> acquiredItemChecks = new HashSet<>();
@@ -26,7 +25,9 @@ public class State {
   private static final ImmutableSet<Term> COST_TERMS = ImmutableSet.of(Term.create("GRUBS"),
       Term.create("ESSENCE"), Term.create("RANCIDEGGS"), Term.create("CHARMS"));
 
-  private State(RoomLabels rooms, Waypoints waypoints, Items items, TermMap tolerances) {
+  private State(JsonObject originalJson, RoomLabels rooms, Waypoints waypoints, Items items,
+      TermMap tolerances) {
+    this.originalJson = originalJson;
     this.roomLabels = rooms;
     this.waypoints = waypoints;
     this.items = items;
@@ -38,6 +39,10 @@ public class State {
     // Automatically acquire all items at Start
     items.allItemChecks().stream().filter(c -> c.location().scene().contentEquals("Start"))
         .forEach(this::acquireItemCheck);
+  }
+
+  public JsonObject originalJson() {
+    return originalJson;
   }
 
   public RoomLabels roomLabels() {
@@ -140,7 +145,7 @@ public class State {
   }
 
   public State deepCopy() {
-    State copy = new State(roomLabels, waypoints, items, tolerances);
+    State copy = new State(originalJson, roomLabels, waypoints, items, tolerances);
     copy.termValues.clear();
     for (Term t : this.termValues.terms()) {
       copy.termValues.set(t, get(t));
@@ -151,9 +156,8 @@ public class State {
     return copy;
   }
 
-  public static State parse(Path rawSpoiler) throws IOException, ParseException {
+  public static State parse(JsonObject json) throws ParseException {
     RoomLabels rooms = RoomLabels.load();
-    JsonObject json = JsonUtil.loadPath(rawSpoiler).getAsJsonObject();
 
     MutableTermMap setters = new MutableTermMap();
     MutableTermMap tolerances = new MutableTermMap();
@@ -172,7 +176,8 @@ public class State {
       }
     }
 
-    State state = new State(rooms, Waypoints.parse(json), Items.parse(json, rooms), tolerances);
+    State state =
+        new State(json, rooms, Waypoints.parse(json), Items.parse(json, rooms), tolerances);
     for (Term t : setters.terms()) {
       state.set(t, setters.get(t));
     }

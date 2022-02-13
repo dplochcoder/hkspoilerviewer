@@ -2,10 +2,12 @@ package hollow.knight.logic;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonArray;
@@ -14,13 +16,17 @@ import com.google.gson.JsonObject;
 
 public final class Items {
   private final CharmIds charmIds;
-  private final ImmutableSet<ItemCheck> allItemChecks;
+  private final ImmutableBiMap<Integer, ItemCheck> itemChecks;
   private final ImmutableList<Integer> notchCosts;
 
-  private Items(CharmIds charmIds, Set<ItemCheck> items, List<Integer> notchCosts) {
+  private Items(CharmIds charmIds, BiMap<Integer, ItemCheck> itemChecks, List<Integer> notchCosts) {
     this.charmIds = charmIds;
-    this.allItemChecks = ImmutableSet.copyOf(items);
+    this.itemChecks = ImmutableBiMap.copyOf(itemChecks);
     this.notchCosts = ImmutableList.copyOf(notchCosts);
+  }
+
+  public ItemCheck get(int id) {
+    return itemChecks.get(id);
   }
 
   public int notchCost(int charmId) {
@@ -32,11 +38,11 @@ public final class Items {
   }
 
   public ImmutableSet<ItemCheck> allItemChecks() {
-    return allItemChecks;
+    return itemChecks.values();
   }
 
-  private static void parseItem(JsonElement elem, String itemField, String locField,
-      RoomLabels rooms, Map<Term, Item> itemsByName, boolean vanilla, Set<ItemCheck> items)
+  private static void parseItem(int id, JsonElement elem, String itemField, String locField,
+      RoomLabels rooms, Map<Term, Item> itemsByName, boolean vanilla, Map<Integer, ItemCheck> items)
       throws ParseException {
     JsonObject itemObj = elem.getAsJsonObject().get(itemField).getAsJsonObject();
 
@@ -65,11 +71,11 @@ public final class Items {
       costs = Costs.parse(costsObj.getAsJsonArray());
     }
 
-    items.add(new ItemCheck(new Location(locName, locAccess, rooms), item, costs, vanilla));
+    items.put(id, new ItemCheck(id, new Location(locName, locAccess, rooms), item, costs, vanilla));
   }
 
   public static Items parse(JsonObject json, RoomLabels rooms) throws ParseException {
-    Set<ItemCheck> items = new HashSet<>();
+    BiMap<Integer, ItemCheck> items = HashBiMap.create();
 
     // Parse item effects.
     JsonArray itemsArr = json.get("LM").getAsJsonObject().get("Items").getAsJsonArray();
@@ -82,11 +88,12 @@ public final class Items {
     // Parse locations.
     JsonArray itemPlacements = json.get("itemPlacements").getAsJsonArray();
     JsonArray vanillaPlacements = json.get("Vanilla").getAsJsonArray();
+    int id = 1;
     for (JsonElement elem : itemPlacements) {
-      parseItem(elem, "item", "location", rooms, itemsByName, false, items);
+      parseItem(id++, elem, "item", "location", rooms, itemsByName, false, items);
     }
     for (JsonElement elem : vanillaPlacements) {
-      parseItem(elem, "Item", "Location", rooms, itemsByName, true, items);
+      parseItem(id++, elem, "Item", "Location", rooms, itemsByName, true, items);
     }
 
     // Parse notch costs.

@@ -7,10 +7,14 @@ import java.util.Set;
 import javax.swing.ListModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import hollow.knight.logic.ItemCheck;
+import hollow.knight.logic.SaveInterface;
 import hollow.knight.logic.State;
 
-public final class SearchResultsListModel implements ListModel<String> {
+public final class SearchResultsListModel implements ListModel<String>, SaveInterface {
 
   private final Object mutex = new Object();
   private final Set<ListDataListener> listeners = new HashSet<>();
@@ -160,6 +164,43 @@ public final class SearchResultsListModel implements ListModel<String> {
   public void unhideResult(State state, ItemCheck check) {
     synchronized (mutex) {
       hiddenResultsSet.remove(check);
+    }
+  }
+
+  @Override
+  public String saveName() {
+    return "SearchResultsListModel";
+  }
+
+  @Override
+  public JsonElement save() {
+    JsonObject obj = new JsonObject();
+
+    JsonArray bookmarksArr = new JsonArray();
+    bookmarks.forEach(b -> bookmarksArr.add(b.id()));
+    obj.add("Bookmarks", bookmarksArr);
+
+    JsonArray hiddenArr = new JsonArray();
+    hiddenResultsSet.forEach(h -> hiddenArr.add(h.id()));
+    obj.add("Hidden", hiddenArr);
+
+    return obj;
+  }
+
+  @Override
+  public void open(String version, State initialState, JsonElement json) {
+    bookmarks.clear();
+    bookmarksSet.clear();
+    hiddenResultsSet.clear();
+
+    JsonObject obj = json.getAsJsonObject();
+    for (JsonElement bookmark : obj.get("Bookmarks").getAsJsonArray()) {
+      ItemCheck check = initialState.items().get(bookmark.getAsInt());
+      bookmarks.add(check);
+      bookmarksSet.add(check);
+    }
+    for (JsonElement hidden : obj.get("Hidden").getAsJsonArray()) {
+      hiddenResultsSet.add(initialState.items().get(hidden.getAsInt()));
     }
   }
 
