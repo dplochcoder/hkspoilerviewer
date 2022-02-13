@@ -15,12 +15,12 @@ public final class Main {
       return Config.load();
     }
   }
-  
+
   private static Path findHkSpoiler(Config cfg) throws Exception {
     if (!cfg.get("RAW_SPOILER").isEmpty()) {
       return Paths.get(cfg.get("RAW_SPOILER"));
     }
-    
+
     // Make user open it.
     JFileChooser j = new JFileChooser("Find RawSpoiler.json");
     j.setFileFilter(new FileFilter() {
@@ -28,6 +28,7 @@ public final class Main {
       public boolean accept(File pathname) {
         return pathname.isDirectory() || pathname.getName().contentEquals("RawSpoiler.json");
       }
+
       @Override
       public String getDescription() {
         return "RawSpoiler.json";
@@ -36,23 +37,23 @@ public final class Main {
     if (j.showOpenDialog(null) != JFileChooser.APPROVE_OPTION) {
       throw new Exception("Must choose RawSpoiler.json");
     }
-    
+
     Path p = Paths.get(j.getSelectedFile().getAbsolutePath());
-    
+
     cfg.set("RAW_SPOILER", p.toString());
     cfg.save();
     return p;
   }
-  
+
   public static void main(String[] args) throws Exception {
     Config cfg = loadConfig(args);
-    
+
     Path rawSpoiler = findHkSpoiler(cfg);
     State state = State.parse(rawSpoiler);
     state.normalize();
-    
+
     new Application(state);
   }
-  
+
   private Main() {}
 }

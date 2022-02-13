@@ -26,10 +26,10 @@ public final class ExclusionFilters implements SearchEngine.ResultFilter {
 
   private ImmutableList<Filter> createFilters(RoomLabels roomLabels) {
     return ImmutableList.of(Filter.create("Vanilla (#)", r -> r.itemCheck().vanilla()),
-        Filter.create("Out of Logic (*)", r -> !r.inLogic()),
-        Filter.create("White Palace",
-            r -> roomLabels.get(r.itemCheck().location().scene(), RoomLabels.Type.MAP)
-                .contentEquals("White Palace")));
+        Filter.create("Out of Logic (*)",
+            r -> r.logicType() == SearchEngine.Result.LogicType.OUT_OF_LOGIC),
+        Filter.create("Purchase Logic ($)",
+            r -> r.logicType() == SearchEngine.Result.LogicType.COST_ACCESSIBLE));
   }
 
   public ExclusionFilters(RoomLabels roomLabels) {

@@ -18,6 +18,10 @@ import hollow.knight.logic.Term;
 public final class SearchEngine {
   @AutoValue
   public abstract static class Result {
+    public static enum LogicType {
+      IN_LOGIC, COST_ACCESSIBLE, OUT_OF_LOGIC;
+    }
+
     public abstract ItemCheck itemCheck();
 
     public final Item item() {
@@ -36,14 +40,16 @@ public final class SearchEngine {
       return itemCheck().vanilla();
     }
 
-    public abstract boolean inLogic();
+    public abstract LogicType logicType();
 
     public abstract Optional<Integer> notchCost();
 
     public final String render() {
       StringBuilder sb = new StringBuilder();
-      if (!inLogic()) {
+      if (logicType() == LogicType.OUT_OF_LOGIC) {
         sb.append('*');
+      } else if (logicType() == LogicType.COST_ACCESSIBLE) {
+        sb.append('$');
       }
       if (vanilla()) {
         sb.append('#');
@@ -75,13 +81,28 @@ public final class SearchEngine {
       return costs().suffixString();
     }
 
+    private static LogicType getLogicType(ItemCheck itemCheck, State state) {
+      if (itemCheck.location().canAccess(state)) {
+        if (itemCheck.costs().canBePaid(state.get(Term.canReplenishGeo()) > 0,
+            state.termValues())) {
+          return LogicType.IN_LOGIC;
+        } else if (itemCheck.costs().canBePaid(state.get(Term.canReplenishGeo()) > 0,
+            state.accessibleTermValues())) {
+          return LogicType.COST_ACCESSIBLE;
+        }
+      }
+
+      return LogicType.OUT_OF_LOGIC;
+    }
+
     public static Result create(ItemCheck itemCheck, State state) {
-      boolean inLogic = itemCheck.location().canAccess(state) && itemCheck.costs().canBePaid(state);
       Optional<Integer> notchCost = Optional.empty();
       if (itemCheck.item().isCharm(state.items())) {
         notchCost = Optional.of(itemCheck.item().notchCost(state.items()));
       }
-      return new AutoValue_SearchEngine_Result(itemCheck, inLogic, notchCost);
+
+      return new AutoValue_SearchEngine_Result(itemCheck, getLogicType(itemCheck, state),
+          notchCost);
     }
   }
 

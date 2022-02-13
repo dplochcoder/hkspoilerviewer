@@ -31,11 +31,11 @@ public final class Cost {
     return term;
   }
 
-  public boolean canBePaid(State state) {
+  public boolean canBePaid(boolean canPayGeo, TermMap values) {
     if (type == Type.GEO) {
-      return state.get(Term.canReplenishGeo()) > 0;
+      return canPayGeo;
     } else {
-      return state.get(term) >= value;
+      return values.get(term) >= value;
     }
   }
 

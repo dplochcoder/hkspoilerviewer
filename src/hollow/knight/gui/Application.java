@@ -1,12 +1,15 @@
 package hollow.knight.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +35,8 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import com.google.common.collect.ImmutableList;
@@ -46,8 +51,10 @@ public final class Application extends JFrame {
   private final SearchEngine searchEngine;
   private final JList<String> resultsList;
   private final SearchResultsListModel searchResultsListModel;
+  private final JScrollPane resultsPane;
   private final JList<String> routeList;
   private final RouteListModel routeListModel;
+  private final JScrollPane routePane;
 
   public Application(State state) throws ParseException {
     setTitle("HKSpoilerViewer");
@@ -64,26 +71,37 @@ public final class Application extends JFrame {
     this.searchEngine = new SearchEngine(state.roomLabels(), resultFilters);
     this.searchResultsListModel = new SearchResultsListModel();
     this.resultsList = createSearchResults();
-    JScrollPane middle = new JScrollPane(this.resultsList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+    this.resultsPane = new JScrollPane(this.resultsList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
         JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+    this.resultsPane.setMinimumSize(new Dimension(400, 600));
 
     this.routeList = new JList<>(routeListModel);
-    for (KeyListener k : routeList.getKeyListeners()) {
-      routeList.removeKeyListener(k);
-    }
+    Arrays.stream(routeList.getKeyListeners()).forEach(routeList::removeKeyListener);
     this.routeList.addKeyListener(routeListKeyListener());
-    JScrollPane right = new JScrollPane(this.routeList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+    this.routePane = new JScrollPane(this.routeList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
         JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+    this.routePane.setMinimumSize(new Dimension(250, 600));
 
     this.getContentPane().setLayout(new BorderLayout());
     this.getContentPane().add(left, BorderLayout.LINE_START);
-    this.getContentPane().add(middle, BorderLayout.CENTER);
-    this.getContentPane().add(right, BorderLayout.LINE_END);
+    this.getContentPane().add(resultsPane, BorderLayout.CENTER);
+    this.getContentPane().add(routePane, BorderLayout.LINE_END);
 
     pack();
     repopulateSearchResults();
     setVisible(true);
   }
+
+  private static final ImmutableList<String> PL_INFO = ImmutableList.<String>builder().add(
+      "A check is in Purchase Logic ($) if it has a cost which is not yet met by the current route, ")
+      .add(
+          "but which *could* be met if the player acquired all immediately accessible items affecting the cost, including tolerance.")
+      .add("-")
+      .add(
+          "I.e., an item at Grubfather for N grubs is in Purchase Logic if the player has immediate access to N+TOLERANCE grubs with their current moveset and keys. ")
+      .add(
+          "Adding N or more grubs to the route explicitly will put the check in normal logic and remove the '$'.")
+      .build();
 
   private static final ImmutableList<String> KS_INFO =
       ImmutableList.<String>builder().add("UP/DOWN - move through results")
@@ -93,20 +111,14 @@ public final class Application extends JFrame {
           .add("-").add("B - bookmark selected item").add("-").add("H - hide selected item")
           .add("U - un-hide selected item").build();
 
-  private JMenuBar createMenu() {
-    JMenuBar bar = new JMenuBar();
-    JMenu about = new JMenu("About");
-    JMenuItem ks = new JMenuItem("Keyboard Shortcuts");
-    about.add(ks);
-    bar.add(about);
-
-    ks.addActionListener(new ActionListener() {
+  private ActionListener infoListener(String title, Iterable<String> content) {
+    return new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 
-        for (String info : KS_INFO) {
+        for (String info : content) {
           if (info.contentEquals("-")) {
             panel.add(new JSeparator());
           } else {
@@ -114,12 +126,42 @@ public final class Application extends JFrame {
           }
         }
 
-        JDialog dialog = new JDialog(Application.this, "Keyboard Shortcuts");
+        JDialog dialog = new JDialog(Application.this, title);
         dialog.setContentPane(panel);
         dialog.pack();
         dialog.setVisible(true);
       }
+    };
+  }
+
+  private JMenuBar createMenu() {
+    JMenuBar bar = new JMenuBar();
+
+    JMenu file = new JMenu("File");
+    JMenuItem saveToTxt = new JMenuItem("Save Route as *.txt");
+    file.add(saveToTxt);
+    bar.add(file);
+
+    JMenu about = new JMenu("About");
+    JMenuItem pl = new JMenuItem("Purchase Logic ($)");
+    about.add(pl);
+    about.add(new JSeparator());
+    JMenuItem ks = new JMenuItem("Keyboard Shortcuts");
+    about.add(ks);
+    bar.add(about);
+
+    saveToTxt.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        try {
+          Application.this.routeListModel.saveAsTxt(Application.this);
+        } catch (IOException ignore) {
+        }
+      }
     });
+
+    pl.addActionListener(infoListener("Purchase Logic ($)", PL_INFO));
+    ks.addActionListener(infoListener("Keyboard Shortcuts", KS_INFO));
 
     return bar;
   }
@@ -166,18 +208,24 @@ public final class Application extends JFrame {
     JPanel search = new JPanel();
     search.add(new JLabel("Search:"));
     JTextField field = new JTextField(16);
-    field.addKeyListener(new KeyListener() {
+    field.getDocument().addDocumentListener(new DocumentListener() {
       @Override
-      public void keyTyped(KeyEvent e) {
+      public void changedUpdate(DocumentEvent e) {
         textFilter.setText(field.getText());
         repopulateSearchResults();
       }
 
       @Override
-      public void keyReleased(KeyEvent e) {}
+      public void insertUpdate(DocumentEvent arg0) {
+        textFilter.setText(field.getText());
+        repopulateSearchResults();
+      }
 
       @Override
-      public void keyPressed(KeyEvent e) {}
+      public void removeUpdate(DocumentEvent arg0) {
+        textFilter.setText(field.getText());
+        repopulateSearchResults();
+      }
     });
     search.add(field);
 
@@ -224,6 +272,7 @@ public final class Application extends JFrame {
     }
 
     all.addActionListener(new ActionListener() {
+
       @Override
       public void actionPerformed(ActionEvent e) {
         icf.allFilters().stream().forEach(f -> icf.enableFilter(f, true));
@@ -400,10 +449,18 @@ public final class Application extends JFrame {
     };
   }
 
+  private static boolean needsExpansion(JScrollPane pane) {
+    return pane.getPreferredSize().width > pane.getSize().width;
+  }
+
   private void repopulateSearchResults() {
     ImmutableList<SearchEngine.Result> results =
         this.searchEngine.getSearchResults(this.currentState());
     this.searchResultsListModel.updateResults(this.currentState(), results);
+
+    if (needsExpansion(this.resultsPane) || needsExpansion(this.routePane)) {
+      pack();
+    }
     repaint();
   }
 

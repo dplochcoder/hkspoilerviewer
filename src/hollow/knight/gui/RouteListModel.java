@@ -1,12 +1,20 @@
 package hollow.knight.gui;
 
+import java.awt.Component;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import javax.swing.JFileChooser;
 import javax.swing.ListModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
+import javax.swing.filechooser.FileFilter;
 import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.State;
 
@@ -24,6 +32,33 @@ public final class RouteListModel implements ListModel<String> {
   public RouteListModel(State initialState) {
     this.initialState = initialState.deepCopy();
     this.currentState = initialState.deepCopy();
+  }
+
+  public void saveAsTxt(Component parent) throws IOException {
+    JFileChooser j = new JFileChooser("Save Route as *.txt");
+    j.setFileFilter(new FileFilter() {
+      @Override
+      public boolean accept(File pathname) {
+        return pathname.isDirectory() || pathname.getName().endsWith(".txt");
+      }
+
+      @Override
+      public String getDescription() {
+        return "*.txt";
+      }
+    });
+    if (j.showSaveDialog(parent) != JFileChooser.APPROVE_OPTION) {
+      return;
+    }
+
+    File f = j.getSelectedFile();
+
+    String out;
+    synchronized (mutex) {
+      out = resultStrings.stream().collect(Collectors.joining("\n"));
+    }
+
+    Files.write(f.toPath(), out.getBytes(StandardCharsets.UTF_8));
   }
 
   public State currentState() {
@@ -108,14 +143,13 @@ public final class RouteListModel implements ListModel<String> {
       }
       listenersCopy = new ArrayList<>(listeners);
 
-      State prevState = getState(index - 1);
+      currentState = getState(index - 1).deepCopy();
       for (int i = index + 1; i < getSize(); i++) {
-        State newState = prevState.deepCopy();
         ItemCheck check = route.get(i).itemCheck();
-        newState.acquireItemCheck(check);
-        newState.normalize();
+        currentState.acquireItemCheck(check);
+        currentState.normalize();
 
-        route.set(i - 1, SearchEngine.Result.create(check, prevState));
+        route.set(i - 1, SearchEngine.Result.create(check, currentState));
         resultStrings.set(i - 1, i + ": " + route.get(i - 1).render());
       }
 

@@ -1,21 +1,22 @@
 package hollow.knight.logic;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 public final class Item {
   private final Term term;
   private final Condition logic;
-  private final TermMap trueEffects;
-  private final TermMap falseEffects;
-  private final TermMap caps;
+  private final ImmutableTermMap trueEffects;
+  private final ImmutableTermMap falseEffects;
+  private final ImmutableTermMap caps;
 
   private Item(Term term, Condition logic, TermMap trueEffects, TermMap falseEffects,
       TermMap caps) {
     this.term = term;
     this.logic = logic;
-    this.trueEffects = trueEffects;
-    this.falseEffects = falseEffects;
-    this.caps = caps;
+    this.trueEffects = ImmutableTermMap.copyOf(trueEffects);
+    this.falseEffects = ImmutableTermMap.copyOf(falseEffects);
+    this.caps = ImmutableTermMap.copyOf(caps);
   }
 
   public Term term() {
@@ -52,15 +53,19 @@ public final class Item {
     }
   }
 
-  private static TermMap parseEffects(JsonObject obj) {
+  private static void parseEffect(JsonObject obj, MutableTermMap out) {
+    out.add(Term.create(obj.get("Term").getAsString()), obj.get("Value").getAsInt());
+  }
+
+  private static void parseEffects(JsonObject obj, MutableTermMap out) {
     if (obj.get("Effect") != null) {
-      return TermMap.parse(obj.get("Effect").getAsJsonObject());
+      parseEffect(obj.get("Effect").getAsJsonObject(), out);
     } else if (obj.get("Effects") != null) {
-      return TermMap.parse(obj.get("Effects").getAsJsonArray());
+      for (JsonElement elem : obj.get("Effects").getAsJsonArray()) {
+        parseEffect(elem.getAsJsonObject(), out);
+      }
     } else if (obj.get("item") != null) {
-      return parseEffects(obj.get("item").getAsJsonObject());
-    } else {
-      return TermMap.none();
+      parseEffects(obj.get("item").getAsJsonObject(), out);
     }
   }
 
@@ -68,19 +73,19 @@ public final class Item {
     Term name = Term.create(item.get("Name").getAsString());
 
     Condition logic = Condition.alwaysTrue();
-    TermMap trueEffects = TermMap.none();
-    TermMap falseEffects = TermMap.none();
-    TermMap caps = TermMap.none();
+    MutableTermMap trueEffects = new MutableTermMap();
+    MutableTermMap falseEffects = new MutableTermMap();
+    MutableTermMap caps = new MutableTermMap();
     if (item.get("Logic") != null) {
       logic = ConditionParser.parse(item.get("Logic").getAsJsonObject().get("logic").getAsString());
-      trueEffects = parseEffects(item.get("TrueItem").getAsJsonObject());
-      falseEffects = parseEffects(item.get("FalseItem").getAsJsonObject());
+      parseEffects(item.get("TrueItem").getAsJsonObject(), trueEffects);
+      parseEffects(item.get("FalseItem").getAsJsonObject(), falseEffects);
     } else {
-      trueEffects = parseEffects(item);
+      parseEffects(item, trueEffects);
     }
 
     if (item.get("Cap") != null) {
-      caps = TermMap.parse(item.get("Cap").getAsJsonObject());
+      parseEffect(item.get("Cap").getAsJsonObject(), caps);
     }
 
     return new Item(name, logic, trueEffects, falseEffects, caps);
