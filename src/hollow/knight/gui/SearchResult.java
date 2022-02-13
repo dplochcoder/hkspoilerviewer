@@ -1,6 +1,9 @@
 package hollow.knight.gui;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
+import javax.swing.JPanel;
 import com.google.auto.value.AutoValue;
 import hollow.knight.logic.Costs;
 import hollow.knight.logic.Item;
@@ -11,8 +14,38 @@ import hollow.knight.logic.Term;
 
 @AutoValue
 public abstract class SearchResult {
-  public static interface Filter {
-    boolean accept(SearchResult result);
+  public static interface FilterChangedListener {
+    void filterChanged();
+  }
+
+  public abstract static class Filter {
+    private final Object mutex = new Object();
+    private final Set<FilterChangedListener> listeners = new HashSet<>();
+
+    public abstract boolean accept(SearchResult result);
+
+    public abstract void addGuiToPanel(JPanel panel);
+
+    protected final void filterChanged() {
+      Set<FilterChangedListener> listenersCopy = new HashSet<>();
+      synchronized (mutex) {
+        listenersCopy.addAll(listeners);
+      }
+
+      listenersCopy.forEach(FilterChangedListener::filterChanged);
+    }
+
+    public void addListener(FilterChangedListener listener) {
+      synchronized (mutex) {
+        listeners.add(listener);
+      }
+    }
+
+    public void removeListener(FilterChangedListener listener) {
+      synchronized (mutex) {
+        listeners.remove(listener);
+      }
+    }
   }
 
   public static enum LogicType {

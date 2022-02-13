@@ -2,23 +2,14 @@ package hollow.knight.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.IntStream;
 import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -27,36 +18,30 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import hollow.knight.logic.ParseException;
-import hollow.knight.logic.RoomLabels;
 import hollow.knight.logic.State;
 
 public final class Application extends JFrame {
   private static final long serialVersionUID = 1L;
 
-  private final SearchEngine searchEngine;
-  private final JList<String> resultsList;
+  private final SearchResult.FilterChangedListener filterChangedListener;
   private final SearchResultsListModel searchResultsListModel;
+  private final RouteListModel routeListModel;
+
+  private final SearchEngine searchEngine;
+
+  private final JList<String> resultsList;
   private final JScrollPane resultsPane;
   private final JList<String> routeList;
-  private final RouteListModel routeListModel;
   private final JScrollPane routePane;
 
   public Application(State state) throws ParseException {
+    this.filterChangedListener = () -> repopulateSearchResults();
     this.searchResultsListModel = new SearchResultsListModel();
     this.routeListModel = new RouteListModel(state);
 
@@ -172,195 +157,20 @@ public final class Application extends JFrame {
   }
 
   private List<SearchResult.Filter> addFilters(JPanel parent) throws ParseException {
-    List<SearchResult.Filter> resultFilters = new ArrayList<>();
+    ImmutableList<SearchResult.Filter> resultFilters =
+        ImmutableList.of(new TextFilter(currentState().roomLabels()), ItemCategoryFilters.load(),
+            new RoomFilters(currentState().roomLabels()),
+            new ExclusionFilters(currentState().roomLabels()));
 
-    TextFilter textFilter = new TextFilter(currentState().roomLabels());
-    resultFilters.add(textFilter);
-    addTextFilter(textFilter, parent);
-    parent.add(new JSeparator());
-
-    ItemCategoryFilters icf = ItemCategoryFilters.load();
-    resultFilters.add(icf);
-    addItemCategoryFilters(icf, parent);
-    parent.add(new JSeparator());
-
-    resultFilters.add(addRoomFilters(parent));
-    parent.add(new JSeparator());
-
-    ExclusionFilters ef = new ExclusionFilters(currentState().roomLabels());
-    addExclusionFilters(ef, parent);
-    resultFilters.add(ef);
+    for (int i = 0; i < resultFilters.size(); i++) {
+      if (i > 0) {
+        parent.add(new JSeparator());
+      }
+      resultFilters.get(i).addListener(filterChangedListener);
+      resultFilters.get(i).addGuiToPanel(parent);
+    }
 
     return resultFilters;
-  }
-
-  private void addModeButton(TextFilter textFilter, TextFilter.Mode mode, String txt,
-      ButtonGroup group, JPanel parent, boolean selected) {
-    JRadioButton button = new JRadioButton(txt, selected);
-    group.add(button);
-    parent.add(button);
-
-    button.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        textFilter.setMode(mode);
-        repopulateSearchResults();
-      }
-    });
-  }
-
-  private void addTextFilter(TextFilter textFilter, JPanel parent) {
-    JPanel search = new JPanel();
-    search.add(new JLabel("Search:"));
-    JTextField field = new JTextField(16);
-    field.getDocument().addDocumentListener(new DocumentListener() {
-      @Override
-      public void changedUpdate(DocumentEvent e) {
-        textFilter.setText(field.getText());
-        repopulateSearchResults();
-      }
-
-      @Override
-      public void insertUpdate(DocumentEvent arg0) {
-        textFilter.setText(field.getText());
-        repopulateSearchResults();
-      }
-
-      @Override
-      public void removeUpdate(DocumentEvent arg0) {
-        textFilter.setText(field.getText());
-        repopulateSearchResults();
-      }
-    });
-    search.add(field);
-
-    parent.add(search);
-
-    JPanel mode = new JPanel();
-    ButtonGroup group = new ButtonGroup();
-    addModeButton(textFilter, TextFilter.Mode.ITEM, "Item", group, mode, false);
-    addModeButton(textFilter, TextFilter.Mode.LOCATION, "Location", group, mode, false);
-    addModeButton(textFilter, TextFilter.Mode.BOTH, "Both", group, mode, true);
-
-    parent.add(mode);
-  }
-
-  private static final int COLS = 2;
-
-  private void addItemCategoryFilters(ItemCategoryFilters icf, JPanel parent) {
-    JPanel filters = new JPanel();
-    int numItems = icf.allFilters().size();
-    int numRows = (numItems + COLS - 1) / COLS;
-    ++numRows; // Two buttons.
-    filters.setLayout(new GridLayout(numRows, COLS));
-
-    JButton all = new JButton("ALL");
-    filters.add(all);
-
-    JButton none = new JButton("NONE");
-    filters.add(none);
-
-    List<JCheckBox> jcbs = new ArrayList<>();
-    for (String filter : icf.allFilters()) {
-      JCheckBox jcb = new JCheckBox(filter);
-      jcb.setSelected(true);
-      jcb.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          icf.enableFilter(filter, jcb.isSelected());
-          repopulateSearchResults();
-        }
-      });
-
-      filters.add(jcb);
-      jcbs.add(jcb);
-    }
-
-    all.addActionListener(new ActionListener() {
-
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        icf.allFilters().stream().forEach(f -> icf.enableFilter(f, true));
-        jcbs.stream().forEach(b -> b.setSelected(true));
-        repopulateSearchResults();
-      }
-    });
-    none.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        icf.allFilters().stream().forEach(f -> icf.enableFilter(f, false));
-        jcbs.stream().forEach(b -> b.setSelected(false));
-        repopulateSearchResults();
-      }
-    });
-
-    parent.add(filters);
-  }
-
-  private SearchResult.Filter addRoomFilters(JPanel parent) {
-    JButton all = new JButton("All Areas");
-    parent.add(all);
-
-    JTabbedPane pane = new JTabbedPane();
-
-    Map<RoomLabels.Type, JList<String>> lists = new HashMap<>();
-    for (RoomLabels.Type type : RoomLabels.Type.values()) {
-      DefaultListModel<String> model = new DefaultListModel<>();
-      currentState().roomLabels().allLabels(type).stream().sorted().forEach(model::addElement);
-
-      JList<String> list = new JList<>(model);
-      lists.put(type, list);
-      list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-      list.setSelectedIndices(IntStream.range(0, model.getSize()).toArray());
-
-      JScrollPane scroll = new JScrollPane(list, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-          JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
-      pane.addTab(type == RoomLabels.Type.MAP ? "Map Areas" : "Titled Areas", scroll);
-    }
-
-    RoomFilters filters = new RoomFilters(currentState().roomLabels(), lists);
-    lists.values().forEach(l -> l.addListSelectionListener(new ListSelectionListener() {
-      @Override
-      public void valueChanged(ListSelectionEvent e) {
-        repopulateSearchResults();
-      }
-    }));
-
-    pane.addChangeListener(new ChangeListener() {
-      @Override
-      public void stateChanged(ChangeEvent e) {
-        filters.setActiveType(RoomLabels.Type.values()[pane.getSelectedIndex()]);
-        repopulateSearchResults();
-      }
-    });
-
-    all.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        lists.values().forEach(
-            l -> l.setSelectedIndices(IntStream.range(0, l.getModel().getSize()).toArray()));
-        repopulateSearchResults();
-      }
-    });
-
-    parent.add(pane);
-    return filters;
-  }
-
-  private void addExclusionFilters(ExclusionFilters filters, JPanel parent) {
-    parent.add(new JLabel("Exclusions"));
-    ActionListener exFilterChanged = new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        repopulateSearchResults();
-      }
-    };
-
-    filters.gui().forEach(cb -> {
-      parent.add(cb);
-      cb.addActionListener(exFilterChanged);
-    });
   }
 
   private JList<String> createSearchResults() {

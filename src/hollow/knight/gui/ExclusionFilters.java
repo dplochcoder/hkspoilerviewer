@@ -1,39 +1,52 @@
 package hollow.knight.gui;
 
-import java.util.stream.Stream;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.function.Predicate;
 import javax.swing.JCheckBox;
+import javax.swing.JPanel;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import hollow.knight.logic.RoomLabels;
 
-public final class ExclusionFilters implements SearchResult.Filter {
+public final class ExclusionFilters extends SearchResult.Filter {
   @AutoValue
-  abstract static class Filter {
+  abstract static class ExclusionFilter {
     public abstract String name();
 
-    public abstract SearchResult.Filter filter();
+    public abstract Predicate<SearchResult> filter();
 
     public abstract JCheckBox checkBox();
 
-    public static Filter create(String name, SearchResult.Filter filter, JCheckBox checkBox) {
-      return new AutoValue_ExclusionFilters_Filter(name, filter, checkBox);
+    public static ExclusionFilter create(ExclusionFilters filters, String name,
+        Predicate<SearchResult> filter, JCheckBox checkBox) {
+      checkBox.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          filters.filterChanged();
+        }
+      });
+
+      return new AutoValue_ExclusionFilters_ExclusionFilter(name, filter, checkBox);
     }
   }
 
-  private final ImmutableList<Filter> filters;
+  private final ImmutableList<ExclusionFilter> filters;
 
-  private static JCheckBox jcb(String txt, boolean isSelected) {
+  private JCheckBox jcb(String txt, boolean isSelected) {
     JCheckBox out = new JCheckBox(txt);
     out.setSelected(isSelected);
     return out;
   }
 
-  private ImmutableList<Filter> createFilters(RoomLabels roomLabels) {
+  private ImmutableList<ExclusionFilter> createFilters(RoomLabels roomLabels) {
     return ImmutableList.of(
-        Filter.create("VANILLA", r -> r.itemCheck().vanilla(), jcb("Vanilla (#)", true)),
-        Filter.create("OUT_OF_LOGIC", r -> r.logicType() == SearchResult.LogicType.OUT_OF_LOGIC,
+        ExclusionFilter.create(this, "VANILLA", r -> r.itemCheck().vanilla(),
+            jcb("Vanilla (#)", true)),
+        ExclusionFilter.create(this, "OUT_OF_LOGIC",
+            r -> r.logicType() == SearchResult.LogicType.OUT_OF_LOGIC,
             jcb("Out of Logic (*)", true)),
-        Filter.create("PURCHASE_LOGIC",
+        ExclusionFilter.create(this, "PURCHASE_LOGIC",
             r -> r.logicType() == SearchResult.LogicType.COST_ACCESSIBLE,
             jcb("Purchase Logic ($)", false)));
   }
@@ -42,12 +55,13 @@ public final class ExclusionFilters implements SearchResult.Filter {
     this.filters = createFilters(roomLabels);
   }
 
-  public Stream<JCheckBox> gui() {
-    return this.filters.stream().map(Filter::checkBox);
+  @Override
+  public void addGuiToPanel(JPanel panel) {
+    filters.forEach(f -> panel.add(f.checkBox()));
   }
 
   @Override
   public boolean accept(SearchResult result) {
-    return filters.stream().allMatch(f -> !f.checkBox().isSelected() || !f.filter().accept(result));
+    return filters.stream().allMatch(f -> !f.checkBox().isSelected() || !f.filter().test(result));
   }
 }
