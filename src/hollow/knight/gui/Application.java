@@ -57,11 +57,13 @@ public final class Application extends JFrame {
   private final JScrollPane routePane;
 
   public Application(State state) throws ParseException {
+    this.searchResultsListModel = new SearchResultsListModel();
+    this.routeListModel = new RouteListModel(state);
+
     setTitle("HKSpoilerViewer");
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    this.setJMenuBar(createMenu());
-    this.routeListModel = new RouteListModel(state);
+    setJMenuBar(createMenu());
 
     JPanel left = new JPanel();
     BoxLayout layout = new BoxLayout(left, BoxLayout.PAGE_AXIS);
@@ -69,23 +71,20 @@ public final class Application extends JFrame {
     List<SearchResult.Filter> resultFilters = addFilters(left);
 
     this.searchEngine = new SearchEngine(state.roomLabels(), resultFilters);
-    this.searchResultsListModel = new SearchResultsListModel();
     this.resultsList = createSearchResults();
-    this.resultsPane = new JScrollPane(this.resultsList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+    this.resultsPane = new JScrollPane(resultsList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
         JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-    this.resultsPane.setMinimumSize(new Dimension(400, 600));
+    resultsPane.setMinimumSize(new Dimension(400, 600));
 
-    this.routeList = new JList<>(routeListModel);
-    Arrays.stream(routeList.getKeyListeners()).forEach(routeList::removeKeyListener);
-    this.routeList.addKeyListener(routeListKeyListener());
-    this.routePane = new JScrollPane(this.routeList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+    this.routeList = createRouteList();
+    this.routePane = new JScrollPane(routeList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
         JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-    this.routePane.setMinimumSize(new Dimension(250, 600));
+    routePane.setMinimumSize(new Dimension(250, 600));
 
-    this.getContentPane().setLayout(new BorderLayout());
-    this.getContentPane().add(left, BorderLayout.LINE_START);
-    this.getContentPane().add(resultsPane, BorderLayout.CENTER);
-    this.getContentPane().add(routePane, BorderLayout.LINE_END);
+    getContentPane().setLayout(new BorderLayout());
+    getContentPane().add(left, BorderLayout.LINE_START);
+    getContentPane().add(resultsPane, BorderLayout.CENTER);
+    getContentPane().add(routePane, BorderLayout.LINE_END);
 
     pack();
     repopulateSearchResults();
@@ -365,18 +364,16 @@ public final class Application extends JFrame {
   }
 
   private JList<String> createSearchResults() {
-    JList<String> resultsList = new JList<String>(this.searchResultsListModel);
+    JList<String> resultsList = new JList<String>(searchResultsListModel);
     resultsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-    for (KeyListener k : resultsList.getKeyListeners()) {
-      resultsList.removeKeyListener(k);
-    }
+    Arrays.stream(resultsList.getKeyListeners()).forEach(resultsList::removeKeyListener);
     resultsList.addKeyListener(resultsListKeyListener());
+
     return resultsList;
   }
 
   private State currentState() {
-    return this.routeListModel.currentState();
+    return routeListModel.currentState();
   }
 
   private static final ImmutableMap<Integer, Integer> UP_DOWN_VALUES = ImmutableMap.of(
@@ -438,14 +435,10 @@ public final class Application extends JFrame {
       }
 
       @Override
-      public void keyReleased(KeyEvent e) {
-        e.consume();
-      }
+      public void keyReleased(KeyEvent e) {}
 
       @Override
-      public void keyTyped(KeyEvent e) {
-        e.consume();
-      }
+      public void keyTyped(KeyEvent e) {}
     };
   }
 
@@ -454,21 +447,27 @@ public final class Application extends JFrame {
   }
 
   private void repopulateSearchResults() {
-    ImmutableList<SearchResult> results = this.searchEngine.getSearchResults(this.currentState());
-    this.searchResultsListModel.updateResults(this.currentState(), results);
+    ImmutableList<SearchResult> results = searchEngine.getSearchResults(currentState());
+    searchResultsListModel.updateResults(currentState(), results);
 
-    if (needsExpansion(this.resultsPane) || needsExpansion(this.routePane)) {
+    if (needsExpansion(resultsPane) || needsExpansion(routePane)) {
       pack();
     }
     repaint();
   }
 
+  private JList<String> createRouteList() {
+    JList<String> routeList = new JList<>(routeListModel);
+    Arrays.stream(routeList.getKeyListeners()).forEach(routeList::removeKeyListener);
+    routeList.addKeyListener(routeListKeyListener());
+
+    return routeList;
+  }
+
   private void addToRoute(SearchResult result) {
-    this.searchResultsListModel.removeBookmark(this.routeListModel.currentState(),
-        result.itemCheck());
-    this.searchResultsListModel.unhideResult(this.routeListModel.currentState(),
-        result.itemCheck());
-    this.routeListModel.addToRoute(result);
+    searchResultsListModel.removeBookmark(routeListModel.currentState(), result.itemCheck());
+    searchResultsListModel.unhideResult(routeListModel.currentState(), result.itemCheck());
+    routeListModel.addToRoute(result);
 
     repopulateSearchResults();
   }
@@ -493,6 +492,11 @@ public final class Application extends JFrame {
         } else if (e.getKeyCode() == KeyEvent.VK_X) {
           routeListModel.removeCheck(routeList.getSelectedIndex());
           repopulateSearchResults();
+        } else if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN) {
+          int newIndex = routeList.getSelectedIndex() + (e.getKeyCode() == KeyEvent.VK_UP ? -1 : 1);
+          if (newIndex >= 0 && newIndex < routeListModel.getSize()) {
+            routeList.setSelectedIndex(newIndex);
+          }
         }
       }
 
