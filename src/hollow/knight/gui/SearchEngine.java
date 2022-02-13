@@ -2,127 +2,27 @@ package hollow.knight.gui;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.ImmutableList;
-import hollow.knight.logic.Costs;
-import hollow.knight.logic.Item;
 import hollow.knight.logic.ItemCheck;
-import hollow.knight.logic.Location;
 import hollow.knight.logic.RoomLabels;
 import hollow.knight.logic.State;
-import hollow.knight.logic.Term;
 
 public final class SearchEngine {
-  @AutoValue
-  public abstract static class Result {
-    public static enum LogicType {
-      IN_LOGIC, COST_ACCESSIBLE, OUT_OF_LOGIC;
-    }
-
-    public abstract ItemCheck itemCheck();
-
-    public final Item item() {
-      return itemCheck().item();
-    }
-
-    public final Costs costs() {
-      return itemCheck().costs();
-    }
-
-    public final Location location() {
-      return itemCheck().location();
-    }
-
-    public final boolean vanilla() {
-      return itemCheck().vanilla();
-    }
-
-    public abstract LogicType logicType();
-
-    public abstract Optional<Integer> notchCost();
-
-    public final String render() {
-      StringBuilder sb = new StringBuilder();
-      if (logicType() == LogicType.OUT_OF_LOGIC) {
-        sb.append('*');
-      } else if (logicType() == LogicType.COST_ACCESSIBLE) {
-        sb.append('$');
-      }
-      if (vanilla()) {
-        sb.append('#');
-      }
-
-      sb.append(item().term().name());
-      sb.append(' ');
-      sb.append(valueSuffix());
-      sb.append("- ");
-      sb.append(location().name());
-      sb.append(costSuffix());
-
-      return sb.toString();
-    }
-
-    private String valueSuffix() {
-      if (notchCost().isPresent()) {
-        return "(" + notchCost().get() + ") ";
-      } else if (item().hasEffectTerm(Term.geo())) {
-        return "(" + item().getEffectValue(Term.geo()) + " Geo) ";
-      } else if (item().hasEffectTerm(Term.essence())) {
-        return "(" + item().getEffectValue(Term.essence()) + " Essence) ";
-      } else {
-        return "";
-      }
-    }
-
-    private String costSuffix() {
-      return costs().suffixString();
-    }
-
-    private static LogicType getLogicType(ItemCheck itemCheck, State state) {
-      if (itemCheck.location().canAccess(state)) {
-        if (itemCheck.costs().canBePaid(state.get(Term.canReplenishGeo()) > 0,
-            state.termValues())) {
-          return LogicType.IN_LOGIC;
-        } else if (itemCheck.costs().canBePaid(state.get(Term.canReplenishGeo()) > 0,
-            state.accessibleTermValues())) {
-          return LogicType.COST_ACCESSIBLE;
-        }
-      }
-
-      return LogicType.OUT_OF_LOGIC;
-    }
-
-    public static Result create(ItemCheck itemCheck, State state) {
-      Optional<Integer> notchCost = Optional.empty();
-      if (itemCheck.item().isCharm(state.items())) {
-        notchCost = Optional.of(itemCheck.item().notchCost(state.items()));
-      }
-
-      return new AutoValue_SearchEngine_Result(itemCheck, getLogicType(itemCheck, state),
-          notchCost);
-    }
-  }
-
-  public static interface ResultFilter {
-    boolean accept(Result r);
-  }
-
   private final RoomLabels roomLabels;
-  private final List<ResultFilter> resultFilters;
+  private final List<SearchResult.Filter> resultFilters;
 
-  public SearchEngine(RoomLabels roomLabels, List<ResultFilter> resultFilters) {
+  public SearchEngine(RoomLabels roomLabels, List<SearchResult.Filter> resultFilters) {
     this.roomLabels = roomLabels;
     this.resultFilters = resultFilters;
   }
 
-  private boolean accept(Result r) {
-    return resultFilters.stream().allMatch(f -> f.accept(r));
+  private boolean accept(SearchResult result) {
+    return resultFilters.stream().allMatch(f -> f.accept(result));
   }
 
-  private int sortResults(Result r1, Result r2) {
+  private int sortResults(SearchResult r1, SearchResult r2) {
     return ComparisonChain.start()
         .compare(roomLabels.get(r1.location().scene(), RoomLabels.Type.MAP),
             roomLabels.get(r2.location().scene(), RoomLabels.Type.MAP))
@@ -130,11 +30,11 @@ public final class SearchEngine {
         .compare(r1.location().name(), r2.location().name()).result();
   }
 
-  public ImmutableList<Result> getSearchResults(State state) {
+  public ImmutableList<SearchResult> getSearchResults(State state) {
     // Step 1: Collect all results.
-    List<Result> results = new ArrayList<>();
+    List<SearchResult> results = new ArrayList<>();
     for (ItemCheck check : state.unobtainedItemChecks()) {
-      Result result = Result.create(check, state);
+      SearchResult result = SearchResult.create(check, state);
       results.add(result);
     }
 
