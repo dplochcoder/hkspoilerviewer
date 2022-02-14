@@ -51,7 +51,7 @@ There are four shops which constrain purchases based on collectibles the player 
 
 If the player is in a situation where they have direct access (in logic) to `X` collectibles, all purchases at shops which require `N` collectibles, where `N + TOLERANCE <= X`, will show as in 'Purchase Logic' with a dollar-sign ($) prefix. This indicates that the player may be expected by logic to purchase these items, even though those collectibles haven't been added to the route yet.
 
-Adding `N` or more such collectibles to your route will but these shop checks fully in logic, removing the '$' prefix.
+Adding `N` or more such collectibles to your route will put these shop checks fully in logic, removing the '$' prefix.
 
 # Search Results
 
