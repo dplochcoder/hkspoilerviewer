@@ -12,9 +12,9 @@ Search using arbitrary text, preset categories, area restrictions and/or logic r
 
 ## Text Search
 
-Search items by their name, location, or both. Scene names like `Ruins_05` are searchable as well (by location), though not displayed in the UI.All matches are case-insensitive and substring-ba
+Search items by their name, location, or both. Scene names like `Ruins_05` are searchable as well (by location), though not displayed in the UI.
 
-All matches are case-insensitive and match on *all* terms, so a search for "Des dark" will match items named 'Descending_Dark'.
+All matches are case-insensitive and match on *all* terms, so a search for "Des dark" will match items named 'Descending_Dark' but not 'Desolate_Dive'.
 
 ## Preset Filters
 
@@ -78,4 +78,4 @@ Your current route can be saved in two formats:
   - A `*.txt` file, for easy sharing/pasting, or
   - A `*.hks` file, which can be re-opened by HKSpoilerViewer later
   
-`\*.hks` files will save your current route, bookmarks, and hidden results, allowing you to share a route with other users of the HKSpoilerViewer, or simply checkpoint it for yourself in case you want to modify or continue the route later. `\*.hks` files are versioned and should be compatible with newer versions of HKSpoilerViewer, but this is not an absolute guarantee.  (Most likely, a 2.0 release will break compatibility with 1.0 save files.) 
+`*.hks` files will save your current route, bookmarks, and hidden results, allowing you to share a route with other users of the HKSpoilerViewer, or simply checkpoint it for yourself in case you want to modify or continue the route later. `*.hks` files are versioned and should be compatible with newer versions of HKSpoilerViewer, but this is not an absolute guarantee.  (Most likely, a 2.0 release will break compatibility with 1.0 save files.) 
