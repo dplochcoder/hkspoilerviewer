@@ -2,7 +2,7 @@ HKSpoilerViewer is a desktop application for searching and routing checks in [Ra
 
 # Installation
 
-Download the latest JAR file from Releases, and store it anywhere on your device. You must have [Java](https://www.java.com/en/) installed to run it.
+Download the latest JAR file from [Releases](https://github.com/dplochcoder/hkspoilerviewer/releases), and store it anywhere on your device. You must have [Java](https://www.java.com/en/) installed to run it.
 
 The first time you run it, it will ask you to locate the `RawSpoiler.json` file on your computer with a file-open dialog. After this, it will always open that file by default; if the program is silently crashing and failing to open the json file, you may have selected a bad input. Delete the automatically created `HKSpoilerViewer.cfg` file and try again if this happens.
 
@@ -49,9 +49,9 @@ There are four shops which constrain purchases based on collectibles the player 
   - Salubra (Charms)
   - Jiji (Rancid Eggs)
 
-If the player is in a situation where they have direct access (in logic) to X collectibles, all purchases at shops which require N collectibles, where N + TOLERANCE <= X, will show as in 'Purchase Logic' with a dollar-sign ($) prefix. This indicates that the player may be expected by logic to purchase these items, even though those collectibles haven't been added to the route yet.
+If the player is in a situation where they have direct access (in logic) to `X` collectibles, all purchases at shops which require `N` collectibles, where `N + TOLERANCE <= X`, will show as in 'Purchase Logic' with a dollar-sign ($) prefix. This indicates that the player may be expected by logic to purchase these items, even though those collectibles haven't been added to the route yet.
 
-Adding N or more such collectibles to your route will but these shop checks fully in logic, removing the '$' prefix.
+Adding `N` or more such collectibles to your route will but these shop checks fully in logic, removing the '$' prefix.
 
 # Search Results
 
@@ -75,7 +75,7 @@ Search results can be added directly to the end of the current route. Doing so a
 
 Your current route can be saved in two formats:
 
-  - A *.txt file, for easy sharing/pasting, or
-  - A *.hks file, which can be re-opened by HKSpoilerViewer later
+  - A `*.txt` file, for easy sharing/pasting, or
+  - A `*.hks` file, which can be re-opened by HKSpoilerViewer later
   
-\*.hks files will save your current route, bookmarks, and hidden results, allowing you to share a route with other users of the HKSpoilerViewer, or simply checkpoint it for yourself in case you want to modify or continue the route later. \*.hks files are versioned and should be compatible with newer versions of HKSpoilerViewer, but this is not an absolute guarantee.  (Most likely, a 2.0 release will break compatibility with 1.0 save files.) 
+`\*.hks` files will save your current route, bookmarks, and hidden results, allowing you to share a route with other users of the HKSpoilerViewer, or simply checkpoint it for yourself in case you want to modify or continue the route later. `\*.hks` files are versioned and should be compatible with newer versions of HKSpoilerViewer, but this is not an absolute guarantee.  (Most likely, a 2.0 release will break compatibility with 1.0 save files.) 
