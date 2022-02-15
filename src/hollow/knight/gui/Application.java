@@ -383,6 +383,7 @@ public final class Application extends JFrame {
 
       @Override
       public void keyPressed(KeyEvent e) {
+        e.consume();
         if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
           routeListModel.removeCheck(routeListModel.getSize() - 1);
           repopulateSearchResults();
