@@ -133,7 +133,7 @@ public final class RouteListModel implements ListModel<String>, SaveInterface {
       resultStrings.set(after, (after + 1) + ": " + route.get(after).render());
     }
 
-    ListDataEvent e = new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, before, after + 1);
+    ListDataEvent e = new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, before, getSize());
     for (ListDataListener listener : listenersCopy) {
       listener.contentsChanged(e);
     }
@@ -161,10 +161,12 @@ public final class RouteListModel implements ListModel<String>, SaveInterface {
       resultStrings.remove(resultStrings.size() - 1);
     }
 
-    ListDataEvent e = new ListDataEvent(this, ListDataEvent.INTERVAL_REMOVED, index, index + 1);
-    for (ListDataListener listener : listenersCopy) {
-      listener.contentsChanged(e);
-    }
+    ListDataEvent e1 = new ListDataEvent(this, ListDataEvent.INTERVAL_REMOVED, index, index + 1);
+    listenersCopy.forEach(l -> l.contentsChanged(e1));
+
+    ListDataEvent e2 =
+        new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, index + 1, getSize());
+    listenersCopy.forEach(l -> l.contentsChanged(e2));
   }
 
   @Override
