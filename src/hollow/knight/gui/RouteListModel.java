@@ -102,9 +102,7 @@ public final class RouteListModel implements ListModel<String>, SaveInterface {
     }
 
     ListDataEvent e = new ListDataEvent(this, ListDataEvent.INTERVAL_ADDED, newSize - 1, newSize);
-    for (ListDataListener listener : listenersCopy) {
-      listener.contentsChanged(e);
-    }
+    listenersCopy.forEach(l -> l.contentsChanged(e));
   }
 
   public void swap(int before, int after) {
@@ -134,9 +132,7 @@ public final class RouteListModel implements ListModel<String>, SaveInterface {
     }
 
     ListDataEvent e = new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, before, getSize());
-    for (ListDataListener listener : listenersCopy) {
-      listener.contentsChanged(e);
-    }
+    listenersCopy.forEach(l -> l.contentsChanged(e));
   }
 
   public void removeCheck(int index) {
