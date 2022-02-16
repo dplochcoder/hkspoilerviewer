@@ -21,11 +21,13 @@ import com.google.gson.JsonObject;
 import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.SaveInterface;
 import hollow.knight.logic.State;
+import hollow.knight.logic.StateContext;
 
 public final class RouteListModel implements ListModel<String>, SaveInterface {
 
   private final Object mutex = new Object();
 
+  private StateContext ctx;
   private State initialState;
   private State currentState;
   private final List<SearchResult> route = new ArrayList<>();
@@ -33,9 +35,10 @@ public final class RouteListModel implements ListModel<String>, SaveInterface {
 
   private final Set<ListDataListener> listeners = new HashSet<>();
 
-  public RouteListModel(State initialState) {
-    this.initialState = initialState.deepCopy();
-    this.currentState = initialState.deepCopy();
+  public RouteListModel(StateContext ctx) {
+    this.ctx = ctx;
+    this.initialState = ctx.newInitialState();
+    this.currentState = this.initialState.deepCopy();
   }
 
   public void saveAsTxt(Component parent) throws IOException {
@@ -63,6 +66,10 @@ public final class RouteListModel implements ListModel<String>, SaveInterface {
     }
 
     Files.write(f.toPath(), out.getBytes(StandardCharsets.UTF_8));
+  }
+
+  public StateContext ctx() {
+    return ctx;
   }
 
   public State currentState() {
@@ -182,14 +189,15 @@ public final class RouteListModel implements ListModel<String>, SaveInterface {
   }
 
   @Override
-  public void open(String version, State initialState, JsonElement json) {
-    this.initialState = initialState.deepCopy();
-    this.currentState = initialState.deepCopy();
+  public void open(String version, StateContext ctx, JsonElement json) {
+    this.ctx = ctx;
+    this.initialState = ctx.newInitialState();
+    this.currentState = this.initialState.deepCopy();
+
     this.route.clear();
     this.resultStrings.clear();
-
     for (JsonElement id : json.getAsJsonObject().get("Route").getAsJsonArray()) {
-      ItemCheck check = initialState.items().get(id.getAsInt());
+      ItemCheck check = ctx.items().get(id.getAsInt());
       addToRoute(SearchResult.create(check, currentState));
     }
   }

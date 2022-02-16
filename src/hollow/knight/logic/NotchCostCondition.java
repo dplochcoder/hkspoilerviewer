@@ -14,8 +14,8 @@ public final class NotchCostCondition extends Condition {
     this.charmIds = ImmutableList.copyOf(charmIds);
   }
 
-  private IntStream notchCosts(State state) {
-    return charmIds.stream().mapToInt(state.items()::notchCost);
+  private IntStream notchCosts(Items items) {
+    return charmIds.stream().mapToInt(items::notchCost);
   }
 
   @Override
@@ -24,7 +24,8 @@ public final class NotchCostCondition extends Condition {
       return true;
 
     int notches = state.get(Term.notches());
-    int cost = notchCosts(state).sum() - notchCosts(state).max().getAsInt();
+    Items items = state.ctx().items();
+    int cost = notchCosts(items).sum() - notchCosts(items).max().getAsInt();
 
     return notches > cost;
   }

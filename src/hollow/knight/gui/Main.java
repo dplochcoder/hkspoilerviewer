@@ -5,7 +5,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
-import hollow.knight.logic.State;
+import hollow.knight.logic.StateContext;
 import hollow.knight.util.JsonUtil;
 
 public final class Main {
@@ -52,10 +52,9 @@ public final class Main {
     Config cfg = loadConfig(args);
 
     Path rawSpoiler = findHkSpoiler(cfg);
-    State state = State.parse(JsonUtil.loadPath(rawSpoiler).getAsJsonObject());
-    state.normalize();
+    StateContext ctx = StateContext.parse(JsonUtil.loadPath(rawSpoiler).getAsJsonObject());
 
-    new Application(state);
+    new Application(ctx);
   }
 
   private Main() {}

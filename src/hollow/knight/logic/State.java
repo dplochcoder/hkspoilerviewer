@@ -5,59 +5,30 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 /** Mutable state of a run; can be deep-copied. */
 public class State {
-  private final JsonObject originalJson;
+  private final StateContext ctx;
 
   private final MutableTermMap termValues = new MutableTermMap();
   private final MutableTermMap costValuesWithTolerances = new MutableTermMap();
   private final Set<ItemCheck> acquiredItemChecks = new HashSet<>();
-  private final ImmutableTermMap tolerances;
 
   private final Set<Term> dirtyTerms = new HashSet<>();
 
-  private final RoomLabels roomLabels;
-  private final Waypoints waypoints;
-  private final Items items;
-
-  private static final ImmutableSet<Term> COST_TERMS = ImmutableSet.of(Term.create("GRUBS"),
-      Term.create("ESSENCE"), Term.create("RANCIDEGGS"), Term.create("CHARMS"));
-
-  private State(JsonObject originalJson, RoomLabels rooms, Waypoints waypoints, Items items,
-      TermMap tolerances) {
-    this.originalJson = originalJson;
-    this.roomLabels = rooms;
-    this.waypoints = waypoints;
-    this.items = items;
-    this.tolerances = ImmutableTermMap.copyOf(tolerances);
+  State(StateContext ctx) {
+    this.ctx = ctx;
 
     // TRUE is always set.
-    set(Term.true_(), 1);
-
-    // Automatically acquire all items at Start
-    items.allItemChecks().stream().filter(c -> c.location().scene().contentEquals("Start"))
-        .forEach(this::acquireItemCheck);
-    dirtyTerms.remove(Term.true_());
+    setClean(Term.true_(), 1);
   }
 
-  public JsonObject originalJson() {
-    return originalJson;
-  }
-
-  public RoomLabels roomLabels() {
-    return roomLabels;
-  }
-
-  public Items items() {
-    return items;
+  public StateContext ctx() {
+    return ctx;
   }
 
   public ImmutableSet<ItemCheck> unobtainedItemChecks() {
-    Set<ItemCheck> unobtained = new HashSet<>(items.allItemChecks());
+    Set<ItemCheck> unobtained = new HashSet<>(ctx.items().allItemChecks());
     unobtained.removeAll(acquiredItemChecks);
     return ImmutableSet.copyOf(unobtained);
   }
@@ -91,27 +62,23 @@ public class State {
     acquiredItemChecks.add(itemCheck);
   }
 
-  private static boolean canAffectCosts(ItemCheck c) {
-    return COST_TERMS.stream().anyMatch(t -> c.item().hasEffectTerm(t));
-  }
-
   // Iteratively apply logic to grant access to items / areas.
   public void normalize() {
     Set<Term> inLogicTerms = new HashSet<>();
-    dirtyTerms.forEach(t -> inLogicTerms.addAll(waypoints.influences(t)));
+    dirtyTerms.forEach(t -> inLogicTerms.addAll(ctx.waypoints().influences(t)));
     dirtyTerms.clear();
 
-    inLogicTerms.removeIf(t -> termValues.get(t) != 0 || !waypoints.get(t).test(this));
+    inLogicTerms.removeIf(t -> termValues.get(t) != 0 || !ctx.waypoints().get(t).test(this));
 
     // Loop: Evaluate all waypoints until there are no more advancements to be made.
     while (!inLogicTerms.isEmpty()) {
       Set<Term> newTerms = new HashSet<>();
       for (Term t : inLogicTerms) {
         set(t, 1);
-        newTerms.addAll(waypoints.influences(t));
+        newTerms.addAll(ctx.waypoints().influences(t));
       }
 
-      newTerms.removeIf(t -> termValues.get(t) != 0 || !waypoints.get(t).test(this));
+      newTerms.removeIf(t -> termValues.get(t) != 0 || !ctx.waypoints().get(t).test(this));
       inLogicTerms.clear();
       inLogicTerms.addAll(newTerms);
     }
@@ -120,7 +87,7 @@ public class State {
     // be acquired.
     State stateCopy = this.deepCopy();
     Set<ItemCheck> canAcquire = stateCopy.unobtainedItemChecks().stream()
-        .filter(State::canAffectCosts).filter(c -> c.location().canAccess(this))
+        .filter(StateContext::canAffectCosts).filter(c -> c.location().canAccess(this))
         .collect(Collectors.toCollection(HashSet::new));
     while (true) {
       int acquired = 0;
@@ -139,8 +106,8 @@ public class State {
 
     // For each cost term, determine the total we have logical access to, without acquiring anything
     // except more cost effects.
-    for (Term t : COST_TERMS) {
-      costValuesWithTolerances.set(t, this.tolerances.get(t) + stateCopy.get(t));
+    for (Term t : StateContext.costTerms()) {
+      costValuesWithTolerances.set(t, ctx.tolerances().get(t) + stateCopy.get(t));
     }
   }
 
@@ -153,7 +120,7 @@ public class State {
   }
 
   public State deepCopy() {
-    State copy = new State(originalJson, roomLabels, waypoints, items, tolerances);
+    State copy = new State(ctx);
     copy.termValues.clear();
     for (Term t : this.termValues.terms()) {
       copy.termValues.set(t, get(t));
@@ -164,34 +131,6 @@ public class State {
     copy.dirtyTerms.clear();
     copy.dirtyTerms.addAll(this.dirtyTerms);
     return copy;
-  }
-
-  public static State parse(JsonObject json) throws ParseException {
-    RoomLabels rooms = RoomLabels.load();
-
-    MutableTermMap setters = new MutableTermMap();
-    MutableTermMap tolerances = new MutableTermMap();
-
-    JsonArray jsonSetters =
-        json.get("InitialProgression").getAsJsonObject().get("Setters").getAsJsonArray();
-    for (JsonElement termValue : jsonSetters) {
-      JsonObject obj = termValue.getAsJsonObject();
-
-      Term term = Term.create(obj.get("Term").getAsString());
-      int value = obj.get("Value").getAsInt();
-      if (COST_TERMS.contains(term)) {
-        tolerances.set(term, value);
-      } else {
-        setters.set(term, value);
-      }
-    }
-
-    State state =
-        new State(json, rooms, Waypoints.parse(json), Items.parse(json, rooms), tolerances);
-    for (Term t : setters.terms()) {
-      state.set(t, setters.get(t));
-    }
-    return state;
   }
 
 }

@@ -13,6 +13,7 @@ import com.google.gson.JsonObject;
 import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.SaveInterface;
 import hollow.knight.logic.State;
+import hollow.knight.logic.StateContext;
 
 public final class SearchResultsListModel implements ListModel<String>, SaveInterface {
 
@@ -188,19 +189,19 @@ public final class SearchResultsListModel implements ListModel<String>, SaveInte
   }
 
   @Override
-  public void open(String version, State initialState, JsonElement json) {
+  public void open(String version, StateContext ctx, JsonElement json) {
     bookmarks.clear();
     bookmarksSet.clear();
     hiddenResultsSet.clear();
 
     JsonObject obj = json.getAsJsonObject();
     for (JsonElement bookmark : obj.get("Bookmarks").getAsJsonArray()) {
-      ItemCheck check = initialState.items().get(bookmark.getAsInt());
+      ItemCheck check = ctx.items().get(bookmark.getAsInt());
       bookmarks.add(check);
       bookmarksSet.add(check);
     }
     for (JsonElement hidden : obj.get("Hidden").getAsJsonArray()) {
-      hiddenResultsSet.add(initialState.items().get(hidden.getAsInt()));
+      hiddenResultsSet.add(ctx.items().get(hidden.getAsInt()));
     }
   }
 

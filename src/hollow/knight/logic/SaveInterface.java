@@ -7,5 +7,5 @@ public interface SaveInterface {
 
   JsonElement save();
 
-  void open(String version, State initialState, JsonElement json);
+  void open(String version, StateContext ctx, JsonElement json);
 }

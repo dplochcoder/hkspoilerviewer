@@ -17,11 +17,15 @@ import com.google.gson.JsonObject;
 public final class Items {
   private final CharmIds charmIds;
   private final ImmutableBiMap<Integer, ItemCheck> itemChecks;
+  private final ImmutableSet<ItemCheck> startItems;
   private final ImmutableList<Integer> notchCosts;
 
   private Items(CharmIds charmIds, BiMap<Integer, ItemCheck> itemChecks, List<Integer> notchCosts) {
     this.charmIds = charmIds;
     this.itemChecks = ImmutableBiMap.copyOf(itemChecks);
+    this.startItems =
+        itemChecks.values().stream().filter(c -> c.location().scene().contentEquals("Start"))
+            .collect(ImmutableSet.toImmutableSet());
     this.notchCosts = ImmutableList.copyOf(notchCosts);
   }
 
@@ -39,6 +43,10 @@ public final class Items {
 
   public ImmutableSet<ItemCheck> allItemChecks() {
     return itemChecks.values();
+  }
+
+  public ImmutableSet<ItemCheck> startItems() {
+    return startItems;
   }
 
   private static void parseItem(int id, JsonElement elem, String itemField, String locField,

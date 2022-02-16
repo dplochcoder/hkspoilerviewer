@@ -35,6 +35,7 @@ import com.google.gson.stream.JsonWriter;
 import hollow.knight.logic.ParseException;
 import hollow.knight.logic.SaveInterface;
 import hollow.knight.logic.State;
+import hollow.knight.logic.StateContext;
 import hollow.knight.util.JsonUtil;
 
 public final class Application extends JFrame {
@@ -52,10 +53,10 @@ public final class Application extends JFrame {
   private final JList<String> routeList;
   private final JScrollPane routePane;
 
-  public Application(State state) throws ParseException {
+  public Application(StateContext ctx) throws ParseException {
     this.filterChangedListener = () -> repopulateSearchResults();
     this.searchResultsListModel = new SearchResultsListModel();
-    this.routeListModel = new RouteListModel(state);
+    this.routeListModel = new RouteListModel(ctx);
     this.saveInterfaces = ImmutableList.of(searchResultsListModel, routeListModel);
 
     setTitle("HKSpoilerViewer");
@@ -68,7 +69,7 @@ public final class Application extends JFrame {
     left.setLayout(layout);
     List<SearchResult.Filter> resultFilters = addFilters(left);
 
-    this.searchEngine = new SearchEngine(state.roomLabels(), resultFilters);
+    this.searchEngine = new SearchEngine(ctx.roomLabels(), resultFilters);
     this.resultsList = createSearchResults();
     this.resultsPane = new JScrollPane(resultsList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
         JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -87,6 +88,14 @@ public final class Application extends JFrame {
     pack();
     repopulateSearchResults();
     setVisible(true);
+  }
+
+  private StateContext ctx() {
+    return routeListModel.ctx();
+  }
+
+  private State currentState() {
+    return routeListModel.currentState();
   }
 
   private static final ImmutableList<String> PL_INFO = ImmutableList.<String>builder().add(
@@ -222,9 +231,8 @@ public final class Application extends JFrame {
 
     JsonObject saveData = JsonUtil.loadPath(c.getSelectedFile().toPath()).getAsJsonObject();
     String version = saveData.get("Version").getAsString();
-    State newState = State.parse(saveData.get("RawSpoiler").getAsJsonObject());
-    newState.normalize();
-    saveInterfaces.forEach(i -> i.open(version, newState, saveData.get(i.saveName())));
+    StateContext newCtx = StateContext.parse(saveData.get("RawSpoiler").getAsJsonObject());
+    saveInterfaces.forEach(i -> i.open(version, newCtx, saveData.get(i.saveName())));
 
     repopulateSearchResults();
   }
@@ -239,7 +247,7 @@ public final class Application extends JFrame {
 
     JsonObject saveData = new JsonObject();
     saveData.add("Version", new JsonPrimitive(Main.VERSION));
-    saveData.add("RawSpoiler", currentState().originalJson());
+    saveData.add("RawSpoiler", currentState().ctx().originalJson());
     saveInterfaces.forEach(i -> saveData.add(i.saveName(), i.save()));
 
     String path = c.getSelectedFile().getAbsolutePath();
@@ -254,9 +262,8 @@ public final class Application extends JFrame {
 
   private List<SearchResult.Filter> addFilters(JPanel parent) throws ParseException {
     ImmutableList<SearchResult.Filter> resultFilters =
-        ImmutableList.of(new TextFilter(currentState().roomLabels()), ItemCategoryFilters.load(),
-            new RoomFilters(currentState().roomLabels()),
-            new ExclusionFilters(currentState().roomLabels()));
+        ImmutableList.of(new TextFilter(ctx().roomLabels()), ItemCategoryFilters.load(),
+            new RoomFilters(ctx().roomLabels()), new ExclusionFilters(ctx().roomLabels()));
 
     for (int i = 0; i < resultFilters.size(); i++) {
       if (i > 0) {
@@ -276,10 +283,6 @@ public final class Application extends JFrame {
     resultsList.addKeyListener(resultsListKeyListener());
 
     return resultsList;
-  }
-
-  private State currentState() {
-    return routeListModel.currentState();
   }
 
   private static final ImmutableMap<Integer, Integer> UP_DOWN_VALUES = ImmutableMap.of(
