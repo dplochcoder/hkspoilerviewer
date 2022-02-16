@@ -161,6 +161,8 @@ public class State {
     copy.acquiredItemChecks.addAll(this.acquiredItemChecks);
     copy.costValuesWithTolerances.clear();
     copy.costValuesWithTolerances.add(this.costValuesWithTolerances);
+    copy.dirtyTerms.clear();
+    copy.dirtyTerms.addAll(this.dirtyTerms);
     return copy;
   }
 
