@@ -18,6 +18,8 @@ public class State {
   private final Set<ItemCheck> acquiredItemChecks = new HashSet<>();
   private final ImmutableTermMap tolerances;
 
+  private final Set<Term> dirtyTerms = new HashSet<>();
+
   private final RoomLabels roomLabels;
   private final Waypoints waypoints;
   private final Items items;
@@ -39,6 +41,7 @@ public class State {
     // Automatically acquire all items at Start
     items.allItemChecks().stream().filter(c -> c.location().scene().contentEquals("Start"))
         .forEach(this::acquireItemCheck);
+    dirtyTerms.remove(Term.true_());
   }
 
   public JsonObject originalJson() {
@@ -64,6 +67,11 @@ public class State {
   }
 
   public void set(Term term, int value) {
+    dirtyTerms.add(term);
+    setClean(term, value);
+  }
+
+  private void setClean(Term term, int value) {
     termValues.set(term, value);
   }
 
@@ -89,23 +97,23 @@ public class State {
 
   // Iteratively apply logic to grant access to items / areas.
   public void normalize() {
-    Set<Term> potWaypoints = new HashSet<>(waypoints.allWaypoints());
-    potWaypoints.removeAll(termValues.terms());
+    Set<Term> inLogicTerms = new HashSet<>();
+    dirtyTerms.forEach(t -> inLogicTerms.addAll(waypoints.influences(t)));
+    dirtyTerms.clear();
+
+    inLogicTerms.removeIf(t -> termValues.get(t) != 0 || !waypoints.get(t).test(this));
 
     // Loop: Evaluate all waypoints until there are no more advancements to be made.
-    while (!potWaypoints.isEmpty()) {
-      Set<Term> influences = new HashSet<>();
-      for (Term t : potWaypoints) {
-        Condition c = waypoints.get(t);
-
-        if (c.test(this)) {
-          set(t, 1);
-          influences.addAll(waypoints.influences(t));
-        }
+    while (!inLogicTerms.isEmpty()) {
+      Set<Term> newTerms = new HashSet<>();
+      for (Term t : inLogicTerms) {
+        set(t, 1);
+        newTerms.addAll(waypoints.influences(t));
       }
 
-      influences.removeAll(termValues.terms());
-      potWaypoints = influences;
+      newTerms.removeIf(t -> termValues.get(t) != 0 || !waypoints.get(t).test(this));
+      inLogicTerms.clear();
+      inLogicTerms.addAll(newTerms);
     }
 
     // Acquire all in-logic items that yield an effect on a cost term, until no more such items can
@@ -183,4 +191,5 @@ public class State {
     }
     return state;
   }
+
 }
