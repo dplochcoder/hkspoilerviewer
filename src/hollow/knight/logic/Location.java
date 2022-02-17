@@ -3,6 +3,7 @@ package hollow.knight.logic;
 import java.util.HashSet;
 import java.util.Set;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
 public final class Location {
@@ -47,6 +48,10 @@ public final class Location {
 
   public boolean canAccess(State state) {
     return access.test(state);
+  }
+
+  public ImmutableSet<Term> terms() {
+    return access.terms();
   }
 
   public String scene() {

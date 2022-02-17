@@ -2,7 +2,6 @@ package hollow.knight.logic;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
@@ -11,10 +10,15 @@ public class State {
   private final StateContext ctx;
 
   private final MutableTermMap termValues = new MutableTermMap();
-  private final MutableTermMap costValuesWithTolerances = new MutableTermMap();
   private final Set<ItemCheck> acquiredItemChecks = new HashSet<>();
 
   private final Set<Term> dirtyTerms = new HashSet<>();
+
+  // A parallel State which acquires every accessible item, for computing purchase logic.
+  private State potentialState = null;
+  private MutableTermMap normalizedCosts = new MutableTermMap();
+  private final Set<ItemCheck> purchasableItemChecks = new HashSet<>();
+
 
   State(StateContext ctx) {
     this.ctx = ctx;
@@ -58,6 +62,11 @@ public class State {
       return;
     }
 
+    if (potentialState != null) {
+      potentialState.acquireItemCheck(itemCheck);
+      purchasableItemChecks.remove(itemCheck);
+    }
+
     itemCheck.item().apply(this);
     acquiredItemChecks.add(itemCheck);
   }
@@ -65,7 +74,9 @@ public class State {
   // Iteratively apply logic to grant access to items / areas.
   public void normalize() {
     Set<Term> inLogicTerms = new HashSet<>();
+    Set<ItemCheck> newChecks = new HashSet<>();
     dirtyTerms.forEach(t -> inLogicTerms.addAll(ctx.waypoints().influences(t)));
+    dirtyTerms.forEach(t -> newChecks.addAll(ctx.items().influences(t)));
     dirtyTerms.clear();
 
     inLogicTerms.removeIf(t -> termValues.get(t) != 0 || !ctx.waypoints().get(t).test(this));
@@ -76,6 +87,7 @@ public class State {
       for (Term t : inLogicTerms) {
         set(t, 1);
         newTerms.addAll(ctx.waypoints().influences(t));
+        newChecks.addAll(ctx.items().influences(t));
       }
 
       newTerms.removeIf(t -> termValues.get(t) != 0 || !ctx.waypoints().get(t).test(this));
@@ -83,31 +95,35 @@ public class State {
       inLogicTerms.addAll(newTerms);
     }
 
-    // Acquire all in-logic items that yield an effect on a cost term, until no more such items can
-    // be acquired.
-    State stateCopy = this.deepCopy();
-    Set<ItemCheck> canAcquire = stateCopy.unobtainedItemChecks().stream()
-        .filter(StateContext::canAffectCosts).filter(c -> c.location().canAccess(this))
-        .collect(Collectors.toCollection(HashSet::new));
-    while (true) {
-      int acquired = 0;
-      for (ItemCheck c : new HashSet<>(canAcquire)) {
-        if (c.costs().canBePaid(this.get(Term.canReplenishGeo()) > 0, stateCopy.termValues)) {
-          stateCopy.acquireItemCheck(c);
-          canAcquire.remove(c);
-          acquired++;
-        }
-      }
-
-      if (acquired == 0) {
-        break;
-      }
+    if (potentialState == null) {
+      potentialState = this.deepCopy();
     }
 
-    // For each cost term, determine the total we have logical access to, without acquiring anything
-    // except more cost effects.
-    for (Term t : StateContext.costTerms()) {
-      costValuesWithTolerances.set(t, ctx.tolerances().get(t) + stateCopy.get(t));
+    boolean canReplenishGeo = get(Term.canReplenishGeo()) > 0;
+    newChecks.removeIf(c -> potentialState.acquiredItemChecks.contains(c)
+        || purchasableItemChecks.contains(c) || !c.location().canAccess(this));
+    while (!newChecks.isEmpty()) {
+      for (ItemCheck check : newChecks) {
+        if (check.costs().canBePaid(canReplenishGeo, potentialState.termValues)) {
+          potentialState.acquireItemCheck(check);
+        } else {
+          purchasableItemChecks.add(check);
+        }
+      }
+      newChecks.clear();
+
+      for (Term cost : Term.costTerms()) {
+        int prev = normalizedCosts.get(cost);
+        int next = potentialState.get(cost);
+
+        if (next > prev) {
+          ctx.items().costChecks(cost, prev, next).forEach(c -> {
+            newChecks.add(c);
+            purchasableItemChecks.remove(c);
+          });
+          normalizedCosts.set(cost, next);
+        }
+      }
     }
   }
 
@@ -116,20 +132,20 @@ public class State {
   }
 
   public TermMap accessibleTermValues() {
-    return this.costValuesWithTolerances;
+    return this.potentialState.termValues();
   }
 
   public State deepCopy() {
     State copy = new State(ctx);
     copy.termValues.clear();
-    for (Term t : this.termValues.terms()) {
-      copy.termValues.set(t, get(t));
-    }
+    this.termValues.terms().forEach(t -> copy.termValues.set(t, get(t)));
     copy.acquiredItemChecks.addAll(this.acquiredItemChecks);
-    copy.costValuesWithTolerances.clear();
-    copy.costValuesWithTolerances.add(this.costValuesWithTolerances);
     copy.dirtyTerms.clear();
     copy.dirtyTerms.addAll(this.dirtyTerms);
+    if (potentialState != null) {
+      copy.potentialState = this.potentialState.deepCopy();
+      copy.purchasableItemChecks.addAll(this.purchasableItemChecks);
+    }
     return copy;
   }
 

@@ -31,6 +31,10 @@ public final class Cost {
     return term;
   }
 
+  public boolean hasCostTerm(Term term) {
+    return type == Type.TERM && this.term.equals(term);
+  }
+
   public boolean canBePaid(boolean canPayGeo, TermMap values) {
     if (type == Type.GEO) {
       return canPayGeo;

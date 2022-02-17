@@ -4,12 +4,18 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSetMultimap;
+import com.google.common.collect.MoreCollectors;
+import com.google.common.collect.TreeMultimap;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -20,6 +26,42 @@ public final class Items {
   private final ImmutableSet<ItemCheck> startItems;
   private final ImmutableList<Integer> notchCosts;
 
+  private final ImmutableSetMultimap<Term, ItemCheck> locationInfluences;
+
+  // TreeMultimap has no immutable version, so we never allow it to be modified after construction.
+  private final ImmutableMap<Term, TreeMultimap<Integer, ItemCheck>> shopChecks;
+
+  private static ImmutableSetMultimap<Term, ItemCheck> buildLocationInfluences(
+      Iterable<ItemCheck> checks) {
+    ImmutableSetMultimap.Builder<Term, ItemCheck> builder = ImmutableSetMultimap.builder();
+
+    for (ItemCheck itemCheck : checks) {
+      itemCheck.location().terms().forEach(t -> builder.put(t, itemCheck));
+    }
+
+    return builder.build();
+  }
+
+  private static ImmutableMap<Term, TreeMultimap<Integer, ItemCheck>> buildShopChecks(
+      Iterable<ItemCheck> checks) {
+    Map<Term, TreeMultimap<Integer, ItemCheck>> map = new HashMap<>();
+
+    for (ItemCheck itemCheck : checks) {
+      Optional<Term> costTerm = Term.costTerms().stream().filter(itemCheck.costs()::hasCostTerm)
+          .collect(MoreCollectors.toOptional());
+      if (!costTerm.isPresent()) {
+        continue;
+      }
+
+      Term term = costTerm.get();
+      TreeMultimap<Integer, ItemCheck> tree =
+          map.computeIfAbsent(term, t -> TreeMultimap.<Integer, ItemCheck>create());
+      tree.put(itemCheck.costs().getCostTerm(term), itemCheck);
+    }
+
+    return ImmutableMap.copyOf(map);
+  }
+
   private Items(CharmIds charmIds, BiMap<Integer, ItemCheck> itemChecks, List<Integer> notchCosts) {
     this.charmIds = charmIds;
     this.itemChecks = ImmutableBiMap.copyOf(itemChecks);
@@ -27,6 +69,8 @@ public final class Items {
         itemChecks.values().stream().filter(c -> c.location().scene().contentEquals("Start"))
             .collect(ImmutableSet.toImmutableSet());
     this.notchCosts = ImmutableList.copyOf(notchCosts);
+    this.locationInfluences = buildLocationInfluences(itemChecks.values());
+    this.shopChecks = buildShopChecks(itemChecks.values());
   }
 
   public ItemCheck get(int id) {
@@ -47,6 +91,20 @@ public final class Items {
 
   public ImmutableSet<ItemCheck> startItems() {
     return startItems;
+  }
+
+  public ImmutableSet<ItemCheck> influences(Term term) {
+    return locationInfluences.get(term);
+  }
+
+  public Stream<ItemCheck> costChecks(Term cost, int lowExclusive, int highInclusive) {
+    TreeMultimap<Integer, ItemCheck> tree = shopChecks.get(cost);
+    if (tree == null) {
+      return Stream.empty();
+    }
+
+    return tree.asMap().subMap(lowExclusive + 1, highInclusive + 1).values().stream()
+        .flatMap(c -> c.stream());
   }
 
   private static void parseItem(int id, JsonElement elem, String itemField, String locField,

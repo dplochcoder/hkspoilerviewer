@@ -1,6 +1,5 @@
 package hollow.knight.logic;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -59,18 +58,6 @@ public final class StateContext {
     return state;
   }
 
-  // TODO: Refactor this to be more efficient.
-  private static final ImmutableSet<Term> COST_TERMS = ImmutableSet.of(Term.create("GRUBS"),
-      Term.create("ESSENCE"), Term.create("RANCIDEGGS"), Term.create("CHARMS"));
-
-  public static ImmutableSet<Term> costTerms() {
-    return COST_TERMS;
-  }
-
-  public static boolean canAffectCosts(ItemCheck c) {
-    return COST_TERMS.stream().anyMatch(t -> c.item().hasEffectTerm(t));
-  }
-
   public static StateContext parse(JsonObject json) throws ParseException {
     RoomLabels rooms = RoomLabels.load();
 
@@ -84,7 +71,7 @@ public final class StateContext {
 
       Term term = Term.create(obj.get("Term").getAsString());
       int value = obj.get("Value").getAsInt();
-      if (COST_TERMS.contains(term)) {
+      if (Term.costTerms().contains(term)) {
         tolerances.set(term, value);
       } else {
         setters.set(term, value);

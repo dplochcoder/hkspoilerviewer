@@ -1,6 +1,6 @@
 package hollow.knight.logic;
 
-public final class ItemCheck {
+public final class ItemCheck implements Comparable<ItemCheck> {
   private final int id;
   private final Location location;
   private final Item item;
@@ -13,6 +13,11 @@ public final class ItemCheck {
     this.item = item;
     this.costs = costs;
     this.vanilla = vanilla;
+  }
+
+  @Override
+  public int compareTo(ItemCheck that) {
+    return Integer.compare(this.id, that.id);
   }
 
   public int id() {

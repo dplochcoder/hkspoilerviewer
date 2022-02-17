@@ -1,6 +1,7 @@
 package hollow.knight.logic;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * A Term is a name with an integer value associated. It may be binary (such as acquiring an item,
@@ -10,33 +11,49 @@ import com.google.auto.value.AutoValue;
 @AutoValue
 public abstract class Term {
   public abstract String name();
-  
+
   public static Term create(String name) {
     return new AutoValue_Term(name);
   }
-  
+
   private static final Term TRUE = Term.create("TRUE");
+
   public static Term true_() {
     return TRUE;
   }
-  
+
   private static final Term GEO = Term.create("GEO");
+
   public static Term geo() {
     return GEO;
   }
-  
+
   private static final Term ESSENCE = Term.create("ESSENCE");
+
   public static Term essence() {
     return ESSENCE;
   }
-  
+
   private static final Term NOTCHES = Term.create("NOTCHES");
+
   public static Term notches() {
     return NOTCHES;
   }
-  
+
   private static final Term CAN_REPLENISH_GEO = Term.create("Can_Replenish_Geo");
+
   public static Term canReplenishGeo() {
     return CAN_REPLENISH_GEO;
+  }
+
+  private static final Term GRUBS = Term.create("GRUBS");
+  private static final Term RANCID_EGGS = Term.create("RANCIDEGGS");
+  private static final Term CHARMS = Term.create("CHARMS");
+
+  private static final ImmutableSet<Term> COST_TERMS =
+      ImmutableSet.of(GRUBS, ESSENCE, RANCID_EGGS, CHARMS);
+
+  public static ImmutableSet<Term> costTerms() {
+    return COST_TERMS;
   }
 }
