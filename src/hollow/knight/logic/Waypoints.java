@@ -69,20 +69,20 @@ public final class Waypoints {
       for (JsonElement item : vanilla) {
         JsonObject obj = item.getAsJsonObject();
         String type = obj.get("Item").getAsJsonObject().get("$type").getAsString();
-        if (!type.contains("RandomizerMod.RC.RandoModTransition")) {
+        if (!type.contains("RandomizerCore.Logic.LogicTransition")) {
           continue;
         }
 
-        JsonObject targetObj = obj.get("Item").getAsJsonObject().get("lt").getAsJsonObject();
+        JsonObject targetObj = obj.get("Item").getAsJsonObject();
         Term targetTerm = Term.create(targetObj.get("term").getAsString());
         Condition targetLogic = ConditionParser
-            .parse(targetObj.get("logic").getAsJsonObject().get("logic").getAsString());
+            .parse(targetObj.get("logic").getAsJsonObject().get("Logic").getAsString());
         waypoints.put(targetTerm, targetLogic);
 
-        JsonObject sourceObj = obj.get("Location").getAsJsonObject().get("lt").getAsJsonObject();
+        JsonObject sourceObj = obj.get("Location").getAsJsonObject();
         Term sourceTerm = Term.create(sourceObj.get("term").getAsString());
         Condition sourceLogic = ConditionParser
-            .parse(sourceObj.get("logic").getAsJsonObject().get("logic").getAsString());
+            .parse(sourceObj.get("logic").getAsJsonObject().get("Logic").getAsString());
         waypoints.put(sourceTerm, sourceLogic);
 
         transitions.put(sourceTerm, targetTerm);

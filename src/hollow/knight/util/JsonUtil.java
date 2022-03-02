@@ -13,13 +13,14 @@ import hollow.knight.logic.ParseException;
 
 public final class JsonUtil {
   public static JsonElement loadResource(Class<?> clazz, String fname) throws ParseException {
-    try (InputStream is = clazz.getResourceAsStream(fname); InputStreamReader isr = new InputStreamReader(is)) {
+    try (InputStream is = clazz.getResourceAsStream(fname);
+        InputStreamReader isr = new InputStreamReader(is)) {
       return JsonParser.parseReader(isr);
     } catch (IOException ex) {
       throw new ParseException("Failed to load " + fname + ": " + ex.getMessage());
     }
   }
-  
+
   public static JsonElement loadPath(Path path) throws ParseException {
     try {
       List<String> lines = Files.readAllLines(path);
@@ -29,6 +30,6 @@ public final class JsonUtil {
       throw new ParseException("Failed to load " + path + ": " + ex.getMessage());
     }
   }
-  
+
   private JsonUtil() {}
 }

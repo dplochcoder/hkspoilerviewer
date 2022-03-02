@@ -107,24 +107,33 @@ public final class Items {
         .flatMap(c -> c.stream());
   }
 
-  private static void parseItem(int id, JsonElement elem, String itemField, String locField,
-      RoomLabels rooms, Map<Term, Item> itemsByName, boolean vanilla, Map<Integer, ItemCheck> items)
+  private static void parseItem(int id, JsonElement elem, RoomLabels rooms,
+      Map<Term, Item> itemsByName, boolean vanilla, Map<Integer, ItemCheck> items)
       throws ParseException {
-    JsonObject itemObj = elem.getAsJsonObject().get(itemField).getAsJsonObject();
+    JsonObject itemObj = elem.getAsJsonObject().get("Item").getAsJsonObject();
+    if (itemObj.has("item")) {
+      itemObj = itemObj.get("item").getAsJsonObject();
+    }
 
     Set<String> types = Arrays.stream(itemObj.get("$type").getAsString().split(", "))
         .collect(ImmutableSet.toImmutableSet());
-    if (!types.contains("RandomizerMod.RC.RandoModItem")
-        && !types.contains("RandomizerMod.RC.PlaceholderItem")) {
+    if (!types.contains("RandomizerCore.LogicItems.BranchedItem")
+        && !types.contains("RandomizerCore.LogicItems.CappedItem")
+        && !types.contains("RandomizerCore.LogicItems.MultiItem")
+        && !types.contains("RandomizerCore.LogicItems.SingleItem")) {
       return;
     }
 
     Term itemName = Term.create(itemObj.get("Name").getAsString());
 
-    JsonObject locObj = elem.getAsJsonObject().get(locField).getAsJsonObject();
-    JsonObject logicObj = locObj.get("logic").getAsJsonObject();
-    String locName = logicObj.get("name").getAsString();
-    Condition locAccess = ConditionParser.parse(logicObj.get("logic").getAsString());
+    JsonObject locObj = elem.getAsJsonObject().get("Location").getAsJsonObject();
+    JsonObject logicObj = locObj;
+    if (logicObj.has("logic")) {
+      logicObj = logicObj.get("logic").getAsJsonObject();
+    }
+
+    String locName = logicObj.get("Name").getAsString();
+    Condition locAccess = ConditionParser.parse(logicObj.get("Logic").getAsString());
 
     Item item = itemsByName.get(itemName);
     if (item == null) {
@@ -133,7 +142,7 @@ public final class Items {
 
     Costs costs = Costs.none();
     JsonElement costsObj = locObj.get("costs");
-    if (!costsObj.isJsonNull()) {
+    if (costsObj != null && !costsObj.isJsonNull()) {
       costs = Costs.parse(costsObj.getAsJsonArray());
     }
 
@@ -156,10 +165,18 @@ public final class Items {
     JsonArray vanillaPlacements = json.get("Vanilla").getAsJsonArray();
     int id = 1;
     for (JsonElement elem : itemPlacements) {
-      parseItem(id++, elem, "item", "location", rooms, itemsByName, false, items);
+      try {
+        parseItem(id++, elem, rooms, itemsByName, false, items);
+      } catch (Exception ex) {
+        throw new ParseException(ex.getMessage() + ": " + elem, ex);
+      }
     }
     for (JsonElement elem : vanillaPlacements) {
-      parseItem(id++, elem, "Item", "Location", rooms, itemsByName, true, items);
+      try {
+        parseItem(id++, elem, rooms, itemsByName, true, items);
+      } catch (Exception ex) {
+        throw new ParseException(ex.getMessage() + ": " + elem, ex);
+      }
     }
 
     // Parse notch costs.

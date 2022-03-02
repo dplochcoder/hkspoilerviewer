@@ -77,7 +77,7 @@ public final class Item {
     MutableTermMap falseEffects = new MutableTermMap();
     MutableTermMap caps = new MutableTermMap();
     if (item.get("Logic") != null) {
-      logic = ConditionParser.parse(item.get("Logic").getAsJsonObject().get("logic").getAsString());
+      logic = ConditionParser.parse(item.get("Logic").getAsJsonObject().get("Logic").getAsString());
       parseEffects(item.get("TrueItem").getAsJsonObject(), trueEffects);
       parseEffects(item.get("FalseItem").getAsJsonObject(), falseEffects);
     } else {

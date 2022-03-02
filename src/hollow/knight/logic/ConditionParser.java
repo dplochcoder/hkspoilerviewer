@@ -27,11 +27,11 @@ public final class ConditionParser {
       return type;
     }
   }
-  
+
   private interface ConditionAtom extends Atom {
     Condition condition();
   }
-  
+
   private static final class LogicConditionAtom implements ConditionAtom {
     private final Condition condition;
 
@@ -65,7 +65,7 @@ public final class ConditionParser {
     public Term term() {
       return condition.term();
     }
-    
+
     @Override
     public Condition condition() {
       return condition;
@@ -88,7 +88,7 @@ public final class ConditionParser {
       return value;
     }
   }
-  
+
   private static final ImmutableList<Atom.Type> OPERATION_ORDER = ImmutableList
       .of(Atom.Type.GREATER_THAN, Atom.Type.CONJUNCTION_OPERATOR, Atom.Type.DISJUNCTION_OPERATOR);
 
@@ -110,19 +110,19 @@ public final class ConditionParser {
   private static Condition parse(List<Atom> atoms) throws ParseException {
     // Handle parenthesis
     atoms = parseParenthesis(atoms);
-    
+
     // Handle binary operations
     for (Atom.Type op : OPERATION_ORDER) {
       atoms = parseBinaryOp(op, atoms);
     }
-    
+
     if (atoms.size() != 1 || !(atoms.get(0) instanceof ConditionAtom)) {
       throw new ParseException("Incomplete expression");
     }
-    
+
     return ((ConditionAtom) atoms.get(0)).condition();
   }
-  
+
   private static List<Atom> parseParenthesis(List<Atom> atoms) throws ParseException {
     int stack = 0;
     List<Atom> newList = new ArrayList<>();
@@ -159,10 +159,10 @@ public final class ConditionParser {
     if (stack > 0 || !subList.isEmpty()) {
       throw new ParseException("Unmatched Left Paren");
     }
-    
+
     return newList;
   }
-  
+
   private static List<Atom> parseBinaryOp(Atom.Type op, List<Atom> atoms) throws ParseException {
     List<Atom> newAtoms = new ArrayList<>();
     for (int i = 0; i < atoms.size(); i++) {
@@ -181,35 +181,38 @@ public final class ConditionParser {
       newAtoms.set(newAtoms.size() - 1, new LogicConditionAtom(opCond));
       i++;
     }
-    
+
     return newAtoms;
   }
-  
+
   private static final String NOTCH_COST_PREFIX = "$NotchCost[";
   private static final String NOTCH_COST_SUFFIX = "]";
-  
+
   private static ImmutableList<Integer> parseCharmIds(String notchCost) {
     Verify.verify(notchCost.startsWith(NOTCH_COST_PREFIX), notchCost);
     Verify.verify(notchCost.endsWith(NOTCH_COST_SUFFIX), notchCost);
-    
+
     ImmutableList.Builder<Integer> builder = ImmutableList.builder();
-    for (String str : notchCost.substring(NOTCH_COST_PREFIX.length(), notchCost.length() - NOTCH_COST_SUFFIX.length()).split(",")) {
+    for (String str : notchCost
+        .substring(NOTCH_COST_PREFIX.length(), notchCost.length() - NOTCH_COST_SUFFIX.length())
+        .split(",")) {
       builder.add(Integer.parseInt(str));
     }
     return builder.build();
   }
-  
-  private static Condition parseBinaryOp(Atom.Type op, Atom left, Atom right) throws ParseException {
+
+  private static Condition parseBinaryOp(Atom.Type op, Atom left, Atom right)
+      throws ParseException {
     switch (op) {
       case CONJUNCTION_OPERATOR:
       case DISJUNCTION_OPERATOR: {
         if (!(left instanceof ConditionAtom) || !(right instanceof ConditionAtom)) {
           throw new ParseException("Unsupported logic operator");
         }
-        
+
         Condition lCond = ((ConditionAtom) left).condition();
         Condition rCond = ((ConditionAtom) right).condition();
-        
+
         if (op == Atom.Type.CONJUNCTION_OPERATOR) {
           return new Conjunction(lCond, rCond);
         } else {
@@ -220,8 +223,9 @@ public final class ConditionParser {
         if (left.type() == Atom.Type.TERM && right.type() == Atom.Type.TERM) {
           TermAtom lTerm = (TermAtom) left;
           TermAtom rTerm = (TermAtom) right;
-          
-          if (lTerm.term().name().contentEquals("NOTCHES") && rTerm.term().name().startsWith(NOTCH_COST_PREFIX)) {
+
+          if (lTerm.term().name().contentEquals("NOTCHES")
+              && rTerm.term().name().startsWith(NOTCH_COST_PREFIX)) {
             // Parse notch cost.
             return new NotchCostCondition(parseCharmIds(rTerm.term().name()));
           }
@@ -239,9 +243,12 @@ public final class ConditionParser {
   private StringBuilder currentAtom = new StringBuilder();
   private final List<Atom> atoms = new ArrayList<>();
 
-  private List<Atom> parseAtoms(String text) {
+  private List<Atom> parseAtoms(String text) throws ParseException {
+    // Spaces are allowed inside term name brackets.
+    boolean bracket = false;
+
     for (char ch : text.toCharArray()) {
-      if (ch == ' ') {
+      if (ch == ' ' && !bracket) {
         closeAtom();
       } else if (ch == '|') {
         closeAtom(OR);
@@ -255,6 +262,17 @@ public final class ConditionParser {
         closeAtom(GT);
       } else {
         currentAtom.append(ch);
+        if (ch == '[') {
+          if (bracket) {
+            throw new ParseException("Nested brackets?");
+          }
+          bracket = true;
+        } else if (ch == ']') {
+          if (!bracket) {
+            throw new ParseException("Unmatched right bracket");
+          }
+          bracket = false;
+        }
       }
     }
     closeAtom();
