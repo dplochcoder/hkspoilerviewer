@@ -9,7 +9,7 @@ import com.google.common.primitives.Ints;
 public final class ConditionParser {
   private interface Atom {
     public enum Type {
-      CONDITION, TERM, DISJUNCTION_OPERATOR, CONJUNCTION_OPERATOR, LEFT_PAREN, RIGHT_PAREN, GREATER_THAN, NUMERIC_LITERAL,
+      CONDITION, TERM, DISJUNCTION_OPERATOR, CONJUNCTION_OPERATOR, LEFT_PAREN, RIGHT_PAREN, GREATER_THAN, EQUAL_TO, NUMERIC_LITERAL,
     };
 
     Type type();
@@ -89,14 +89,16 @@ public final class ConditionParser {
     }
   }
 
-  private static final ImmutableList<Atom.Type> OPERATION_ORDER = ImmutableList
-      .of(Atom.Type.GREATER_THAN, Atom.Type.CONJUNCTION_OPERATOR, Atom.Type.DISJUNCTION_OPERATOR);
+  private static final ImmutableList<Atom.Type> OPERATION_ORDER =
+      ImmutableList.of(Atom.Type.GREATER_THAN, Atom.Type.EQUAL_TO, Atom.Type.CONJUNCTION_OPERATOR,
+          Atom.Type.DISJUNCTION_OPERATOR);
 
   private static final Atom OR = new SingletonType(Atom.Type.DISJUNCTION_OPERATOR);
   private static final Atom AND = new SingletonType(Atom.Type.CONJUNCTION_OPERATOR);
   private static final Atom LPAREN = new SingletonType(Atom.Type.LEFT_PAREN);
   private static final Atom RPAREN = new SingletonType(Atom.Type.RIGHT_PAREN);
   private static final Atom GT = new SingletonType(Atom.Type.GREATER_THAN);
+  private static final Atom EQ = new SingletonType(Atom.Type.EQUAL_TO);
 
   public static Condition parse(String text) throws ParseException {
     ConditionParser parser = new ConditionParser();
@@ -219,8 +221,10 @@ public final class ConditionParser {
           return new Disjunction(lCond, rCond);
         }
       }
-      case GREATER_THAN: {
-        if (left.type() == Atom.Type.TERM && right.type() == Atom.Type.TERM) {
+      case GREATER_THAN:
+      case EQUAL_TO: {
+        if (op == Atom.Type.GREATER_THAN && left.type() == Atom.Type.TERM
+            && right.type() == Atom.Type.TERM) {
           TermAtom lTerm = (TermAtom) left;
           TermAtom rTerm = (TermAtom) right;
 
@@ -231,9 +235,16 @@ public final class ConditionParser {
           }
         }
         if (left.type() != Atom.Type.TERM || right.type() != Atom.Type.NUMERIC_LITERAL) {
-          throw new ParseException("Unsupported '>' operator");
+          throw new ParseException("Unsupported operator");
         }
-        return new TermCondition(((TermAtom) left).term(), ((NumericAtom) right).value());
+
+        Term term = ((TermAtom) left).term();
+        int value = ((NumericAtom) right).value();
+        if (op == Atom.Type.GREATER_THAN) {
+          return new TermCondition(term, value);
+        } else {
+          return new TermEqualCondition(term, value);
+        }
       }
       default:
         throw new ParseException("Internal error: not a binary op");
@@ -260,6 +271,8 @@ public final class ConditionParser {
         closeAtom(RPAREN);
       } else if (ch == '>') {
         closeAtom(GT);
+      } else if (ch == '=') {
+        closeAtom(EQ);
       } else {
         currentAtom.append(ch);
         if (ch == '[') {
