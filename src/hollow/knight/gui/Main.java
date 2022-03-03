@@ -1,9 +1,12 @@
 package hollow.knight.gui;
 
 import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import hollow.knight.logic.StateContext;
 import hollow.knight.util.JsonUtil;
@@ -38,7 +41,7 @@ public final class Main {
       }
     });
     if (j.showOpenDialog(null) != JFileChooser.APPROVE_OPTION) {
-      throw new Exception("Must choose RawSpoiler.json");
+      return null;
     }
 
     Path p = Paths.get(j.getSelectedFile().getAbsolutePath());
@@ -51,8 +54,27 @@ public final class Main {
   public static void main(String[] args) throws Exception {
     Config cfg = loadConfig(args);
 
-    Path rawSpoiler = findHkSpoiler(cfg);
-    StateContext ctx = StateContext.parse(JsonUtil.loadPath(rawSpoiler).getAsJsonObject());
+    StateContext ctx;
+    while (true) {
+      try {
+        Path rawSpoiler = findHkSpoiler(cfg);
+        if (rawSpoiler == null) {
+          return;
+        }
+
+        ctx = StateContext.parse(JsonUtil.loadPath(rawSpoiler).getAsJsonObject());
+        break;
+      } catch (Exception ex) {
+        try (StringWriter sw = new StringWriter(); PrintWriter pw = new PrintWriter(sw)) {
+          ex.printStackTrace(pw);
+          JOptionPane.showMessageDialog(null,
+              "Error opening RawSpoiler.json: " + ex.getMessage() + ";\n" + sw.toString());
+        }
+
+        cfg.set("RAW_SPOILER", "");
+        cfg.save();
+      }
+    }
 
     new Application(ctx);
   }
