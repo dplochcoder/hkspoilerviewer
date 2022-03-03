@@ -2,11 +2,11 @@ package hollow.knight.logic;
 
 import com.google.common.collect.ImmutableSet;
 
-public final class TermEqualCondition extends Condition {
+public final class TermEqualToCondition extends Condition {
   private final Term term;
   private final int value;
 
-  public TermEqualCondition(Term term, int value) {
+  public TermEqualToCondition(Term term, int value) {
     super(ImmutableSet.of(term));
     this.term = term;
     this.value = value;

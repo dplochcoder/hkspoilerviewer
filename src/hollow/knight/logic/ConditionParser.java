@@ -51,10 +51,10 @@ public final class ConditionParser {
   }
 
   private static final class TermAtom implements ConditionAtom {
-    private final TermCondition condition;
+    private final TermGreaterThanCondition condition;
 
     public TermAtom(Term term) {
-      this.condition = new TermCondition(term);
+      this.condition = new TermGreaterThanCondition(term);
     }
 
     @Override
@@ -241,9 +241,9 @@ public final class ConditionParser {
         Term term = ((TermAtom) left).term();
         int value = ((NumericAtom) right).value();
         if (op == Atom.Type.GREATER_THAN) {
-          return new TermCondition(term, value);
+          return new TermGreaterThanCondition(term, value);
         } else {
-          return new TermEqualCondition(term, value);
+          return new TermEqualToCondition(term, value);
         }
       }
       default:
