@@ -7,6 +7,12 @@ import java.util.Set;
 public final class MutableTermMap implements TermMap {
   private final Map<Term, Integer> values = new HashMap<>();
 
+  public MutableTermMap() {}
+
+  public MutableTermMap(TermMap map) {
+    map.terms().forEach(t -> set(t, map.get(t)));
+  }
+
   @Override
   public Set<Term> terms() {
     return values.keySet();

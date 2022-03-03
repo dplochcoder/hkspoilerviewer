@@ -16,6 +16,7 @@ public class State {
 
   // A parallel State which acquires every accessible item, for computing purchase logic.
   private State potentialState = null;
+  private TermMap toleranceValues = null;
   private MutableTermMap normalizedCosts = new MutableTermMap();
   private final Set<ItemCheck> purchasableItemChecks = new HashSet<>();
 
@@ -97,6 +98,8 @@ public class State {
 
     if (potentialState == null) {
       potentialState = this.deepCopy();
+      toleranceValues =
+          new SumTermMap(ImmutableList.of(potentialState.termValues, ctx.tolerances()));
     }
 
     boolean canReplenishGeo = get(Term.canReplenishGeo()) > 0;
@@ -128,11 +131,11 @@ public class State {
   }
 
   public TermMap termValues() {
-    return this.termValues;
+    return termValues;
   }
 
   public TermMap accessibleTermValues() {
-    return this.potentialState.termValues();
+    return toleranceValues;
   }
 
   public State deepCopy() {
@@ -144,6 +147,8 @@ public class State {
     copy.dirtyTerms.addAll(this.dirtyTerms);
     if (potentialState != null) {
       copy.potentialState = this.potentialState.deepCopy();
+      copy.toleranceValues =
+          new SumTermMap(ImmutableList.of(copy.potentialState.termValues, ctx.tolerances()));
       copy.purchasableItemChecks.addAll(this.purchasableItemChecks);
     }
     return copy;
