@@ -112,13 +112,24 @@ public final class Application extends JFrame {
           "Adding N or more grubs to the route explicitly will put the check in normal logic and remove the '$'.")
       .build();
 
+  private static final ImmutableList<String> INSERT_INFO = ImmutableList.<String>builder().add(
+      "Insertion allows you to rewind Logic to an earlier point in the route to insert earlier checks.")
+      .add(
+          "Your search results will reflect Logic at the point just prior to insertion, and any acquired item checks ")
+      .add(
+          "will be inserted into the middle of the route at that point. Grayed-out route items after the insertion ")
+      .add("point will not appear in search results.").add("-")
+      .add("Route items before and after the insertion point can still be removed or swapped.")
+      .build();
+
   private static final ImmutableList<String> KS_INFO =
       ImmutableList.<String>builder().add("UP/DOWN - move through results")
           .add("W/D - move selected item up/down (bookmarks+route)")
           .add("X - remove selected item (bookmarks+route)").add("-")
           .add("SPACE - acquire selected item").add("BACKSPACE - un-acquire last selected item")
-          .add("-").add("B - bookmark selected item").add("-").add("H - hide selected item")
-          .add("U - un-hide selected item").build();
+          .add("-").add("I - Insert and search before selected route item")
+          .add("K - Undo insertion point").add("-").add("B - bookmark selected item").add("-")
+          .add("H - hide selected item").add("U - un-hide selected item").build();
 
   private ActionListener infoListener(String title, Iterable<String> content) {
     return new ActionListener() {
@@ -159,6 +170,9 @@ public final class Application extends JFrame {
     JMenu about = new JMenu("About");
     JMenuItem pl = new JMenuItem("Purchase Logic ($)");
     about.add(pl);
+    about.add(new JSeparator());
+    JMenuItem insert = new JMenuItem("Insertions / Rewind");
+    about.add(insert);
     about.add(new JSeparator());
     JMenuItem ks = new JMenuItem("Keyboard Shortcuts");
     about.add(ks);
@@ -204,6 +218,7 @@ public final class Application extends JFrame {
     });
 
     pl.addActionListener(infoListener("Purchase Logic ($)", PL_INFO));
+    insert.addActionListener(infoListener("Insert / Rewind", INSERT_INFO));
     ks.addActionListener(infoListener("Keyboard Shortcuts", KS_INFO));
     v.addActionListener(
         infoListener("Version", ImmutableList.of("HKSpoilerViewer Version " + Main.VERSION, "-",
@@ -266,7 +281,8 @@ public final class Application extends JFrame {
   private List<SearchResult.Filter> addFilters(JPanel parent) throws ParseException {
     ImmutableList<SearchResult.Filter> resultFilters =
         ImmutableList.of(new TextFilter(ctx().roomLabels()), ItemCategoryFilters.load(),
-            new RoomFilters(ctx().roomLabels()), new ExclusionFilters(ctx().roomLabels()));
+            new RoomFilters(ctx().roomLabels()), new ExclusionFilters(ctx().roomLabels()),
+            routeListModel.futureCheckFilter());
 
     for (int i = 0; i < resultFilters.size(); i++) {
       if (i > 0) {
@@ -388,6 +404,7 @@ public final class Application extends JFrame {
     JList<String> routeList = new JList<>(routeListModel);
     Arrays.stream(routeList.getKeyListeners()).forEach(routeList::removeKeyListener);
     routeList.addKeyListener(routeListKeyListener());
+    routeList.setCellRenderer(routeListCellRenderer());
 
     return routeList;
   }
@@ -402,7 +419,6 @@ public final class Application extends JFrame {
 
   private KeyListener routeListKeyListener() {
     return new KeyListener() {
-
       @Override
       public void keyPressed(KeyEvent e) {
         e.consume();
@@ -421,6 +437,12 @@ public final class Application extends JFrame {
         } else if (e.getKeyCode() == KeyEvent.VK_X) {
           routeListModel.removeCheck(routeList.getSelectedIndex());
           repopulateSearchResults();
+        } else if (e.getKeyCode() == KeyEvent.VK_I) {
+          routeListModel.setInsertionPoint(routeList.getSelectedIndex());
+          repopulateSearchResults();
+        } else if (e.getKeyCode() == KeyEvent.VK_K) {
+          routeListModel.setInsertionPoint(routeListModel.getSize());
+          repopulateSearchResults();
         } else if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN) {
           int newIndex = routeList.getSelectedIndex() + (e.getKeyCode() == KeyEvent.VK_UP ? -1 : 1);
           if (newIndex >= 0 && newIndex < routeListModel.getSize()) {
@@ -434,6 +456,21 @@ public final class Application extends JFrame {
 
       @Override
       public void keyTyped(KeyEvent e) {}
+    };
+  }
+
+  private ListCellRenderer<? super String> routeListCellRenderer() {
+    return new DefaultListCellRenderer() {
+      private static final long serialVersionUID = 1L;
+
+      @Override
+      public Component getListCellRendererComponent(JList<?> list, Object value, int index,
+          boolean isSelected, boolean cellHasFocus) {
+        Component c =
+            super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        routeListModel.adjustForegroundColor(c, index);
+        return c;
+      }
     };
   }
 }

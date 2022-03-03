@@ -4,7 +4,7 @@ HKSpoilerViewer is a desktop application for searching and routing checks in [Ra
 
 Download the latest JAR file from [Releases](https://github.com/dplochcoder/hkspoilerviewer/releases), and store it anywhere on your device. You must have [Java](https://www.java.com/en/) installed to run it.
 
-The first time you run it, it will ask you to locate the `RawSpoiler.json` file on your computer with a file-open dialog. After this, it will always open that file by default; if the program is silently crashing and failing to open the json file, you may have selected a bad input. Delete the automatically created `HKSpoilerViewer.cfg` file and try again if this happens.
+The first time you run it, it will ask you to locate the `RawSpoiler.json` file on your computer with a file-open dialog. After this, it will always open that file by default. If you want to select a different file, find the `HKSpoilerViewer.cfg` file in your AppData/Local/dplochcoder/HKSpoilerViewer directory (or OS-dependent equivalent) and delete it before re-opening the program.
 
 # Search Features
 
@@ -70,6 +70,16 @@ The player can mark checks as 'uninteresting' and force them to the bottom of se
 ## Routed Results
 
 Search results can be added directly to the end of the current route. Doing so acquires the item and applies its effects to Logic, which can dramatically expand search results when the Out of Logic filter is active. Routed checks can also be deleted or re-ordered from the route panel on the right.
+
+# Insertion and Rewind
+
+Search results normally reflect the state of Logic at the end of the current route, but this is not so useful when you want to route in additional checks at an earlier point in the route. Use the `I` key to set an insertion point
+in the current route, with an appropriate item selected.
+
+This will 'rewind' Logic to prior to the insertion point, allowing to search for things in Logic *without* movement
+that is routed in later on. Acquiring new checks with an insertion point set will insert the checks into the route at that point, instead of at the end.
+
+Use the `K` key to unset the insertion point, and go back to appending to the end of the list.
 
 # Saving and Loading
 

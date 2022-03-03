@@ -12,7 +12,7 @@ import hollow.knight.logic.StateContext;
 import hollow.knight.util.JsonUtil;
 
 public final class Main {
-  public static String VERSION = "1.2.1";
+  public static String VERSION = "1.3";
 
   private static Config loadConfig(String[] args) {
     if (args.length > 0) {

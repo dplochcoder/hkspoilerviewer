@@ -38,6 +38,10 @@ public class State {
     return ImmutableSet.copyOf(unobtained);
   }
 
+  public boolean isAcquired(ItemCheck check) {
+    return acquiredItemChecks.contains(check);
+  }
+
   public int get(Term term) {
     return termValues.get(term);
   }
