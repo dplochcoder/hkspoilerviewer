@@ -1,5 +1,6 @@
 package hollow.knight.gui;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -7,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import com.google.common.base.Verify;
 import net.harawata.appdirs.AppDirsFactory;
 
 public final class Config {
@@ -52,9 +54,15 @@ public final class Config {
   }
 
   public static Config load() {
-    Path abs = Paths
+    Path dir = Paths
         .get(AppDirsFactory.getInstance().getUserDataDir("HKSpoilerViewer", null, "dplochcoder"));
-    return load(abs);
+    File f = dir.toFile();
+    if (f.isFile()) {
+      Verify.verify(f.delete());
+    }
+
+    Path path = Paths.get(dir.toString(), "HKSpoilerViewer.cfg");
+    return load(path);
   }
 
   public static Config load(Path path) {
