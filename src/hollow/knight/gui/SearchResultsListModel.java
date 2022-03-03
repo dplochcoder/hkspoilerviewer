@@ -1,5 +1,7 @@
 package hollow.knight.gui;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -99,6 +101,26 @@ public final class SearchResultsListModel implements ListModel<String>, SaveInte
       }
 
       return hiddenResults.get(index);
+    }
+  }
+
+  private void brighten(Component c) {
+    c.setForeground(Color.GRAY);
+  }
+
+  public void adjustForegroundColor(Component c, State state, SearchEngine engine, int index) {
+    SearchResult s = getResult(state, index);
+    if (s == null) {
+      return;
+    }
+
+    ItemCheck check = s.itemCheck();
+    if (bookmarksSet.contains(check)) {
+      if (!engine.accept(s)) {
+        brighten(c);
+      }
+    } else if (hiddenResultsSet.contains(check)) {
+      brighten(c);
     }
   }
 

@@ -18,7 +18,7 @@ public final class SearchEngine {
     this.resultFilters = resultFilters;
   }
 
-  private boolean accept(SearchResult result) {
+  public boolean accept(SearchResult result) {
     return resultFilters.stream().allMatch(f -> f.accept(result));
   }
 
