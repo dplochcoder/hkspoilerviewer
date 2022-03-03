@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import javax.swing.JFileChooser;
 import javax.swing.ListModel;
 import javax.swing.event.ListDataEvent;
@@ -60,12 +59,17 @@ public final class RouteListModel implements ListModel<String>, SaveInterface {
 
     File f = j.getSelectedFile();
 
-    String out;
+    StringBuilder out = new StringBuilder();
     synchronized (mutex) {
-      out = resultStrings.stream().collect(Collectors.joining("\n"));
+      for (int i = 0; i < resultStrings.size(); i++) {
+        out.append((i + 1) + ": " + resultStrings.get(i));
+        if (i < resultStrings.size() - 1) {
+          out.append("\n");
+        }
+      }
     }
 
-    Files.write(f.toPath(), out.getBytes(StandardCharsets.UTF_8));
+    Files.write(f.toPath(), out.toString().getBytes(StandardCharsets.UTF_8));
   }
 
   public StateContext ctx() {
@@ -104,7 +108,7 @@ public final class RouteListModel implements ListModel<String>, SaveInterface {
       currentState.normalize();
 
       this.route.add(result);
-      this.resultStrings.add((resultStrings.size() + 1) + ": " + result.render());
+      this.resultStrings.add(result.render());
       newSize = this.resultStrings.size();
     }
 
@@ -134,8 +138,8 @@ public final class RouteListModel implements ListModel<String>, SaveInterface {
 
       route.set(before, SearchResult.create(b, prevState));
       route.set(after, SearchResult.create(a, newState1));
-      resultStrings.set(before, (before + 1) + ": " + route.get(before).render());
-      resultStrings.set(after, (after + 1) + ": " + route.get(after).render());
+      resultStrings.set(before, route.get(before).render());
+      resultStrings.set(after, route.get(after).render());
     }
 
     ListDataEvent e = new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, before, getSize());
@@ -157,7 +161,7 @@ public final class RouteListModel implements ListModel<String>, SaveInterface {
         currentState.normalize();
 
         route.set(i - 1, SearchResult.create(check, currentState));
-        resultStrings.set(i - 1, i + ": " + route.get(i - 1).render());
+        resultStrings.set(i - 1, route.get(i - 1).render());
       }
 
       route.remove(route.size() - 1);
@@ -212,7 +216,7 @@ public final class RouteListModel implements ListModel<String>, SaveInterface {
   @Override
   public String getElementAt(int index) {
     synchronized (mutex) {
-      return resultStrings.get(index);
+      return (index + 1) + ": " + resultStrings.get(index);
     }
   }
 
