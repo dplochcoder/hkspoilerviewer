@@ -253,11 +253,9 @@ public final class ConditionParser {
 
   private StringBuilder currentAtom = new StringBuilder();
   private final List<Atom> atoms = new ArrayList<>();
+  private boolean bracket = false;
 
   private List<Atom> parseAtoms(String text) throws ParseException {
-    // Spaces are allowed inside term name brackets.
-    boolean bracket = false;
-
     for (char ch : text.toCharArray()) {
       if (ch == ' ' && !bracket) {
         closeAtom();
@@ -293,7 +291,11 @@ public final class ConditionParser {
     return atoms;
   }
 
-  private void closeAtom(Atom next) {
+  private void closeAtom(Atom next) throws ParseException {
+    if (bracket) {
+      throw new ParseException("Unclosed bracket");
+    }
+
     String content = currentAtom.toString();
     currentAtom = new StringBuilder();
 
@@ -310,7 +312,7 @@ public final class ConditionParser {
     }
   }
 
-  private void closeAtom() {
+  private void closeAtom() throws ParseException {
     closeAtom(null);
   }
 
