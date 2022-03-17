@@ -42,13 +42,13 @@ public final class ExclusionFilters extends SearchResult.Filter {
   private ImmutableList<ExclusionFilter> createFilters(RoomLabels roomLabels) {
     return ImmutableList.of(
         ExclusionFilter.create(this, "VANILLA", r -> r.itemCheck().vanilla(),
-            jcb("Vanilla (#)", true)),
+            jcb("Vanilla (#)", false)),
         ExclusionFilter.create(this, "OUT_OF_LOGIC",
             r -> r.logicType() == SearchResult.LogicType.OUT_OF_LOGIC,
-            jcb("Out of Logic (*)", true)),
+            jcb("Out of Logic (*)", false)),
         ExclusionFilter.create(this, "PURCHASE_LOGIC",
             r -> r.logicType() == SearchResult.LogicType.COST_ACCESSIBLE,
-            jcb("Purchase Logic ($)", false)));
+            jcb("Purchase Logic ($)", true)));
   }
 
   public ExclusionFilters(RoomLabels roomLabels) {
@@ -62,6 +62,6 @@ public final class ExclusionFilters extends SearchResult.Filter {
 
   @Override
   public boolean accept(SearchResult result) {
-    return filters.stream().allMatch(f -> !f.checkBox().isSelected() || !f.filter().test(result));
+    return filters.stream().allMatch(f -> f.checkBox().isSelected() || !f.filter().test(result));
   }
 }

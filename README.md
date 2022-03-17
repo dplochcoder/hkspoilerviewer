@@ -26,7 +26,7 @@ Constrain your search to specific Map or Titled areas in the likewise named tabs
 
 ## Exclusions
 
-Several types of checks are excluded from search results by default; you can un-exclude them by disabling them in the Exclusions section.
+Several types of checks are excluded from search results by default; you can un-exclude them by checking them in the Exclusions section at the bottom.
 
 ### Vanilla (#)
 
