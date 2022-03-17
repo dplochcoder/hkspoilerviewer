@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -114,8 +115,8 @@ public final class Items {
       itemObj = itemObj.get("item").getAsJsonObject();
     }
 
-    Stream<String> types = Arrays.stream(itemObj.get("$type").getAsString().split(", "));
-    if (!types.anyMatch(s -> s.startsWith("RandomizerCore.LogicItems."))) {
+    Set<String> types = Arrays.stream(itemObj.get("$type").getAsString().split(", ")).collect(ImmutableSet.toImmutableSet());
+    if (!types.contains("RandomizerMod.RC.SplitCloakItem") && types.stream().noneMatch(s -> s.startsWith("RandomizerCore.LogicItems."))) {
       return;
     }
 
