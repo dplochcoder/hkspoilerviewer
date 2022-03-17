@@ -1,7 +1,6 @@
 [ {
   "Name" : "Movement",
-  "Items" : [ "Mothwing_Cloak", "Shade_Cloak", "Mantis_Claw", "Crystal_Heart", "Monarch_Wings", "Swim", "Isma's_Tear" ],
-  "Comment" : "TODO: support split claw/dash/superdash"
+  "Items" : [ "Mothwing_Cloak", "Left_Mothwing_Cloak", "Right_Mothwing_Cloak", "Shade_Cloak", "Left_Shade_Cloak", "Right_Shade_Cloak", "Mantis_Claw", "Left_Mantis_Claw", "Right_Mantis_Claw", "Crystal_Heart", "Left_Crystal_Heart", "Right_Crystal_Heart", "Monarch_Wings", "Swim", "Isma's_Tear" ]
 }, {
   "Name" : "Spells",
   "Items" : [ "Vengeful_Spirit", "Shade_Soul", "Desolate_Dive", "Descending_Dark", "Howling_Wraiths", "Abyss_Shriek" ]
@@ -13,7 +12,7 @@
   "Items" : [ "Lurien", "Monomon", "Herrah", "Dreamer", "Queen_Fragment", "King_Fragment", "Void_Heart", "Dream_Nail", "Dream_Gate", "Awoken_Dream_Nail" ]
 }, {
   "Name" : "Upgrades",
-  "Items" : [ "Vessel_Fragment", "Mask_Shard", "Charm_Notch", "Pale_Ore" ] 
+  "Items" : [ "Vessel_Fragment", "Mask_Shard", "Charm_Notch", "Pale_Ore", "Leftslash", "Rightslash", "Upslash" ] 
 }, {
   "Name" : "Keys",
   "Items" : [ "City_Crest", "Elegant_Key", "King's_Brand", "Shopkeeper's_Key", "Simple_Key", "Love_Key", "Tram_Pass", "Elevator_Pass", "Lumafly_Lantern", "Godtuner", "Collector's_Map" ]
