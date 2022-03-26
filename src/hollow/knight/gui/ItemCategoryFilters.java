@@ -66,7 +66,7 @@ public final class ItemCategoryFilters extends SearchResult.Filter {
     ImmutableMap.Builder<String, JCheckBox> builder = ImmutableMap.builder();
     for (String name : filters.keySet()) {
       JCheckBox jcb = new JCheckBox(name);
-      jcb.setSelected(true);
+      jcb.setSelected(false);
       jcb.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
