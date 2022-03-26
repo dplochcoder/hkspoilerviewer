@@ -3,6 +3,8 @@ package hollow.knight.gui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -31,14 +33,18 @@ import javax.swing.ListSelectionModel;
 import javax.swing.filechooser.FileFilter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonWriter;
 import hollow.knight.logic.ParseException;
+import hollow.knight.logic.Query;
 import hollow.knight.logic.SaveInterface;
 import hollow.knight.logic.State;
 import hollow.knight.logic.StateContext;
+import hollow.knight.util.GuiUtil;
 import hollow.knight.util.JsonUtil;
 
 public final class Application extends JFrame {
@@ -122,6 +128,12 @@ public final class Application extends JFrame {
       .add("Route items before and after the insertion point can still be removed or swapped.")
       .build();
 
+  private static final ImmutableList<String> QUERIES_INFO = ImmutableList.<String>builder().add(
+      "Queries enable partial spoiler formats by surfacing specific info about a seed without revealing all of it.")
+      .add("Several pre-built queries are included, but custom ones can be used as well.").add("-")
+      .add("See the queries.json source file for examples of how to author custom queries.")
+      .build();
+
   private static final ImmutableList<String> KS_INFO =
       ImmutableList.<String>builder().add("UP/DOWN - move through results")
           .add("W/D - move selected item up/down (bookmarks+route)")
@@ -154,7 +166,25 @@ public final class Application extends JFrame {
     };
   }
 
-  private JMenuBar createMenu() {
+  private void addBuiltinQueries(JMenu menu) throws ParseException {
+    JsonArray queries = JsonUtil.loadResource(Application.class, "queries.json").getAsJsonArray();
+    for (JsonElement json : queries) {
+      JsonObject obj = json.getAsJsonObject();
+      String name = obj.get("Name").getAsString();
+      Query query = Query.parse(obj.get("Query").getAsJsonObject());
+
+      JMenuItem qItem = new JMenuItem(name);
+      qItem.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          executeQuery(query);
+        }
+      });
+      menu.add(qItem);
+    }
+  }
+
+  private JMenuBar createMenu() throws ParseException {
     JMenuBar bar = new JMenuBar();
 
     JMenu file = new JMenu("File");
@@ -167,12 +197,22 @@ public final class Application extends JFrame {
     file.add(saveToTxt);
     bar.add(file);
 
+    JMenu query = new JMenu("Query");
+    addBuiltinQueries(query);
+    query.add(new JSeparator());
+    JMenuItem qFromFile = new JMenuItem("From file (*.hksq)");
+    query.add(qFromFile);
+    bar.add(query);
+
     JMenu about = new JMenu("About");
     JMenuItem pl = new JMenuItem("Purchase Logic ($)");
     about.add(pl);
     about.add(new JSeparator());
     JMenuItem insert = new JMenuItem("Insertions / Rewind");
     about.add(insert);
+    about.add(new JSeparator());
+    JMenuItem aboutQueries = new JMenuItem("Queries");
+    about.add(aboutQueries);
     about.add(new JSeparator());
     JMenuItem ks = new JMenuItem("Keyboard Shortcuts");
     about.add(ks);
@@ -217,8 +257,16 @@ public final class Application extends JFrame {
       }
     });
 
+    qFromFile.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        executeQueryFromFile();
+      }
+    });
+
     pl.addActionListener(infoListener("Purchase Logic ($)", PL_INFO));
     insert.addActionListener(infoListener("Insert / Rewind", INSERT_INFO));
+    aboutQueries.addActionListener(infoListener("Queries", QUERIES_INFO));
     ks.addActionListener(infoListener("Keyboard Shortcuts", KS_INFO));
     v.addActionListener(
         infoListener("Version", ImmutableList.of("HKSpoilerViewer Version " + Main.VERSION, "-",
@@ -236,6 +284,18 @@ public final class Application extends JFrame {
     @Override
     public boolean accept(File f) {
       return f.isDirectory() || f.getName().endsWith(".hks");
+    }
+  };
+
+  private static final FileFilter QUERY_FILTER = new FileFilter() {
+    @Override
+    public String getDescription() {
+      return "Hollow Knight Spoiler Query (*.hksq)";
+    }
+
+    @Override
+    public boolean accept(File f) {
+      return f.isDirectory() || f.getName().endsWith(".hksq");
     }
   };
 
@@ -472,5 +532,41 @@ public final class Application extends JFrame {
         return c;
       }
     };
+  }
+
+  private Query getQueryFromFile() throws ParseException {
+    JFileChooser c = new JFileChooser("Query");
+    c.setFileFilter(QUERY_FILTER);
+
+    if (c.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) {
+      return null;
+    }
+
+    JsonObject queryData = JsonUtil.loadPath(c.getSelectedFile().toPath()).getAsJsonObject();
+    return Query.parse(queryData);
+  }
+
+  private void executeQueryFromFile() {
+    Query query;
+    try {
+      query = getQueryFromFile();
+    } catch (Exception ex) {
+      GuiUtil.showStackTrace(this, "Failed to parse Query", ex);
+      return;
+    }
+
+    if (query != null) {
+      executeQuery(query);
+    }
+  }
+
+  private void executeQuery(Query query) {
+    // Copy to clipboard.
+    String results = query.execute(currentState());
+    StringSelection sel = new StringSelection(results);
+    Toolkit.getDefaultToolkit().getSystemClipboard().setContents(sel, null);
+
+    String msg = results + "\n\n(Copied to clipboard!)";
+    JOptionPane.showMessageDialog(this, msg, "Query results", JOptionPane.INFORMATION_MESSAGE);
   }
 }

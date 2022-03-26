@@ -1,18 +1,16 @@
 package hollow.knight.gui;
 
 import java.io.File;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import hollow.knight.logic.StateContext;
+import hollow.knight.util.GuiUtil;
 import hollow.knight.util.JsonUtil;
 
 public final class Main {
-  public static String VERSION = "1.4";
+  public static String VERSION = "1.5";
 
   private static Config loadConfig(String[] args) {
     if (args.length > 0) {
@@ -65,11 +63,7 @@ public final class Main {
         ctx = StateContext.parse(JsonUtil.loadPath(rawSpoiler).getAsJsonObject());
         break;
       } catch (Exception ex) {
-        try (StringWriter sw = new StringWriter(); PrintWriter pw = new PrintWriter(sw)) {
-          ex.printStackTrace(pw);
-          JOptionPane.showMessageDialog(null,
-              "Error opening RawSpoiler.json: " + ex.getMessage() + ";\n" + sw.toString());
-        }
+        GuiUtil.showStackTrace(null, "Error opening RawSpoiler.json: ", ex);
 
         cfg.set("RAW_SPOILER", "");
         cfg.save();
