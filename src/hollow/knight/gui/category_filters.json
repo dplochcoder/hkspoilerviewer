@@ -1,6 +1,6 @@
 [ {
   "Name" : "Movement",
-  "Items" : [ "Mothwing_Cloak", "Left_Mothwing_Cloak", "Right_Mothwing_Cloak", "Shade_Cloak", "Left_Shade_Cloak", "Right_Shade_Cloak", "Mantis_Claw", "Left_Mantis_Claw", "Right_Mantis_Claw", "Crystal_Heart", "Left_Crystal_Heart", "Right_Crystal_Heart", "Monarch_Wings", "Swim", "Isma's_Tear" ]
+  "Items" : [ "Mothwing_Cloak", "Left_Mothwing_Cloak", "Right_Mothwing_Cloak", "Shade_Cloak", "Split_Shade_Cloak", "Mantis_Claw", "Left_Mantis_Claw", "Right_Mantis_Claw", "Crystal_Heart", "Left_Crystal_Heart", "Right_Crystal_Heart", "Monarch_Wings", "Swim", "Isma's_Tear" ]
 }, {
   "Name" : "Spells",
   "Items" : [ "Vengeful_Spirit", "Shade_Soul", "Desolate_Dive", "Descending_Dark", "Howling_Wraiths", "Abyss_Shriek" ]
