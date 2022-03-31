@@ -24,7 +24,7 @@
   "EffectTerm" : "ESSENCE"
 }, {
   "Name" : "Charms",
-  "Items" : [ "Gathering_Swarm", "Wayward_Compass", "Grubsong", "Stalwart_Shell", "Baldur_Shell", "Fury_of_the_Fallen", "Quick_Focus", "Lifeblood_Heart", "Lifeblood_Core", "Defender's_Crest", "Flukenest", "Thorns_of_Agony", "Mark_of_Pride", "Steady_Body", "Heavy_Blow", "Sharp_Shadow", "Spore_Shroom", "Longnail", "Shaman_Stone", "Soul_Catcher", "Soul_Eater", "Glowing_Womb", "Fragile_Heart", "Unbreakable_Heart", "Fragile_Greed", "Unbreakable_Green", "Fragile_Strength", "Unbreakable_Strength", "Nailmaster's_Glory", "Joni's_Blessing", "Shape_of_Unn", "Hiveblood", "Dream_Wielder", "Dashmaster", "Quick_Slash", "Spell_Twister", "Deep_Focus", "Grubberfly's_Elegy", "Queen_Fragment", "King_Fragment", "Void_Heart", "Sprintmaster", "Dreamshield", "Weaversong", "Grimmchild2" ]
+  "Items" : [ "Gathering_Swarm", "Wayward_Compass", "Grubsong", "Stalwart_Shell", "Baldur_Shell", "Fury_of_the_Fallen", "Quick_Focus", "Lifeblood_Heart", "Lifeblood_Core", "Defender's_Crest", "Flukenest", "Thorns_of_Agony", "Mark_of_Pride", "Steady_Body", "Heavy_Blow", "Sharp_Shadow", "Spore_Shroom", "Longnail", "Shaman_Stone", "Soul_Catcher", "Soul_Eater", "Glowing_Womb", "Fragile_Heart", "Unbreakable_Heart", "Fragile_Greed", "Unbreakable_Greed", "Fragile_Strength", "Unbreakable_Strength", "Nailmaster's_Glory", "Joni's_Blessing", "Shape_of_Unn", "Hiveblood", "Dream_Wielder", "Dashmaster", "Quick_Slash", "Spell_Twister", "Deep_Focus", "Grubberfly's_Elegy", "Queen_Fragment", "King_Fragment", "Void_Heart", "Sprintmaster", "Dreamshield", "Weaversong", "Grimmchild2" ]
 }, {
   "Name" : "Rancid Eggs",
   "Items" : [ "Rancid_Egg" ]
