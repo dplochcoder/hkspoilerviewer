@@ -1,11 +1,9 @@
 package hollow.knight.logic;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Stream;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -107,20 +105,13 @@ public final class Items {
         .flatMap(c -> c.stream());
   }
 
-  private static void parseItem(int id, JsonElement elem, RoomLabels rooms,
-      Map<Term, Item> itemsByName, boolean vanilla, Map<Integer, ItemCheck> items)
-      throws ParseException {
-    JsonObject itemObj = elem.getAsJsonObject().get("Item").getAsJsonObject();
-    if (itemObj.has("item")) {
-      itemObj = itemObj.get("item").getAsJsonObject();
-    }
-
-    Set<String> types = Arrays.stream(itemObj.get("$type").getAsString().split(", ")).collect(ImmutableSet.toImmutableSet());
-    if (!types.contains("RandomizerMod.RC.SplitCloakItem") && types.stream().noneMatch(s -> s.startsWith("RandomizerCore.LogicItems."))) {
+  private static void parseItem(int id, JsonElement elem, RoomLabels rooms, boolean vanilla,
+      Map<Integer, ItemCheck> items) throws ParseException {
+    Item item = Item.parse(elem.getAsJsonObject().get("Item").getAsJsonObject());
+    if (!item.types().contains("RandomizerMod.RC.SplitCloakItem")
+        && item.types().stream().noneMatch(s -> s.startsWith("RandomizerCore.LogicItems."))) {
       return;
     }
-
-    Term itemName = Term.create(itemObj.get("Name").getAsString());
 
     JsonObject locObj = elem.getAsJsonObject().get("Location").getAsJsonObject();
     JsonObject logicObj = locObj;
@@ -130,11 +121,6 @@ public final class Items {
 
     String locName = logicObj.get("Name").getAsString();
     Condition locAccess = ConditionParser.parse(logicObj.get("Logic").getAsString());
-
-    Item item = itemsByName.get(itemName);
-    if (item == null) {
-      return;
-    }
 
     Costs costs = Costs.none();
     JsonElement costsObj = locObj.get("costs");
@@ -148,28 +134,20 @@ public final class Items {
   public static Items parse(JsonObject json, RoomLabels rooms) throws ParseException {
     BiMap<Integer, ItemCheck> items = HashBiMap.create();
 
-    // Parse item effects.
-    JsonArray itemsArr = json.get("LM").getAsJsonObject().get("Items").getAsJsonArray();
-    Map<Term, Item> itemsByName = new HashMap<>();
-    for (JsonElement elem : itemsArr) {
-      Item item = Item.parse(elem.getAsJsonObject());
-      itemsByName.put(item.term(), item);
-    }
-
     // Parse locations.
     JsonArray itemPlacements = json.get("itemPlacements").getAsJsonArray();
     JsonArray vanillaPlacements = json.get("Vanilla").getAsJsonArray();
     int id = 1;
     for (JsonElement elem : itemPlacements) {
       try {
-        parseItem(id++, elem, rooms, itemsByName, false, items);
+        parseItem(id++, elem, rooms, false, items);
       } catch (Exception ex) {
         throw new ParseException(ex.getMessage() + ": " + elem, ex);
       }
     }
     for (JsonElement elem : vanillaPlacements) {
       try {
-        parseItem(id++, elem, rooms, itemsByName, true, items);
+        parseItem(id++, elem, rooms, true, items);
       } catch (Exception ex) {
         throw new ParseException(ex.getMessage() + ": " + elem, ex);
       }

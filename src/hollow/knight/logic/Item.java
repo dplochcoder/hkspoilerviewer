@@ -1,18 +1,25 @@
 package hollow.knight.logic;
 
+import java.util.Arrays;
+import java.util.Set;
+import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 public final class Item {
   private final Term term;
+  private final String pool;
+  private final ImmutableSet<String> types;
   private final Condition logic;
   private final ImmutableTermMap trueEffects;
   private final ImmutableTermMap falseEffects;
   private final ImmutableTermMap caps;
 
-  private Item(Term term, Condition logic, TermMap trueEffects, TermMap falseEffects,
-      TermMap caps) {
+  private Item(Term term, String pool, Set<String> types, Condition logic, TermMap trueEffects,
+      TermMap falseEffects, TermMap caps) {
     this.term = term;
+    this.pool = pool;
+    this.types = ImmutableSet.copyOf(types);
     this.logic = logic;
     this.trueEffects = ImmutableTermMap.copyOf(trueEffects);
     this.falseEffects = ImmutableTermMap.copyOf(falseEffects);
@@ -21,6 +28,14 @@ public final class Item {
 
   public Term term() {
     return term;
+  }
+
+  public String pool() {
+    return pool;
+  }
+
+  public ImmutableSet<String> types() {
+    return types;
   }
 
   public boolean isCharm(Items items) {
@@ -70,7 +85,21 @@ public final class Item {
   }
 
   public static Item parse(JsonObject item) throws ParseException {
-    Term name = Term.create(item.get("Name").getAsString());
+    String pool = "";
+    if (item.get("ItemDef") != null) {
+      pool = item.get("ItemDef").getAsJsonObject().get("Pool").getAsString();
+    }
+
+    if (item.get("item") != null) {
+      item = item.get("item").getAsJsonObject();
+    }
+
+    Term name;
+    if (item.get("Name") != null) {
+      name = Term.create(item.get("Name").getAsString());
+    } else {
+      name = Term.create(item.get("logic").getAsJsonObject().get("Name").getAsString());
+    }
 
     Condition logic = Condition.alwaysTrue();
     MutableTermMap trueEffects = new MutableTermMap();
@@ -88,6 +117,9 @@ public final class Item {
       parseEffect(item.get("Cap").getAsJsonObject(), caps);
     }
 
-    return new Item(name, logic, trueEffects, falseEffects, caps);
+    Set<String> types = Arrays.stream(item.get("$type").getAsString().split(", "))
+        .collect(ImmutableSet.toImmutableSet());
+
+    return new Item(name, pool, types, logic, trueEffects, falseEffects, caps);
   }
 }
