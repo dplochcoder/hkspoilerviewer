@@ -8,17 +8,15 @@ import com.google.gson.JsonObject;
 
 public final class Item {
   private final Term term;
-  private final String pool;
   private final ImmutableSet<String> types;
   private final Condition logic;
   private final ImmutableTermMap trueEffects;
   private final ImmutableTermMap falseEffects;
   private final ImmutableTermMap caps;
 
-  private Item(Term term, String pool, Set<String> types, Condition logic, TermMap trueEffects,
+  private Item(Term term, Set<String> types, Condition logic, TermMap trueEffects,
       TermMap falseEffects, TermMap caps) {
     this.term = term;
-    this.pool = pool;
     this.types = ImmutableSet.copyOf(types);
     this.logic = logic;
     this.trueEffects = ImmutableTermMap.copyOf(trueEffects);
@@ -28,10 +26,6 @@ public final class Item {
 
   public Term term() {
     return term;
-  }
-
-  public String pool() {
-    return pool;
   }
 
   public ImmutableSet<String> types() {
@@ -85,11 +79,6 @@ public final class Item {
   }
 
   public static Item parse(JsonObject item) throws ParseException {
-    String pool = "";
-    if (item.get("ItemDef") != null) {
-      pool = item.get("ItemDef").getAsJsonObject().get("Pool").getAsString();
-    }
-
     if (item.get("item") != null) {
       item = item.get("item").getAsJsonObject();
     }
@@ -120,6 +109,6 @@ public final class Item {
     Set<String> types = Arrays.stream(item.get("$type").getAsString().split(", "))
         .collect(ImmutableSet.toImmutableSet());
 
-    return new Item(name, pool, types, logic, trueEffects, falseEffects, caps);
+    return new Item(name, types, logic, trueEffects, falseEffects, caps);
   }
 }

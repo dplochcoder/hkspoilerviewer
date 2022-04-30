@@ -9,16 +9,18 @@ public final class StateContext {
 
   private final JsonObject originalJson;
   private final RoomLabels roomLabels;
+  private final Pools pools;
   private final Waypoints waypoints;
   private final Items items;
 
   private final ImmutableTermMap tolerances;
   private final ImmutableTermMap setters;
 
-  public StateContext(JsonObject originalJson, RoomLabels roomLabels, Waypoints waypoints,
-      Items items, TermMap tolerances, TermMap setters) {
+  public StateContext(JsonObject originalJson, RoomLabels roomLabels, Pools pools,
+      Waypoints waypoints, Items items, TermMap tolerances, TermMap setters) {
     this.originalJson = originalJson;
     this.roomLabels = roomLabels;
+    this.pools = pools;
     this.waypoints = waypoints;
     this.items = items;
     this.tolerances = ImmutableTermMap.copyOf(tolerances);
@@ -31,6 +33,10 @@ public final class StateContext {
 
   public RoomLabels roomLabels() {
     return roomLabels;
+  }
+
+  public Pools pools() {
+    return pools;
   }
 
   public Waypoints waypoints() {
@@ -60,6 +66,7 @@ public final class StateContext {
 
   public static StateContext parse(JsonObject json) throws ParseException {
     RoomLabels rooms = RoomLabels.load();
+    Pools pools = Pools.load();
 
     MutableTermMap setters = new MutableTermMap();
     MutableTermMap tolerances = new MutableTermMap();
@@ -78,7 +85,7 @@ public final class StateContext {
       }
     }
 
-    return new StateContext(json, rooms, Waypoints.parse(json), Items.parse(json, rooms),
+    return new StateContext(json, rooms, pools, Waypoints.parse(json), Items.parse(json, rooms),
         tolerances, setters);
   }
 
