@@ -5,4 +5,11 @@
     "LabelType" : "MAP_AREA",
     "Items" : [ "Mothwing_Cloak", "Left_Mothwing_Cloak", "Right_Mothwing_Cloak", "Shade_Cloak", "Split_Shade_Cloak", "Crystal_Heart", "Left_Crystal_Heart", "Right_Crystal_Heart", "Isma's_Tear", "Swim", "Mantis_Claw", "Left_Mantis_Claw", "Right_Mantis_Claw", "Monarch_Wings", "Dream_Nail", "Dream_Gate", "Awoken_Dream_Nail", "Lurien", "Herrah", "Monomon", "Dreamer", "Void_Heart", "Queen_Fragment", "King_Fragment", "Great_Slash", "Dash_Slash", "Cyclone_Slash", "Vengeful_Spirit", "Shade_Soul", "Desolate_Dive", "Descending_Dark", "Howling_Wraiths", "Abyss_Shriek" ]
   }
+}, {
+  "Name" : "Compass",
+  "Query" : {
+    "Type" : "ItemCounts",
+    "LabelType" : "MAP_AREA",
+    "Items" : [ "Wayward_Compass" ]
+  }
 } ]
