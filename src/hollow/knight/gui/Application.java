@@ -55,6 +55,7 @@ public final class Application extends JFrame {
   private final RouteListModel routeListModel;
   private final ImmutableList<SaveInterface> saveInterfaces;
 
+  private final Skips skips;
   private final SearchEngine searchEngine;
 
   private final JList<String> resultsList;
@@ -77,6 +78,12 @@ public final class Application extends JFrame {
     BoxLayout layout = new BoxLayout(left, BoxLayout.PAGE_AXIS);
     left.setLayout(layout);
     List<SearchResult.Filter> resultFilters = addFilters(left);
+
+    this.skips = Skips.load();
+    this.skips.setInitialState(ctx.newInitialState());
+    this.skips.addListener(this::skipsUpdated);
+    left.add(new JSeparator());
+    this.skips.addToGui(left);
 
     this.searchEngine = new SearchEngine(ctx.roomLabels(), resultFilters);
     this.resultsList = createSearchResults();
@@ -311,6 +318,7 @@ public final class Application extends JFrame {
     String version = saveData.get("Version").getAsString();
     StateContext newCtx = StateContext.parse(saveData.get("RawSpoiler").getAsJsonObject());
     saveInterfaces.forEach(i -> i.open(version, newCtx, saveData.get(i.saveName())));
+    skips.setInitialState(newCtx.newInitialState());
 
     repopulateSearchResults();
   }
@@ -353,6 +361,11 @@ public final class Application extends JFrame {
     }
 
     return resultFilters;
+  }
+
+  private void skipsUpdated() {
+    routeListModel.updateSkips(skips);
+    repopulateSearchResults();
   }
 
   private JList<String> createSearchResults() {

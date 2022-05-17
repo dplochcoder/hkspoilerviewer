@@ -1,0 +1,46 @@
+[ {
+  "Name" : "Precise Movement",
+  "Effect" : "PRECISEMOVEMENT"
+}, {
+  "Name" : "Proficient Combat",
+  "Effect" : "PROFICIENTCOMBAT"
+}, {
+  "Name" : "Background Pogos",
+  "Effect" : "BACKGROUNDPOGOS"
+}, {
+  "Name" : "Enemy Pogos",
+  "Effect" : "ENEMYPOGOS"
+}, {
+  "Name" : "Obscure Skips",
+  "Effect" : "OBSCURESKIPS"
+}, {
+  "Name" : "Shade Skips",
+  "Effect" : "SHADESKIPS"
+}, {
+  "Name" : "Infection Skips",
+  "Effect" : "INFECTIONSKIPS"
+}, {
+  "Name" : "Fireball Skips",
+  "Effect" : "FIREBALLSKIPS"
+}, {
+  "Name" : "Spike Tunnels",
+  "Effect" : "SPIKETUNNELS"
+}, {
+  "Name" : "Acid Skips",
+  "Effect" : "ACIDSKIPS"
+}, {
+  "Name" : "Damage Boosts",
+  "Effect" : "DAMAGEBOOSTS"
+}, {
+  "Name" : "Dangerous Skips",
+  "Effect" : "DANGEROUSSKIPS"
+}, {
+  "Name" : "Dark Rooms",
+  "Effect" : "DARKROOMS"
+}, {
+  "Name" : "Complex Skips",
+  "Effect" : "COMPLEXSKIPS"
+}, {
+  "Name" : "Difficult Skips",
+  "Effect" : "DIFFICULTSKIPS"
+} ]

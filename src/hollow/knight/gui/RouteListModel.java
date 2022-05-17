@@ -154,6 +154,38 @@ public final class RouteListModel implements ListModel<String>, SaveInterface {
     listenersCopy.forEach(l -> l.contentsChanged(e));
   }
 
+  public void updateSkips(Skips skips) {
+    List<ListDataListener> listenersCopy;
+    synchronized (mutex) {
+      listenersCopy = new ArrayList<>(listeners);
+
+      initialState = ctx.newInitialState();
+      skips.applySkips(initialState);
+
+      finalState = initialState.deepCopy();
+      for (int i = 0; i < route.size(); i++) {
+        if (i == insertionPoint) {
+          currentState = finalState.deepCopy();
+        }
+
+        ItemCheck check = route.get(i).itemCheck();
+        SearchResult newResult = SearchResult.create(check, finalState);
+        route.set(i, newResult);
+        resultStrings.set(i, newResult.render());
+
+        finalState.acquireItemCheck(check);
+        finalState.normalize();
+      }
+
+      if (route.size() == insertionPoint) {
+        currentState = finalState.deepCopy();
+      }
+    }
+
+    ListDataEvent e = new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, 0, getSize());
+    listenersCopy.forEach(l -> l.contentsChanged(e));
+  }
+
   public void addToRoute(SearchResult result) {
     List<ListDataListener> listenersCopy;
     synchronized (mutex) {
