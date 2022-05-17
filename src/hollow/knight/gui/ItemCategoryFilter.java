@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.ParseException;
+import hollow.knight.logic.StateContext;
 
 public abstract class ItemCategoryFilter {
 
@@ -17,7 +18,7 @@ public abstract class ItemCategoryFilter {
     return name;
   }
 
-  public abstract boolean accept(ItemCheck itemCheck);
+  public abstract boolean accept(StateContext ctx, ItemCheck itemCheck);
 
   public static ItemCategoryFilter parse(JsonObject obj) throws ParseException {
     String name = obj.get("Name").getAsString();
@@ -40,6 +41,11 @@ public abstract class ItemCategoryFilter {
     JsonElement locations = obj.get("Locations");
     if (locations != null) {
       return LocationCategoryFilter.parse(name, locations.getAsJsonArray());
+    }
+
+    JsonElement pools = obj.get("Pools");
+    if (pools != null) {
+      return PoolsCategoryFilter.parse(name, pools.getAsJsonArray());
     }
 
     throw new ParseException("Unsupported filter: " + name);

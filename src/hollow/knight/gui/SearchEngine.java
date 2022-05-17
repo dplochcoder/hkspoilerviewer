@@ -8,6 +8,7 @@ import com.google.common.collect.ImmutableList;
 import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.RoomLabels;
 import hollow.knight.logic.State;
+import hollow.knight.logic.StateContext;
 
 public final class SearchEngine {
   private final RoomLabels roomLabels;
@@ -18,8 +19,8 @@ public final class SearchEngine {
     this.resultFilters = resultFilters;
   }
 
-  public boolean accept(SearchResult result) {
-    return resultFilters.stream().allMatch(f -> f.accept(result));
+  public boolean accept(StateContext ctx, SearchResult result) {
+    return resultFilters.stream().allMatch(f -> f.accept(ctx, result));
   }
 
   private int sortResults(SearchResult r1, SearchResult r2) {
@@ -39,7 +40,7 @@ public final class SearchEngine {
     }
 
     // Step 2: Apply filters.
-    results = results.stream().filter(this::accept).collect(Collectors.toList());
+    results = results.stream().filter(r -> accept(state.ctx(), r)).collect(Collectors.toList());
 
     // Step 3: Sort results.
     results = results.stream().sorted(this::sortResults).collect(Collectors.toList());

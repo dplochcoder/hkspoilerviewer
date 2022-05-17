@@ -20,10 +20,10 @@ import javax.swing.event.ListSelectionListener;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import hollow.knight.logic.RoomLabels;
+import hollow.knight.logic.StateContext;
 
 public final class RoomFilters extends SearchResult.Filter {
 
-  private final RoomLabels roomLabels;
   private RoomLabels.Type activeType = RoomLabels.Type.MAP;
 
   private final JButton allAreas = new JButton("All Areas");
@@ -34,15 +34,14 @@ public final class RoomFilters extends SearchResult.Filter {
   private final ImmutableMap<RoomLabels.Type, JList<String>> selectionLists;
 
   public RoomFilters(RoomLabels roomLabels) {
-    this.roomLabels = roomLabels;
-    this.selectionLists = createSelectionLists();
+    this.selectionLists = createSelectionLists(roomLabels);
     this.activeType = RoomLabels.Type.MAP;
 
     this.allAreas.addActionListener(allAreasListener());
     this.tabPane.addChangeListener(tabChangedListener());
   }
 
-  private ImmutableMap<RoomLabels.Type, JList<String>> createSelectionLists() {
+  private ImmutableMap<RoomLabels.Type, JList<String>> createSelectionLists(RoomLabels roomLabels) {
     ImmutableMap.Builder<RoomLabels.Type, JList<String>> builder = ImmutableMap.builder();
     Map<RoomLabels.Type, JList<String>> lists = new HashMap<>();
     for (RoomLabels.Type type : RoomLabels.Type.values()) {
@@ -99,9 +98,9 @@ public final class RoomFilters extends SearchResult.Filter {
   }
 
   @Override
-  public boolean accept(SearchResult result) {
+  public boolean accept(StateContext ctx, SearchResult result) {
     String scene = result.location().scene();
-    String label = roomLabels.get(scene, activeType);
+    String label = ctx.roomLabels().get(scene, activeType);
     JList<String> list = selectionLists.get(activeType);
     return list.getSelectedValuesList().contains(label);
   }

@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import hollow.knight.logic.ItemCheck;
+import hollow.knight.logic.StateContext;
 
 public class LocationCategoryFilter extends ItemCategoryFilter {
 
@@ -16,7 +17,7 @@ public class LocationCategoryFilter extends ItemCategoryFilter {
   }
 
   @Override
-  public boolean accept(ItemCheck itemCheck) {
+  public boolean accept(StateContext ctx, ItemCheck itemCheck) {
     return locations.contains(itemCheck.location().name());
   }
 

@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import hollow.knight.logic.ItemCheck;
+import hollow.knight.logic.StateContext;
 import hollow.knight.logic.Term;
 
 public final class ExplicitItemCategoryFilter extends ItemCategoryFilter {
@@ -16,7 +17,7 @@ public final class ExplicitItemCategoryFilter extends ItemCategoryFilter {
   }
 
   @Override
-  public boolean accept(ItemCheck itemCheck) {
+  public boolean accept(StateContext ctx, ItemCheck itemCheck) {
     return terms.contains(itemCheck.item().term());
   }
 

@@ -13,6 +13,7 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import hollow.knight.logic.RoomLabels;
+import hollow.knight.logic.StateContext;
 
 public final class TextFilter extends SearchResult.Filter {
 
@@ -82,7 +83,7 @@ public final class TextFilter extends SearchResult.Filter {
   }
 
   @Override
-  public boolean accept(SearchResult result) {
+  public boolean accept(StateContext ctx, SearchResult result) {
     String t = textField.getText().trim().toLowerCase();
     if (t.isEmpty()) {
       return true;

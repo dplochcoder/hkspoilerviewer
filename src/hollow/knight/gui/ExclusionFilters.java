@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import hollow.knight.logic.RoomLabels;
+import hollow.knight.logic.StateContext;
 
 public final class ExclusionFilters extends SearchResult.Filter {
   @AutoValue
@@ -61,7 +62,7 @@ public final class ExclusionFilters extends SearchResult.Filter {
   }
 
   @Override
-  public boolean accept(SearchResult result) {
+  public boolean accept(StateContext ctx, SearchResult result) {
     return filters.stream().allMatch(f -> f.checkBox().isSelected() || !f.filter().test(result));
   }
 }

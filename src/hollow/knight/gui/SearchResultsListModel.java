@@ -116,7 +116,7 @@ public final class SearchResultsListModel implements ListModel<String>, SaveInte
 
     ItemCheck check = s.itemCheck();
     if (bookmarksSet.contains(check)) {
-      if (!engine.accept(s)) {
+      if (!engine.accept(state.ctx(), s)) {
         brighten(c);
       }
     } else if (hiddenResultsSet.contains(check)) {

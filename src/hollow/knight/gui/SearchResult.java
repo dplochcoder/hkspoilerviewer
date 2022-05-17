@@ -10,6 +10,7 @@ import hollow.knight.logic.Item;
 import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.Location;
 import hollow.knight.logic.State;
+import hollow.knight.logic.StateContext;
 import hollow.knight.logic.Term;
 
 @AutoValue
@@ -22,7 +23,7 @@ public abstract class SearchResult {
     private final Object mutex = new Object();
     private final Set<FilterChangedListener> listeners = new HashSet<>();
 
-    public abstract boolean accept(SearchResult result);
+    public abstract boolean accept(StateContext ctx, SearchResult result);
 
     public abstract void addGuiToPanel(JPanel panel);
 

@@ -13,6 +13,7 @@ import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import hollow.knight.logic.ParseException;
+import hollow.knight.logic.StateContext;
 import hollow.knight.util.JsonUtil;
 
 // Canonical filters with check box toggles.
@@ -34,9 +35,9 @@ public final class ItemCategoryFilters extends SearchResult.Filter {
   }
 
   @Override
-  public boolean accept(SearchResult result) {
+  public boolean accept(StateContext ctx, SearchResult result) {
     return filterBoxes.keySet().stream().filter(n -> filterBoxes.get(n).isSelected())
-        .map(filters::get).anyMatch(icf -> icf.accept(result.itemCheck()));
+        .map(filters::get).anyMatch(icf -> icf.accept(ctx, result.itemCheck()));
   }
 
   public static ItemCategoryFilters load() throws ParseException {

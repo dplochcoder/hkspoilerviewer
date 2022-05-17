@@ -49,7 +49,7 @@ public final class RouteListModel implements ListModel<String>, SaveInterface {
       public void addGuiToPanel(JPanel panel) {}
 
       @Override
-      public boolean accept(SearchResult result) {
+      public boolean accept(StateContext ctx, SearchResult result) {
         return !finalState.isAcquired(result.itemCheck());
       }
     };

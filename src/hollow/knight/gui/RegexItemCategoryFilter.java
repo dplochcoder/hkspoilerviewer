@@ -2,6 +2,7 @@ package hollow.knight.gui;
 
 import java.util.regex.Pattern;
 import hollow.knight.logic.ItemCheck;
+import hollow.knight.logic.StateContext;
 
 public final class RegexItemCategoryFilter extends ItemCategoryFilter {
   private final Pattern pattern;
@@ -12,7 +13,7 @@ public final class RegexItemCategoryFilter extends ItemCategoryFilter {
   }
 
   @Override
-  public boolean accept(ItemCheck itemCheck) {
+  public boolean accept(StateContext ctx, ItemCheck itemCheck) {
     return pattern.matcher(itemCheck.item().term().name()).matches();
   }
 
