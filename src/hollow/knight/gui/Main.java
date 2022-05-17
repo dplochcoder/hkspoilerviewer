@@ -10,7 +10,7 @@ import hollow.knight.util.GuiUtil;
 import hollow.knight.util.JsonUtil;
 
 public final class Main {
-  public static String VERSION = "1.5";
+  public static String VERSION = "1.6";
 
   private static Config loadConfig(String[] args) {
     if (args.length > 0) {

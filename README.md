@@ -26,7 +26,11 @@ Constrain your search to specific Map or Titled areas in the likewise named tabs
 
 ## Exclusions
 
-Several types of checks are excluded from search results by default; you can un-exclude them by checking them in the Exclusions section at the bottom.
+Several types of checks are excluded from search results by default; you can un-exclude them by checking them in the Exclusions section near the bottom.
+
+## Skips
+
+By default, logic assumes you only want to do the skips that were configured when creating the seed. In the Skips section at the bottom, you can turn on individual skips, putting their results "in logic". This allows you to constrain the out-of-logic search results to more manageable sizes.
 
 ### Vanilla (#)
 
