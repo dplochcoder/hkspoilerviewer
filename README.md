@@ -28,10 +28,6 @@ Constrain your search to specific Map or Titled areas in the likewise named tabs
 
 Several types of checks are excluded from search results by default; you can un-exclude them by checking them in the Exclusions section near the bottom.
 
-## Skips
-
-By default, logic assumes you only want to do the skips that were configured when creating the seed. In the Skips section at the bottom, you can turn on individual skips, putting their results "in logic". This allows you to constrain the out-of-logic search results to more manageable sizes.
-
 ### Vanilla (#)
 
 All item checks which were not randomized fall into the 'Vanilla' category. This includes geo rocks, so it tends to bloat search results when disabled. It also includes things like Grubs and Boss Essence which can be required for purchases at Grubfather and Seer, so you may need to disable this filter temporarily for such routes.
@@ -56,6 +52,10 @@ There are four shops which constrain purchases based on collectibles the player 
 If the player is in a situation where they have direct access (in logic) to `X` collectibles, all purchases at shops which require `N` collectibles, where `N + TOLERANCE <= X`, will show as in 'Purchase Logic' with a dollar-sign ($) prefix. This indicates that the player may be expected by logic to purchase these items, even though those collectibles haven't been added to the route yet.
 
 Adding `N` or more such collectibles to your route will put these shop checks fully in logic, removing the '$' prefix.
+
+## Skips
+
+By default, logic assumes you only want to do the skips that were configured when creating the seed. In the Skips section at the bottom, you can turn on individual skips, putting their results "in logic". This allows you to constrain the out-of-logic search results to more manageable sizes.
 
 # Search Results
 
