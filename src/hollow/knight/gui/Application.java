@@ -77,13 +77,8 @@ public final class Application extends JFrame {
     JPanel left = new JPanel();
     BoxLayout layout = new BoxLayout(left, BoxLayout.PAGE_AXIS);
     left.setLayout(layout);
+    this.skips = createSkips();
     List<SearchResult.Filter> resultFilters = addFilters(left);
-
-    this.skips = Skips.load();
-    this.skips.setInitialState(ctx.newInitialState());
-    this.skips.addListener(this::skipsUpdated);
-    left.add(new JSeparator());
-    this.skips.addToGui(left);
 
     this.searchEngine = new SearchEngine(ctx.roomLabels(), resultFilters);
     this.resultsList = createSearchResults();
@@ -346,21 +341,46 @@ public final class Application extends JFrame {
     }
   }
 
+  private Skips createSkips() throws ParseException {
+    Skips skips = Skips.load();
+    skips.setInitialState(ctx().newInitialState());
+    skips.addListener(this::skipsUpdated);
+    return skips;
+  }
+
   private List<SearchResult.Filter> addFilters(JPanel parent) throws ParseException {
-    ImmutableList<SearchResult.Filter> resultFilters =
-        ImmutableList.of(new TextFilter(ctx().roomLabels()), ItemCategoryFilters.load(),
-            new RoomFilters(ctx().roomLabels()), new ExclusionFilters(ctx().roomLabels()),
-            routeListModel.futureCheckFilter());
+    ImmutableList.Builder<SearchResult.Filter> searchFilters = ImmutableList.builder();
 
-    for (int i = 0; i < resultFilters.size(); i++) {
-      if (i > 0) {
-        parent.add(new JSeparator());
-      }
-      resultFilters.get(i).addListener(filterChangedListener);
-      resultFilters.get(i).addGuiToPanel(parent);
-    }
+    SearchResult.Filter textFilter = new TextFilter(ctx().roomLabels());
+    textFilter.addListener(filterChangedListener);
+    textFilter.addGuiToPanel(parent);
+    searchFilters.add(textFilter);
 
-    return resultFilters;
+    parent.add(new JSeparator());
+    SearchResult.Filter itemFilter = ItemCategoryFilters.load();
+    itemFilter.addListener(filterChangedListener);
+    itemFilter.addGuiToPanel(parent);
+    searchFilters.add(itemFilter);
+
+    parent.add(new JSeparator());
+    SearchResult.Filter roomsFilter = new RoomFilters(ctx().roomLabels());
+    roomsFilter.addListener(filterChangedListener);
+    roomsFilter.addGuiToPanel(parent);
+    searchFilters.add(roomsFilter);
+
+    parent.add(new JSeparator());
+    this.skips.addToGui(parent);
+
+    parent.add(new JSeparator());
+    SearchResult.Filter excFilters = new ExclusionFilters(ctx().roomLabels());
+    excFilters.addListener(filterChangedListener);
+    excFilters.addGuiToPanel(parent);
+    searchFilters.add(excFilters);
+
+    // No GUI
+    searchFilters.add(routeListModel.futureCheckFilter());
+
+    return searchFilters.build();
   }
 
   private void skipsUpdated() {

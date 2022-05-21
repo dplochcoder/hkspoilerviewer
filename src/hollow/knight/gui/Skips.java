@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -55,13 +56,27 @@ public final class Skips {
     return SkipTerm.create(effectTerm, box);
   }
 
+  private JButton createAllButton(String txt, boolean enable) {
+    JButton button = new JButton(txt);
+    button.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        skipTerms.forEach(st -> st.box().setSelected(enable));
+        notifyListeners();
+      }
+    });
+
+    return button;
+  }
+
   private Skips(Map<String, Term> skipTerms) {
     this.skipTerms = skipTerms.keySet().stream().sorted()
         .map(s -> createSkipTerm(s, skipTerms.get(s))).collect(ImmutableList.toImmutableList());
 
     int numRows = (this.skipTerms.size() + 3) / 2;
     this.panel.setLayout(new GridLayout(numRows, 2));
-    this.panel.add(new JLabel("Skips"));
+    this.panel.add(createAllButton("ALL", true));
+    this.panel.add(createAllButton("NONE", false));
     this.panel.add(new JLabel(""));
     this.skipTerms.forEach(st -> this.panel.add(st.box()));
   }
