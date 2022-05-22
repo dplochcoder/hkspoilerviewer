@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.google.common.base.Verify;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.primitives.Ints;
 
 public final class ConditionParser {
@@ -190,11 +191,11 @@ public final class ConditionParser {
   private static final String NOTCH_COST_PREFIX = "$NotchCost[";
   private static final String NOTCH_COST_SUFFIX = "]";
 
-  private static ImmutableList<Integer> parseCharmIds(String notchCost) {
+  private static ImmutableSet<Integer> parseCharmIds(String notchCost) {
     Verify.verify(notchCost.startsWith(NOTCH_COST_PREFIX), notchCost);
     Verify.verify(notchCost.endsWith(NOTCH_COST_SUFFIX), notchCost);
 
-    ImmutableList.Builder<Integer> builder = ImmutableList.builder();
+    ImmutableSet.Builder<Integer> builder = ImmutableSet.builder();
     for (String str : notchCost
         .substring(NOTCH_COST_PREFIX.length(), notchCost.length() - NOTCH_COST_SUFFIX.length())
         .split(",")) {

@@ -16,4 +16,20 @@ public final class Conjunction extends Condition {
   public boolean test(State state) {
     return left.test(state) && right.test(state);
   }
+
+  @Override
+  public int hashCode() {
+    return Conjunction.class.hashCode() + left.hashCode() + right.hashCode();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (!(o instanceof Conjunction)) {
+      return false;
+    }
+
+    Conjunction that = (Conjunction) o;
+    return (left.equals(that.left) && right.equals(that.right))
+        || (left.equals(that.right) && right.equals(that.left));
+  }
 }

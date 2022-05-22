@@ -1,5 +1,6 @@
 package hollow.knight.logic;
 
+import java.util.Objects;
 import com.google.common.collect.ImmutableSet;
 
 /** Tests if a specific Term has a value greater than X, where X is 0 by default. */
@@ -27,4 +28,18 @@ public final class TermGreaterThanCondition extends Condition {
     return term;
   }
 
+  @Override
+  public int hashCode() {
+    return Objects.hash(term, greater);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (!(o instanceof TermEqualToCondition)) {
+      return false;
+    }
+
+    TermGreaterThanCondition that = (TermGreaterThanCondition) o;
+    return term.equals(that.term) && greater == that.greater;
+  }
 }

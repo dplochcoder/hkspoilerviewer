@@ -1,17 +1,16 @@
 package hollow.knight.logic;
 
-import java.util.List;
+import java.util.Set;
 import java.util.stream.IntStream;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 public final class NotchCostCondition extends Condition {
 
-  private final ImmutableList<Integer> charmIds;
+  private final ImmutableSet<Integer> charmIds;
 
-  public NotchCostCondition(List<Integer> charmIds) {
+  public NotchCostCondition(Set<Integer> charmIds) {
     super(ImmutableSet.of(Term.notches()));
-    this.charmIds = ImmutableList.copyOf(charmIds);
+    this.charmIds = ImmutableSet.copyOf(charmIds);
   }
 
   private IntStream notchCosts(Items items) {
@@ -29,4 +28,19 @@ public final class NotchCostCondition extends Condition {
 
     return notches > cost;
   }
+
+  @Override
+  public int hashCode() {
+    return NotchCostCondition.class.hashCode() ^ charmIds.hashCode();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (!(o instanceof NotchCostCondition)) {
+      return false;
+    }
+
+    return charmIds.equals(((NotchCostCondition) o).charmIds);
+  }
+
 }

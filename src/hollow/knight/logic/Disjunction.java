@@ -16,4 +16,20 @@ public final class Disjunction extends Condition {
   public boolean test(State state) {
     return left.test(state) || right.test(state);
   }
+
+  @Override
+  public int hashCode() {
+    return Disjunction.class.hashCode() + left.hashCode() + right.hashCode();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (!(o instanceof Disjunction)) {
+      return false;
+    }
+
+    Disjunction that = (Disjunction) o;
+    return (left.equals(that.left) && right.equals(that.right))
+        || (left.equals(that.right) && right.equals(that.left));
+  }
 }
