@@ -8,9 +8,13 @@ public final class NotchCostCondition extends Condition {
 
   private final ImmutableSet<Integer> charmIds;
 
-  public NotchCostCondition(Set<Integer> charmIds) {
+  private NotchCostCondition(Set<Integer> charmIds) {
     super(ImmutableSet.of(Term.notches()));
     this.charmIds = ImmutableSet.copyOf(charmIds);
+  }
+
+  public static NotchCostCondition of(Set<Integer> charmIdS) {
+    return (NotchCostCondition) (new NotchCostCondition(charmIdS)).intern();
   }
 
   private IntStream notchCosts(Items items) {

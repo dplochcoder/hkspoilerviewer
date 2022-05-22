@@ -9,14 +9,18 @@ public final class TermGreaterThanCondition extends Condition {
   private final Term term;
   private final int greater;
 
-  public TermGreaterThanCondition(Term term) {
-    this(term, 0);
-  }
-
-  public TermGreaterThanCondition(Term term, int greater) {
+  private TermGreaterThanCondition(Term term, int greater) {
     super(ImmutableSet.of(term));
     this.term = term;
     this.greater = greater;
+  }
+
+  public static TermGreaterThanCondition of(Term term) {
+    return of(term, 0);
+  }
+
+  public static TermGreaterThanCondition of(Term term, int greater) {
+    return (TermGreaterThanCondition) (new TermGreaterThanCondition(term, greater)).intern();
   }
 
   @Override
@@ -35,7 +39,7 @@ public final class TermGreaterThanCondition extends Condition {
 
   @Override
   public boolean equals(Object o) {
-    if (!(o instanceof TermEqualToCondition)) {
+    if (!(o instanceof TermGreaterThanCondition)) {
       return false;
     }
 

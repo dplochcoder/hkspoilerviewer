@@ -92,7 +92,8 @@ public final class Waypoints {
     // Modify logic by adding transition disjunctions.
     for (Term source : transitions.keySet()) {
       Term target = transitions.get(source);
-      waypoints.put(target, new Disjunction(new TermGreaterThanCondition(source), waypoints.get(target)));
+      waypoints.put(target,
+          Disjunction.of(TermGreaterThanCondition.of(source), waypoints.get(target)));
     }
 
     return new Waypoints(waypoints);

@@ -7,10 +7,14 @@ public final class TermEqualToCondition extends Condition {
   private final Term term;
   private final int value;
 
-  public TermEqualToCondition(Term term, int value) {
+  private TermEqualToCondition(Term term, int value) {
     super(ImmutableSet.of(term));
     this.term = term;
     this.value = value;
+  }
+
+  public static TermEqualToCondition of(Term term, int value) {
+    return (TermEqualToCondition) (new TermEqualToCondition(term, value)).intern();
   }
 
   @Override

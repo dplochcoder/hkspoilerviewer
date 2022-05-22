@@ -54,20 +54,18 @@ public abstract class Condition {
 
     @Override
     public boolean equals(Object o) {
-      if (!(o instanceof ConstantCondition)) {
-        return false;
-      }
-      return value == ((ConstantCondition) o).value;
+      // Only two instances of this class exist, so we can use identity equals.
+      return this == o;
     }
   };
 
-  private static final Condition ALWAYS_TRUE = new ConstantCondition(true);
+  private static final Condition ALWAYS_TRUE = new ConstantCondition(true).intern();
 
   public static Condition alwaysTrue() {
     return ALWAYS_TRUE;
   }
 
-  private static final Condition ALWAYS_FALSE = new ConstantCondition(false);
+  private static final Condition ALWAYS_FALSE = new ConstantCondition(false).intern();
 
   public static Condition alwaysFalse() {
     return ALWAYS_FALSE;

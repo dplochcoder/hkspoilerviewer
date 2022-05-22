@@ -55,7 +55,7 @@ public final class ConditionParser {
     private final TermGreaterThanCondition condition;
 
     public TermAtom(Term term) {
-      this.condition = new TermGreaterThanCondition(term);
+      this.condition = TermGreaterThanCondition.of(term);
     }
 
     @Override
@@ -217,9 +217,9 @@ public final class ConditionParser {
         Condition rCond = ((ConditionAtom) right).condition();
 
         if (op == Atom.Type.CONJUNCTION_OPERATOR) {
-          return new Conjunction(lCond, rCond);
+          return Conjunction.of(lCond, rCond);
         } else {
-          return new Disjunction(lCond, rCond);
+          return Disjunction.of(lCond, rCond);
         }
       }
       case GREATER_THAN:
@@ -232,7 +232,7 @@ public final class ConditionParser {
           if (lTerm.term().name().contentEquals("NOTCHES")
               && rTerm.term().name().startsWith(NOTCH_COST_PREFIX)) {
             // Parse notch cost.
-            return new NotchCostCondition(parseCharmIds(rTerm.term().name()));
+            return NotchCostCondition.of(parseCharmIds(rTerm.term().name()));
           }
         }
         if (left.type() != Atom.Type.TERM || right.type() != Atom.Type.NUMERIC_LITERAL) {
@@ -242,9 +242,9 @@ public final class ConditionParser {
         Term term = ((TermAtom) left).term();
         int value = ((NumericAtom) right).value();
         if (op == Atom.Type.GREATER_THAN) {
-          return new TermGreaterThanCondition(term, value);
+          return TermGreaterThanCondition.of(term, value);
         } else {
-          return new TermEqualToCondition(term, value);
+          return TermEqualToCondition.of(term, value);
         }
       }
       default:

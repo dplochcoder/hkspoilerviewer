@@ -1,25 +1,49 @@
 package hollow.knight.logic;
 
+import java.util.HashSet;
+import java.util.Set;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 
 public final class Conjunction extends Condition {
-  private final Condition left;
-  private final Condition right;
+  private final ImmutableSet<Condition> operands;
 
-  public Conjunction(Condition left, Condition right) {
-    super(ImmutableSet.<Term>builder().addAll(left.terms()).addAll(right.terms()).build());
-    this.left = left;
-    this.right = right;
+  private Conjunction(Set<Condition> operands) {
+    super(
+        operands.stream().flatMap(c -> c.terms().stream()).collect(ImmutableSet.toImmutableSet()));
+
+    Preconditions.checkArgument(operands.size() > 1);
+    this.operands = ImmutableSet.copyOf(operands);
+  }
+
+  public static Condition of(Condition c1, Condition c2) {
+    Set<Condition> operands = new HashSet<>();
+    if (c1 instanceof Conjunction) {
+      operands.addAll(((Conjunction) c1).operands);
+    } else {
+      operands.add(c1);
+    }
+    if (c2 instanceof Conjunction) {
+      operands.addAll(((Conjunction) c2).operands);
+    } else {
+      operands.add(c2);
+    }
+
+    if (operands.size() == 1) {
+      return operands.iterator().next();
+    } else {
+      return new Conjunction(operands).intern();
+    }
   }
 
   @Override
   public boolean test(State state) {
-    return left.test(state) && right.test(state);
+    return operands.stream().allMatch(c -> c.test(state));
   }
 
   @Override
   public int hashCode() {
-    return Conjunction.class.hashCode() + left.hashCode() + right.hashCode();
+    return Conjunction.class.hashCode() ^ operands.hashCode();
   }
 
   @Override
@@ -27,9 +51,6 @@ public final class Conjunction extends Condition {
     if (!(o instanceof Conjunction)) {
       return false;
     }
-
-    Conjunction that = (Conjunction) o;
-    return (left.equals(that.left) && right.equals(that.right))
-        || (left.equals(that.right) && right.equals(that.left));
+    return operands.equals(((Conjunction) o).operands);
   }
 }
