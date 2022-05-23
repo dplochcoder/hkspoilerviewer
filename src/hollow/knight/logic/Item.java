@@ -45,6 +45,8 @@ public final class Item {
   }
 
   void apply(State state) {
+    // We can't do state.test() here because item conditions don't necessarily hold to the false ->
+    // true paradigm.
     TermMap effects = logic.test(state.termValues()) ? trueEffects : falseEffects;
 
     for (Term t : effects.terms()) {

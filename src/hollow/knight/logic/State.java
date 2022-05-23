@@ -70,6 +70,14 @@ public class State {
     acquiredItemChecks.add(itemCheck);
   }
 
+  public boolean test(Condition c) {
+    if (dirtyTerms.isEmpty() && graph != null) {
+      return graph.test(c);
+    } else {
+      return c.test(termValues());
+    }
+  }
+
   // Iteratively apply logic to grant access to items / areas.
   public void normalize() {
     Set<Term> newWaypoints = new HashSet<>();

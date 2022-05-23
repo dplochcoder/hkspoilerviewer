@@ -25,6 +25,10 @@ public final class ConditionGraph {
     this.index = new TermConditionIndex(index);
   }
 
+  public boolean test(Condition c) {
+    return trueConditions.contains(c);
+  }
+
   public ConditionGraph deepCopy() {
     return new ConditionGraph(this.trueConditions, this.children, this.index);
   }
@@ -64,8 +68,8 @@ public final class ConditionGraph {
         }
       }
 
+      newUpdates.addAll(next);
       queue = next;
-      newUpdates.addAll(queue);
     }
 
     // Remove all such conditions from the term index.

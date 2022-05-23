@@ -113,8 +113,8 @@ public abstract class SearchResult {
   }
 
   private static LogicType getLogicType(ItemCheck itemCheck, State state) {
-    if (itemCheck.location().accessCondition().test(state.termValues())) {
-      if (itemCheck.costs().asCondition().test(state.termValues())) {
+    if (state.test(itemCheck.location().accessCondition())) {
+      if (state.test(itemCheck.costs().asCondition())) {
         return LogicType.IN_LOGIC;
       } else if (itemCheck.costs().asCondition().test(state.purchaseTermValues())) {
         return LogicType.COST_ACCESSIBLE;
