@@ -57,7 +57,7 @@ public abstract class Condition {
 
     @Override
     public int hashCode() {
-      return Boolean.hashCode(value) + ConstantCondition.class.hashCode();
+      return ConstantCondition.class.hashCode() ^ Boolean.hashCode(value);
     }
 
     @Override
