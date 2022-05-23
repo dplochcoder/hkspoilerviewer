@@ -1,7 +1,6 @@
 package hollow.knight.logic;
 
-import java.util.Set;
-import com.google.common.collect.ImmutableSet;
+import java.util.stream.Stream;
 import com.google.common.collect.Interner;
 import com.google.common.collect.Interners;
 
@@ -16,16 +15,10 @@ import com.google.common.collect.Interners;
 public abstract class Condition {
   private static final Interner<Condition> INTERNER = Interners.newWeakInterner();
 
-  private final ImmutableSet<Term> locationTerms;
   private final int hashCode;
 
-  protected Condition(Set<Term> locationTerms, int hashCode) {
-    this.locationTerms = ImmutableSet.copyOf(locationTerms);
+  protected Condition(int hashCode) {
     this.hashCode = hashCode;
-  }
-
-  public ImmutableSet<Term> locationTerms() {
-    return locationTerms;
   }
 
   // Tests whether this condition evaluates to true.
@@ -34,6 +27,10 @@ public abstract class Condition {
   // Invoke appropriate methods on `builder` to index this Condition.
   // Never invoked on a Condition already evaluating to true.
   public abstract void index(ConditionGraph.Builder builder);
+
+  // Generic terms in this condition possibly related to location; used to infer scenes.
+  // May contain duplicates, not efficient.
+  public abstract Stream<Term> locationTerms();
 
   @Override
   public final int hashCode() {
@@ -51,7 +48,7 @@ public abstract class Condition {
     private final boolean value;
 
     private ConstantCondition(boolean value) {
-      super(ImmutableSet.of(), ConstantCondition.class.hashCode() ^ Boolean.hashCode(value));
+      super(ConstantCondition.class.hashCode() ^ Boolean.hashCode(value));
       this.value = value;
     }
 
@@ -62,6 +59,11 @@ public abstract class Condition {
 
     @Override
     public void index(ConditionGraph.Builder builder) {}
+
+    @Override
+    public Stream<Term> locationTerms() {
+      return Stream.of();
+    }
 
     @Override
     public boolean equals(Object o) {

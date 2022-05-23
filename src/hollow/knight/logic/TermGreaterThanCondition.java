@@ -1,7 +1,7 @@
 package hollow.knight.logic;
 
 import java.util.Objects;
-import com.google.common.collect.ImmutableSet;
+import java.util.stream.Stream;
 
 /** Tests if a specific Term has a value greater than X, where X is 0 by default. */
 public final class TermGreaterThanCondition extends Condition {
@@ -10,7 +10,7 @@ public final class TermGreaterThanCondition extends Condition {
   private final int greater;
 
   private TermGreaterThanCondition(Term term, int greater) {
-    super(ImmutableSet.of(term), Objects.hash(term, greater));
+    super(Objects.hash(term, greater));
     this.term = term;
     this.greater = greater;
   }
@@ -35,6 +35,11 @@ public final class TermGreaterThanCondition extends Condition {
   @Override
   public void index(ConditionGraph.Builder builder) {
     builder.indexTermCondition(term, greater + 1, this);
+  }
+
+  @Override
+  public Stream<Term> locationTerms() {
+    return Stream.of(term);
   }
 
   @Override

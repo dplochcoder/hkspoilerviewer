@@ -1,14 +1,14 @@
 package hollow.knight.logic;
 
 import java.util.Objects;
-import com.google.common.collect.ImmutableSet;
+import java.util.stream.Stream;
 
 public final class TermEqualToCondition extends Condition {
   private final Term term;
   private final int value;
 
   private TermEqualToCondition(Term term, int value) {
-    super(ImmutableSet.of(), Objects.hash(term, value));
+    super(Objects.hash(term, value));
     this.term = term;
     this.value = value;
   }
@@ -26,6 +26,11 @@ public final class TermEqualToCondition extends Condition {
   public void index(ConditionGraph.Builder builder) {
     // An equal-to condition is always based on initial state, and should never change.
     // So we don't index it.
+  }
+
+  @Override
+  public Stream<Term> locationTerms() {
+    return Stream.of(term);
   }
 
   @Override

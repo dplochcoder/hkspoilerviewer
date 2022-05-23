@@ -3,6 +3,7 @@ package hollow.knight.logic;
 import java.util.HashSet;
 import java.util.Set;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
 public final class Location {
@@ -17,7 +18,7 @@ public final class Location {
   private static String inferScene(String name, Condition accessCondition, RoomLabels rooms)
       throws ParseException {
     Set<String> potentialScenes = new HashSet<>();
-    for (Term t : accessCondition.locationTerms()) {
+    for (Term t : accessCondition.locationTerms().collect(ImmutableSet.toImmutableSet())) {
       if (t.name().contains("[")) {
         potentialScenes.add(t.name().substring(0, t.name().indexOf('[')));
       } else {
