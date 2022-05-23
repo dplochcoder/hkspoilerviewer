@@ -52,9 +52,6 @@ public abstract class CommutativeCondition extends Condition {
 
   @Override
   public final boolean equals(Object o) {
-    if (!(o instanceof CommutativeCondition)) {
-      return false;
-    }
     if (!o.getClass().equals(getClass())) {
       return false;
     }
