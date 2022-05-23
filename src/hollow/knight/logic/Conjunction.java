@@ -4,7 +4,7 @@ import java.util.Set;
 
 public final class Conjunction extends CommutativeCondition {
   private Conjunction(Set<Condition> operands) {
-    super(operands);
+    super(Conjunction.class, operands);
   }
 
   public static Condition of(Condition c1, Condition c2) {

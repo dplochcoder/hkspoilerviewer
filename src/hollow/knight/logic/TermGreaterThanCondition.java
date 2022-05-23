@@ -10,7 +10,7 @@ public final class TermGreaterThanCondition extends Condition {
   private final int greater;
 
   private TermGreaterThanCondition(Term term, int greater) {
-    super(ImmutableSet.of(term));
+    super(ImmutableSet.of(term), Objects.hash(term, greater));
     this.term = term;
     this.greater = greater;
   }
@@ -35,11 +35,6 @@ public final class TermGreaterThanCondition extends Condition {
   @Override
   public void index(ConditionGraph.Builder builder) {
     builder.indexTermCondition(term, greater + 1, this);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(term, greater);
   }
 
   @Override

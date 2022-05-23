@@ -2,6 +2,7 @@ package hollow.knight.logic;
 
 import java.util.HashSet;
 import java.util.Set;
+import com.google.common.collect.Sets;
 
 // A mutable record of all Condition evaluations, updated incrementally.
 // Assumes all conditions can only transition from false -> true, and that term values can only
@@ -20,7 +21,9 @@ public final class ConditionGraph {
 
   private ConditionGraph(Set<Condition> trueConditions,
       BiMultimap<CommutativeCondition, Condition> children, TermConditionIndex index) {
-    this.trueConditions = new HashSet<>(trueConditions);
+    this.trueConditions = Sets.newIdentityHashSet();
+    this.trueConditions.addAll(trueConditions);
+
     this.children = new BiMultimap<>(children);
     this.index = new TermConditionIndex(index);
   }

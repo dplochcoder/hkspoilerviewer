@@ -13,9 +13,11 @@ public abstract class Condition {
   private static final Interner<Condition> INTERNER = Interners.newWeakInterner();
 
   private final ImmutableSet<Term> locationTerms;
+  private final int hashCode;
 
-  protected Condition(Set<Term> locationTerms) {
+  protected Condition(Set<Term> locationTerms, int hashCode) {
     this.locationTerms = ImmutableSet.copyOf(locationTerms);
+    this.hashCode = hashCode;
   }
 
   public ImmutableSet<Term> locationTerms() {
@@ -30,7 +32,9 @@ public abstract class Condition {
   public abstract void index(ConditionGraph.Builder builder);
 
   @Override
-  public abstract int hashCode();
+  public final int hashCode() {
+    return hashCode;
+  }
 
   @Override
   public abstract boolean equals(Object o);
@@ -43,7 +47,7 @@ public abstract class Condition {
     private final boolean value;
 
     private ConstantCondition(boolean value) {
-      super(ImmutableSet.of());
+      super(ImmutableSet.of(), ConstantCondition.class.hashCode() ^ Boolean.hashCode(value));
       this.value = value;
     }
 
@@ -54,11 +58,6 @@ public abstract class Condition {
 
     @Override
     public void index(ConditionGraph.Builder builder) {}
-
-    @Override
-    public int hashCode() {
-      return ConstantCondition.class.hashCode() ^ Boolean.hashCode(value);
-    }
 
     @Override
     public boolean equals(Object o) {

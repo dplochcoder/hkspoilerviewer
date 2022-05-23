@@ -8,7 +8,7 @@ public final class TermEqualToCondition extends Condition {
   private final int value;
 
   private TermEqualToCondition(Term term, int value) {
-    super(ImmutableSet.of());
+    super(ImmutableSet.of(), Objects.hash(term, value));
     this.term = term;
     this.value = value;
   }
@@ -26,11 +26,6 @@ public final class TermEqualToCondition extends Condition {
   public void index(ConditionGraph.Builder builder) {
     // An equal-to condition is always based on initial state, and should never change.
     // So we don't index it.
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(term, value);
   }
 
   @Override
