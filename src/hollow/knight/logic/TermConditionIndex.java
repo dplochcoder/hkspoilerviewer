@@ -1,9 +1,12 @@
 package hollow.knight.logic;
 
-import java.util.HashSet;
 import java.util.Set;
+import java.util.SortedSet;
 import com.google.auto.value.AutoValue;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import com.google.common.collect.MultimapBuilder;
+import com.google.common.collect.Sets;
 import com.google.common.collect.SortedSetMultimap;
 
 public final class TermConditionIndex {
@@ -20,7 +23,7 @@ public final class TermConditionIndex {
 
   private final SortedSetMultimap<Term, Integer> indexValues =
       MultimapBuilder.hashKeys().treeSetValues().build();
-  private final BiMultimap<TermIndex, Condition> conditionIndex = new BiMultimap<>();
+  private final BiMap<TermIndex, Condition> conditionIndex = HashBiMap.create();
 
   public TermConditionIndex() {}
 
@@ -35,20 +38,19 @@ public final class TermConditionIndex {
   }
 
   public Set<Condition> removeTermIndex(Term term, int index) {
-    Set<Condition> conditions = new HashSet<>();
-    Set<Integer> indices = new HashSet<>(indexValues.get(term).headSet(index + 1));
-    for (int i : indices) {
-      indexValues.remove(term, i);
+    Set<Condition> conditions = Sets.newIdentityHashSet();
 
+    SortedSet<Integer> affected = indexValues.get(term).headSet(index + 1);
+    for (int i : affected) {
       TermIndex ti = TermIndex.of(term, i);
-      conditions.addAll(conditionIndex.removeKey(ti));
+      conditions.add(conditionIndex.remove(ti));
     }
+    affected.clear();
+
     return conditions;
   }
 
   public void removeCondition(Condition c) {
-    for (TermIndex ti : conditionIndex.removeValue(c)) {
-      indexValues.remove(ti.term(), ti.index());
-    }
+    conditionIndex.inverse().remove(c);
   }
 }
