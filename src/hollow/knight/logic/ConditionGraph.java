@@ -62,7 +62,6 @@ public final class ConditionGraph {
     }
 
     Set<Condition> queue = new HashSet<>(updates);
-    Set<Condition> newUpdates = new HashSet<>();
     while (!queue.isEmpty()) {
       Set<Condition> next = new HashSet<>();
       for (Condition c : queue) {
@@ -71,15 +70,11 @@ public final class ConditionGraph {
         }
       }
 
-      newUpdates.addAll(next);
+      updates.addAll(next);
       queue = next;
     }
 
-    // Remove all such conditions from the term index.
-    newUpdates.forEach(index::removeCondition);
-
     // We now have the full set of all Conditions that have become true.
-    updates.addAll(newUpdates);
     trueConditions.addAll(updates);
     return updates;
   }
