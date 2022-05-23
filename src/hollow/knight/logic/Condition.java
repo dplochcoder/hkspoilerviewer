@@ -8,6 +8,10 @@ import com.google.common.collect.Interners;
 /**
  * A generic expression for whether something is reachable, given the current State of obtains and
  * locations.
+ * 
+ * <p>
+ * Conditions are interned and immutable. To re-evaluate complex conditions efficiently given known
+ * assumptions about logic progression, use a ConditionGraph.
  */
 public abstract class Condition {
   private static final Interner<Condition> INTERNER = Interners.newWeakInterner();
