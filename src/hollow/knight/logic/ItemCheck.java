@@ -5,6 +5,7 @@ public final class ItemCheck implements Comparable<ItemCheck> {
   private final Location location;
   private final Item item;
   private final Costs costs;
+  private final Condition condition;
   private final boolean vanilla;
 
   public ItemCheck(int id, Location location, Item item, Costs costs, boolean vanilla) {
@@ -12,6 +13,7 @@ public final class ItemCheck implements Comparable<ItemCheck> {
     this.location = location;
     this.item = item;
     this.costs = costs;
+    this.condition = Conjunction.of(location.accessCondition(), costs.asCondition());
     this.vanilla = vanilla;
   }
 
@@ -34,6 +36,10 @@ public final class ItemCheck implements Comparable<ItemCheck> {
 
   public Costs costs() {
     return costs;
+  }
+
+  public Condition condition() {
+    return condition;
   }
 
   public boolean vanilla() {

@@ -12,23 +12,28 @@ import com.google.common.collect.Interners;
 public abstract class Condition {
   private static final Interner<Condition> INTERNER = Interners.newWeakInterner();
 
-  private final ImmutableSet<Term> terms;
+  private final ImmutableSet<Term> locationTerms;
 
-  protected Condition(Set<Term> terms) {
-    this.terms = ImmutableSet.copyOf(terms);
+  protected Condition(Set<Term> locationTerms) {
+    this.locationTerms = ImmutableSet.copyOf(locationTerms);
   }
 
-  public abstract boolean test(State state);
+  public ImmutableSet<Term> locationTerms() {
+    return locationTerms;
+  }
+
+  // Tests whether this condition evaluates to true.
+  public abstract boolean test(TermMap values);
+
+  // Invoke appropriate methods on `builder` to index this Condition.
+  // Never invoked on a Condition already evaluating to true.
+  public abstract void index(ConditionGraph.Builder builder);
 
   @Override
   public abstract int hashCode();
 
   @Override
   public abstract boolean equals(Object o);
-
-  public final ImmutableSet<Term> terms() {
-    return terms;
-  }
 
   public final Condition intern() {
     return INTERNER.intern(this);
@@ -43,9 +48,12 @@ public abstract class Condition {
     }
 
     @Override
-    public boolean test(State state) {
+    public boolean test(TermMap values) {
       return value;
     }
+
+    @Override
+    public void index(ConditionGraph.Builder builder) {}
 
     @Override
     public int hashCode() {
@@ -69,5 +77,12 @@ public abstract class Condition {
 
   public static Condition alwaysFalse() {
     return ALWAYS_FALSE;
+  }
+
+  private static final Condition CAN_REPLENISH_GEO =
+      TermGreaterThanCondition.of(Term.canReplenishGeo(), 0);
+
+  public static Condition canReplenishGeo() {
+    return CAN_REPLENISH_GEO;
   }
 }

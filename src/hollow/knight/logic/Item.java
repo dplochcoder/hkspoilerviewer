@@ -36,10 +36,6 @@ public final class Item {
     return items.charmIds().charmId(term) != null;
   }
 
-  public int notchCost(Items items) {
-    return items.notchCost(items.charmIds().charmId(term));
-  }
-
   public boolean hasEffectTerm(Term term) {
     return trueEffects.get(term) != 0 || falseEffects.get(term) != 0;
   }
@@ -49,7 +45,7 @@ public final class Item {
   }
 
   void apply(State state) {
-    TermMap effects = logic.test(state) ? trueEffects : falseEffects;
+    TermMap effects = logic.test(state.termValues()) ? trueEffects : falseEffects;
 
     for (Term t : effects.terms()) {
       int cap = Integer.MAX_VALUE;
@@ -78,7 +74,7 @@ public final class Item {
     }
   }
 
-  public static Item parse(JsonObject item) throws ParseException {
+  public static Item parse(ConditionParser.Context ctx, JsonObject item) throws ParseException {
     if (item.get("item") != null) {
       item = item.get("item").getAsJsonObject();
     }
@@ -95,7 +91,8 @@ public final class Item {
     MutableTermMap falseEffects = new MutableTermMap();
     MutableTermMap caps = new MutableTermMap();
     if (item.get("Logic") != null) {
-      logic = ConditionParser.parse(item.get("Logic").getAsJsonObject().get("Logic").getAsString());
+      logic = ConditionParser.parse(ctx,
+          item.get("Logic").getAsJsonObject().get("Logic").getAsString());
       parseEffects(item.get("TrueItem").getAsJsonObject(), trueEffects);
       parseEffects(item.get("FalseItem").getAsJsonObject(), falseEffects);
     } else {

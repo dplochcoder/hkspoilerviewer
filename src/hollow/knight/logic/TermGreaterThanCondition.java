@@ -24,12 +24,17 @@ public final class TermGreaterThanCondition extends Condition {
   }
 
   @Override
-  public boolean test(State state) {
-    return state.get(term) > greater;
+  public boolean test(TermMap values) {
+    return values.get(term) > greater;
   }
 
   public Term term() {
     return term;
+  }
+
+  @Override
+  public void index(ConditionGraph.Builder builder) {
+    builder.indexTermCondition(term, greater + 1, this);
   }
 
   @Override

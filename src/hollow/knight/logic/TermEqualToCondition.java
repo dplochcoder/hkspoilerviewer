@@ -8,7 +8,7 @@ public final class TermEqualToCondition extends Condition {
   private final int value;
 
   private TermEqualToCondition(Term term, int value) {
-    super(ImmutableSet.of(term));
+    super(ImmutableSet.of());
     this.term = term;
     this.value = value;
   }
@@ -18,8 +18,14 @@ public final class TermEqualToCondition extends Condition {
   }
 
   @Override
-  public boolean test(State state) {
-    return state.get(term) == value;
+  public boolean test(TermMap values) {
+    return values.get(term) == value;
+  }
+
+  @Override
+  public void index(ConditionGraph.Builder builder) {
+    // An equal-to condition is always based on initial state, and should never change.
+    // So we don't index it.
   }
 
   @Override

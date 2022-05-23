@@ -10,6 +10,7 @@ public final class StateContext {
   private final JsonObject originalJson;
   private final RoomLabels roomLabels;
   private final Pools pools;
+  private final NotchCosts notchCosts;
   private final Waypoints waypoints;
   private final Items items;
 
@@ -17,10 +18,12 @@ public final class StateContext {
   private final ImmutableTermMap setters;
 
   public StateContext(JsonObject originalJson, RoomLabels roomLabels, Pools pools,
-      Waypoints waypoints, Items items, TermMap tolerances, TermMap setters) {
+      NotchCosts notchCosts, Waypoints waypoints, Items items, TermMap tolerances,
+      TermMap setters) {
     this.originalJson = originalJson;
     this.roomLabels = roomLabels;
     this.pools = pools;
+    this.notchCosts = notchCosts;
     this.waypoints = waypoints;
     this.items = items;
     this.tolerances = ImmutableTermMap.copyOf(tolerances);
@@ -37,6 +40,10 @@ public final class StateContext {
 
   public Pools pools() {
     return pools;
+  }
+
+  public NotchCosts notchCosts() {
+    return notchCosts;
   }
 
   public Waypoints waypoints() {
@@ -85,8 +92,10 @@ public final class StateContext {
       }
     }
 
-    return new StateContext(json, rooms, pools, Waypoints.parse(json), Items.parse(json, rooms),
-        tolerances, setters);
+    NotchCosts notchCosts = NotchCosts.parse(json);
+    ConditionParser.Context parseCtx = new ConditionParser.Context(notchCosts);
+    return new StateContext(json, rooms, pools, notchCosts, Waypoints.parse(json, parseCtx),
+        Items.parse(json, parseCtx, rooms), tolerances, setters);
   }
 
 }

@@ -18,6 +18,14 @@ public final class Cost {
     this.term = term;
   }
 
+  public Condition asCondition() {
+    if (type == Type.GEO) {
+      return Condition.canReplenishGeo();
+    } else {
+      return TermGreaterThanCondition.of(term, value - 1);
+    }
+  }
+
   public Type type() {
     return type;
   }
@@ -33,14 +41,6 @@ public final class Cost {
 
   public boolean hasCostTerm(Term term) {
     return type == Type.TERM && this.term.equals(term);
-  }
-
-  public boolean canBePaid(boolean canPayGeo, TermMap values) {
-    if (type == Type.GEO) {
-      return canPayGeo;
-    } else {
-      return values.get(term) >= value;
-    }
   }
 
   public String debugString() {

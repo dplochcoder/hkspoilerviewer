@@ -2,9 +2,10 @@ package hollow.knight.logic;
 
 import java.util.HashMap;
 import java.util.Map;
+import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSetMultimap;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -14,38 +15,33 @@ import com.google.gson.JsonObject;
 public final class Waypoints {
 
   private final ImmutableMap<Term, Condition> waypoints;
+  private final ImmutableMultimap<Condition, Term> inverse;
 
-  // Inverse index; reaching a key in this map may grant access to any of its mapped values.
-  private final ImmutableSetMultimap<Term, Term> influences;
-
-  private static ImmutableSetMultimap<Term, Term> indexInfluences(Map<Term, Condition> waypoints) {
-    ImmutableSetMultimap.Builder<Term, Term> builder = ImmutableSetMultimap.builder();
-    for (Term t : waypoints.keySet()) {
-      for (Term influencer : waypoints.get(t).terms()) {
-        builder.put(influencer, t);
-      }
-    }
-    return builder.build();
-  }
 
   private Waypoints(Map<Term, Condition> waypoints) {
     this.waypoints = ImmutableMap.copyOf(waypoints);
-    this.influences = indexInfluences(this.waypoints);
+
+    ImmutableMultimap.Builder<Condition, Term> inverse = ImmutableMultimap.builder();
+    for (Term t : waypoints.keySet()) {
+      inverse.put(waypoints.get(t), t);
+    }
+    this.inverse = inverse.build();
   }
 
   public ImmutableSet<Term> allWaypoints() {
     return waypoints.keySet();
   }
 
-  public Condition get(Term waypoint) {
+  public Condition getCondition(Term waypoint) {
     return waypoints.get(waypoint);
   }
 
-  public ImmutableSet<Term> influences(Term term) {
-    return influences.get(term);
+  public ImmutableCollection<Term> getTerms(Condition c) {
+    return inverse.get(c);
   }
 
-  public static Waypoints parse(JsonObject json) throws ParseException {
+  public static Waypoints parse(JsonObject json, ConditionParser.Context parseCtx)
+      throws ParseException {
     JsonObject lm = json.get("LM").getAsJsonObject();
 
     Map<Term, Condition> waypoints = new HashMap<>();
@@ -56,7 +52,7 @@ public final class Waypoints {
       JsonObject obj = elem.getAsJsonObject();
 
       Term term = Term.create(obj.get("name").getAsString());
-      Condition cond = ConditionParser.parse(obj.get("logic").getAsString());
+      Condition cond = ConditionParser.parse(parseCtx, obj.get("logic").getAsString());
       waypoints.put(term, cond);
     }
 
@@ -75,14 +71,14 @@ public final class Waypoints {
 
         JsonObject targetObj = obj.get("Item").getAsJsonObject();
         Term targetTerm = Term.create(targetObj.get("term").getAsString());
-        Condition targetLogic = ConditionParser
-            .parse(targetObj.get("logic").getAsJsonObject().get("Logic").getAsString());
+        Condition targetLogic = ConditionParser.parse(parseCtx,
+            targetObj.get("logic").getAsJsonObject().get("Logic").getAsString());
         waypoints.put(targetTerm, targetLogic);
 
         JsonObject sourceObj = obj.get("Location").getAsJsonObject();
         Term sourceTerm = Term.create(sourceObj.get("term").getAsString());
-        Condition sourceLogic = ConditionParser
-            .parse(sourceObj.get("logic").getAsJsonObject().get("Logic").getAsString());
+        Condition sourceLogic = ConditionParser.parse(parseCtx,
+            sourceObj.get("logic").getAsJsonObject().get("Logic").getAsString());
         waypoints.put(sourceTerm, sourceLogic);
 
         transitions.put(sourceTerm, targetTerm);

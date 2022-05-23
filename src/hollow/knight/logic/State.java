@@ -10,6 +10,7 @@ public class State {
   private final StateContext ctx;
 
   private final MutableTermMap termValues = new MutableTermMap();
+  private ConditionGraph graph = null;
   private final Set<ItemCheck> acquiredItemChecks = new HashSet<>();
 
   private final Set<Term> dirtyTerms = new HashSet<>();
@@ -18,14 +19,12 @@ public class State {
   private State potentialState = null;
   private TermMap toleranceValues = null;
   private MutableTermMap normalizedCosts = new MutableTermMap();
-  private final Set<ItemCheck> purchasableItemChecks = new HashSet<>();
-
 
   State(StateContext ctx) {
     this.ctx = ctx;
 
     // TRUE is always set.
-    setClean(Term.true_(), 1);
+    set(Term.true_(), 1);
   }
 
   public StateContext ctx() {
@@ -48,10 +47,6 @@ public class State {
 
   public void set(Term term, int value) {
     dirtyTerms.add(term);
-    setClean(term, value);
-  }
-
-  private void setClean(Term term, int value) {
     termValues.set(term, value);
   }
 
@@ -69,7 +64,6 @@ public class State {
 
     if (potentialState != null) {
       potentialState.acquireItemCheck(itemCheck);
-      purchasableItemChecks.remove(itemCheck);
     }
 
     itemCheck.item().apply(this);
@@ -78,26 +72,41 @@ public class State {
 
   // Iteratively apply logic to grant access to items / areas.
   public void normalize() {
-    Set<Term> inLogicTerms = new HashSet<>();
-    Set<ItemCheck> newChecks = new HashSet<>();
-    dirtyTerms.forEach(t -> inLogicTerms.addAll(ctx.waypoints().influences(t)));
-    dirtyTerms.forEach(t -> newChecks.addAll(ctx.items().influences(t)));
+    Set<Term> newWaypoints = new HashSet<>();
+    Set<ItemCheck> newItemChecks = new HashSet<>();
+    if (graph == null) {
+      ConditionGraph.Builder builder = ConditionGraph.builder(termValues());
+      for (Term t : ctx.waypoints().allWaypoints()) {
+        if (builder.index(ctx.waypoints().getCondition(t))) {
+          newWaypoints.add(t);
+        }
+      }
+      for (ItemCheck check : ctx.items().allItemChecks()) {
+        if (builder.index(check.condition())) {
+          newItemChecks.add(check);
+        }
+      }
+      graph = builder.build();
+    } else {
+      for (Condition c : graph.update(this, dirtyTerms)) {
+        newWaypoints.addAll(ctx.waypoints().getTerms(c));
+        newItemChecks.addAll(ctx.items().getByCondition(c));
+      }
+    }
     dirtyTerms.clear();
 
-    inLogicTerms.removeIf(t -> termValues.get(t) != 0 || !ctx.waypoints().get(t).test(this));
-
-    // Loop: Evaluate all waypoints until there are no more advancements to be made.
-    while (!inLogicTerms.isEmpty()) {
-      Set<Term> newTerms = new HashSet<>();
-      for (Term t : inLogicTerms) {
+    // Iterate waypoints.
+    while (!newWaypoints.isEmpty()) {
+      for (Term t : newWaypoints) {
         set(t, 1);
-        newTerms.addAll(ctx.waypoints().influences(t));
-        newChecks.addAll(ctx.items().influences(t));
       }
 
-      newTerms.removeIf(t -> termValues.get(t) != 0 || !ctx.waypoints().get(t).test(this));
-      inLogicTerms.clear();
-      inLogicTerms.addAll(newTerms);
+      newWaypoints.clear();
+      for (Condition c : graph.update(this, dirtyTerms)) {
+        newWaypoints.addAll(ctx.waypoints().getTerms(c));
+        newItemChecks.addAll(ctx.items().getByCondition(c));
+      }
+      dirtyTerms.clear();
     }
 
     if (potentialState == null) {
@@ -106,31 +115,16 @@ public class State {
           new SumTermMap(ImmutableList.of(potentialState.termValues, ctx.tolerances()));
     }
 
-    boolean canReplenishGeo = get(Term.canReplenishGeo()) > 0;
-    newChecks.removeIf(c -> potentialState.acquiredItemChecks.contains(c)
-        || purchasableItemChecks.contains(c) || !c.location().canAccess(this));
-    while (!newChecks.isEmpty()) {
-      for (ItemCheck check : newChecks) {
-        if (check.costs().canBePaid(canReplenishGeo, potentialState.termValues)) {
-          potentialState.acquireItemCheck(check);
-        } else {
-          purchasableItemChecks.add(check);
-        }
-      }
-      newChecks.clear();
+    // Acquire all accessible item checks.
+    newItemChecks.removeAll(potentialState.acquiredItemChecks);
+    while (!newItemChecks.isEmpty()) {
+      newItemChecks.forEach(potentialState::acquireItemCheck);
+      newItemChecks.clear();
 
-      for (Term cost : Term.costTerms()) {
-        int prev = normalizedCosts.get(cost);
-        int next = potentialState.get(cost);
-
-        if (next > prev) {
-          ctx.items().costChecks(cost, prev, next).forEach(c -> {
-            newChecks.add(c);
-            purchasableItemChecks.remove(c);
-          });
-          normalizedCosts.set(cost, next);
-        }
+      for (Condition c : potentialState.graph.update(potentialState, potentialState.dirtyTerms)) {
+        newItemChecks.addAll(ctx.items().getByCondition(c));
       }
+      potentialState.dirtyTerms.clear();
     }
   }
 
@@ -138,7 +132,7 @@ public class State {
     return termValues;
   }
 
-  public TermMap accessibleTermValues() {
+  public TermMap purchaseTermValues() {
     return toleranceValues;
   }
 
@@ -149,11 +143,13 @@ public class State {
     copy.acquiredItemChecks.addAll(this.acquiredItemChecks);
     copy.dirtyTerms.clear();
     copy.dirtyTerms.addAll(this.dirtyTerms);
+    if (graph != null) {
+      copy.graph = graph.deepCopy();
+    }
     if (potentialState != null) {
       copy.potentialState = this.potentialState.deepCopy();
       copy.toleranceValues =
           new SumTermMap(ImmutableList.of(copy.potentialState.termValues, ctx.tolerances()));
-      copy.purchasableItemChecks.addAll(this.purchasableItemChecks);
     }
     return copy;
   }

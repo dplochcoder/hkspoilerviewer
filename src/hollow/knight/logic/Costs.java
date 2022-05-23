@@ -3,19 +3,24 @@ package hollow.knight.logic;
 import java.util.List;
 import java.util.stream.Collectors;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.MoreCollectors;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
 public final class Costs {
   private final ImmutableList<Cost> costs;
+  private final Condition condition;
 
   private Costs(List<Cost> costs) {
     this.costs = ImmutableList.copyOf(costs);
+    this.condition = costs.isEmpty() ? Condition.alwaysTrue()
+        : Conjunction
+            .of(costs.stream().map(Cost::asCondition).collect(ImmutableSet.toImmutableSet()));
   }
 
-  public boolean canBePaid(boolean canPayGeo, TermMap values) {
-    return costs.stream().allMatch(c -> c.canBePaid(canPayGeo, values));
+  public Condition asCondition() {
+    return condition;
   }
 
   public String suffixString() {

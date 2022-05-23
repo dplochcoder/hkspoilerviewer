@@ -1,56 +1,36 @@
 package hollow.knight.logic;
 
-import java.util.HashSet;
 import java.util.Set;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableSet;
 
-public final class Conjunction extends Condition {
-  private final ImmutableSet<Condition> operands;
-
+public final class Conjunction extends CommutativeCondition {
   private Conjunction(Set<Condition> operands) {
-    super(
-        operands.stream().flatMap(c -> c.terms().stream()).collect(ImmutableSet.toImmutableSet()));
-
-    Preconditions.checkArgument(operands.size() > 1);
-    this.operands = ImmutableSet.copyOf(operands);
+    super(operands);
   }
 
   public static Condition of(Condition c1, Condition c2) {
-    Set<Condition> operands = new HashSet<>();
-    if (c1 instanceof Conjunction) {
-      operands.addAll(((Conjunction) c1).operands);
-    } else {
-      operands.add(c1);
-    }
-    if (c2 instanceof Conjunction) {
-      operands.addAll(((Conjunction) c2).operands);
-    } else {
-      operands.add(c2);
-    }
+    return CommutativeCondition.of(c1, c2, Conjunction.class, Conjunction::new);
+  }
 
-    if (operands.size() == 1) {
-      return operands.iterator().next();
-    } else {
-      return new Conjunction(operands).intern();
-    }
+  public static Condition of(Set<Condition> operands) {
+    return CommutativeCondition.of(operands, Conjunction.class, Conjunction::new);
   }
 
   @Override
-  public boolean test(State state) {
-    return operands.stream().allMatch(c -> c.test(state));
+  public boolean isDisjunction() {
+    return false;
   }
 
   @Override
-  public int hashCode() {
-    return Conjunction.class.hashCode() ^ operands.hashCode();
+  public boolean test(TermMap values) {
+    return operands.stream().allMatch(c -> c.test(values));
   }
 
   @Override
-  public boolean equals(Object o) {
-    if (!(o instanceof Conjunction)) {
-      return false;
+  public void index(ConditionGraph.Builder builder) {
+    for (Condition c : operands) {
+      if (!builder.index(c)) {
+        builder.indexChild(this, c);
+      }
     }
-    return operands.equals(((Conjunction) o).operands);
   }
 }

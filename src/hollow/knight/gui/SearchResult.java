@@ -113,11 +113,10 @@ public abstract class SearchResult {
   }
 
   private static LogicType getLogicType(ItemCheck itemCheck, State state) {
-    if (itemCheck.location().canAccess(state)) {
-      if (itemCheck.costs().canBePaid(state.get(Term.canReplenishGeo()) > 0, state.termValues())) {
+    if (itemCheck.location().accessCondition().test(state.termValues())) {
+      if (itemCheck.costs().asCondition().test(state.termValues())) {
         return LogicType.IN_LOGIC;
-      } else if (itemCheck.costs().canBePaid(state.get(Term.canReplenishGeo()) > 0,
-          state.accessibleTermValues())) {
+      } else if (itemCheck.costs().asCondition().test(state.purchaseTermValues())) {
         return LogicType.COST_ACCESSIBLE;
       }
     }
@@ -128,7 +127,8 @@ public abstract class SearchResult {
   public static SearchResult create(ItemCheck itemCheck, State state) {
     Optional<Integer> notchCost = Optional.empty();
     if (itemCheck.item().isCharm(state.ctx().items())) {
-      notchCost = Optional.of(itemCheck.item().notchCost(state.ctx().items()));
+      notchCost = Optional.of(state.ctx().notchCosts()
+          .notchCost(state.ctx().items().charmIds().charmId(itemCheck.item().term())));
     }
 
     return new AutoValue_SearchResult(itemCheck, getLogicType(itemCheck, state), notchCost);
