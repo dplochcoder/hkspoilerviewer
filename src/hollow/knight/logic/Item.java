@@ -32,10 +32,6 @@ public final class Item {
     return types;
   }
 
-  public boolean isCharm(Items items) {
-    return items.charmIds().charmId(term) != null;
-  }
-
   public boolean hasEffectTerm(Term term) {
     return trueEffects.get(term) != 0 || falseEffects.get(term) != 0;
   }

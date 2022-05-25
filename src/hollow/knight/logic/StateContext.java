@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 public final class StateContext {
 
   private final JsonObject originalJson;
+  private final CharmIds charmIds;
   private final RoomLabels roomLabels;
   private final Pools pools;
   private final NotchCosts notchCosts;
@@ -17,10 +18,11 @@ public final class StateContext {
   private final ImmutableTermMap tolerances;
   private final ImmutableTermMap setters;
 
-  public StateContext(JsonObject originalJson, RoomLabels roomLabels, Pools pools,
-      NotchCosts notchCosts, Waypoints waypoints, Items items, TermMap tolerances,
+  public StateContext(JsonObject originalJson, CharmIds charmIds, RoomLabels roomLabels,
+      Pools pools, NotchCosts notchCosts, Waypoints waypoints, Items items, TermMap tolerances,
       TermMap setters) {
     this.originalJson = originalJson;
+    this.charmIds = charmIds;
     this.roomLabels = roomLabels;
     this.pools = pools;
     this.notchCosts = notchCosts;
@@ -32,6 +34,10 @@ public final class StateContext {
 
   public JsonObject originalJson() {
     return originalJson;
+  }
+
+  public CharmIds charmIds() {
+    return charmIds;
   }
 
   public RoomLabels roomLabels() {
@@ -72,6 +78,7 @@ public final class StateContext {
   }
 
   public static StateContext parse(JsonObject json) throws ParseException {
+    CharmIds charmIds = CharmIds.load();
     RoomLabels rooms = RoomLabels.load();
     Pools pools = Pools.load();
 
@@ -94,8 +101,8 @@ public final class StateContext {
 
     NotchCosts notchCosts = NotchCosts.parse(json);
     ConditionParser.Context parseCtx = new ConditionParser.Context(notchCosts);
-    return new StateContext(json, rooms, pools, notchCosts, Waypoints.parse(json, parseCtx),
-        Items.parse(json, parseCtx, rooms), tolerances, setters);
+    return new StateContext(json, charmIds, rooms, pools, notchCosts,
+        Waypoints.parse(json, parseCtx), Items.parse(json, parseCtx, rooms), tolerances, setters);
   }
 
 }

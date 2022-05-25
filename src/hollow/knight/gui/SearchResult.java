@@ -126,9 +126,9 @@ public abstract class SearchResult {
 
   public static SearchResult create(ItemCheck itemCheck, State state) {
     Optional<Integer> notchCost = Optional.empty();
-    if (itemCheck.item().isCharm(state.ctx().items())) {
-      notchCost = Optional.of(state.ctx().notchCosts()
-          .notchCost(state.ctx().items().charmIds().charmId(itemCheck.item().term())));
+    Integer charmId = state.ctx().charmIds().charmId(itemCheck.item().term());
+    if (charmId != null) {
+      notchCost = Optional.of(state.ctx().notchCosts().notchCost(charmId));
     }
 
     return new AutoValue_SearchResult(itemCheck, getLogicType(itemCheck, state), notchCost);

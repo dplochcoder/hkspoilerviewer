@@ -13,13 +13,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 public final class Items {
-  private final CharmIds charmIds;
   private final ImmutableBiMap<Integer, ItemCheck> itemChecks;
   private final ImmutableMultimap<Condition, ItemCheck> checksByCondition;
   private final ImmutableSet<ItemCheck> startItems;
 
-  private Items(CharmIds charmIds, BiMap<Integer, ItemCheck> itemChecks) {
-    this.charmIds = charmIds;
+  private Items(BiMap<Integer, ItemCheck> itemChecks) {
     this.itemChecks = ImmutableBiMap.copyOf(itemChecks);
     this.checksByCondition = Multimaps.index(itemChecks.values(), ItemCheck::condition);
     this.startItems =
@@ -33,10 +31,6 @@ public final class Items {
 
   public ImmutableCollection<ItemCheck> getByCondition(Condition c) {
     return checksByCondition.get(c);
-  }
-
-  public CharmIds charmIds() {
-    return charmIds;
   }
 
   public ImmutableSet<ItemCheck> allItemChecks() {
@@ -96,6 +90,6 @@ public final class Items {
       }
     }
 
-    return new Items(CharmIds.load(), items);
+    return new Items(items);
   }
 }
