@@ -40,7 +40,4 @@
 }, {
   "Name" : "Relics",
   "Items" : [ "Wanderer's_Journal", "Hallownest_Seal", "King's_Idol", "Arcane_Egg" ]
-}, {
-  "Name" : "Shops",
-  "Locations" : [ "Sly", "Sly_(Key)", "Salubra", "Leg_Eater", "Grubfather", "Seer", "Egg_Shop", "Unbreakable_Heart", "Unbreakable_Greed", "Unbreakable_Strength" ]
 } ]

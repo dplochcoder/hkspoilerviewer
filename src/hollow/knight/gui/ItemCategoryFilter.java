@@ -38,11 +38,6 @@ public abstract class ItemCategoryFilter {
       return EffectItemCategoryFilter.parse(name, effectTerm.getAsString());
     }
 
-    JsonElement locations = obj.get("Locations");
-    if (locations != null) {
-      return LocationCategoryFilter.parse(name, locations.getAsJsonArray());
-    }
-
     JsonElement pools = obj.get("Pools");
     if (pools != null) {
       return PoolsCategoryFilter.parse(name, pools.getAsJsonArray());
