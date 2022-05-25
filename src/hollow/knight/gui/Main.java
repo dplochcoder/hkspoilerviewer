@@ -5,12 +5,27 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
+import hollow.knight.logic.ParseException;
 import hollow.knight.logic.StateContext;
+import hollow.knight.logic.Version;
 import hollow.knight.util.GuiUtil;
 import hollow.knight.util.JsonUtil;
 
 public final class Main {
-  public static String VERSION = "1.6";
+  private static final String VERSION = "2.0";
+
+  private static final Version TYPED_VERSION;
+  static {
+    try {
+      TYPED_VERSION = Version.parse(VERSION);
+    } catch (ParseException ex) {
+      throw new AssertionError(ex);
+    }
+  }
+
+  public static final Version version() {
+    return TYPED_VERSION;
+  }
 
   private static Config loadConfig(String[] args) {
     if (args.length > 0) {

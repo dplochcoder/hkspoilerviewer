@@ -44,6 +44,7 @@ import hollow.knight.logic.Query;
 import hollow.knight.logic.SaveInterface;
 import hollow.knight.logic.State;
 import hollow.knight.logic.StateContext;
+import hollow.knight.logic.Version;
 import hollow.knight.util.GuiUtil;
 import hollow.knight.util.JsonUtil;
 
@@ -271,7 +272,7 @@ public final class Application extends JFrame {
     aboutQueries.addActionListener(infoListener("Queries", QUERIES_INFO));
     ks.addActionListener(infoListener("Keyboard Shortcuts", KS_INFO));
     v.addActionListener(
-        infoListener("Version", ImmutableList.of("HKSpoilerViewer Version " + Main.VERSION, "-",
+        infoListener("Version", ImmutableList.of("HKSpoilerViewer Version " + Main.version(), "-",
             "https://github.com/dplochcoder/hkspoilerviewer")));
 
     return bar;
@@ -310,7 +311,10 @@ public final class Application extends JFrame {
     }
 
     JsonObject saveData = JsonUtil.loadPath(c.getSelectedFile().toPath()).getAsJsonObject();
-    String version = saveData.get("Version").getAsString();
+    Version version = Version.parse(saveData.get("Version").getAsString());
+    if (version.major() < Main.version().major()) {
+      throw new ParseException("Unsupported version " + version + " < " + Main.version());
+    }
     StateContext newCtx = StateContext.parse(saveData.get("RawSpoiler").getAsJsonObject());
     saveInterfaces.forEach(i -> i.open(version, newCtx, saveData.get(i.saveName())));
     skips.setInitialState(newCtx.newInitialState());
@@ -327,7 +331,7 @@ public final class Application extends JFrame {
     }
 
     JsonObject saveData = new JsonObject();
-    saveData.add("Version", new JsonPrimitive(Main.VERSION));
+    saveData.add("Version", new JsonPrimitive(Main.version().toString()));
     saveData.add("RawSpoiler", currentState().ctx().originalJson());
     saveInterfaces.forEach(i -> saveData.add(i.saveName(), i.save()));
 

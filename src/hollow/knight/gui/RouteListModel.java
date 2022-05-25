@@ -23,6 +23,7 @@ import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.SaveInterface;
 import hollow.knight.logic.State;
 import hollow.knight.logic.StateContext;
+import hollow.knight.logic.Version;
 
 public final class RouteListModel implements ListModel<String>, SaveInterface {
 
@@ -308,7 +309,7 @@ public final class RouteListModel implements ListModel<String>, SaveInterface {
   }
 
   @Override
-  public void open(String version, StateContext ctx, JsonElement json) {
+  public void open(Version version, StateContext ctx, JsonElement json) {
     this.ctx = ctx;
     this.initialState = ctx.newInitialState();
     this.currentState = this.initialState.deepCopy();
