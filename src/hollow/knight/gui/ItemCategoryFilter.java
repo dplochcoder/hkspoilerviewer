@@ -28,11 +28,6 @@ public abstract class ItemCategoryFilter {
       return ExplicitItemCategoryFilter.parse(name, items.getAsJsonArray());
     }
 
-    JsonElement regex = obj.get("Regex");
-    if (regex != null) {
-      return RegexItemCategoryFilter.parse(name, regex.getAsString());
-    }
-
     JsonElement effectTerm = obj.get("EffectTerm");
     if (effectTerm != null) {
       return EffectItemCategoryFilter.parse(name, effectTerm.getAsString());
