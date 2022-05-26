@@ -19,6 +19,7 @@ import javax.swing.filechooser.FileFilter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import hollow.knight.logic.CheckId;
 import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.SaveInterface;
 import hollow.knight.logic.State;
@@ -34,7 +35,7 @@ public final class RouteListModel implements ListModel<String>, SaveInterface {
   private State currentState; // All checks up to but excluding insertionPoint
   private State finalState; // All checks
   private int insertionPoint = 0; // New elements go @ this index
-  private final List<SearchResult> route = new ArrayList<>();
+  private final List<CheckId> route = new ArrayList<>();
   private final List<String> resultStrings = new ArrayList<>();
 
   private final Set<ListDataListener> listeners = new HashSet<>();
@@ -51,7 +52,7 @@ public final class RouteListModel implements ListModel<String>, SaveInterface {
 
       @Override
       public boolean accept(StateContext ctx, SearchResult result) {
-        return !finalState.isAcquired(result.itemCheck());
+        return !finalState.isAcquired(result.id());
       }
     };
   }
@@ -96,6 +97,10 @@ public final class RouteListModel implements ListModel<String>, SaveInterface {
     return ctx;
   }
 
+  private ItemCheck getCheck(int index) {
+    return ctx.checks().get(route.get(index));
+  }
+
   public State currentState() {
     return getState(insertionPoint - 1);
   }
@@ -111,7 +116,7 @@ public final class RouteListModel implements ListModel<String>, SaveInterface {
       } else if (index < insertionPoint) {
         State newState = initialState.deepCopy();
         for (int i = 0; i <= index; i++) {
-          newState.acquireItemCheck(route.get(i).itemCheck());
+          newState.acquireCheck(route.get(i));
         }
         newState.normalize();
 
@@ -119,7 +124,7 @@ public final class RouteListModel implements ListModel<String>, SaveInterface {
       } else {
         State newState = currentState.deepCopy();
         for (int i = insertionPoint; i <= index; i++) {
-          newState.acquireItemCheck(route.get(i).itemCheck());
+          newState.acquireCheck(route.get(i));
         }
         newState.normalize();
 
@@ -144,7 +149,7 @@ public final class RouteListModel implements ListModel<String>, SaveInterface {
 
       currentState = initialState.deepCopy();
       for (int i = 0; i < insertionPoint; i++) {
-        currentState.acquireItemCheck(route.get(i).itemCheck());
+        currentState.acquireCheck(route.get(i));
       }
       currentState.normalize();
 
@@ -169,12 +174,10 @@ public final class RouteListModel implements ListModel<String>, SaveInterface {
           currentState = finalState.deepCopy();
         }
 
-        ItemCheck check = route.get(i).itemCheck();
-        SearchResult newResult = SearchResult.create(check, finalState);
-        route.set(i, newResult);
+        SearchResult newResult = SearchResult.create(getCheck(i), finalState);
         resultStrings.set(i, newResult.render());
 
-        finalState.acquireItemCheck(check);
+        finalState.acquireCheck(route.get(i));
         finalState.normalize();
       }
 
@@ -187,25 +190,25 @@ public final class RouteListModel implements ListModel<String>, SaveInterface {
     listenersCopy.forEach(l -> l.contentsChanged(e));
   }
 
-  public void addToRoute(SearchResult result) {
+  public void addToRoute(CheckId id) {
     List<ListDataListener> listenersCopy;
     synchronized (mutex) {
       listenersCopy = new ArrayList<>(listeners);
 
-      currentState.acquireItemCheck(result.itemCheck());
+      currentState.acquireCheck(id);
       currentState.normalize();
 
-      this.route.add(insertionPoint, result);
-      this.resultStrings.add(insertionPoint, result.render());
+      this.route.add(insertionPoint, id);
+      this.resultStrings.add(insertionPoint,
+          SearchResult.create(ctx.checks().get(id), currentState).render());
       ++insertionPoint;
 
       finalState = currentState.deepCopy();
       for (int i = insertionPoint; i < route.size(); i++) {
-        SearchResult newResult = SearchResult.create(route.get(i).itemCheck(), finalState);
-        route.set(i, newResult);
+        SearchResult newResult = SearchResult.create(getCheck(i), finalState);
         resultStrings.set(i, newResult.render());
 
-        finalState.acquireItemCheck(route.get(i).itemCheck());
+        finalState.acquireCheck(id);
         finalState.normalize();
       }
     }
@@ -228,21 +231,21 @@ public final class RouteListModel implements ListModel<String>, SaveInterface {
 
       listenersCopy = new ArrayList<>(listeners);
 
-      ItemCheck a = this.route.get(before).itemCheck();
-      ItemCheck b = this.route.get(after).itemCheck();
+      ItemCheck a = getCheck(before);
+      ItemCheck b = getCheck(after);
 
       State prevState = getState(before - 1);
       State newState1 = prevState.deepCopy();
-      newState1.acquireItemCheck(b);
+      newState1.acquireCheck(b.id());
       newState1.normalize();
       State newState2 = newState1.deepCopy();
-      newState2.acquireItemCheck(a);
+      newState2.acquireCheck(a.id());
       newState2.normalize();
 
-      route.set(before, SearchResult.create(b, prevState));
-      route.set(after, SearchResult.create(a, newState1));
-      resultStrings.set(before, route.get(before).render());
-      resultStrings.set(after, route.get(after).render());
+      route.set(before, b.id());
+      route.set(after, a.id());
+      resultStrings.set(before, SearchResult.create(getCheck(before), newState1).render());
+      resultStrings.set(after, SearchResult.create(getCheck(after), newState2).render());
 
       if (insertionPoint == after) {
         currentState = newState1;
@@ -263,12 +266,12 @@ public final class RouteListModel implements ListModel<String>, SaveInterface {
 
       finalState = getState(index - 1).deepCopy();
       for (int i = index + 1; i < getSize(); i++) {
-        ItemCheck check = route.get(i).itemCheck();
-        finalState.acquireItemCheck(check);
+        ItemCheck check = getCheck(i);
+        finalState.acquireCheck(check.id());
         finalState.normalize();
 
-        route.set(i - 1, SearchResult.create(check, finalState));
-        resultStrings.set(i - 1, route.get(i - 1).render());
+        route.set(i - 1, check.id());
+        resultStrings.set(i - 1, SearchResult.create(check, finalState).render());
       }
 
       route.remove(route.size() - 1);
@@ -278,7 +281,7 @@ public final class RouteListModel implements ListModel<String>, SaveInterface {
         --insertionPoint;
         currentState = initialState.deepCopy();
         for (int i = 0; i < insertionPoint; i++) {
-          currentState.acquireItemCheck(route.get(i).itemCheck());
+          currentState.acquireCheck(route.get(i));
         }
         currentState.normalize();
       }
@@ -302,7 +305,7 @@ public final class RouteListModel implements ListModel<String>, SaveInterface {
     JsonObject obj = new JsonObject();
 
     JsonArray arr = new JsonArray();
-    route.forEach(r -> arr.add(r.itemCheck().id()));
+    route.forEach(r -> arr.add(r.id()));
     obj.add("Route", arr);
 
     return obj;
@@ -319,8 +322,7 @@ public final class RouteListModel implements ListModel<String>, SaveInterface {
     this.route.clear();
     this.resultStrings.clear();
     for (JsonElement id : json.getAsJsonObject().get("Route").getAsJsonArray()) {
-      ItemCheck check = ctx.items().get(id.getAsInt());
-      addToRoute(SearchResult.create(check, currentState));
+      addToRoute(CheckId.of(id.getAsLong()));
     }
   }
 

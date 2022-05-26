@@ -1,48 +1,27 @@
 package hollow.knight.logic;
 
-public final class ItemCheck implements Comparable<ItemCheck> {
-  private final int id;
-  private final Location location;
-  private final Item item;
-  private final Costs costs;
-  private final Condition condition;
-  private final boolean vanilla;
+import com.google.auto.value.AutoValue;
+import com.google.auto.value.extension.memoized.Memoized;
 
-  public ItemCheck(int id, Location location, Item item, Costs costs, boolean vanilla) {
-    this.id = id;
-    this.location = location;
-    this.item = item;
-    this.costs = costs;
-    this.condition = Conjunction.of(location.accessCondition(), costs.asCondition());
-    this.vanilla = vanilla;
-  }
+@AutoValue
+public abstract class ItemCheck {
+  public abstract CheckId id();
 
-  @Override
-  public int compareTo(ItemCheck that) {
-    return Integer.compare(this.id, that.id);
-  }
+  public abstract Location location();
 
-  public int id() {
-    return id;
-  }
+  public abstract Item item();
 
-  public Location location() {
-    return location;
-  }
+  public abstract Costs costs();
 
-  public Item item() {
-    return item;
-  }
+  public abstract boolean vanilla();
 
-  public Costs costs() {
-    return costs;
-  }
-
+  @Memoized
   public Condition condition() {
-    return condition;
+    return Conjunction.of(location().accessCondition(), costs().asCondition());
   }
 
-  public boolean vanilla() {
-    return vanilla;
+  public static ItemCheck create(CheckId id, Location loc, Item item, Costs costs,
+      boolean vanilla) {
+    return new AutoValue_ItemCheck(id, loc, item, costs, vanilla);
   }
 }

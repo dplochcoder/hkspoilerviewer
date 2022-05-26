@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.Set;
 import javax.swing.JPanel;
 import com.google.auto.value.AutoValue;
+import hollow.knight.logic.CheckId;
 import hollow.knight.logic.Costs;
 import hollow.knight.logic.Item;
 import hollow.knight.logic.ItemCheck;
@@ -54,6 +55,10 @@ public abstract class SearchResult {
   }
 
   public abstract ItemCheck itemCheck();
+
+  public final CheckId id() {
+    return itemCheck().id();
+  }
 
   public final Item item() {
     return itemCheck().item();

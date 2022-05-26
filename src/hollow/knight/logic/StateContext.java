@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-/** Immutable context for a State object. */
+/** Mostly immutable context for a State object. */
 public final class StateContext {
 
   private final JsonObject originalJson;
@@ -13,21 +13,21 @@ public final class StateContext {
   private final Pools pools;
   private final NotchCosts notchCosts;
   private final Waypoints waypoints;
-  private final Items items;
+  private final ItemChecks checks;
 
   private final ImmutableTermMap tolerances;
   private final ImmutableTermMap setters;
 
   public StateContext(JsonObject originalJson, CharmIds charmIds, RoomLabels roomLabels,
-      Pools pools, NotchCosts notchCosts, Waypoints waypoints, Items items, TermMap tolerances,
-      TermMap setters) {
+      Pools pools, NotchCosts notchCosts, Waypoints waypoints, ItemChecks checks,
+      TermMap tolerances, TermMap setters) {
     this.originalJson = originalJson;
     this.charmIds = charmIds;
     this.roomLabels = roomLabels;
     this.pools = pools;
     this.notchCosts = notchCosts;
     this.waypoints = waypoints;
-    this.items = items;
+    this.checks = checks;
     this.tolerances = ImmutableTermMap.copyOf(tolerances);
     this.setters = ImmutableTermMap.copyOf(setters);
   }
@@ -56,8 +56,8 @@ public final class StateContext {
     return waypoints;
   }
 
-  public Items items() {
-    return items;
+  public ItemChecks checks() {
+    return checks;
   }
 
   public ImmutableTermMap tolerances() {
@@ -68,7 +68,7 @@ public final class StateContext {
     State state = new State(this);
 
     // Automatically acquire all items at Start
-    items.startItems().forEach(state::acquireItemCheck);
+    checks.startChecks().forEach(c -> state.acquireCheck(c.id()));
     for (Term t : setters.terms()) {
       state.set(t, setters.get(t));
     }
@@ -101,8 +101,10 @@ public final class StateContext {
 
     NotchCosts notchCosts = NotchCosts.parse(json);
     ConditionParser.Context parseCtx = new ConditionParser.Context(notchCosts);
+    ItemChecks checks = new ItemChecks();
+    checks.parse(json, parseCtx, rooms);
     return new StateContext(json, charmIds, rooms, pools, notchCosts,
-        Waypoints.parse(json, parseCtx), Items.parse(json, parseCtx, rooms), tolerances, setters);
+        Waypoints.parse(json, parseCtx), checks, tolerances, setters);
   }
 
 }

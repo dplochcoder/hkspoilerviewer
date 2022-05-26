@@ -2,20 +2,29 @@ package hollow.knight.logic;
 
 import java.util.HashSet;
 import java.util.Set;
+import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
-public final class Location {
+@AutoValue
+public abstract class Location {
   private static final ImmutableMap<String, String> SCENE_OVERRIDES = ImmutableMap.of(
       "Mask_Shard-Grey_Mourner", "Room_Mansion", "Vessel_Fragment-Basin", "Abyss_04", "Dash_Slash",
       "Room_nailmaster_03", "Geo_Rock-Crossroads_Tram", "Crossroads_46", "Start", "Start");
 
-  private final String name;
-  private final Condition accessCondition;
-  private final String scene;
+  public abstract String name();
 
-  private static String inferScene(String name, Condition accessCondition, RoomLabels rooms)
+  public abstract Condition accessCondition();
+
+  public abstract String scene();
+
+  public static Location create(RoomLabels rooms, String name, Condition accessCondition)
+      throws ParseException {
+    return new AutoValue_Location(name, accessCondition, inferScene(rooms, name, accessCondition));
+  }
+
+  private static String inferScene(RoomLabels rooms, String name, Condition accessCondition)
       throws ParseException {
     Set<String> potentialScenes = new HashSet<>();
     for (Term t : accessCondition.locationTerms().collect(ImmutableSet.toImmutableSet())) {
@@ -34,23 +43,5 @@ public final class Location {
     } else {
       return SCENE_OVERRIDES.get(name);
     }
-  }
-
-  public Location(String name, Condition accessCondition, RoomLabels rooms) throws ParseException {
-    this.name = name;
-    this.accessCondition = accessCondition;
-    this.scene = inferScene(name, accessCondition, rooms);
-  }
-
-  public String name() {
-    return name;
-  }
-
-  public Condition accessCondition() {
-    return accessCondition;
-  }
-
-  public String scene() {
-    return scene;
   }
 }

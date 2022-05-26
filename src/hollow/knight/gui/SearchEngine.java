@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.ImmutableList;
-import hollow.knight.logic.ItemCheck;
+import hollow.knight.logic.CheckId;
 import hollow.knight.logic.RoomLabels;
 import hollow.knight.logic.State;
 import hollow.knight.logic.StateContext;
@@ -34,8 +34,8 @@ public final class SearchEngine {
   public ImmutableList<SearchResult> getSearchResults(State state) {
     // Step 1: Collect all results.
     List<SearchResult> results = new ArrayList<>();
-    for (ItemCheck check : state.unobtainedItemChecks()) {
-      SearchResult result = SearchResult.create(check, state);
+    for (CheckId id : state.unobtained()) {
+      SearchResult result = SearchResult.create(state.ctx().checks().get(id), state);
       results.add(result);
     }
 

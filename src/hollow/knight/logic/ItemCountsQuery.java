@@ -11,7 +11,7 @@ import com.google.gson.JsonObject;
 public final class ItemCountsQuery implements Query {
 
   private static interface LabelExtractor {
-    String getLabel(ItemCheck check, RoomLabels roomLabels);
+    String getLabel(ItemCheck placement, RoomLabels roomLabels);
   }
 
   private final ImmutableSet<Term> items;
@@ -20,11 +20,11 @@ public final class ItemCountsQuery implements Query {
   @Override
   public String execute(State state) {
     Multiset<String> labels = HashMultiset.create();
-    for (ItemCheck check : state.ctx().items().allItemChecks()) {
-      if (items.contains(check.item().term())) {
-        labels.add(labelExtractor.getLabel(check, state.ctx().roomLabels()));
+    state.ctx().checks().allChecks().forEach(p -> {
+      if (items.contains(p.item().term())) {
+        labels.add(labelExtractor.getLabel(p, state.ctx().roomLabels()));
       }
-    }
+    });
 
     return labels.elementSet().stream().sorted().map(l -> l + ": " + labels.count(l))
         .collect(Collectors.joining("\n"));

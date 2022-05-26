@@ -39,6 +39,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonWriter;
+import hollow.knight.logic.CheckId;
 import hollow.knight.logic.ParseException;
 import hollow.knight.logic.Query;
 import hollow.knight.logic.SaveInterface;
@@ -66,7 +67,7 @@ public final class Application extends JFrame {
 
   public Application(StateContext ctx) throws ParseException {
     this.filterChangedListener = () -> repopulateSearchResults();
-    this.searchResultsListModel = new SearchResultsListModel();
+    this.searchResultsListModel = new SearchResultsListModel(ctx.checks());
     this.routeListModel = new RouteListModel(ctx);
     this.saveInterfaces = ImmutableList.of(searchResultsListModel, routeListModel);
 
@@ -315,7 +316,9 @@ public final class Application extends JFrame {
     if (version.major() < Main.version().major()) {
       throw new ParseException("Unsupported version " + version + " < " + Main.version());
     }
-    StateContext newCtx = StateContext.parse(saveData.get("RawSpoiler").getAsJsonObject());
+
+    JsonObject rawSpoiler = saveData.get("RawSpoiler").getAsJsonObject();
+    StateContext newCtx = StateContext.parse(rawSpoiler);
     saveInterfaces.forEach(i -> i.open(version, newCtx, saveData.get(i.saveName())));
     skips.setInitialState(newCtx.newInitialState());
 
@@ -420,26 +423,25 @@ public final class Application extends JFrame {
         }
 
         if (e.getKeyCode() == KeyEvent.VK_B) {
-          searchResultsListModel.addBookmark(currentState(), resultsList.getSelectedIndex());
+          searchResultsListModel.addBookmark(resultsList.getSelectedIndex());
           resultsList.setSelectedIndex(searchResultsListModel.numBookmarks() - 1);
         } else if (e.getKeyCode() == KeyEvent.VK_W || e.getKeyCode() == KeyEvent.VK_S) {
           boolean up = e.getKeyCode() == KeyEvent.VK_W;
-          searchResultsListModel.moveBookmark(currentState(), resultsList.getSelectedIndex(), up);
+          searchResultsListModel.moveBookmark(resultsList.getSelectedIndex(), up);
           resultsList.setSelectedIndex(resultsList.getSelectedIndex() + (up ? -1 : 1));
         } else if (e.getKeyCode() == KeyEvent.VK_X) {
           searchResultsListModel.deleteBookmark(currentState(), resultsList.getSelectedIndex());
         } else if (e.getKeyCode() == KeyEvent.VK_H) {
-          searchResultsListModel.hideResult(currentState(), resultsList.getSelectedIndex());
+          searchResultsListModel.hideResult(resultsList.getSelectedIndex());
         } else if (e.getKeyCode() == KeyEvent.VK_U) {
-          searchResultsListModel.unhideResult(currentState(), resultsList.getSelectedIndex());
+          searchResultsListModel.unhideResult(resultsList.getSelectedIndex());
         } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-          SearchResult result =
-              searchResultsListModel.getResult(currentState(), resultsList.getSelectedIndex());
-          if (result == null) {
+          CheckId id = searchResultsListModel.getId(resultsList.getSelectedIndex());
+          if (id == null) {
             return;
           }
 
-          addToRoute(result);
+          addToRoute(id);
         } else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
           if (routeListModel.getSize() > 0) {
             routeListModel.removeCheck(routeListModel.getSize() - 1);
@@ -506,10 +508,10 @@ public final class Application extends JFrame {
     return routeList;
   }
 
-  private void addToRoute(SearchResult result) {
-    searchResultsListModel.removeBookmark(routeListModel.currentState(), result.itemCheck());
-    searchResultsListModel.unhideResult(routeListModel.currentState(), result.itemCheck());
-    routeListModel.addToRoute(result);
+  private void addToRoute(CheckId id) {
+    searchResultsListModel.removeBookmark(routeListModel.currentState(), id);
+    searchResultsListModel.unhideResult(id);
+    routeListModel.addToRoute(id);
 
     repopulateSearchResults();
   }
