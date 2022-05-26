@@ -12,6 +12,7 @@ import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.BoxLayout;
@@ -53,6 +54,7 @@ import hollow.knight.util.JsonUtil;
 public final class Application extends JFrame {
   private static final long serialVersionUID = 1L;
 
+  private final Config cfg;
   private final SearchResult.FilterChangedListener filterChangedListener;
   private final SearchResultsListModel searchResultsListModel;
   private final RouteListModel routeListModel;
@@ -67,7 +69,8 @@ public final class Application extends JFrame {
   private final JList<String> routeList;
   private final JScrollPane routePane;
 
-  public Application(StateContext ctx) throws ParseException {
+  public Application(StateContext ctx, Config cfg) throws ParseException {
+    this.cfg = cfg;
     this.filterChangedListener = () -> repopulateSearchResults();
     this.searchResultsListModel = new SearchResultsListModel();
     this.routeListModel = new RouteListModel(ctx);
@@ -197,7 +200,7 @@ public final class Application extends JFrame {
     JMenuBar bar = new JMenuBar();
 
     JMenu file = new JMenu("File");
-    JMenuItem open = new JMenuItem("Open (*.hks)");
+    JMenuItem open = new JMenuItem("Open");
     file.add(open);
     JMenuItem save = new JMenuItem("Save (*.hks)");
     file.add(save);
@@ -287,12 +290,13 @@ public final class Application extends JFrame {
   private static final FileFilter HKS_FILTER = new FileFilter() {
     @Override
     public String getDescription() {
-      return "Hollow Knight Spoiler (*.hks)";
+      return "Hollow Knight Spoiler (*.hks, RawSpoiler.json, ctx.json)";
     }
 
     @Override
     public boolean accept(File f) {
-      return f.isDirectory() || f.getName().endsWith(".hks");
+      return f.isDirectory() || f.getName().endsWith(".hks")
+          || f.getName().contentEquals("RawSpoiler.json") || f.getName().contentEquals("ctx.json");
     }
   };
 
@@ -308,7 +312,7 @@ public final class Application extends JFrame {
     }
   };
 
-  private void openFile() throws ParseException {
+  private void openFile() throws ParseException, IOException {
     StateContext prevCtx = routeListModel.ctx();
     JFileChooser c = new JFileChooser("Open");
     c.setFileFilter(HKS_FILTER);
@@ -317,21 +321,44 @@ public final class Application extends JFrame {
       return;
     }
 
-    JsonObject saveData = JsonUtil.loadPath(c.getSelectedFile().toPath()).getAsJsonObject();
-    Version version = Version.parse(saveData.get("Version").getAsString());
-    if (version.major() < Main.version().major()) {
-      throw new ParseException("Unsupported version " + version + " < " + Main.version());
+    Path p = c.getSelectedFile().toPath();
+    boolean isRawSpoiler = !p.endsWith(".hks");
+
+    // TODO: use this
+    boolean isICDL = isRawSpoiler && p.endsWith("ctx.json");
+
+    JsonObject saveData = new JsonObject();
+    JsonObject rawSpoiler = JsonUtil.loadPath(c.getSelectedFile().toPath()).getAsJsonObject();
+    Version version = Main.version();
+    if (!isRawSpoiler) {
+      version = Version.parse(saveData.get("Version").getAsString());
+      if (version.major() < Main.version().major()) {
+        throw new ParseException("Unsupported version " + version + " < " + Main.version());
+      }
+
+      saveData = rawSpoiler;
+      rawSpoiler = saveData.get("RawSpoiler").getAsJsonObject();
     }
 
-    JsonObject rawSpoiler = saveData.get("RawSpoiler").getAsJsonObject();
+    Version finalVersion = version;
+    JsonObject finalSaveData = saveData;
+
     StateContext newCtx = StateContext.parse(rawSpoiler);
-    saveInterfaces.forEach(i -> i.open(version, newCtx, saveData.get(i.saveName())));
+    saveInterfaces.forEach(i -> i.open(finalVersion, newCtx, finalSaveData.get(i.saveName())));
     skips.setInitialState(newCtx.newInitialState());
 
     checksListeners.forEach(prevCtx.checks()::removeListener);
     checksListeners.forEach(newCtx.checks()::addListener);
 
     repopulateSearchResults();
+
+    if (isRawSpoiler && !isICDL) {
+      int option = JOptionPane.showConfirmDialog(this, "Open this RawSpoiler.json on startup?");
+      if (option == JOptionPane.OK_OPTION) {
+        cfg.set("RAW_SPOILER", p.toAbsolutePath().toString());
+        cfg.save();
+      }
+    }
   }
 
   private void saveFile() throws IOException {

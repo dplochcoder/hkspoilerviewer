@@ -264,14 +264,16 @@ public final class SearchResultsListModel
     bookmarksSet.clear();
     hiddenResultsSet.clear();
 
-    JsonObject obj = json.getAsJsonObject();
-    for (JsonElement bookmark : obj.get("Bookmarks").getAsJsonArray()) {
-      ItemCheck check = ctx.checks().get(CheckId.of(bookmark.getAsLong()));
-      bookmarks.add(check);
-      bookmarksSet.add(check);
-    }
-    for (JsonElement hidden : obj.get("Hidden").getAsJsonArray()) {
-      hiddenResultsSet.add(ctx.checks().get(CheckId.of(hidden.getAsLong())));
+    if (json != null) {
+      JsonObject obj = json.getAsJsonObject();
+      for (JsonElement bookmark : obj.get("Bookmarks").getAsJsonArray()) {
+        ItemCheck check = ctx.checks().get(CheckId.of(bookmark.getAsLong()));
+        bookmarks.add(check);
+        bookmarksSet.add(check);
+      }
+      for (JsonElement hidden : obj.get("Hidden").getAsJsonArray()) {
+        hiddenResultsSet.add(ctx.checks().get(CheckId.of(hidden.getAsLong())));
+      }
     }
   }
 

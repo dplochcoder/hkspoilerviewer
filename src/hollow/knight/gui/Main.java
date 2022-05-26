@@ -41,11 +41,12 @@ public final class Main {
     }
 
     // Make user open it.
-    JFileChooser j = new JFileChooser("Find RawSpoiler.json");
+    JFileChooser j = new JFileChooser("Find RawSpoiler.json or ctx.json");
     j.setFileFilter(new FileFilter() {
       @Override
       public boolean accept(File pathname) {
-        return pathname.isDirectory() || pathname.getName().contentEquals("RawSpoiler.json");
+        return pathname.isDirectory() || pathname.getName().contentEquals("RawSpoiler.json")
+            || pathname.getName().contentEquals("ctx.json");
       }
 
       @Override
@@ -85,7 +86,7 @@ public final class Main {
       }
     }
 
-    new Application(ctx);
+    new Application(ctx, cfg);
   }
 
   private Main() {}
