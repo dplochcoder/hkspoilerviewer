@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JDialog;
@@ -61,6 +62,8 @@ public final class Application extends JFrame {
   private final ImmutableList<SaveInterface> saveInterfaces;
   private final ImmutableList<ItemChecks.Listener> checksListeners;
 
+  private final JMenu icdlMenu;
+
   private final Skips skips;
   private final SearchEngine searchEngine;
 
@@ -82,6 +85,7 @@ public final class Application extends JFrame {
     setTitle("HKSpoilerViewer");
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+    icdlMenu = createICDLMenu();
     setJMenuBar(createMenu());
 
     JPanel left = new JPanel();
@@ -196,6 +200,38 @@ public final class Application extends JFrame {
     }
   }
 
+  private void refreshLogic() {
+    routeListModel.refreshLogic();
+    repopulateSearchResults();
+  }
+
+  private JMenuItem icdlReset(String name, Predicate<ItemCheck> filter) {
+    JMenuItem item = new JMenuItem(name);
+    item.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        ctx().checks().reduceToNothing(filter);
+        refreshLogic();
+      }
+    });
+
+    return item;
+  }
+
+  private JMenu createICDLMenu() {
+    JMenu menu = new JMenu("ICDL");
+    menu.setEnabled(false);
+    menu.setToolTipText("Open an ICDL ctx.json file to enable ICDL features");
+
+    JMenu reset = new JMenu("Reset All");
+    reset.add(icdlReset("Randomized Checks", c -> !c.vanilla()));
+    reset.add(icdlReset("All Checks", c -> true));
+    reset.add(icdlReset("Matching Search Results", searchResultsListModel::isMatchingSearchResult));
+    menu.add(reset);
+
+    return menu;
+  }
+
   private JMenuBar createMenu() throws ParseException {
     JMenuBar bar = new JMenuBar();
 
@@ -215,6 +251,8 @@ public final class Application extends JFrame {
     JMenuItem qFromFile = new JMenuItem("From file (*.hksq)");
     query.add(qFromFile);
     bar.add(query);
+
+    bar.add(icdlMenu);
 
     JMenu about = new JMenu("About");
     JMenuItem pl = new JMenuItem("Purchase Logic ($)");
@@ -312,6 +350,11 @@ public final class Application extends JFrame {
     }
   };
 
+  private void setICDLEnabled(boolean enable) {
+    icdlMenu.setEnabled(enable);
+    icdlMenu.setToolTipText(enable ? "" : "Open an ICDL ctx.json file to enable ICDL features");
+  }
+
   private void openFile() throws ParseException, IOException {
     StateContext prevCtx = routeListModel.ctx();
     JFileChooser c = new JFileChooser("Open");
@@ -324,8 +367,8 @@ public final class Application extends JFrame {
     Path p = c.getSelectedFile().toPath();
     boolean isRawSpoiler = !p.endsWith(".hks");
 
-    // TODO: use this
     boolean isICDL = isRawSpoiler && p.endsWith("ctx.json");
+    setICDLEnabled(isICDL);
 
     JsonObject saveData = new JsonObject();
     JsonObject rawSpoiler = JsonUtil.loadPath(c.getSelectedFile().toPath()).getAsJsonObject();

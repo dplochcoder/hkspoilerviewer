@@ -8,7 +8,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
+import hollow.knight.logic.Location;
 import hollow.knight.logic.RoomLabels;
 import hollow.knight.logic.StateContext;
 
@@ -43,10 +43,6 @@ public final class ExclusionFilters extends SearchResult.Filter {
     return out;
   }
 
-  private static final ImmutableSet<String> SHOPS =
-      ImmutableSet.of("Egg_shop", "Grubfather", "Iselda", "Leg_Eater", "Salubra", "Seer", "Sly",
-          "Sly_(Key)", "Unbreakable_Greed", "Unbreakable_Heart", "Unbreakable_Strength");
-
   private ImmutableList<ExclusionFilter> createFilters(RoomLabels roomLabels) {
     return ImmutableList.of(
         ExclusionFilter.create(this, "NON_VANILLA", r -> !r.itemCheck().vanilla(),
@@ -58,7 +54,7 @@ public final class ExclusionFilters extends SearchResult.Filter {
         ExclusionFilter.create(this, "OUT_OF_LOGIC",
             r -> r.logicType() == SearchResult.LogicType.OUT_OF_LOGIC,
             jcb("Out of Logic (*)", false)),
-        ExclusionFilter.create(this, "SHOPS", r -> SHOPS.contains(r.location().name()),
+        ExclusionFilter.create(this, "SHOPS", r -> Location.shops().contains(r.location().name()),
             jcb("Shops", true)),
         ExclusionFilter.create(this, "PURCHASE_LOGIC",
             r -> r.logicType() == SearchResult.LogicType.COST_ACCESSIBLE,

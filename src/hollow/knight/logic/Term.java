@@ -47,13 +47,33 @@ public abstract class Term {
   }
 
   private static final Term GRUBS = Term.create("GRUBS");
+
+  public static Term grubs() {
+    return GRUBS;
+  }
+
   private static final Term RANCID_EGGS = Term.create("RANCIDEGGS");
+
+  public static Term rancidEggs() {
+    return RANCID_EGGS;
+  }
+
   private static final Term CHARMS = Term.create("CHARMS");
+
+  public static Term charms() {
+    return CHARMS;
+  }
 
   private static final ImmutableSet<Term> COST_TERMS =
       ImmutableSet.of(GRUBS, ESSENCE, RANCID_EGGS, CHARMS);
 
   public static ImmutableSet<Term> costTerms() {
     return COST_TERMS;
+  }
+
+  private static final Term NOTHING = Term.create("Lumafly_Escape");
+
+  public static Term nothing() {
+    return NOTHING;
   }
 }

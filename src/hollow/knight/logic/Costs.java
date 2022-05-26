@@ -12,11 +12,15 @@ public final class Costs {
   private final ImmutableList<Cost> costs;
   private final Condition condition;
 
-  private Costs(List<Cost> costs) {
+  public Costs(List<Cost> costs) {
     this.costs = ImmutableList.copyOf(costs);
     this.condition = costs.isEmpty() ? Condition.alwaysTrue()
         : Conjunction
             .of(costs.stream().map(Cost::asCondition).collect(ImmutableSet.toImmutableSet()));
+  }
+
+  public Costs(Cost cost) {
+    this(ImmutableList.of(cost));
   }
 
   public Condition asCondition() {
@@ -46,6 +50,31 @@ public final class Costs {
     }
 
     return new Costs(builder.build());
+  }
+
+  public static Costs defaultCosts(String location) {
+    switch (location) {
+      case "Iselda":
+      case "Leg_Eater":
+      case "Salubra":
+      case "Sly":
+      case "Sly_(Key)":
+        return new Costs(Cost.createGeo(1));
+      case "Grubfather":
+        return new Costs(Cost.createTerm(Term.grubs(), 1));
+      case "Seer":
+        return new Costs(Cost.createTerm(Term.essence(), 1));
+      case "Egg_Shop":
+        return new Costs(Cost.createTerm(Term.rancidEggs(), 1));
+      case "Unbreakable_Greed":
+        return new Costs(Cost.createGeo(450));
+      case "Unbreakable_Heart":
+        return new Costs(Cost.createGeo(600));
+      case "Unbreakable_Strength":
+        return new Costs(Cost.createGeo(750));
+      default:
+        return none();
+    }
   }
 
   private static final Costs NONE = new Costs(ImmutableList.of());

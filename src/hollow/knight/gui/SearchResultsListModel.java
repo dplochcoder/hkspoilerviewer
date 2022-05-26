@@ -42,7 +42,16 @@ public final class SearchResultsListModel
 
   private static final String SEPARATOR = "----------------------------------------";
 
+  private final Set<ItemCheck> matchingResults = new HashSet<>();
+
+  public boolean isMatchingSearchResult(ItemCheck check) {
+    return matchingResults.contains(check);
+  }
+
   public void updateResults(State state, List<SearchResult> newResults) {
+    matchingResults.clear();
+    newResults.forEach(r -> matchingResults.add(r.itemCheck()));
+
     List<ListDataListener> listenersCopy;
     int oldSize, newSize;
     synchronized (mutex) {

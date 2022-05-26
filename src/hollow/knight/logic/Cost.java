@@ -18,6 +18,14 @@ public final class Cost {
     this.term = term;
   }
 
+  public static Cost createGeo(int value) {
+    return new Cost(Type.GEO, value, null);
+  }
+
+  public static Cost createTerm(Term term, int value) {
+    return new Cost(Type.TERM, value, term);
+  }
+
   public Condition asCondition() {
     if (type == Type.GEO) {
       return Condition.canReplenishGeo();

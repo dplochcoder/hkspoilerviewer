@@ -13,6 +13,14 @@ public abstract class Location {
       "Mask_Shard-Grey_Mourner", "Room_Mansion", "Vessel_Fragment-Basin", "Abyss_04", "Dash_Slash",
       "Room_nailmaster_03", "Geo_Rock-Crossroads_Tram", "Crossroads_46", "Start", "Start");
 
+  private static final ImmutableSet<String> SHOPS =
+      ImmutableSet.of("Egg_Shop", "Grubfather", "Iselda", "Leg_Eater", "Salubra", "Seer", "Sly",
+          "Sly_(Key)", "Unbreakable_Greed", "Unbreakable_Heart", "Unbreakable_Strength");
+
+  public static ImmutableSet<String> shops() {
+    return SHOPS;
+  }
+
   public abstract String name();
 
   public abstract Condition accessCondition();

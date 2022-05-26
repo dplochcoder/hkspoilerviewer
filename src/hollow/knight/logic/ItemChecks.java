@@ -1,13 +1,18 @@
 package hollow.knight.logic;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -27,6 +32,9 @@ public final class ItemChecks {
   private final Map<CheckId, ItemCheck> checksById = new HashMap<>();
   private final BiMultimap<Condition, CheckId> idsByCondition = new BiMultimap<>();
   private final BiMultimap<String, CheckId> idsByLocation = new BiMultimap<>();
+
+  private final Map<Term, Item> itemsByName = new HashMap<>();
+  private final BiMultimap<Term, CheckId> idsByItemName = new BiMultimap<>();
 
   private long nextId = 1;
 
@@ -56,15 +64,28 @@ public final class ItemChecks {
     return CheckId.of(nextId++);
   }
 
-  public CheckId placeNew(Location loc, Item item, Costs costs, boolean vanilla) {
-    CheckId id = newId();
-    ItemCheck p = ItemCheck.create(id, loc, item, costs, vanilla);
-    checksById.put(id, p);
-    idsByCondition.put(p.condition(), id);
-    idsByLocation.put(loc.name(), id);
+  private void addInternal(ItemCheck check) {
+    checksById.put(check.id(), check);
+    idsByCondition.put(check.condition(), check.id());
+    idsByLocation.put(check.location().name(), check.id());
 
-    listeners().forEach(l -> l.checkAdded(p));
-    return id;
+    itemsByName.put(check.item().term(), check.item());
+    idsByItemName.put(check.item().term(), check.id());
+  }
+
+  private void removeInternal(CheckId id) {
+    checksById.remove(id);
+    idsByCondition.removeValue(id);
+    idsByLocation.removeValue(id);
+    idsByItemName.removeValue(id);
+  }
+
+  public CheckId placeNew(Location loc, Item item, Costs costs, boolean vanilla) {
+    ItemCheck check = ItemCheck.create(newId(), loc, item, costs, vanilla);
+    addInternal(check);
+
+    listeners().forEach(l -> l.checkAdded(check));
+    return check.id();
   }
 
   public CheckId replace(CheckId prevId, Location loc, Item item, Costs costs, boolean vanilla) {
@@ -72,12 +93,8 @@ public final class ItemChecks {
     ItemCheck before = checksById.get(prevId);
     ItemCheck after = ItemCheck.create(id, loc, item, costs, vanilla);
 
-    checksById.remove(prevId);
-    idsByCondition.removeValue(prevId);
-    idsByLocation.removeValue(prevId);
-    checksById.put(id, after);
-    idsByCondition.put(after.condition(), id);
-    idsByLocation.put(loc.name(), id);
+    removeInternal(prevId);
+    addInternal(after);
 
     listeners().forEach(l -> l.checkReplaced(before, after));
     return id;
@@ -85,11 +102,32 @@ public final class ItemChecks {
 
   public void remove(CheckId id) {
     ItemCheck check = checksById.get(id);
-    checksById.remove(id);
-    idsByCondition.removeValue(id);
-    idsByLocation.removeValue(id);
+    removeInternal(id);
 
     listeners().forEach(l -> l.checkRemoved(check));
+  }
+
+  public void reduceToNothing(Predicate<ItemCheck> filter) {
+    // Keep at least one instance of each location alive.
+    Set<CheckId> toRemove = checksById.values().stream().filter(filter).map(ItemCheck::id)
+        .collect(ImmutableSet.toImmutableSet());
+    Multimap<String, CheckId> modifiedLocations =
+        Multimaps.index(toRemove, id -> checksById.get(id).location().name());
+
+    for (String loc : modifiedLocations.keySet()) {
+      if (loc.equals("Start")) {
+        continue;
+      }
+
+      Collection<CheckId> removing = modifiedLocations.get(loc);
+      ItemCheck template = checksById.get(idsByLocation.getKey(loc).iterator().next());
+
+      removing.forEach(this::remove);
+      if (!idsByLocation.containsKey(loc)) {
+        placeNew(template.location(), nothing(), Costs.defaultCosts(template.location().name()),
+            false);
+      }
+    }
   }
 
   public void compact() {
@@ -116,6 +154,10 @@ public final class ItemChecks {
 
   public Stream<ItemCheck> startChecks() {
     return idsByLocation.getKey("Start").stream().map(checksById::get);
+  }
+
+  public Item nothing() {
+    return itemsByName.get(Term.nothing());
   }
 
   public Stream<ItemCheck> getByCondition(Condition c) {

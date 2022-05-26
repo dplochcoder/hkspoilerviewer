@@ -64,6 +64,14 @@ public abstract class SearchResult {
     return itemCheck().item();
   }
 
+  public final String itemDisplayName() {
+    if (item().term().equals(Term.nothing())) {
+      return "Nothing!";
+    } else {
+      return item().term().name();
+    }
+  }
+
   public final Costs costs() {
     return itemCheck().costs();
   }
@@ -91,7 +99,7 @@ public abstract class SearchResult {
       sb.append('#');
     }
 
-    sb.append(item().term().name());
+    sb.append(itemDisplayName());
     sb.append(' ');
     sb.append(valueSuffix());
     sb.append("- ");

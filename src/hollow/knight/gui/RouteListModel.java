@@ -304,11 +304,10 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
       route.set(index, replacement);
       for (int i = index; i < getSize(); i++) {
         ItemCheck check = route.get(i);
+        resultStrings.set(i, SearchResult.create(check, finalState).render());
+
         finalState.acquireCheck(check);
         finalState.normalize();
-
-        route.set(i, check);
-        resultStrings.set(i, SearchResult.create(check, finalState).render());
       }
 
       if (index < insertionPoint) {
@@ -320,7 +319,33 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
       }
     }
 
-    ListDataEvent e = new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, index, index + 1);
+    ListDataEvent e = new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, index, getSize());
+    listenersCopy.forEach(l -> l.contentsChanged(e));
+  }
+
+  public void refreshLogic() {
+    List<ListDataListener> listenersCopy;
+    synchronized (mutex) {
+      listenersCopy = new ArrayList<>(listeners);
+
+      finalState = ctx.newInitialState();
+      for (int i = 0; i < getSize(); i++) {
+        ItemCheck check = route.get(i);
+        resultStrings.set(i, SearchResult.create(check, finalState).render());
+        if (i == insertionPoint) {
+          currentState = finalState.deepCopy();
+        }
+
+        finalState.acquireCheck(check);;
+        finalState.normalize();
+      }
+
+      if (insertionPoint == getSize()) {
+        currentState = finalState.deepCopy();
+      }
+    }
+
+    ListDataEvent e = new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, 0, getSize());
     listenersCopy.forEach(l -> l.contentsChanged(e));
   }
 
