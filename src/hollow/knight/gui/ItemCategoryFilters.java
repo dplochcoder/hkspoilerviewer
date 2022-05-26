@@ -29,8 +29,8 @@ public final class ItemCategoryFilters extends SearchResult.Filter {
     this.filtersPanel.setLayout(new GridLayout(numRows, 2));
 
     this.filterBoxes = createFilterBoxes();
-    filtersPanel.add(createAllButton("ALL", true));
-    filtersPanel.add(createAllButton("NONE", false));
+    filtersPanel.add(createAllButton("All Items", true));
+    filtersPanel.add(createAllButton("No Items", false));
     filterBoxes.values().forEach(filtersPanel::add);
   }
 

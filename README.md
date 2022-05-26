@@ -26,7 +26,7 @@ Constrain your search to specific Map or Titled areas in the likewise named tabs
 
 ## Exclusions
 
-Several types of checks are excluded from search results by default; you can un-exclude them by checking them in the Exclusions section near the bottom.
+Several types of checks are excluded from search results by default; you can un-exclude them by checking them in the Exclusions section near the bottom. Likewise, you can exclude the standard categories, like 'In-Logic', in order to exclusively search Out-of-logic checks.
 
 ### Vanilla (#)
 

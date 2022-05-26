@@ -75,8 +75,8 @@ public final class Skips {
 
     int numRows = (this.skipTerms.size() + 3) / 2;
     this.panel.setLayout(new GridLayout(numRows, 2));
-    this.panel.add(createAllButton("ALL", true));
-    this.panel.add(createAllButton("NONE", false));
+    this.panel.add(createAllButton("All Skips", true));
+    this.panel.add(createAllButton("No Skips", false));
     this.panel.add(new JLabel(""));
     this.skipTerms.forEach(st -> this.panel.add(st.box()));
   }
