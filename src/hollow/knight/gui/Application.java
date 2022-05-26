@@ -40,6 +40,7 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonWriter;
 import hollow.knight.logic.ItemCheck;
+import hollow.knight.logic.ItemChecks;
 import hollow.knight.logic.ParseException;
 import hollow.knight.logic.Query;
 import hollow.knight.logic.SaveInterface;
@@ -56,6 +57,7 @@ public final class Application extends JFrame {
   private final SearchResultsListModel searchResultsListModel;
   private final RouteListModel routeListModel;
   private final ImmutableList<SaveInterface> saveInterfaces;
+  private final ImmutableList<ItemChecks.Listener> checksListeners;
 
   private final Skips skips;
   private final SearchEngine searchEngine;
@@ -67,9 +69,12 @@ public final class Application extends JFrame {
 
   public Application(StateContext ctx) throws ParseException {
     this.filterChangedListener = () -> repopulateSearchResults();
-    this.searchResultsListModel = new SearchResultsListModel(ctx.checks());
+    this.searchResultsListModel = new SearchResultsListModel();
     this.routeListModel = new RouteListModel(ctx);
     this.saveInterfaces = ImmutableList.of(searchResultsListModel, routeListModel);
+    this.checksListeners = ImmutableList.of(searchResultsListModel, routeListModel);
+
+    this.checksListeners.forEach(ctx.checks()::addListener);
 
     setTitle("HKSpoilerViewer");
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -304,6 +309,7 @@ public final class Application extends JFrame {
   };
 
   private void openFile() throws ParseException {
+    StateContext prevCtx = routeListModel.ctx();
     JFileChooser c = new JFileChooser("Open");
     c.setFileFilter(HKS_FILTER);
 
@@ -321,6 +327,9 @@ public final class Application extends JFrame {
     StateContext newCtx = StateContext.parse(rawSpoiler);
     saveInterfaces.forEach(i -> i.open(version, newCtx, saveData.get(i.saveName())));
     skips.setInitialState(newCtx.newInitialState());
+
+    checksListeners.forEach(prevCtx.checks()::removeListener);
+    checksListeners.forEach(newCtx.checks()::addListener);
 
     repopulateSearchResults();
   }

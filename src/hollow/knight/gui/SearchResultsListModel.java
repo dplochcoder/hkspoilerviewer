@@ -20,7 +20,8 @@ import hollow.knight.logic.State;
 import hollow.knight.logic.StateContext;
 import hollow.knight.logic.Version;
 
-public final class SearchResultsListModel implements ListModel<String>, SaveInterface {
+public final class SearchResultsListModel
+    implements ListModel<String>, ItemChecks.Listener, SaveInterface {
 
   private final Object mutex = new Object();
   private final Set<ListDataListener> listeners = new HashSet<>();
@@ -32,10 +33,6 @@ public final class SearchResultsListModel implements ListModel<String>, SaveInte
   private final List<SearchResult> results = new ArrayList<>();
   private final List<SearchResult> hiddenResults = new ArrayList<>();
   private final List<String> resultStrings = new ArrayList<>();
-
-  public SearchResultsListModel(ItemChecks checks) {
-    // FIXME: Add listeners
-  }
 
   public int numBookmarks() {
     synchronized (mutex) {
@@ -216,6 +213,28 @@ public final class SearchResultsListModel implements ListModel<String>, SaveInte
   public void unhideResult(ItemCheck check) {
     synchronized (mutex) {
       hiddenResultsSet.remove(check);
+    }
+  }
+
+  @Override
+  public void checkAdded(ItemCheck check) {}
+
+  @Override
+  public void checkRemoved(ItemCheck check) {
+    if (bookmarksSet.remove(check)) {
+      bookmarks.remove(check);
+    } else {
+      hiddenResultsSet.remove(check);
+    }
+  }
+
+  @Override
+  public void checkReplaced(ItemCheck before, ItemCheck after) {
+    if (bookmarksSet.remove(before)) {
+      bookmarksSet.add(after);
+      bookmarks.set(bookmarks.indexOf(before), after);
+    } else if (hiddenResultsSet.remove(before)) {
+      hiddenResultsSet.add(after);
     }
   }
 

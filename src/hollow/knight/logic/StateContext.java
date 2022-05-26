@@ -101,10 +101,9 @@ public final class StateContext {
 
     NotchCosts notchCosts = NotchCosts.parse(json);
     ConditionParser.Context parseCtx = new ConditionParser.Context(notchCosts);
-    ItemChecks checks = new ItemChecks();
-    checks.parse(json, parseCtx, rooms);
     return new StateContext(json, charmIds, rooms, pools, notchCosts,
-        Waypoints.parse(json, parseCtx), checks, tolerances, setters);
+        Waypoints.parse(json, parseCtx), ItemChecks.parse(json, parseCtx, rooms), tolerances,
+        setters);
   }
 
 }

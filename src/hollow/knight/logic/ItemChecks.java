@@ -1,24 +1,56 @@
 package hollow.knight.logic;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Stream;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.MultimapBuilder;
+import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 /** A mutable mapping of locations to items. */
 public final class ItemChecks {
-  private final Map<CheckId, ItemCheck> placementsById = new HashMap<>();
-  private final Multimap<Condition, CheckId> idsByCondition =
-      MultimapBuilder.hashKeys().hashSetValues().build();
-  private final Multimap<String, CheckId> idsByLocation =
-      MultimapBuilder.hashKeys().hashSetValues().build();
+  public interface Listener {
+    void checkAdded(ItemCheck check);
+
+    void checkRemoved(ItemCheck check);
+
+    void checkReplaced(ItemCheck before, ItemCheck after);
+  }
+
+  private final Object mutex = new Object();
+  private final Set<Listener> listeners = new HashSet<>();
+
+  private final Map<CheckId, ItemCheck> checksById = new HashMap<>();
+  private final BiMultimap<Condition, CheckId> idsByCondition = new BiMultimap<>();
+  private final BiMultimap<String, CheckId> idsByLocation = new BiMultimap<>();
 
   private long nextId = 1;
 
-  public ItemChecks() {}
+  private ItemChecks() {}
+
+  public void addListener(Listener listener) {
+    synchronized (mutex) {
+      listeners.add(listener);
+    }
+  }
+
+  public void removeListener(Listener listener) {
+    synchronized (mutex) {
+      listeners.remove(listener);
+    }
+  }
+
+  private Stream<Listener> listeners() {
+    List<Listener> listeners;
+    synchronized (mutex) {
+      listeners = new ArrayList<>(this.listeners);
+    }
+    return listeners.stream();
+  }
 
   private CheckId newId() {
     return CheckId.of(nextId++);
@@ -27,34 +59,67 @@ public final class ItemChecks {
   public CheckId placeNew(Location loc, Item item, Costs costs, boolean vanilla) {
     CheckId id = newId();
     ItemCheck p = ItemCheck.create(id, loc, item, costs, vanilla);
-    placementsById.put(id, p);
+    checksById.put(id, p);
     idsByCondition.put(p.condition(), id);
     idsByLocation.put(loc.name(), id);
 
+    listeners().forEach(l -> l.checkAdded(p));
     return id;
   }
 
-  public void clear() {
-    placementsById.clear();
-    idsByCondition.clear();
-    idsByLocation.clear();
-    nextId = 1;
+  public CheckId replace(CheckId prevId, Location loc, Item item, Costs costs, boolean vanilla) {
+    CheckId id = newId();
+    ItemCheck before = checksById.get(prevId);
+    ItemCheck after = ItemCheck.create(id, loc, item, costs, vanilla);
+
+    checksById.remove(prevId);
+    idsByCondition.removeValue(prevId);
+    idsByLocation.removeValue(prevId);
+    checksById.put(id, after);
+    idsByCondition.put(after.condition(), id);
+    idsByLocation.put(loc.name(), id);
+
+    listeners().forEach(l -> l.checkReplaced(before, after));
+    return id;
+  }
+
+  public void remove(CheckId id) {
+    ItemCheck check = checksById.get(id);
+    checksById.remove(id);
+    idsByCondition.removeValue(id);
+    idsByLocation.removeValue(id);
+
+    listeners().forEach(l -> l.checkRemoved(check));
+  }
+
+  public void compact() {
+    ImmutableList<CheckId> sorted =
+        checksById.keySet().stream().sorted().collect(ImmutableList.toImmutableList());
+
+    for (int i = 0; i < sorted.size(); i++) {
+      CheckId id = sorted.get(i);
+
+      if (id.id() != i + 1) {
+        ItemCheck check = checksById.get(id);
+        replace(id, check.location(), check.item(), check.costs(), check.vanilla());
+      }
+    }
   }
 
   public ItemCheck get(CheckId id) {
-    return placementsById.get(id);
+    return checksById.get(id);
   }
 
   public Stream<ItemCheck> allChecks() {
-    return placementsById.values().stream();
+    return checksById.values().stream();
   }
 
   public Stream<ItemCheck> startChecks() {
-    return idsByLocation.get("Start").stream().map(placementsById::get);
+    return idsByLocation.getKey("Start").stream().map(checksById::get);
   }
 
   public Stream<ItemCheck> getByCondition(Condition c) {
-    return idsByCondition.get(c).stream().map(placementsById::get);
+    return idsByCondition.getKey(c).stream().map(checksById::get);
   }
 
   private void parseCheck(JsonElement elem, ConditionParser.Context parseCtx, RoomLabels rooms,
@@ -84,25 +149,26 @@ public final class ItemChecks {
     placeNew(loc, item, costs, vanilla);
   }
 
-  public void parse(JsonObject json, ConditionParser.Context parseCtx, RoomLabels roomLabels)
-      throws ParseException {
-    clear();
+  public static ItemChecks parse(JsonObject json, ConditionParser.Context parseCtx,
+      RoomLabels roomLabels) throws ParseException {
+    ItemChecks checks = new ItemChecks();
 
     // Parse locations.
     for (JsonElement elem : json.get("itemPlacements").getAsJsonArray()) {
       try {
-        parseCheck(elem, parseCtx, roomLabels, false);
+        checks.parseCheck(elem, parseCtx, roomLabels, false);
+      } catch (Exception ex) {
+        throw new ParseException(ex.getMessage() + ": " + elem, ex);
+      }
+    }
+    for (JsonElement elem : json.get("Vanilla").getAsJsonArray()) {
+      try {
+        checks.parseCheck(elem, parseCtx, roomLabels, true);
       } catch (Exception ex) {
         throw new ParseException(ex.getMessage() + ": " + elem, ex);
       }
     }
 
-    for (JsonElement elem : json.get("Vanilla").getAsJsonArray()) {
-      try {
-        parseCheck(elem, parseCtx, roomLabels, true);
-      } catch (Exception ex) {
-        throw new ParseException(ex.getMessage() + ": " + elem, ex);
-      }
-    }
+    return checks;
   }
 }

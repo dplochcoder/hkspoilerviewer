@@ -21,12 +21,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import hollow.knight.logic.CheckId;
 import hollow.knight.logic.ItemCheck;
+import hollow.knight.logic.ItemChecks;
 import hollow.knight.logic.SaveInterface;
 import hollow.knight.logic.State;
 import hollow.knight.logic.StateContext;
 import hollow.knight.logic.Version;
 
-public final class RouteListModel implements ListModel<String>, SaveInterface {
+public final class RouteListModel implements ItemChecks.Listener, ListModel<String>, SaveInterface {
 
   private final Object mutex = new Object();
 
@@ -35,6 +36,7 @@ public final class RouteListModel implements ListModel<String>, SaveInterface {
   private State currentState; // All checks up to but excluding insertionPoint
   private State finalState; // All checks
   private int insertionPoint = 0; // New elements go @ this index
+
   private final List<ItemCheck> route = new ArrayList<>();
   private final List<String> resultStrings = new ArrayList<>();
 
@@ -288,6 +290,57 @@ public final class RouteListModel implements ListModel<String>, SaveInterface {
     ListDataEvent e2 =
         new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, index + 1, getSize());
     listenersCopy.forEach(l -> l.contentsChanged(e2));
+  }
+
+  public void replaceCheck(int index, ItemCheck replacement) {
+    List<ListDataListener> listenersCopy;
+    synchronized (mutex) {
+      if (index < 0 || index >= getSize()) {
+        return;
+      }
+      listenersCopy = new ArrayList<>(listeners);
+
+      finalState = getState(index - 1).deepCopy();
+      route.set(index, replacement);
+      for (int i = index; i < getSize(); i++) {
+        ItemCheck check = route.get(i);
+        finalState.acquireCheck(check);
+        finalState.normalize();
+
+        route.set(i, check);
+        resultStrings.set(i, SearchResult.create(check, finalState).render());
+      }
+
+      if (index < insertionPoint) {
+        currentState = initialState.deepCopy();
+        for (int i = 0; i < insertionPoint; i++) {
+          currentState.acquireCheck(route.get(i));
+        }
+        currentState.normalize();
+      }
+    }
+
+    ListDataEvent e = new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, index, index + 1);
+    listenersCopy.forEach(l -> l.contentsChanged(e));
+  }
+
+  @Override
+  public void checkAdded(ItemCheck check) {}
+
+  @Override
+  public void checkRemoved(ItemCheck check) {
+    int index = route.indexOf(check);
+    if (index != -1) {
+      removeCheck(index);
+    }
+  }
+
+  @Override
+  public void checkReplaced(ItemCheck before, ItemCheck after) {
+    int index = route.indexOf(before);
+    if (index != -1) {
+      replaceCheck(index, after);
+    }
   }
 
   @Override
