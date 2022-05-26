@@ -39,7 +39,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonWriter;
-import hollow.knight.logic.CheckId;
+import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.ParseException;
 import hollow.knight.logic.Query;
 import hollow.knight.logic.SaveInterface;
@@ -436,12 +436,12 @@ public final class Application extends JFrame {
         } else if (e.getKeyCode() == KeyEvent.VK_U) {
           searchResultsListModel.unhideResult(resultsList.getSelectedIndex());
         } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-          CheckId id = searchResultsListModel.getId(resultsList.getSelectedIndex());
-          if (id == null) {
+          ItemCheck check = searchResultsListModel.getCheck(resultsList.getSelectedIndex());
+          if (check == null) {
             return;
           }
 
-          addToRoute(id);
+          addToRoute(check);
         } else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
           if (routeListModel.getSize() > 0) {
             routeListModel.removeCheck(routeListModel.getSize() - 1);
@@ -508,10 +508,10 @@ public final class Application extends JFrame {
     return routeList;
   }
 
-  private void addToRoute(CheckId id) {
-    searchResultsListModel.removeBookmark(routeListModel.currentState(), id);
-    searchResultsListModel.unhideResult(id);
-    routeListModel.addToRoute(id);
+  private void addToRoute(ItemCheck check) {
+    searchResultsListModel.removeBookmark(check);
+    searchResultsListModel.unhideResult(check);
+    routeListModel.addToRoute(check);
 
     repopulateSearchResults();
   }

@@ -13,6 +13,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import hollow.knight.logic.CheckId;
+import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.ItemChecks;
 import hollow.knight.logic.SaveInterface;
 import hollow.knight.logic.State;
@@ -24,18 +25,16 @@ public final class SearchResultsListModel implements ListModel<String>, SaveInte
   private final Object mutex = new Object();
   private final Set<ListDataListener> listeners = new HashSet<>();
 
-  private ItemChecks checks;
+  private final Set<ItemCheck> bookmarksSet = new HashSet<>();
+  private final Set<ItemCheck> hiddenResultsSet = new HashSet<>();
 
-  private final Set<CheckId> bookmarksSet = new HashSet<>();
-  private final Set<CheckId> hiddenResultsSet = new HashSet<>();
-
-  private final List<CheckId> bookmarks = new ArrayList<>();
+  private final List<ItemCheck> bookmarks = new ArrayList<>();
   private final List<SearchResult> results = new ArrayList<>();
   private final List<SearchResult> hiddenResults = new ArrayList<>();
   private final List<String> resultStrings = new ArrayList<>();
 
   public SearchResultsListModel(ItemChecks checks) {
-    this.checks = checks;
+    // FIXME: Add listeners
   }
 
   public int numBookmarks() {
@@ -57,14 +56,14 @@ public final class SearchResultsListModel implements ListModel<String>, SaveInte
       resultStrings.clear();
       hiddenResults.clear();
       for (SearchResult r : newResults) {
-        if (hiddenResultsSet.contains(r.id())) {
+        if (hiddenResultsSet.contains(r.itemCheck())) {
           hiddenResults.add(r);
-        } else if (!bookmarksSet.contains(r.id())) {
+        } else if (!bookmarksSet.contains(r.itemCheck())) {
           results.add(r);
         }
       }
 
-      bookmarks.forEach(b -> resultStrings.add(SearchResult.create(checks.get(b), state).render()));
+      bookmarks.forEach(b -> resultStrings.add(SearchResult.create(b, state).render()));
       resultStrings.add(SEPARATOR);
       results.forEach(r -> resultStrings.add(r.render()));
       resultStrings.add(SEPARATOR);
@@ -80,15 +79,15 @@ public final class SearchResultsListModel implements ListModel<String>, SaveInte
     }
   }
 
-  public void removeBookmark(State state, CheckId id) {
+  public void removeBookmark(ItemCheck check) {
     synchronized (mutex) {
-      if (bookmarksSet.remove(id)) {
-        bookmarks.remove(id);
+      if (bookmarksSet.remove(check)) {
+        bookmarks.remove(check);
       }
     }
   }
 
-  public CheckId getId(int index) {
+  public ItemCheck getCheck(int index) {
     synchronized (mutex) {
       if (index < bookmarks.size()) {
         return bookmarks.get(index);
@@ -100,7 +99,7 @@ public final class SearchResultsListModel implements ListModel<String>, SaveInte
       }
 
       if (index < results.size()) {
-        return results.get(index).id();
+        return results.get(index).itemCheck();
       }
 
       index -= results.size() + 1;
@@ -108,14 +107,14 @@ public final class SearchResultsListModel implements ListModel<String>, SaveInte
         return null;
       }
 
-      return hiddenResults.get(index).id();
+      return hiddenResults.get(index).itemCheck();
     }
   }
 
   public SearchResult getResult(State state, int index) {
     synchronized (mutex) {
       if (index < bookmarks.size()) {
-        return SearchResult.create(checks.get(bookmarks.get(index)), state);
+        return SearchResult.create(bookmarks.get(index), state);
       }
 
       index -= bookmarks.size() + 1;
@@ -146,25 +145,25 @@ public final class SearchResultsListModel implements ListModel<String>, SaveInte
       return;
     }
 
-    if (bookmarksSet.contains(s.id())) {
+    if (bookmarksSet.contains(s.itemCheck())) {
       if (!engine.accept(state.ctx(), s)) {
         brighten(c);
       }
-    } else if (hiddenResultsSet.contains(s.id())) {
+    } else if (hiddenResultsSet.contains(s.itemCheck())) {
       brighten(c);
     }
   }
 
   public void addBookmark(int index) {
     synchronized (mutex) {
-      CheckId id = getId(index);
-      if (id == null) {
+      ItemCheck check = getCheck(index);
+      if (check == null) {
         return;
       }
 
-      if (bookmarksSet.add(id)) {
-        bookmarks.add(id);
-        hiddenResultsSet.remove(id);
+      if (bookmarksSet.add(check)) {
+        bookmarks.add(check);
+        hiddenResultsSet.remove(check);
       }
     }
   }
@@ -180,8 +179,8 @@ public final class SearchResultsListModel implements ListModel<String>, SaveInte
         return;
       }
 
-      CheckId a = bookmarks.get(index);
-      CheckId b = bookmarks.get(otherIndex);
+      ItemCheck a = bookmarks.get(index);
+      ItemCheck b = bookmarks.get(otherIndex);
       bookmarks.set(index, b);
       bookmarks.set(otherIndex, a);
     }
@@ -199,24 +198,24 @@ public final class SearchResultsListModel implements ListModel<String>, SaveInte
 
   public void hideResult(int index) {
     synchronized (mutex) {
-      CheckId id = getId(index);
+      ItemCheck check = getCheck(index);
 
-      hiddenResultsSet.add(id);
-      if (bookmarksSet.remove(id)) {
-        bookmarks.remove(id);
+      hiddenResultsSet.add(check);
+      if (bookmarksSet.remove(check)) {
+        bookmarks.remove(check);
       }
     }
   }
 
   public void unhideResult(int index) {
     synchronized (mutex) {
-      hiddenResultsSet.remove(getId(index));
+      hiddenResultsSet.remove(getCheck(index));
     }
   }
 
-  public void unhideResult(CheckId id) {
+  public void unhideResult(ItemCheck check) {
     synchronized (mutex) {
-      hiddenResultsSet.remove(id);
+      hiddenResultsSet.remove(check);
     }
   }
 
@@ -230,11 +229,11 @@ public final class SearchResultsListModel implements ListModel<String>, SaveInte
     JsonObject obj = new JsonObject();
 
     JsonArray bookmarksArr = new JsonArray();
-    bookmarks.forEach(b -> bookmarksArr.add(b.id()));
+    bookmarks.forEach(b -> bookmarksArr.add(b.id().id()));;
     obj.add("Bookmarks", bookmarksArr);
 
     JsonArray hiddenArr = new JsonArray();
-    hiddenResultsSet.forEach(h -> hiddenArr.add(h.id()));
+    hiddenResultsSet.forEach(h -> hiddenArr.add(h.id().id()));
     obj.add("Hidden", hiddenArr);
 
     return obj;
@@ -248,12 +247,12 @@ public final class SearchResultsListModel implements ListModel<String>, SaveInte
 
     JsonObject obj = json.getAsJsonObject();
     for (JsonElement bookmark : obj.get("Bookmarks").getAsJsonArray()) {
-      CheckId id = CheckId.of(bookmark.getAsLong());
-      bookmarks.add(id);
-      bookmarksSet.add(id);
+      ItemCheck check = ctx.checks().get(CheckId.of(bookmark.getAsLong()));
+      bookmarks.add(check);
+      bookmarksSet.add(check);
     }
     for (JsonElement hidden : obj.get("Hidden").getAsJsonArray()) {
-      hiddenResultsSet.add(CheckId.of(hidden.getAsLong()));
+      hiddenResultsSet.add(ctx.checks().get(CheckId.of(hidden.getAsLong())));
     }
   }
 

@@ -68,7 +68,7 @@ public final class StateContext {
     State state = new State(this);
 
     // Automatically acquire all items at Start
-    checks.startChecks().forEach(c -> state.acquireCheck(c.id()));
+    checks.startChecks().forEach(state::acquireCheck);
     for (Term t : setters.terms()) {
       state.set(t, setters.get(t));
     }

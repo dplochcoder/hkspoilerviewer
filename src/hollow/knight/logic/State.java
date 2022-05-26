@@ -11,7 +11,7 @@ public class State {
 
   private final MutableTermMap termValues = new MutableTermMap();
   private ConditionGraph graph = null;
-  private final Set<CheckId> obtains = new HashSet<>();
+  private final Set<ItemCheck> obtains = new HashSet<>();
 
   private final Set<Term> dirtyTerms = new HashSet<>();
 
@@ -30,13 +30,13 @@ public class State {
     return ctx;
   }
 
-  public ImmutableSet<CheckId> unobtained() {
-    return ctx.checks().allChecks().map(c -> c.id()).filter(id -> !obtains.contains(id))
+  public ImmutableSet<ItemCheck> unobtained() {
+    return ctx.checks().allChecks().filter(id -> !obtains.contains(id))
         .collect(ImmutableSet.toImmutableSet());
   }
 
-  public boolean isAcquired(CheckId id) {
-    return obtains.contains(id);
+  public boolean isAcquired(ItemCheck check) {
+    return obtains.contains(check);
   }
 
   public int get(Term term) {
@@ -55,16 +55,16 @@ public class State {
     }
   }
 
-  public void acquireCheck(CheckId id) {
-    if (!obtains.add(id)) {
+  public void acquireCheck(ItemCheck check) {
+    if (!obtains.add(check)) {
       return;
     }
 
     if (potentialState != null) {
-      potentialState.acquireCheck(id);
+      potentialState.acquireCheck(check);
     }
 
-    ctx.checks().get(id).item().apply(this);
+    check.item().apply(this);
   }
 
   public boolean test(Condition c) {
@@ -78,7 +78,7 @@ public class State {
   // Iteratively apply logic to grant access to items / areas.
   public void normalize() {
     Set<Term> newWaypoints = new HashSet<>();
-    Set<CheckId> newChecks = new HashSet<>();
+    Set<ItemCheck> newChecks = new HashSet<>();
     if (graph == null) {
       ConditionGraph.Builder builder = ConditionGraph.builder(termValues());
       for (Term t : ctx.waypoints().allWaypoints()) {
@@ -88,14 +88,14 @@ public class State {
       }
       ctx().checks().allChecks().forEach(c -> {
         if (builder.index(c.condition())) {
-          newChecks.add(c.id());
+          newChecks.add(c);
         }
       });
       graph = builder.build();
     } else {
       for (Condition c : graph.update(this, dirtyTerms)) {
         newWaypoints.addAll(ctx.waypoints().getTerms(c));
-        ctx().checks().getByCondition(c).forEach(check -> newChecks.add(check.id()));
+        ctx().checks().getByCondition(c).forEach(newChecks::add);
       }
     }
     dirtyTerms.clear();
@@ -109,7 +109,7 @@ public class State {
       newWaypoints.clear();
       for (Condition c : graph.update(this, dirtyTerms)) {
         newWaypoints.addAll(ctx.waypoints().getTerms(c));
-        ctx().checks().getByCondition(c).forEach(check -> newChecks.add(check.id()));
+        ctx().checks().getByCondition(c).forEach(newChecks::add);
       }
       dirtyTerms.clear();
     }
@@ -127,7 +127,7 @@ public class State {
       newChecks.clear();
 
       for (Condition c : potentialState.graph.update(potentialState, potentialState.dirtyTerms)) {
-        ctx().checks().getByCondition(c).forEach(check -> newChecks.add(check.id()));
+        ctx().checks().getByCondition(c).forEach(newChecks::add);
       }
       potentialState.dirtyTerms.clear();
     }
