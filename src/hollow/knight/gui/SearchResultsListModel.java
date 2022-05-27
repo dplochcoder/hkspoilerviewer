@@ -110,6 +110,10 @@ public final class SearchResultsListModel
 
   public ItemCheck getCheck(int index) {
     synchronized (mutex) {
+      if (index < 0) {
+        return null;
+      }
+
       if (index < bookmarks.size()) {
         return bookmarks.get(index);
       }
@@ -134,6 +138,10 @@ public final class SearchResultsListModel
 
   public SearchResult getResult(State state, int index) {
     synchronized (mutex) {
+      if (index < 0) {
+        return null;
+      }
+
       if (index < bookmarks.size()) {
         return SearchResult.create(bookmarks.get(index), state);
       }
