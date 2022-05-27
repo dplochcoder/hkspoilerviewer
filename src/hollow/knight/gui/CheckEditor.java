@@ -100,11 +100,12 @@ public final class CheckEditor extends JFrame {
       @Override
       public void keyPressed(KeyEvent e) {
         // TODO: Make key codes configurable.
-        if (e.getKeyCode() != KeyEvent.VK_C && !UP_DOWN_VALUES.containsKey(e.getKeyCode())) {
+        if (e.getKeyCode() != KeyEvent.VK_C && e.getKeyCode() != KeyEvent.VK_SPACE
+            && !UP_DOWN_VALUES.containsKey(e.getKeyCode())) {
           return;
         }
 
-        if (e.getKeyCode() == KeyEvent.VK_C) {
+        if (e.getKeyCode() == KeyEvent.VK_C || e.getKeyCode() == KeyEvent.VK_SPACE) {
           application.copyCheckEditorItem(true);
         } else {
           // Navigate up or down.

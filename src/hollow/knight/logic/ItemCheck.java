@@ -24,4 +24,15 @@ public abstract class ItemCheck {
       boolean vanilla) {
     return new AutoValue_ItemCheck(id, loc, item, costs, vanilla);
   }
+
+  // Always compare ItemChecks by identity for efficiency.
+  @Override
+  public final boolean equals(Object o) {
+    return this == o;
+  }
+
+  @Override
+  public final int hashCode() {
+    return super.hashCode();
+  }
 }
