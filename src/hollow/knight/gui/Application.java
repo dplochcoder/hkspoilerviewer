@@ -63,6 +63,8 @@ public final class Application extends JFrame {
   private final ImmutableList<ItemChecks.Listener> checksListeners;
 
   private final JMenu icdlMenu;
+  private final JMenuItem openEditor;
+  private CheckEditor checkEditor;
 
   private final Skips skips;
   private final SearchEngine searchEngine;
@@ -85,6 +87,7 @@ public final class Application extends JFrame {
     setTitle("HKSpoilerViewer");
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+    openEditor = new JMenuItem("Open Editor");
     icdlMenu = createICDLMenu();
     setJMenuBar(createMenu());
 
@@ -115,7 +118,7 @@ public final class Application extends JFrame {
     setVisible(true);
   }
 
-  private StateContext ctx() {
+  public StateContext ctx() {
     return routeListModel.ctx();
   }
 
@@ -152,12 +155,16 @@ public final class Application extends JFrame {
 
   private static final ImmutableList<String> KS_INFO =
       ImmutableList.<String>builder().add("UP/DOWN - move through results")
-          .add("W/D - move selected item up/down (bookmarks+route)")
+          .add("W/S - move selected item up/down (bookmarks+route)")
           .add("X - remove selected item (bookmarks+route)").add("-")
           .add("SPACE - acquire selected item").add("BACKSPACE - un-acquire last selected item")
           .add("-").add("I - Insert and search before selected route item")
           .add("K - Undo insertion point").add("-").add("B - bookmark selected item").add("-")
-          .add("H - hide selected item").add("U - un-hide selected item").build();
+          .add("H - hide selected item").add("U - un-hide selected item").add("-")
+          .add("E - (ICDL) edit selected check in the check editor")
+          .add("D - (ICDL) delete selected check")
+          .add("C - (ICDL) copy current item onto selected check")
+          .add("N - (ICDL) duplicate the selected check (mostly for shops)").build();
 
   private ActionListener infoListener(String title, Iterable<String> content) {
     return new ActionListener() {
@@ -203,6 +210,10 @@ public final class Application extends JFrame {
   private void refreshLogic() {
     routeListModel.refreshLogic();
     repopulateSearchResults();
+
+    if (checkEditor != null) {
+      checkEditor.repopulateItemResults();
+    }
   }
 
   private JMenuItem icdlReset(String name, Predicate<ItemCheck> filter) {
@@ -229,7 +240,25 @@ public final class Application extends JFrame {
     reset.add(icdlReset("Matching Search Results", searchResultsListModel::isMatchingSearchResult));
     menu.add(reset);
 
+    menu.add(new JSeparator());
+    openEditor.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent arg0) {
+        checkEditor = new CheckEditor(Application.this);
+
+        openEditor.setEnabled(false);
+        openEditor.setToolTipText("Editor is already open");
+      }
+    });
+    menu.add(openEditor);
+
     return menu;
+  }
+
+  public void editorClosed() {
+    checkEditor = null;
+    openEditor.setEnabled(true);
+    openEditor.setToolTipText("");
   }
 
   private JMenuBar createMenu() throws ParseException {
@@ -402,6 +431,11 @@ public final class Application extends JFrame {
         cfg.save();
       }
     }
+
+    if (checkEditor != null) {
+      checkEditor.dispose();
+      checkEditor = null;
+    }
   }
 
   private void saveFile() throws IOException {
@@ -437,19 +471,19 @@ public final class Application extends JFrame {
   private List<SearchResult.Filter> addFilters(JPanel parent) throws ParseException {
     ImmutableList.Builder<SearchResult.Filter> searchFilters = ImmutableList.builder();
 
-    SearchResult.Filter textFilter = new TextFilter(ctx().roomLabels());
+    TextFilter textFilter = new TextFilter(ctx().roomLabels());
     textFilter.addListener(filterChangedListener);
     textFilter.addGuiToPanel(parent);
     searchFilters.add(textFilter);
 
     parent.add(new JSeparator());
-    SearchResult.Filter itemFilter = ItemCategoryFilters.load();
+    ItemCategoryFilters itemFilter = ItemCategoryFilters.load();
     itemFilter.addListener(filterChangedListener);
     itemFilter.addGuiToPanel(parent);
     searchFilters.add(itemFilter);
 
     parent.add(new JSeparator());
-    SearchResult.Filter roomsFilter = new RoomFilters(ctx().roomLabels());
+    RoomFilters roomsFilter = new RoomFilters(ctx().roomLabels());
     roomsFilter.addListener(filterChangedListener);
     roomsFilter.addGuiToPanel(parent);
     searchFilters.add(roomsFilter);
@@ -458,7 +492,7 @@ public final class Application extends JFrame {
     this.skips.addToGui(parent);
 
     parent.add(new JSeparator());
-    SearchResult.Filter excFilters = new ExclusionFilters(ctx().roomLabels());
+    ExclusionFilters excFilters = new ExclusionFilters(ctx().roomLabels());
     excFilters.addListener(filterChangedListener);
     excFilters.addGuiToPanel(parent);
     searchFilters.add(excFilters);
@@ -492,6 +526,8 @@ public final class Application extends JFrame {
       @Override
       public void keyPressed(KeyEvent e) {
         e.consume();
+
+        // TODO: Make key codes configurable.
         if (e.getKeyCode() != KeyEvent.VK_B && e.getKeyCode() != KeyEvent.VK_W
             && e.getKeyCode() != KeyEvent.VK_S && e.getKeyCode() != KeyEvent.VK_X
             && e.getKeyCode() != KeyEvent.VK_DOWN && e.getKeyCode() != KeyEvent.VK_UP

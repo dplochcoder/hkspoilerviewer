@@ -89,35 +89,31 @@ public final class TextFilter extends SearchResult.Filter {
       return true;
     }
 
-    return Arrays.stream(t.split("\\s")).allMatch(term -> matchesTerm(result, term));
+    List<String> aliases = getAliases(result);
+    return Arrays.stream(t.split("\\s"))
+        .allMatch(term -> aliases.stream().anyMatch(s -> s.contains(term)));
   }
 
-  @Override
   public void addGuiToPanel(JPanel panel) {
     panel.add(searchPanel);
     panel.add(modePanel);
   }
 
-  private boolean matchesTerm(SearchResult result, String term) {
+  private List<String> getAliases(SearchResult result) {
+    List<String> tokens = new ArrayList<>();
     if (mode != Mode.LOCATION) {
-      String item = result.item().term().name().toLowerCase();
-      if (item.contains(term)) {
-        return true;
-      }
+      tokens.add(result.item().term().name().toLowerCase());
+      tokens.add(result.item().displayName().toLowerCase());
     }
 
     if (mode != Mode.ITEM) {
-      List<String> locations = new ArrayList<>();
-      locations.add(result.location().name());
-      locations.add(result.location().scene());
-      locations.add(roomLabels.get(result.location().scene(), RoomLabels.Type.MAP));
-      locations.add(roomLabels.get(result.location().scene(), RoomLabels.Type.TITLE));
-      if (locations.stream().anyMatch(l -> l.toLowerCase().contains(term))) {
-        return true;
-      }
+      tokens.add(result.location().name().toLowerCase());
+      tokens.add(result.location().scene().toLowerCase());
+      tokens.add(roomLabels.get(result.location().scene(), RoomLabels.Type.MAP).toLowerCase());
+      tokens.add(roomLabels.get(result.location().scene(), RoomLabels.Type.TITLE).toLowerCase());
     }
 
-    return false;
+    return tokens;
   }
 
 }

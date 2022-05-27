@@ -70,7 +70,6 @@ public final class ExclusionFilters extends SearchResult.Filter {
     this.filters.forEach(f -> filtersPanel.add(f.checkBox()));
   }
 
-  @Override
   public void addGuiToPanel(JPanel panel) {
     panel.add(filtersPanel);
   }

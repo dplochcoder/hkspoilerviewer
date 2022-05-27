@@ -94,7 +94,6 @@ public final class ItemCategoryFilters extends SearchResult.Filter {
     return button;
   }
 
-  @Override
   public void addGuiToPanel(JPanel panel) {
     panel.add(filtersPanel);
   }

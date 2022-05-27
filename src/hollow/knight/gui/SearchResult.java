@@ -3,7 +3,6 @@ package hollow.knight.gui;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import javax.swing.JPanel;
 import com.google.auto.value.AutoValue;
 import hollow.knight.logic.CheckId;
 import hollow.knight.logic.Costs;
@@ -25,8 +24,6 @@ public abstract class SearchResult {
     private final Set<FilterChangedListener> listeners = new HashSet<>();
 
     public abstract boolean accept(StateContext ctx, SearchResult result);
-
-    public abstract void addGuiToPanel(JPanel panel);
 
     protected final void filterChanged() {
       Set<FilterChangedListener> listenersCopy = new HashSet<>();
@@ -64,14 +61,6 @@ public abstract class SearchResult {
     return itemCheck().item();
   }
 
-  public final String itemDisplayName() {
-    if (item().term().equals(Term.nothing())) {
-      return "Nothing!";
-    } else {
-      return item().term().name();
-    }
-  }
-
   public final Costs costs() {
     return itemCheck().costs();
   }
@@ -99,7 +88,7 @@ public abstract class SearchResult {
       sb.append('#');
     }
 
-    sb.append(itemDisplayName());
+    sb.append(item().displayName());
     sb.append(' ');
     sb.append(valueSuffix());
     sb.append("- ");

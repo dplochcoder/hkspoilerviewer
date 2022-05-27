@@ -28,6 +28,10 @@ public final class Item {
     return term;
   }
 
+  public String displayName() {
+    return term().equals(Term.nothing()) ? "Nothing!" : term().name();
+  }
+
   public ImmutableSet<String> types() {
     return types;
   }

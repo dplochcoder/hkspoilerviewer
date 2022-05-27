@@ -56,10 +56,11 @@ public final class Costs {
     switch (location) {
       case "Iselda":
       case "Leg_Eater":
-      case "Salubra":
       case "Sly":
       case "Sly_(Key)":
         return new Costs(Cost.createGeo(1));
+      case "Salubra":
+        return new Costs(ImmutableList.of(Cost.createGeo(1), Cost.createTerm(Term.charms(), 1)));
       case "Grubfather":
         return new Costs(Cost.createTerm(Term.grubs(), 1));
       case "Seer":

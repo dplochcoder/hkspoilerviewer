@@ -152,6 +152,10 @@ public final class ItemChecks {
     return checksById.values().stream();
   }
 
+  public Stream<Item> allItems() {
+    return itemsByName.values().stream();
+  }
+
   public Stream<ItemCheck> startChecks() {
     return idsByLocation.getKey("Start").stream().map(checksById::get);
   }

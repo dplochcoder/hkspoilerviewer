@@ -23,6 +23,7 @@ import hollow.knight.logic.Version;
 public final class SearchResultsListModel
     implements ListModel<String>, ItemChecks.Listener, SaveInterface {
 
+  // TODO: Move this common code into a parent class.
   private final Object mutex = new Object();
   private final Set<ListDataListener> listeners = new HashSet<>();
 

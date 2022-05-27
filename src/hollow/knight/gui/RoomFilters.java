@@ -91,7 +91,6 @@ public final class RoomFilters extends SearchResult.Filter {
     };
   }
 
-  @Override
   public void addGuiToPanel(JPanel panel) {
     panel.add(allAreas);
     panel.add(tabPane);

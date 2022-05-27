@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.swing.JFileChooser;
-import javax.swing.JPanel;
 import javax.swing.ListModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
@@ -49,9 +48,6 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
     this.currentState = this.initialState.deepCopy();
     this.finalState = this.initialState.deepCopy();
     this.futureFilter = new SearchResult.Filter() {
-      @Override
-      public void addGuiToPanel(JPanel panel) {}
-
       @Override
       public boolean accept(StateContext ctx, SearchResult result) {
         return !finalState.isAcquired(result.itemCheck());
