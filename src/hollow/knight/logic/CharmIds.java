@@ -3,6 +3,7 @@ package hollow.knight.logic;
 import java.util.HashMap;
 import java.util.Map;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonObject;
 import hollow.knight.util.JsonUtil;
 
@@ -11,6 +12,10 @@ public final class CharmIds {
 
   private CharmIds(Map<Term, Integer> charmIds) {
     this.charmIds = ImmutableMap.copyOf(charmIds);
+  }
+
+  public ImmutableSet<Term> charmTerms() {
+    return charmIds.keySet();
   }
 
   public Integer charmId(Term charm) {

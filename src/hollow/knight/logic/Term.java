@@ -9,8 +9,13 @@ import com.google.common.collect.ImmutableSet;
  * dreamers, grimmkin flames, etc.
  */
 @AutoValue
-public abstract class Term {
+public abstract class Term implements Comparable<Term> {
   public abstract String name();
+
+  @Override
+  public final int compareTo(Term term) {
+    return name().compareTo(term.name());
+  }
 
   public static Term create(String name) {
     return new AutoValue_Term(name);

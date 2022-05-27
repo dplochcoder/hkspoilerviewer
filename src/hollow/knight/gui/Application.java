@@ -330,6 +330,12 @@ public final class Application extends JFrame {
     refreshLogic(true);
   }
 
+  private void editNotchCosts() {
+    if (NotchCostsEditor.editNotchCosts(this, ctx())) {
+      refreshLogic(true);
+    }
+  }
+
   private JMenuItem icdlReset(String name, Predicate<ItemCheck> filter) {
     JMenuItem item = new JMenuItem(name);
     item.addActionListener(new ActionListener() {
@@ -358,11 +364,20 @@ public final class Application extends JFrame {
     JMenuItem editStartingGeo = new JMenuItem("Edit Starting Geo");
     editStartingGeo.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed(ActionEvent arg0) {
+      public void actionPerformed(ActionEvent e) {
         editStartingGeo();
       }
     });
     menu.add(editStartingGeo);
+
+    JMenuItem editNotches = new JMenuItem("Edit Charm Costs");
+    editNotches.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        editNotchCosts();
+      }
+    });
+    menu.add(editNotches);
 
     menu.add(new JSeparator());
     openEditor.addActionListener(new ActionListener() {
