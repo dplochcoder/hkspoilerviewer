@@ -41,6 +41,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonWriter;
+import hollow.knight.logic.Item;
 import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.ItemChecks;
 import hollow.knight.logic.ParseException;
@@ -161,10 +162,11 @@ public final class Application extends JFrame {
           .add("-").add("I - Insert and search before selected route item")
           .add("K - Undo insertion point").add("-").add("B - bookmark selected item").add("-")
           .add("H - hide selected item").add("U - un-hide selected item").add("-")
-          .add("E - (ICDL) edit selected check in the check editor")
-          .add("D - (ICDL) delete selected check")
-          .add("C - (ICDL) copy current item onto selected check")
-          .add("N - (ICDL) duplicate the selected check (mostly for shops)").build();
+          .add("E - (ICDL) edit selected check in the check editor") // FIXME
+          .add("D - (ICDL) delete selected check") // FIXME
+          .add("C - (ICDL) copy current item onto selected check") // FIXME
+          .add("N - (ICDL) duplicate the selected check (mostly for shops)") // FIXME
+          .build();
 
   private ActionListener infoListener(String title, Iterable<String> content) {
     return new ActionListener() {
@@ -214,6 +216,30 @@ public final class Application extends JFrame {
     if (checkEditor != null) {
       checkEditor.repopulateItemResults();
     }
+  }
+
+  private boolean ensureCheckEditor() {
+    if (checkEditor != null) {
+      return true;
+    } else {
+      JOptionPane.showMessageDialog(this, "Open the ICDL check editor for this action");
+      return false;
+    }
+  }
+
+  private void copyCheckEditorItem() {
+    if (!ensureCheckEditor()) {
+      return;
+    }
+
+    Item item = checkEditor.selectedItem();
+    ItemCheck check = searchResultsListModel.getCheck(resultsList.getSelectedIndex());
+    if (item == null || check == null || item.term().equals(check.item().term())) {
+      return;
+    }
+
+    ctx().checks().replace(check.id(), check.location(), item, check.costs(), false);
+    refreshLogic();
   }
 
   private JMenuItem icdlReset(String name, Predicate<ItemCheck> filter) {
@@ -532,8 +558,9 @@ public final class Application extends JFrame {
             && e.getKeyCode() != KeyEvent.VK_S && e.getKeyCode() != KeyEvent.VK_X
             && e.getKeyCode() != KeyEvent.VK_DOWN && e.getKeyCode() != KeyEvent.VK_UP
             && e.getKeyCode() != KeyEvent.VK_H && e.getKeyCode() != KeyEvent.VK_U
-            && e.getKeyCode() != KeyEvent.VK_PAGE_DOWN && e.getKeyCode() != KeyEvent.VK_PAGE_UP
-            && e.getKeyCode() != KeyEvent.VK_SPACE && e.getKeyCode() != KeyEvent.VK_BACK_SPACE) {
+            && e.getKeyCode() != KeyEvent.VK_C && e.getKeyCode() != KeyEvent.VK_PAGE_DOWN
+            && e.getKeyCode() != KeyEvent.VK_PAGE_UP && e.getKeyCode() != KeyEvent.VK_SPACE
+            && e.getKeyCode() != KeyEvent.VK_BACK_SPACE) {
           return;
         }
 
@@ -550,6 +577,8 @@ public final class Application extends JFrame {
           searchResultsListModel.hideResult(resultsList.getSelectedIndex());
         } else if (e.getKeyCode() == KeyEvent.VK_U) {
           searchResultsListModel.unhideResult(resultsList.getSelectedIndex());
+        } else if (e.getKeyCode() == KeyEvent.VK_C) {
+          copyCheckEditorItem();
         } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
           ItemCheck check = searchResultsListModel.getCheck(resultsList.getSelectedIndex());
           if (check == null) {

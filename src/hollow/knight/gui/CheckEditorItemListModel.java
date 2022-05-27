@@ -63,7 +63,13 @@ public final class CheckEditorItemListModel implements ListModel<String>, ItemCh
   }
 
   public Item get(int index) {
-    return resultItems.get(index);
+    synchronized (mutex) {
+      if (index < 0 || index >= resultItems.size()) {
+        return null;
+      }
+      
+      return resultItems.get(index);
+    }
   }
 
   @Override

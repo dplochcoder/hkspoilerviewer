@@ -74,8 +74,8 @@ public final class CheckEditor extends JFrame {
   }
 
   public Item selectedItem() {
-    // FIXME
-    return null;
+    // TODO: Support custom geo and essence items
+    return itemListModel.get(itemsList.getSelectedIndex());
   }
 
   private final WindowListener newWindowListener() {
