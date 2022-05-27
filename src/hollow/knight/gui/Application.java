@@ -284,7 +284,7 @@ public final class Application extends JFrame {
       return;
     }
 
-    ctx().checks().remove(check.id());
+    ctx().checks().reduceToNothing(c -> c == check);
     refreshLogic(false);
     resultsList.setSelectedIndex(-1);
   }
