@@ -14,7 +14,7 @@ public final class Item {
   private final ImmutableTermMap falseEffects;
   private final ImmutableTermMap caps;
 
-  private Item(Term term, Set<String> types, Condition logic, TermMap trueEffects,
+  public Item(Term term, Set<String> types, Condition logic, TermMap trueEffects,
       TermMap falseEffects, TermMap caps) {
     this.term = term;
     this.types = ImmutableSet.copyOf(types);

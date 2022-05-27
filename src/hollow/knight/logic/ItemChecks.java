@@ -64,6 +64,10 @@ public final class ItemChecks {
     return CheckId.of(nextId++);
   }
 
+  public void addItem(Item item) {
+    itemsByName.put(item.term(), item);
+  }
+
   private void addInternal(ItemCheck check) {
     checksById.put(check.id(), check);
     idsByCondition.put(check.condition(), check.id());

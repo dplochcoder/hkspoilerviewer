@@ -27,12 +27,17 @@ import javax.swing.JSeparator;
 import javax.swing.ListSelectionModel;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.primitives.Ints;
+import hollow.knight.logic.Condition;
 import hollow.knight.logic.Cost;
 import hollow.knight.logic.Costs;
 import hollow.knight.logic.Item;
 import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.ItemChecks;
+import hollow.knight.logic.MutableTermMap;
 import hollow.knight.logic.Term;
+import hollow.knight.logic.TermMap;
 
 // Free-floating UI for editing a single check.
 public final class CheckEditor extends JFrame implements ItemChecks.Listener {
@@ -44,7 +49,6 @@ public final class CheckEditor extends JFrame implements ItemChecks.Listener {
   private final CheckEditorItemsListModel itemsListModel;
   private final JList<String> itemsList;
   private final JScrollPane itemsPane;
-  // TODO: Add UI for custom geo+essence items
 
   private ItemCheck checkForEdit;
   private final JLabel itemLabel;
@@ -66,7 +70,7 @@ public final class CheckEditor extends JFrame implements ItemChecks.Listener {
     this.itemsList = createItemsList();
     this.itemsPane = new JScrollPane(itemsList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
         JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-    itemsPane.setMinimumSize(new Dimension(300, 200));
+    itemsPane.setMinimumSize(new Dimension(300, 300));
 
     this.itemLabel = new JLabel("");
     this.locationLabel = new JLabel("");
@@ -90,6 +94,7 @@ public final class CheckEditor extends JFrame implements ItemChecks.Listener {
     contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
     itemSearchField.addToGui(contentPane);
     contentPane.add(itemsPane);
+    contentPane.add(createCustomItemsPanel());
     contentPane.add(new JSeparator());
     contentPane.add(itemLabel);
     contentPane.add(locationLabel);
@@ -101,7 +106,7 @@ public final class CheckEditor extends JFrame implements ItemChecks.Listener {
     contentPane.setAlignmentX(Component.LEFT_ALIGNMENT);
     getContentPane().add(contentPane);
 
-    setPreferredSize(new Dimension(400, 600));
+    setPreferredSize(new Dimension(350, 500));
 
     pack();
     repopulateItemResults();
@@ -118,6 +123,43 @@ public final class CheckEditor extends JFrame implements ItemChecks.Listener {
     itemsList.addKeyListener(newItemsListKeyListener());
 
     return itemsList;
+  }
+
+  private JButton customItemButton(String txt, Term term, ImmutableSet<String> types) {
+    JButton button = new JButton(txt);
+    button.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        String valueStr = JOptionPane.showInputDialog(CheckEditor.this, "Enter custom amount");
+        if (valueStr == null || valueStr.trim().isEmpty()) {
+          return;
+        }
+
+        Integer val = Ints.tryParse(valueStr);
+        if (val == null || val <= 0) {
+          JOptionPane.showMessageDialog(CheckEditor.this, "Must enter a positive integer");
+          return;
+        }
+
+        MutableTermMap termMap = new MutableTermMap();
+        termMap.set(term, val);
+        Item item = new Item(Term.create(val + "_" + term.name()), types, Condition.alwaysTrue(),
+            termMap, TermMap.empty(), TermMap.empty());
+
+        application.ctx().checks().addItem(item);
+      }
+    });
+    return button;
+  }
+
+  private JPanel createCustomItemsPanel() {
+    JPanel panel = new JPanel();
+    panel.add(customItemButton("Add Custom Geo", Term.geo(),
+        ImmutableSet.of("RandomizerMod.RC.CustomGeoItem", "RandomizerMod")));
+    panel.add(customItemButton("Add Custom Essence", Term.essence(),
+        ImmutableSet.of("RandomizerCore.LogicItems.SingleItem", "RandomizerCore")));
+
+    return panel;
   }
 
   private JPanel createActionPanel() {
