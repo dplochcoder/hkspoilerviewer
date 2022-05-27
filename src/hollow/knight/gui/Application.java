@@ -7,6 +7,7 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
@@ -209,9 +210,11 @@ public final class Application extends JFrame {
     }
   }
 
-  private void refreshLogic() {
+  private void refreshLogic(boolean refreshSearchResults) {
     routeListModel.refreshLogic();
-    repopulateSearchResults();
+    if (refreshSearchResults) {
+      repopulateSearchResults();
+    }
 
     if (checkEditor != null) {
       checkEditor.repopulateItemResults();
@@ -227,7 +230,7 @@ public final class Application extends JFrame {
     }
   }
 
-  private void copyCheckEditorItem() {
+  public void copyCheckEditorItem(boolean refreshSearchResults) {
     if (!ensureCheckEditor()) {
       return;
     }
@@ -239,7 +242,7 @@ public final class Application extends JFrame {
     }
 
     ctx().checks().replace(check.id(), check.location(), item, check.costs(), false);
-    refreshLogic();
+    refreshLogic(refreshSearchResults);
   }
 
   private JMenuItem icdlReset(String name, Predicate<ItemCheck> filter) {
@@ -248,7 +251,7 @@ public final class Application extends JFrame {
       @Override
       public void actionPerformed(ActionEvent e) {
         ctx().checks().reduceToNothing(filter);
-        refreshLogic();
+        refreshLogic(true);
       }
     });
 
@@ -548,7 +551,7 @@ public final class Application extends JFrame {
       KeyEvent.VK_UP, -1, KeyEvent.VK_DOWN, 1, KeyEvent.VK_PAGE_UP, -25, KeyEvent.VK_PAGE_DOWN, 25);
 
   private KeyListener resultsListKeyListener() {
-    return new KeyListener() {
+    return new KeyAdapter() {
       @Override
       public void keyPressed(KeyEvent e) {
         e.consume();
@@ -578,7 +581,7 @@ public final class Application extends JFrame {
         } else if (e.getKeyCode() == KeyEvent.VK_U) {
           searchResultsListModel.unhideResult(resultsList.getSelectedIndex());
         } else if (e.getKeyCode() == KeyEvent.VK_C) {
-          copyCheckEditorItem();
+          copyCheckEditorItem(false);
         } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
           ItemCheck check = searchResultsListModel.getCheck(resultsList.getSelectedIndex());
           if (check == null) {
@@ -605,12 +608,6 @@ public final class Application extends JFrame {
 
         repopulateSearchResults();
       }
-
-      @Override
-      public void keyReleased(KeyEvent e) {}
-
-      @Override
-      public void keyTyped(KeyEvent e) {}
     };
   }
 

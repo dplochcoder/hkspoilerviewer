@@ -27,7 +27,7 @@ public final class SearchEngine {
     return ComparisonChain.start()
         .compare(roomLabels.get(r1.location().scene(), RoomLabels.Type.MAP),
             roomLabels.get(r2.location().scene(), RoomLabels.Type.MAP))
-        .compare(r1.item().term().name().toLowerCase(), r2.item().term().name().toLowerCase())
+        .compare(r1.item().displayName().toLowerCase(), r2.item().displayName().toLowerCase())
         .compare(r1.location().name(), r2.location().name()).result();
   }
 

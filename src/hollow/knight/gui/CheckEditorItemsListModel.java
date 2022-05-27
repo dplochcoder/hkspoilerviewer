@@ -8,7 +8,6 @@ import java.util.Set;
 import javax.swing.ListModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
-import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import hollow.knight.logic.Item;
@@ -16,7 +15,7 @@ import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.ItemChecks;
 import hollow.knight.logic.Term;
 
-public final class CheckEditorItemListModel implements ListModel<String>, ItemChecks.Listener {
+public final class CheckEditorItemsListModel implements ListModel<String>, ItemChecks.Listener {
 
   private final Object mutex = new Object();
   private final Set<ListDataListener> listeners = new HashSet<>();
@@ -24,12 +23,10 @@ public final class CheckEditorItemListModel implements ListModel<String>, ItemCh
   private final Multiset<Term> itemCounts = HashMultiset.create();
   private final List<Item> resultItems = new ArrayList<>();
   private final List<String> resultStrings = new ArrayList<>();
-  private final Comparator<Item> sorter = (i1, i2) -> {
-    return ComparisonChain.start().compare(itemCounts.count(i1.term()), itemCounts.count(i2.term()))
-        .compare(i1.displayName(), i2.displayName()).result();
-  };
+  private final Comparator<Item> sorter =
+      Comparator.comparing(item -> item.displayName().toLowerCase());
 
-  public CheckEditorItemListModel(ItemChecks checks) {
+  public CheckEditorItemsListModel(ItemChecks checks) {
     checks.allChecks().forEach(c -> itemCounts.add(c.item().term()));
     checks.addListener(this);
   }
@@ -67,7 +64,7 @@ public final class CheckEditorItemListModel implements ListModel<String>, ItemCh
       if (index < 0 || index >= resultItems.size()) {
         return null;
       }
-      
+
       return resultItems.get(index);
     }
   }
