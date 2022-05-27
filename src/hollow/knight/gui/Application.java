@@ -65,6 +65,7 @@ public final class Application extends JFrame {
   private final ImmutableList<SaveInterface> saveInterfaces;
   private final ImmutableList<ItemChecks.Listener> checksListeners;
 
+  private boolean isICDL = false;
   private final JMenu icdlMenu;
   private final JMenuItem openEditor;
   private CheckEditor checkEditor;
@@ -165,10 +166,9 @@ public final class Application extends JFrame {
           .add("K - Undo insertion point").add("-").add("B - bookmark selected item").add("-")
           .add("H - hide selected item").add("U - un-hide selected item").add("-")
           .add("E - (ICDL) edit selected check in the check editor") // FIXME
-          .add("D - (ICDL) delete selected check") // FIXME
-          .add("C - (ICDL) copy current item onto selected check") // FIXME
-          .add("N - (ICDL) duplicate the selected check (mostly for shops)") // FIXME
-          .build();
+          .add("Z - (ICDL) delete selected check")
+          .add("C - (ICDL) copy current item onto selected check")
+          .add("D - (ICDL) duplicate the selected check (mostly for shops)").build();
 
   private ActionListener infoListener(String title, Iterable<String> content) {
     return new ActionListener() {
@@ -231,6 +231,15 @@ public final class Application extends JFrame {
     }
   }
 
+  private boolean ensureICDL() {
+    if (isICDL) {
+      return true;
+    } else {
+      JOptionPane.showMessageDialog(this, "Oepn an ICDL ctx.json file for this action");
+      return false;
+    }
+  }
+
   public void copyCheckEditorItem(boolean refreshSearchResults) {
     if (!ensureCheckEditor()) {
       return;
@@ -245,6 +254,37 @@ public final class Application extends JFrame {
     CheckId newId =
         ctx().checks().replace(check.id(), check.location(), item, check.costs(), false);
     refreshLogic(refreshSearchResults);
+    resultsList
+        .setSelectedIndex(searchResultsListModel.indexOfSearchResult(ctx().checks().get(newId)));
+  }
+
+  private void deleteSelectedCheck() {
+    if (!ensureICDL()) {
+      return;
+    }
+
+    ItemCheck check = searchResultsListModel.getCheck(resultsList.getSelectedIndex());
+    if (check == null) {
+      return;
+    }
+
+    ctx().checks().remove(check.id());
+    refreshLogic(false);
+    resultsList.setSelectedIndex(-1);
+  }
+
+  private void duplicateSelectedCheck() {
+    if (!ensureICDL()) {
+      return;
+    }
+
+    ItemCheck check = searchResultsListModel.getCheck(resultsList.getSelectedIndex());
+    if (check == null) {
+      return;
+    }
+
+    CheckId newId = ctx().checks().placeNew(check.location(), check.item(), check.costs(), false);
+    refreshLogic(false);
     resultsList
         .setSelectedIndex(searchResultsListModel.indexOfSearchResult(ctx().checks().get(newId)));
   }
@@ -469,6 +509,7 @@ public final class Application extends JFrame {
       checkEditor.dispose();
       checkEditor = null;
     }
+    this.isICDL = isICDL;
   }
 
   private void saveFile() throws IOException {
@@ -565,7 +606,8 @@ public final class Application extends JFrame {
             && e.getKeyCode() != KeyEvent.VK_S && e.getKeyCode() != KeyEvent.VK_X
             && e.getKeyCode() != KeyEvent.VK_DOWN && e.getKeyCode() != KeyEvent.VK_UP
             && e.getKeyCode() != KeyEvent.VK_H && e.getKeyCode() != KeyEvent.VK_U
-            && e.getKeyCode() != KeyEvent.VK_C && e.getKeyCode() != KeyEvent.VK_PAGE_DOWN
+            && e.getKeyCode() != KeyEvent.VK_C && e.getKeyCode() != KeyEvent.VK_D
+            && e.getKeyCode() != KeyEvent.VK_Z && e.getKeyCode() != KeyEvent.VK_PAGE_DOWN
             && e.getKeyCode() != KeyEvent.VK_PAGE_UP && e.getKeyCode() != KeyEvent.VK_SPACE
             && e.getKeyCode() != KeyEvent.VK_BACK_SPACE) {
           return;
@@ -586,6 +628,10 @@ public final class Application extends JFrame {
           searchResultsListModel.unhideResult(resultsList.getSelectedIndex());
         } else if (e.getKeyCode() == KeyEvent.VK_C) {
           copyCheckEditorItem(false);
+        } else if (e.getKeyCode() == KeyEvent.VK_D) {
+          duplicateSelectedCheck();
+        } else if (e.getKeyCode() == KeyEvent.VK_Z) {
+          deleteSelectedCheck();
         } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
           ItemCheck check = searchResultsListModel.getCheck(resultsList.getSelectedIndex());
           if (check == null) {
