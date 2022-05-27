@@ -214,7 +214,7 @@ public final class Application extends JFrame {
     }
   }
 
-  private void refreshLogic(boolean refreshSearchResults) {
+  public void refreshLogic(boolean refreshSearchResults) {
     routeListModel.refreshLogic();
     if (refreshSearchResults) {
       repopulateSearchResults();
@@ -241,6 +241,19 @@ public final class Application extends JFrame {
       JOptionPane.showMessageDialog(this, "Oepn an ICDL ctx.json file for this action");
       return false;
     }
+  }
+
+  private void editSelectedCheck() {
+    if (!ensureCheckEditor()) {
+      return;
+    }
+
+    ItemCheck check = searchResultsListModel.getCheck(resultsList.getSelectedIndex());
+    if (check == null) {
+      return;
+    }
+
+    checkEditor.editCheck(check);
   }
 
   public void copyCheckEditorItem(boolean refreshSearchResults) {
@@ -644,10 +657,10 @@ public final class Application extends JFrame {
             && e.getKeyCode() != KeyEvent.VK_S && e.getKeyCode() != KeyEvent.VK_X
             && e.getKeyCode() != KeyEvent.VK_DOWN && e.getKeyCode() != KeyEvent.VK_UP
             && e.getKeyCode() != KeyEvent.VK_H && e.getKeyCode() != KeyEvent.VK_U
-            && e.getKeyCode() != KeyEvent.VK_C && e.getKeyCode() != KeyEvent.VK_D
-            && e.getKeyCode() != KeyEvent.VK_Z && e.getKeyCode() != KeyEvent.VK_PAGE_DOWN
-            && e.getKeyCode() != KeyEvent.VK_PAGE_UP && e.getKeyCode() != KeyEvent.VK_SPACE
-            && e.getKeyCode() != KeyEvent.VK_BACK_SPACE) {
+            && e.getKeyCode() != KeyEvent.VK_E && e.getKeyCode() != KeyEvent.VK_C
+            && e.getKeyCode() != KeyEvent.VK_D && e.getKeyCode() != KeyEvent.VK_Z
+            && e.getKeyCode() != KeyEvent.VK_PAGE_DOWN && e.getKeyCode() != KeyEvent.VK_PAGE_UP
+            && e.getKeyCode() != KeyEvent.VK_SPACE && e.getKeyCode() != KeyEvent.VK_BACK_SPACE) {
           return;
         }
 
@@ -664,6 +677,9 @@ public final class Application extends JFrame {
           searchResultsListModel.hideResult(resultsList.getSelectedIndex());
         } else if (e.getKeyCode() == KeyEvent.VK_U) {
           searchResultsListModel.unhideResult(resultsList.getSelectedIndex());
+        } else if (e.getKeyCode() == KeyEvent.VK_E) {
+          editSelectedCheck();
+          return;
         } else if (e.getKeyCode() == KeyEvent.VK_C) {
           copyCheckEditorItem(false);
         } else if (e.getKeyCode() == KeyEvent.VK_D) {

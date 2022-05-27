@@ -32,7 +32,8 @@ public final class CheckEditorItemsListModel implements ListModel<String>, ItemC
   }
 
   private String render(Item item) {
-    return "(" + itemCounts.count(item.term()) + ") " + item.displayName() + item.valueSuffix();
+    return "(" + itemCounts.count(item.term()) + ") " + item.displayName() + " "
+        + item.valueSuffix();
   }
 
   public void updateResults(List<Item> resultItems) {

@@ -23,6 +23,10 @@ public final class Costs {
     this(ImmutableList.of(cost));
   }
 
+  public ImmutableList<Cost> costs() {
+    return costs;
+  }
+
   public Condition asCondition() {
     return condition;
   }
