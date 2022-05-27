@@ -42,6 +42,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonWriter;
+import hollow.knight.logic.CheckId;
 import hollow.knight.logic.Item;
 import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.ItemChecks;
@@ -241,8 +242,11 @@ public final class Application extends JFrame {
       return;
     }
 
-    ctx().checks().replace(check.id(), check.location(), item, check.costs(), false);
+    CheckId newId =
+        ctx().checks().replace(check.id(), check.location(), item, check.costs(), false);
     refreshLogic(refreshSearchResults);
+    resultsList
+        .setSelectedIndex(searchResultsListModel.indexOfSearchResult(ctx().checks().get(newId)));
   }
 
   private JMenuItem icdlReset(String name, Predicate<ItemCheck> filter) {

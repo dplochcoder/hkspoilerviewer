@@ -49,6 +49,20 @@ public final class SearchResultsListModel
     return matchingResults.contains(check);
   }
 
+  public int indexOfSearchResult(ItemCheck check) {
+    if (bookmarksSet.contains(check)) {
+      return bookmarks.indexOf(check);
+    }
+
+    for (int i = 0; i < results.size(); i++) {
+      if (results.get(i).itemCheck().equals(check)) {
+        return bookmarks.size() + 1 + i;
+      }
+    }
+
+    return -1;
+  }
+
   public void updateResults(State state, List<SearchResult> newResults) {
     matchingResults.clear();
     newResults.forEach(r -> matchingResults.add(r.itemCheck()));
