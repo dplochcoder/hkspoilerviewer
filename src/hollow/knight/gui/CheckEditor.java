@@ -213,6 +213,8 @@ public final class CheckEditor extends JFrame implements ItemChecks.Listener {
         JOptionPane.showMessageDialog(this, "Error: Duplicate costs for type " + term.name());
         return;
       }
+
+      costs.add(c);
     }
 
     Costs newCosts = new Costs(costs);
