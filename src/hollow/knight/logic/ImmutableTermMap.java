@@ -5,6 +5,12 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
 public final class ImmutableTermMap implements TermMap {
+  private static final TermMap EMPTY = new ImmutableTermMap(ImmutableMap.of());
+
+  public static TermMap empty() {
+    return EMPTY;
+  }
+
   private final ImmutableMap<Term, Integer> terms;
 
   private ImmutableTermMap(Map<Term, Integer> terms) {

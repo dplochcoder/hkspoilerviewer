@@ -70,6 +70,11 @@ public final class Item {
     }
   }
 
+  public Item withNameAndEffects(String name, TermMap trueValues) {
+    return new Item(term, types, Condition.alwaysTrue(), trueValues, TermMap.empty(),
+        TermMap.empty());
+  }
+
   private static void parseEffect(JsonObject obj, MutableTermMap out) {
     out.add(Term.create(obj.get("Term").getAsString()), obj.get("Value").getAsInt());
   }

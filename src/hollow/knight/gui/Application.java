@@ -36,6 +36,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.filechooser.FileFilter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.primitives.Ints;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -46,11 +47,13 @@ import hollow.knight.logic.CheckId;
 import hollow.knight.logic.Item;
 import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.ItemChecks;
+import hollow.knight.logic.MutableTermMap;
 import hollow.knight.logic.ParseException;
 import hollow.knight.logic.Query;
 import hollow.knight.logic.SaveInterface;
 import hollow.knight.logic.State;
 import hollow.knight.logic.StateContext;
+import hollow.knight.logic.Term;
 import hollow.knight.logic.Version;
 import hollow.knight.util.GuiUtil;
 import hollow.knight.util.JsonUtil;
@@ -289,6 +292,31 @@ public final class Application extends JFrame {
         .setSelectedIndex(searchResultsListModel.indexOfSearchResult(ctx().checks().get(newId)));
   }
 
+  private void editStartingGeo() {
+    ItemCheck check = ctx().checks().startChecks().filter(c -> c.item().hasEffectTerm(Term.geo()))
+        .findFirst().get();
+    int geo = check.item().getEffectValue(Term.geo());
+
+    String newGeo =
+        JOptionPane.showInputDialog(this, "Enter new Starting Geo", String.valueOf(geo));
+    if (newGeo == null || newGeo.trim().isEmpty()) {
+      return;
+    }
+
+    Integer value = Ints.tryParse(newGeo.trim());
+    if (value == null || value < 0) {
+      JOptionPane.showMessageDialog(this, "Must be a non-negative integer");
+      return;
+    }
+
+    MutableTermMap termMap = new MutableTermMap();
+    termMap.add(Term.geo(), value);
+    Item newGeoItem = check.item().withNameAndEffects(value + "_Geo", termMap);
+
+    ctx().checks().replace(check.id(), check.location(), newGeoItem, check.costs(), false);
+    refreshLogic(true);
+  }
+
   private JMenuItem icdlReset(String name, Predicate<ItemCheck> filter) {
     JMenuItem item = new JMenuItem(name);
     item.addActionListener(new ActionListener() {
@@ -312,6 +340,16 @@ public final class Application extends JFrame {
     reset.add(icdlReset("All Checks", c -> true));
     reset.add(icdlReset("Matching Search Results", searchResultsListModel::isMatchingSearchResult));
     menu.add(reset);
+
+    menu.add(new JSeparator());
+    JMenuItem editStartingGeo = new JMenuItem("Edit Starting Geo");
+    editStartingGeo.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent arg0) {
+        editStartingGeo();
+      }
+    });
+    menu.add(editStartingGeo);
 
     menu.add(new JSeparator());
     openEditor.addActionListener(new ActionListener() {
