@@ -44,6 +44,16 @@ public final class Item {
     return trueEffects.get(term);
   }
 
+  public String valueSuffix() {
+    if (hasEffectTerm(Term.geo())) {
+      return "(" + getEffectValue(Term.geo()) + " Geo) ";
+    } else if (hasEffectTerm(Term.essence())) {
+      return "(" + getEffectValue(Term.essence()) + " Essence) ";
+    } else {
+      return "";
+    }
+  }
+
   void apply(State state) {
     // We can't do state.test() here because item conditions don't necessarily hold to the false ->
     // true paradigm.

@@ -11,7 +11,6 @@ import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.Location;
 import hollow.knight.logic.State;
 import hollow.knight.logic.StateContext;
-import hollow.knight.logic.Term;
 
 @AutoValue
 public abstract class SearchResult {
@@ -101,12 +100,8 @@ public abstract class SearchResult {
   private String valueSuffix() {
     if (notchCost().isPresent()) {
       return "(" + notchCost().get() + ") ";
-    } else if (item().hasEffectTerm(Term.geo())) {
-      return "(" + item().getEffectValue(Term.geo()) + " Geo) ";
-    } else if (item().hasEffectTerm(Term.essence())) {
-      return "(" + item().getEffectValue(Term.essence()) + " Essence) ";
     } else {
-      return "";
+      return item().valueSuffix();
     }
   }
 
