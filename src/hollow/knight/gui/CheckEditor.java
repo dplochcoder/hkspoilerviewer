@@ -106,14 +106,22 @@ public final class CheckEditor extends JFrame implements ItemChecks.Listener {
     contentPane.setAlignmentX(Component.LEFT_ALIGNMENT);
     getContentPane().add(contentPane);
 
-    setPreferredSize(new Dimension(350, 500));
-
-    pack();
+    updateSize();
     repopulateItemResults();
     editCheck(null);
     setVisible(true);
 
     application.ctx().checks().addListener(this);
+  }
+
+  private void updateSize() {
+    int height =
+        500 + costEditors.stream().mapToInt(e -> e.panel().getPreferredSize().height).sum();
+    Dimension d = new Dimension(Math.max(425, getSize().width), height);
+
+    setPreferredSize(d);
+    setSize(d);
+    repaint();
   }
 
   private JList<String> createItemsList() {
@@ -214,8 +222,7 @@ public final class CheckEditor extends JFrame implements ItemChecks.Listener {
       next.setUpNeighbor(prev);
     }
 
-    pack();
-    repaint();
+    updateSize();
   }
 
   private void deleteCostEditor(CostEditor editor) {
@@ -233,8 +240,7 @@ public final class CheckEditor extends JFrame implements ItemChecks.Listener {
       after.setUpNeighbor(before);
     }
 
-    pack();
-    repaint();
+    updateSize();
   }
 
   private void applyCosts() {
@@ -291,6 +297,7 @@ public final class CheckEditor extends JFrame implements ItemChecks.Listener {
       costButtons.forEach(b -> b.setEnabled(false));
       costButtons.forEach(b -> b.setToolTipText("Select a check to edit with 'E' first"));
     }
+    updateSize();
   }
 
   public Item selectedItem() {
