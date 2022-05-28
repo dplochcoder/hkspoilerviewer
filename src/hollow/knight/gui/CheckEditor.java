@@ -306,7 +306,12 @@ public final class CheckEditor extends JFrame implements ItemChecks.Listener {
       return;
     }
 
-    editCheck(checks.iterator().next());
+    ItemCheck check = checks.iterator().next();
+    if (!application.ensureRandomized(check)) {
+      return;
+    }
+
+    editCheck(check);
   }
 
   private WindowListener newWindowListener() {

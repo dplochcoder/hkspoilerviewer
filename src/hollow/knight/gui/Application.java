@@ -247,13 +247,23 @@ public final class Application extends JFrame {
     }
   }
 
+  public boolean ensureRandomized(ItemCheck check) {
+    if (check.vanilla()) {
+      JOptionPane.showMessageDialog(this, "Cannot edit vanilla checks.", "Not Allowed",
+          JOptionPane.WARNING_MESSAGE);
+      return false;
+    }
+
+    return true;
+  }
+
   private void editSelectedCheck() {
     if (!ensureCheckEditor()) {
       return;
     }
 
     ItemCheck check = searchResultsListModel.getCheck(resultsList.getSelectedIndex());
-    if (check == null) {
+    if (check == null || !ensureRandomized(check)) {
       return;
     }
 
@@ -267,7 +277,8 @@ public final class Application extends JFrame {
 
     Item item = checkEditor.selectedItem();
     ItemCheck check = searchResultsListModel.getCheck(resultsList.getSelectedIndex());
-    if (item == null || check == null || item.term().equals(check.item().term())) {
+    if (item == null || check == null || item.term().equals(check.item().term())
+        || !ensureRandomized(check)) {
       return;
     }
 
@@ -284,7 +295,7 @@ public final class Application extends JFrame {
     }
 
     ItemCheck check = searchResultsListModel.getCheck(resultsList.getSelectedIndex());
-    if (check == null) {
+    if (check == null && !ensureRandomized(check)) {
       return;
     }
 
@@ -356,8 +367,7 @@ public final class Application extends JFrame {
     menu.setToolTipText("Open an ICDL ctx.json file to enable ICDL features");
 
     JMenu reset = new JMenu("Reset All");
-    reset.add(icdlReset("Randomized Checks", c -> !c.vanilla()));
-    reset.add(icdlReset("All Checks", c -> true));
+    reset.add(icdlReset("All Randomized Checks", c -> true));
     reset.add(icdlReset("Matching Search Results", searchResultsListModel::isMatchingSearchResult));
     menu.add(reset);
 

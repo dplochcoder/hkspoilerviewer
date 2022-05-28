@@ -124,8 +124,8 @@ public final class ItemChecks {
 
   public void reduceToNothing(Predicate<ItemCheck> filter) {
     // Keep at least one instance of each location alive.
-    Set<CheckId> toRemove = checksById.values().stream().filter(filter).map(ItemCheck::id)
-        .collect(ImmutableSet.toImmutableSet());
+    Set<CheckId> toRemove = checksById.values().stream().filter(filter).filter(c -> !c.vanilla())
+        .map(ItemCheck::id).collect(ImmutableSet.toImmutableSet());
     Multimap<String, CheckId> modifiedLocations =
         Multimaps.index(toRemove, id -> checksById.get(id).location().name());
 
