@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
@@ -47,7 +48,6 @@ import hollow.knight.logic.CheckId;
 import hollow.knight.logic.Item;
 import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.ItemChecks;
-import hollow.knight.logic.MutableTermMap;
 import hollow.knight.logic.ParseException;
 import hollow.knight.logic.Query;
 import hollow.knight.logic.SaveInterface;
@@ -326,11 +326,8 @@ public final class Application extends JFrame {
       return;
     }
 
-    MutableTermMap termMap = new MutableTermMap();
-    termMap.add(Term.geo(), value);
-    Item newGeoItem = check.item().withNameAndEffects(value + "_Geo", termMap);
-
-    ctx().checks().replace(check.id(), check.location(), newGeoItem, check.costs(), false);
+    ctx().checks().replace(check.id(), check.location(), Item.newGeoItem(value), check.costs(),
+        false);
     refreshLogic(true);
   }
 
@@ -452,8 +449,7 @@ public final class Application extends JFrame {
         try {
           openFile();
         } catch (Exception ex) {
-          JOptionPane.showMessageDialog(Application.this, "Failed to open file: " + ex.getMessage(),
-              "Error", JOptionPane.ERROR_MESSAGE);
+          GuiUtil.showStackTrace(Application.this, "Open file failed", ex);
         }
 
         repopulateSearchResults();
@@ -466,8 +462,7 @@ public final class Application extends JFrame {
         try {
           saveFile();
         } catch (Exception ex) {
-          JOptionPane.showMessageDialog(Application.this, "Failed to save file: " + ex.getMessage(),
-              "Error", JOptionPane.ERROR_MESSAGE);
+          GuiUtil.showStackTrace(Application.this, "Save file failed", ex);
         }
       }
     });
@@ -526,6 +521,7 @@ public final class Application extends JFrame {
   };
 
   private void setICDLEnabled(boolean enable) {
+    this.isICDL = enable;
     icdlMenu.setEnabled(enable);
     icdlMenu.setToolTipText(enable ? "" : "Open an ICDL ctx.json file to enable ICDL features");
   }
@@ -540,28 +536,41 @@ public final class Application extends JFrame {
     }
 
     Path p = c.getSelectedFile().toPath();
-    boolean isRawSpoiler = !p.endsWith(".hks");
-
-    boolean isICDL = isRawSpoiler && p.endsWith("ctx.json");
-    setICDLEnabled(isICDL);
+    boolean isRawSpoiler = !p.toString().endsWith(".hks");
 
     JsonObject saveData = new JsonObject();
-    JsonObject rawSpoiler = JsonUtil.loadPath(c.getSelectedFile().toPath()).getAsJsonObject();
+    JsonObject rawSpoiler = JsonUtil.loadPath(p).getAsJsonObject();
+    JsonObject rawICDL = null;
+    JsonObject rawPack = null;
     Version version = Main.version();
     if (!isRawSpoiler) {
+      saveData = rawSpoiler;
+      rawSpoiler = saveData.get("RawSpoiler").getAsJsonObject();
+
       version = Version.parse(saveData.get("Version").getAsString());
       if (version.major() < Main.version().major()) {
         throw new ParseException("Unsupported version " + version + " < " + Main.version());
       }
 
-      saveData = rawSpoiler;
-      rawSpoiler = saveData.get("RawSpoiler").getAsJsonObject();
+      if (saveData.has("RawICDL")) {
+        rawICDL = saveData.get("RawICDL").getAsJsonObject();
+        rawPack = saveData.get("RawPack").getAsJsonObject();
+      }
+    } else if (p.endsWith("ctx.json")) {
+      String parent = p.getParent().toString();
+      rawICDL = JsonUtil.loadPath(Paths.get(parent, "ic.json")).getAsJsonObject();
+      rawPack = JsonUtil.loadPath(Paths.get(parent, "pack.json")).getAsJsonObject();
     }
+
+    setICDLEnabled(rawICDL != null);
 
     Version finalVersion = version;
     JsonObject finalSaveData = saveData;
 
-    StateContext newCtx = StateContext.parse(rawSpoiler);
+    StateContext newCtx = StateContext.parse(rawSpoiler, rawICDL, rawPack);
+    if (isICDL) {
+      newCtx.loadMutables(saveData);
+    }
     saveInterfaces.forEach(i -> i.open(finalVersion, newCtx, finalSaveData.get(i.saveName())));
     skips.setInitialState(newCtx.newInitialState());
 
@@ -582,7 +591,6 @@ public final class Application extends JFrame {
       checkEditor.dispose();
       checkEditor = null;
     }
-    this.isICDL = isICDL;
   }
 
   private void saveFile() throws IOException {
@@ -595,7 +603,13 @@ public final class Application extends JFrame {
 
     JsonObject saveData = new JsonObject();
     saveData.add("Version", new JsonPrimitive(Main.version().toString()));
-    saveData.add("RawSpoiler", currentState().ctx().originalJson());
+    saveData.add("RawSpoiler", ctx().rawSpoilerJson());
+    if (isICDL) {
+      saveData.add("RawICDL", ctx().icdlJson());
+      saveData.add("RawPack", ctx().packJson());
+      ctx().checks().compact();
+      ctx().saveMutables(saveData);
+    }
     saveInterfaces.forEach(i -> saveData.add(i.saveName(), i.save()));
 
     String path = c.getSelectedFile().getAbsolutePath();

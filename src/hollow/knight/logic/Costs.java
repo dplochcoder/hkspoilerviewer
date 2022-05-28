@@ -46,6 +46,12 @@ public final class Costs {
         .value();
   }
 
+  public JsonArray toJson() {
+    JsonArray arr = new JsonArray();
+    costs.forEach(c -> arr.add(c.toJson()));
+    return arr;
+  }
+
   public static Costs parse(JsonArray costs) {
     ImmutableList.Builder<Cost> builder = ImmutableList.builder();
     for (JsonElement elem : costs) {

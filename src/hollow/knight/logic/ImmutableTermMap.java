@@ -5,9 +5,9 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
 public final class ImmutableTermMap implements TermMap {
-  private static final TermMap EMPTY = new ImmutableTermMap(ImmutableMap.of());
+  private static final ImmutableTermMap EMPTY = new ImmutableTermMap(ImmutableMap.of());
 
-  public static TermMap empty() {
+  public static ImmutableTermMap empty() {
     return EMPTY;
   }
 

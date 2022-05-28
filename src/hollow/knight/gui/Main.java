@@ -41,12 +41,11 @@ public final class Main {
     }
 
     // Make user open it.
-    JFileChooser j = new JFileChooser("Find RawSpoiler.json or ctx.json");
+    JFileChooser j = new JFileChooser("Find RawSpoiler.json");
     j.setFileFilter(new FileFilter() {
       @Override
       public boolean accept(File pathname) {
-        return pathname.isDirectory() || pathname.getName().contentEquals("RawSpoiler.json")
-            || pathname.getName().contentEquals("ctx.json");
+        return pathname.isDirectory() || pathname.getName().contentEquals("RawSpoiler.json");
       }
 
       @Override
@@ -76,7 +75,7 @@ public final class Main {
           return;
         }
 
-        ctx = StateContext.parse(JsonUtil.loadPath(rawSpoiler).getAsJsonObject());
+        ctx = StateContext.parse(JsonUtil.loadPath(rawSpoiler).getAsJsonObject(), null, null);
         break;
       } catch (Exception ex) {
         GuiUtil.showStackTrace(null, "Error opening RawSpoiler.json: ", ex);

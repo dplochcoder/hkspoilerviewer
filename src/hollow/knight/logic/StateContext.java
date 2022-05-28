@@ -7,7 +7,9 @@ import com.google.gson.JsonObject;
 /** Mostly immutable context for a State object. */
 public final class StateContext {
 
-  private final JsonObject originalJson;
+  private final JsonObject rawSpoilerJson;
+  private final JsonObject icdlJson;
+  private final JsonObject packJson;
   private final CharmIds charmIds;
   private final RoomLabels roomLabels;
   private final Pools pools;
@@ -18,10 +20,12 @@ public final class StateContext {
   private final ImmutableTermMap tolerances;
   private final ImmutableTermMap setters;
 
-  public StateContext(JsonObject originalJson, CharmIds charmIds, RoomLabels roomLabels,
-      Pools pools, NotchCosts notchCosts, Waypoints waypoints, ItemChecks checks,
-      TermMap tolerances, TermMap setters) {
-    this.originalJson = originalJson;
+  public StateContext(JsonObject rawSpoilerJson, JsonObject icdlJson, JsonObject packJson,
+      CharmIds charmIds, RoomLabels roomLabels, Pools pools, NotchCosts notchCosts,
+      Waypoints waypoints, ItemChecks checks, TermMap tolerances, TermMap setters) {
+    this.rawSpoilerJson = rawSpoilerJson;
+    this.icdlJson = icdlJson;
+    this.packJson = packJson;
     this.charmIds = charmIds;
     this.roomLabels = roomLabels;
     this.pools = pools;
@@ -32,8 +36,16 @@ public final class StateContext {
     this.setters = ImmutableTermMap.copyOf(setters);
   }
 
-  public JsonObject originalJson() {
-    return originalJson;
+  public JsonObject rawSpoilerJson() {
+    return rawSpoilerJson.deepCopy();
+  }
+
+  public JsonObject icdlJson() {
+    return icdlJson == null ? null : icdlJson.deepCopy();
+  }
+
+  public JsonObject packJson() {
+    return packJson == null ? null : packJson.deepCopy();
   }
 
   public CharmIds charmIds() {
@@ -77,7 +89,20 @@ public final class StateContext {
     return state;
   }
 
-  public static StateContext parse(JsonObject json) throws ParseException {
+  public void saveMutables(JsonObject obj) {
+    obj.add("ICDLItemChecks", checks().toJson());
+    obj.add("ICDLNotchCosts", notchCosts().toJson());
+  }
+
+  public void loadMutables(JsonObject obj) {
+    if (obj.has("ICDLItemChecks")) {
+      checks().fromJson(obj.get("ICDLItemChecks").getAsJsonObject());
+      notchCosts().parse(obj.get("ICDLNotchCosts").getAsJsonObject());
+    }
+  }
+
+  public static StateContext parse(JsonObject rawSpoilerJson, JsonObject icdlJson,
+      JsonObject packJson) throws ParseException {
     CharmIds charmIds = CharmIds.load();
     RoomLabels rooms = RoomLabels.load();
     Pools pools = Pools.load();
@@ -86,7 +111,7 @@ public final class StateContext {
     MutableTermMap tolerances = new MutableTermMap();
 
     JsonArray jsonSetters =
-        json.get("InitialProgression").getAsJsonObject().get("Setters").getAsJsonArray();
+        rawSpoilerJson.get("InitialProgression").getAsJsonObject().get("Setters").getAsJsonArray();
     for (JsonElement termValue : jsonSetters) {
       JsonObject obj = termValue.getAsJsonObject();
 
@@ -99,11 +124,14 @@ public final class StateContext {
       }
     }
 
-    NotchCosts notchCosts = NotchCosts.parse(json);
+    // TODO: Notch cost logic must be re-evaluated when notch costs change.
+    NotchCosts notchCosts = new NotchCosts();
+    notchCosts.parse(rawSpoilerJson);
+
     ConditionParser.Context parseCtx = new ConditionParser.Context(notchCosts);
-    return new StateContext(json, charmIds, rooms, pools, notchCosts,
-        Waypoints.parse(json, parseCtx), ItemChecks.parse(json, parseCtx, rooms), tolerances,
-        setters);
+    ItemChecks checks = ItemChecks.parse(rawSpoilerJson, parseCtx, rooms);
+    return new StateContext(rawSpoilerJson, icdlJson, packJson, charmIds, rooms, pools, notchCosts,
+        Waypoints.parse(rawSpoilerJson, parseCtx), checks, tolerances, setters);
   }
 
 }

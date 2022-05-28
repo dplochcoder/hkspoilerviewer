@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -29,15 +30,12 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.primitives.Ints;
-import hollow.knight.logic.Condition;
 import hollow.knight.logic.Cost;
 import hollow.knight.logic.Costs;
 import hollow.knight.logic.Item;
 import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.ItemChecks;
-import hollow.knight.logic.MutableTermMap;
 import hollow.knight.logic.Term;
-import hollow.knight.logic.TermMap;
 
 // Free-floating UI for editing a single check.
 public final class CheckEditor extends JFrame implements ItemChecks.Listener {
@@ -133,7 +131,7 @@ public final class CheckEditor extends JFrame implements ItemChecks.Listener {
     return itemsList;
   }
 
-  private JButton customItemButton(String txt, Term term, ImmutableSet<String> types) {
+  private JButton customItemButton(String txt, Function<Integer, Item> itemFn) {
     JButton button = new JButton(txt);
     button.addActionListener(new ActionListener() {
       @Override
@@ -149,12 +147,7 @@ public final class CheckEditor extends JFrame implements ItemChecks.Listener {
           return;
         }
 
-        MutableTermMap termMap = new MutableTermMap();
-        termMap.set(term, val);
-        Item item = new Item(Term.create(val + "_" + term.name()), types, Condition.alwaysTrue(),
-            termMap, TermMap.empty(), TermMap.empty());
-
-        application.ctx().checks().addItem(item);
+        application.ctx().checks().addItem(itemFn.apply(val));
       }
     });
     return button;
@@ -162,11 +155,8 @@ public final class CheckEditor extends JFrame implements ItemChecks.Listener {
 
   private JPanel createCustomItemsPanel() {
     JPanel panel = new JPanel();
-    panel.add(customItemButton("Add Custom Geo", Term.geo(),
-        ImmutableSet.of("RandomizerMod.RC.CustomGeoItem", "RandomizerMod")));
-    panel.add(customItemButton("Add Custom Essence", Term.essence(),
-        ImmutableSet.of("RandomizerCore.LogicItems.SingleItem", "RandomizerCore")));
-
+    panel.add(customItemButton("Add Custom Geo", Item::newGeoItem));
+    panel.add(customItemButton("Add Custom Essence", Item::newEssenceItem));
     return panel;
   }
 

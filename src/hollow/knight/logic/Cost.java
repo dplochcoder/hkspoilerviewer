@@ -59,6 +59,17 @@ public final class Cost {
     }
   }
 
+  public JsonObject toJson() {
+    JsonObject obj = new JsonObject();
+    if (type == Type.GEO) {
+      obj.addProperty("GeoAmount", value);
+    } else {
+      obj.addProperty("term", term.name());
+      obj.addProperty("threshold", value);
+    }
+    return obj;
+  }
+
   public static Cost parse(JsonObject obj) {
     if (obj.get("term") != null) {
       Term term = Term.create(obj.get("term").getAsString());

@@ -13,6 +13,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -33,6 +34,7 @@ public final class ItemChecks {
   private final BiMultimap<Condition, CheckId> idsByCondition = new BiMultimap<>();
   private final BiMultimap<String, CheckId> idsByLocation = new BiMultimap<>();
 
+  private final Map<String, Location> locationsByName = new HashMap<>();
   private final Map<Term, Item> itemsByName = new HashMap<>();
   private final BiMultimap<Term, CheckId> idsByItemName = new BiMultimap<>();
 
@@ -73,6 +75,7 @@ public final class ItemChecks {
     idsByCondition.put(check.condition(), check.id());
     idsByLocation.put(check.location().name(), check.id());
 
+    locationsByName.put(check.location().name(), check.location());
     itemsByName.put(check.item().term(), check.item());
     idsByItemName.put(check.item().term(), check.id());
   }
@@ -109,6 +112,14 @@ public final class ItemChecks {
     removeInternal(id);
 
     listeners().forEach(l -> l.checkRemoved(check));
+  }
+
+  public Location getLocation(String name) {
+    return locationsByName.get(name);
+  }
+
+  public Item getItem(Term term) {
+    return itemsByName.get(term);
   }
 
   public void reduceToNothing(Predicate<ItemCheck> filter) {
@@ -170,6 +181,23 @@ public final class ItemChecks {
 
   public Stream<ItemCheck> getByCondition(Condition c) {
     return idsByCondition.getKey(c).stream().map(checksById::get);
+  }
+
+  public JsonObject toJson() {
+    JsonObject obj = new JsonObject();
+    JsonArray arr = new JsonArray();
+    checksById.values().forEach(c -> arr.add(c.toJson()));
+    obj.add("checks", arr);
+    return obj;
+  }
+
+  public void fromJson(JsonObject obj) {
+    // Remove all item checks
+    ImmutableSet<CheckId> ids = ImmutableSet.copyOf(checksById.keySet());
+    ids.forEach(this::removeInternal);
+
+    JsonArray arr = obj.get("checks").getAsJsonArray();
+    arr.forEach(e -> addInternal(ItemCheck.fromJson(this, e.getAsJsonObject())));
   }
 
   private void parseCheck(JsonElement elem, ConditionParser.Context parseCtx, RoomLabels rooms,

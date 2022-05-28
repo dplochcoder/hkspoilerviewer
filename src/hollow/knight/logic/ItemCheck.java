@@ -2,6 +2,7 @@ package hollow.knight.logic;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
+import com.google.gson.JsonObject;
 
 @AutoValue
 public abstract class ItemCheck {
@@ -18,6 +19,23 @@ public abstract class ItemCheck {
   @Memoized
   public Condition condition() {
     return Conjunction.of(location().accessCondition(), costs().asCondition());
+  }
+
+  public final JsonObject toJson() {
+    JsonObject obj = new JsonObject();
+    obj.addProperty("id", id().id());
+    obj.addProperty("location", location().name());
+    obj.add("item", item().toJson());
+    obj.add("costs", costs().toJson());
+    obj.addProperty("vanilla", vanilla());
+    return obj;
+  }
+
+  public static ItemCheck fromJson(ItemChecks checks, JsonObject json) {
+    return create(CheckId.of(json.get("id").getAsLong()),
+        checks.getLocation(json.get("location").getAsString()),
+        Item.fromJson(checks, json.get("item")), Costs.parse(json.get("costs").getAsJsonArray()),
+        json.get("vanilla").getAsBoolean());
   }
 
   public static ItemCheck create(CheckId id, Location loc, Item item, Costs costs,
