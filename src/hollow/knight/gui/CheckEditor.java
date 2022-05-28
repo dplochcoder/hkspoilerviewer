@@ -320,6 +320,7 @@ public final class CheckEditor extends JFrame implements ItemChecks.Listener {
           return;
         }
 
+        // TODO: Support 'E' here, if the item is placed once.
         if (e.getKeyCode() == KeyEvent.VK_C || e.getKeyCode() == KeyEvent.VK_SPACE) {
           application.copyCheckEditorItem(true);
         } else {

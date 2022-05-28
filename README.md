@@ -93,3 +93,55 @@ Your current route can be saved in two formats:
   - A `*.hks` file, which can be re-opened by HKSpoilerViewer later
   
 `*.hks` files will save your current route, bookmarks, and hidden results, allowing you to share a route with other users of the HKSpoilerViewer, or simply checkpoint it for yourself in case you want to modify or continue the route later. `*.hks` files are versioned and should be compatible with newer versions of HKSpoilerViewer, but this is not an absolute guarantee.  (Most likely, a 2.0 release will break compatibility with 1.0 save files.) 
+
+# ICDL Edit Mode (NOT YET RELEASED)
+
+You can also use the HKSpoilerViewer to create Plandos, using the [ICDL](https://github.com/homothetyhk/ItemChangerDataLoader) format. To create a plando, or simply make small modifications to an existing seed, first:
+
+  1. Make sure the ICDL mod is installed via Scarab. 
+  1. Create a new randomizer run inside Hollow Knight, and launch into the game. This will automatically create an ICDL save of the seed in your AppData/Team Cherry/Hollow Knight/ICDL/Temp folder. Make sure you force your desired start location: HKSpoilerViewer does not currently support changing the start location.
+  1. In HKSpoilerViewer, go to `File > Open`, navigate to the ICDL save and open the `ctx.json` file.
+  1. Click `ICDL > Open Editor` to open the check editor, a separate editing window. 
+
+Now, you can edit the seed to your heart's content! The following sections describe precisely how to do this.
+
+## Clearing the seed
+
+You can bulk clear checks, filling them with the 'Nothing?' item if you want to start a Plando from a clean slate. Open the `ICDL > Reset all` menu and select the set of checks you'd like to clear. Shops which are cleared will all be be reduced down to a single item for sale, costing the minimum currency required by the shop.
+
+Be careful: HKSpoilerViewer does not (yet) have Undo+Redo functionality, so be sure to save your intermediate work frequently when working on a large Plando.
+
+## Placing Items
+
+The ICDL check editor has two separate sections: an Item selector up top, and a Costs editor down below.
+To place a specific Item at a specific location, select the desired Item in the ICDL check editor, and select the desired location/check in the Search Results section in the main window, then hit 'C'. There are no built-in limits for how many of each item is placed within the world, so you will want to actively monitor the total count of placed items in the ICDL check editor to make sure your seed is reasonable.
+
+Note that this may cause the check to immediately disappear from search results, because it no longer matches the active filters. Generally, in Plando mode, you will want to search by locations, not by items.
+
+### Custom Items
+
+You can create custom Geo and Essence drops using the named buttons below the Item search list in the ICDL check editor. Doing so will add a new appropriately named geo or essence item to the search results, which you can then select and place wherever desired.
+
+## Adding Checks
+
+HKSpoilerViewer does not support adding brand new checks to the world, a la [Transcendence](https://github.com/dpinela/Transcendence), but it does support creating new checks at existing locations. This is mostly intended for shops to create new sell-slots, but you could also use this functionality to create area-blitz-like multi-items throughout the world.
+
+To create a new check at an existing location, select that check in Search Results and press 'D'. To remove a check, press 'Z'. Note that removing the last check at a specific location will instead replace that check with a 'Nothing?' check.
+
+## Setting Shop Costs
+
+To set the price of an item at a shop, select the check in Search Results and tap 'E' to edit it in the Costs section of the ICDL Check Editor. This will update the UI with fields for existing costs, allowing you to modify them, delete them, or create new ones. After making those modifications, click 'Apply Costs' to apply the changes, or 'Reset Costs' to undo the edits. Editing a new check without clicking 'Apply Costs' will lose those unsaved changes.
+
+You can also tap 'E' if you have the item selected in the ICDL Check Editor, however this only works if the item is placed exactly once (and thus the check/location is unambiguous). If it is placed 0 times, or more than once, nothing will happen.
+
+HKSpoilerViewer does not restrict what costs you set and where, but these may not work correctly outside of their standard locations. (In particular, there will be no UI to clue in the blind player as to what's required, outside of standard shop UIs.)
+
+## Editing Context
+
+You can edit Starting Geo and charm notch costs from the ICDL menu. Each of these opens a text editor, which you modify and then close. The only restrictions are that geo and notch costs be non-negative integers.
+
+## Saving
+
+At any point, you can save your progress as a new ICDL pack folder from the save menu. Simply select `File > Save as ICDL Pack` at any time to checkpoint your progress. This will also save your current bookmarks and route, if you have any open.
+
+You will ideally save your ICDL packs in the `Past Randos` folder, so that you can open them in Hollow Knight for playing/debugging, but you can save them anywhere.

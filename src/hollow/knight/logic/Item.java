@@ -29,7 +29,7 @@ public final class Item {
   }
 
   public String displayName() {
-    return term().equals(Term.nothing()) ? "Nothing!" : term().name();
+    return term().equals(Term.nothing()) ? "Nothing?" : term().name();
   }
 
   public ImmutableSet<String> types() {

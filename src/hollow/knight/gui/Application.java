@@ -228,9 +228,13 @@ public final class Application extends JFrame {
   private boolean ensureCheckEditor() {
     if (checkEditor != null) {
       return true;
-    } else {
-      JOptionPane.showMessageDialog(this, "Open the ICDL check editor for this action");
+    } else if (!isICDL) {
+      JOptionPane.showMessageDialog(this, "Must open an ICDL ctx.json file for this action",
+          "Requires ICDL", JOptionPane.ERROR_MESSAGE);
       return false;
+    } else {
+      openEditor();
+      return true;
     }
   }
 
@@ -238,7 +242,7 @@ public final class Application extends JFrame {
     if (isICDL) {
       return true;
     } else {
-      JOptionPane.showMessageDialog(this, "Oepn an ICDL ctx.json file for this action");
+      JOptionPane.showMessageDialog(this, "Open an ICDL ctx.json file for this action");
       return false;
     }
   }
@@ -383,15 +387,18 @@ public final class Application extends JFrame {
     openEditor.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent arg0) {
-        checkEditor = new CheckEditor(Application.this);
-
-        openEditor.setEnabled(false);
-        openEditor.setToolTipText("Editor is already open");
+        openEditor();
       }
     });
     menu.add(openEditor);
 
     return menu;
+  }
+
+  private void openEditor() {
+    checkEditor = new CheckEditor(Application.this);
+    openEditor.setEnabled(false);
+    openEditor.setToolTipText("Editor is already open");
   }
 
   public void editorClosed() {
