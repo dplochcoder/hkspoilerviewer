@@ -301,8 +301,22 @@ public final class CheckEditor extends JFrame implements ItemChecks.Listener {
   }
 
   public Item selectedItem() {
-    // TODO: Support custom geo and essence items
     return itemsListModel.get(itemsList.getSelectedIndex());
+  }
+
+  private void selectUniqueItemCheck() {
+    Item item = selectedItem();
+    if (item == null) {
+      return;
+    }
+
+    Set<ItemCheck> checks = application.ctx().checks().allChecks()
+        .filter(c -> c.item().term().equals(item.term())).collect(ImmutableSet.toImmutableSet());
+    if (checks.size() != 1) {
+      return;
+    }
+
+    editCheck(checks.iterator().next());
   }
 
   private WindowListener newWindowListener() {
@@ -322,14 +336,15 @@ public final class CheckEditor extends JFrame implements ItemChecks.Listener {
       @Override
       public void keyPressed(KeyEvent e) {
         // TODO: Make key codes configurable.
-        if (e.getKeyCode() != KeyEvent.VK_C && e.getKeyCode() != KeyEvent.VK_SPACE
-            && !UP_DOWN_VALUES.containsKey(e.getKeyCode())) {
+        if (e.getKeyCode() != KeyEvent.VK_C && e.getKeyCode() != KeyEvent.VK_E
+            && e.getKeyCode() != KeyEvent.VK_SPACE && !UP_DOWN_VALUES.containsKey(e.getKeyCode())) {
           return;
         }
 
-        // TODO: Support 'E' here, if the item is placed once.
         if (e.getKeyCode() == KeyEvent.VK_C || e.getKeyCode() == KeyEvent.VK_SPACE) {
           application.copyCheckEditorItem(true);
+        } else if (e.getKeyCode() == KeyEvent.VK_E) {
+          selectUniqueItemCheck();
         } else {
           // Navigate up or down.
           int delta = UP_DOWN_VALUES.get(e.getKeyCode());
