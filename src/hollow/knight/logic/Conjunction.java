@@ -21,8 +21,8 @@ public final class Conjunction extends CommutativeCondition {
   }
 
   @Override
-  public boolean test(TermMap values) {
-    return operands.stream().allMatch(c -> c.test(values));
+  public boolean test(Context ctx) {
+    return operands.stream().allMatch(c -> c.test(ctx));
   }
 
   @Override

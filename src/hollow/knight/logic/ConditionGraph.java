@@ -79,25 +79,29 @@ public final class ConditionGraph {
     return updates;
   }
 
-  public static Builder builder(TermMap values) {
-    return new Builder(values);
+  public static Builder builder(Condition.Context ctx) {
+    return new Builder(ctx);
   }
 
   public static final class Builder {
-    private final TermMap values;
+    private final Condition.Context ctx;
     private final Set<Condition> indexed = new HashSet<>();
 
     private final Set<Condition> trueConditions = new HashSet<>();
     private final BiMultimap<CommutativeCondition, Condition> children = new BiMultimap<>();
     private final TermConditionIndex termIndex = new TermConditionIndex();
 
-    private Builder(TermMap values) {
-      this.values = values;
+    private Builder(Condition.Context ctx) {
+      this.ctx = ctx;
+    }
+
+    public Condition.Context ctx() {
+      return ctx;
     }
 
     public boolean index(Condition c) {
       if (indexed.add(c)) {
-        if (c.test(values)) {
+        if (c.test(ctx)) {
           trueConditions.add(c);
           return true;
         } else {

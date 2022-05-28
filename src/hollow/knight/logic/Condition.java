@@ -13,6 +13,24 @@ import com.google.common.collect.Interners;
  * assumptions about logic progression, use a ConditionGraph.
  */
 public abstract class Condition {
+  public static final class Context {
+    private final TermMap values;
+    private final NotchCosts notchCosts;
+
+    public Context(TermMap values, NotchCosts notchCosts) {
+      this.values = values;
+      this.notchCosts = notchCosts;
+    }
+
+    public TermMap values() {
+      return values;
+    }
+
+    public NotchCosts notchCosts() {
+      return notchCosts;
+    }
+  }
+
   private static final Interner<Condition> INTERNER = Interners.newWeakInterner();
 
   private final int hashCode;
@@ -22,7 +40,11 @@ public abstract class Condition {
   }
 
   // Tests whether this condition evaluates to true.
-  public abstract boolean test(TermMap values);
+  public abstract boolean test(Context ctx);
+
+  public final boolean test(TermMap values, NotchCosts notchCosts) {
+    return test(new Context(values, notchCosts));
+  }
 
   // Invoke appropriate methods on `builder` to index this Condition.
   // Never invoked on a Condition already evaluating to true.
@@ -53,7 +75,7 @@ public abstract class Condition {
     }
 
     @Override
-    public boolean test(TermMap values) {
+    public boolean test(Context ctx) {
       return value;
     }
 

@@ -7,18 +7,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.primitives.Ints;
 
 public final class ConditionParser {
-  public static final class Context {
-    private final NotchCosts notchCosts;
-
-    public Context(NotchCosts notchCosts) {
-      this.notchCosts = notchCosts;
-    }
-
-    public NotchCosts notchCosts() {
-      return notchCosts;
-    }
-  }
-
   private interface Atom {
     public enum Type {
       CONDITION, TERM, DISJUNCTION_OPERATOR, CONJUNCTION_OPERATOR, LEFT_PAREN, RIGHT_PAREN, GREATER_THAN, EQUAL_TO, NUMERIC_LITERAL,
@@ -112,22 +100,22 @@ public final class ConditionParser {
   private static final Atom GT = new SingletonType(Atom.Type.GREATER_THAN);
   private static final Atom EQ = new SingletonType(Atom.Type.EQUAL_TO);
 
-  public static Condition parse(Context ctx, String text) throws ParseException {
+  public static Condition parse(String text) throws ParseException {
     ConditionParser parser = new ConditionParser();
     try {
-      return parse(ctx, parser.parseAtoms(text));
+      return parse(parser.parseAtoms(text));
     } catch (ParseException ex) {
       throw new ParseException("Failed to parse '" + text + "': " + ex.getMessage());
     }
   }
 
-  private static Condition parse(Context ctx, List<Atom> atoms) throws ParseException {
+  private static Condition parse(List<Atom> atoms) throws ParseException {
     // Handle parenthesis
-    atoms = parseParenthesis(ctx, atoms);
+    atoms = parseParenthesis(atoms);
 
     // Handle binary operations
     for (Atom.Type op : OPERATION_ORDER) {
-      atoms = parseBinaryOp(ctx, op, atoms);
+      atoms = parseBinaryOp(op, atoms);
     }
 
     if (atoms.size() != 1 || !(atoms.get(0) instanceof ConditionAtom)) {
@@ -137,7 +125,7 @@ public final class ConditionParser {
     return ((ConditionAtom) atoms.get(0)).condition();
   }
 
-  private static List<Atom> parseParenthesis(Context ctx, List<Atom> atoms) throws ParseException {
+  private static List<Atom> parseParenthesis(List<Atom> atoms) throws ParseException {
     int stack = 0;
     List<Atom> newList = new ArrayList<>();
     List<Atom> subList = new ArrayList<>();
@@ -156,7 +144,7 @@ public final class ConditionParser {
           } else if (stack > 0) {
             subList.add(atom);
           } else {
-            newList.add(new LogicConditionAtom(parse(ctx, subList)));
+            newList.add(new LogicConditionAtom(parse(subList)));
             subList.clear();
           }
           break;
@@ -177,8 +165,7 @@ public final class ConditionParser {
     return newList;
   }
 
-  private static List<Atom> parseBinaryOp(Context ctx, Atom.Type op, List<Atom> atoms)
-      throws ParseException {
+  private static List<Atom> parseBinaryOp(Atom.Type op, List<Atom> atoms) throws ParseException {
     List<Atom> newAtoms = new ArrayList<>();
     for (int i = 0; i < atoms.size(); i++) {
       Atom atom = atoms.get(i);
@@ -192,8 +179,7 @@ public final class ConditionParser {
         throw new ParseException("Operator with missing operand");
       }
 
-      Condition opCond =
-          parseBinaryOp(ctx, op, newAtoms.get(newAtoms.size() - 1), atoms.get(i + 1));
+      Condition opCond = parseBinaryOp(op, newAtoms.get(newAtoms.size() - 1), atoms.get(i + 1));
       newAtoms.set(newAtoms.size() - 1, new LogicConditionAtom(opCond));
       i++;
     }
@@ -204,22 +190,21 @@ public final class ConditionParser {
   private static final String NOTCH_COST_PREFIX = "$NotchCost[";
   private static final String NOTCH_COST_SUFFIX = "]";
 
-  private static int parseNotchCost(Context ctx, String notchCost) {
+  private static List<Integer> parseNotchCostCharmIds(String notchCost) {
     Verify.verify(notchCost.startsWith(NOTCH_COST_PREFIX), notchCost);
     Verify.verify(notchCost.endsWith(NOTCH_COST_SUFFIX), notchCost);
 
-    List<Integer> notchCosts = new ArrayList<>();
+    List<Integer> charmIds = new ArrayList<>();
     for (String str : notchCost
         .substring(NOTCH_COST_PREFIX.length(), notchCost.length() - NOTCH_COST_SUFFIX.length())
         .split(",")) {
-      notchCosts.add(ctx.notchCosts().notchCost(Integer.parseInt(str)));
+      charmIds.add(Integer.parseInt(str));
     }
 
-    return notchCosts.stream().mapToInt(i -> i).sum()
-        - notchCosts.stream().mapToInt(i -> i).max().getAsInt() + 1;
+    return charmIds;
   }
 
-  private static Condition parseBinaryOp(Context ctx, Atom.Type op, Atom left, Atom right)
+  private static Condition parseBinaryOp(Atom.Type op, Atom left, Atom right)
       throws ParseException {
     switch (op) {
       case CONJUNCTION_OPERATOR:
@@ -246,8 +231,7 @@ public final class ConditionParser {
 
           if (lTerm.term().name().contentEquals("NOTCHES")
               && rTerm.term().name().startsWith(NOTCH_COST_PREFIX)) {
-            return TermGreaterThanCondition.of(Term.notches(),
-                parseNotchCost(ctx, rTerm.term().name()) - 1);
+            return NotchCostCondition.of(parseNotchCostCharmIds(rTerm.term().name()));
           }
         }
         if (left.type() != Atom.Type.TERM || right.type() != Atom.Type.NUMERIC_LITERAL) {

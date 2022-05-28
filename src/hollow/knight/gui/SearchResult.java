@@ -113,7 +113,8 @@ public abstract class SearchResult {
     if (state.test(itemCheck.location().accessCondition())) {
       if (state.test(itemCheck.costs().asCondition())) {
         return LogicType.IN_LOGIC;
-      } else if (itemCheck.costs().asCondition().test(state.purchaseTermValues())) {
+      } else if (itemCheck.costs().asCondition().test(state.purchaseTermValues(),
+          state.ctx().notchCosts())) {
         return LogicType.COST_ACCESSIBLE;
       }
     }

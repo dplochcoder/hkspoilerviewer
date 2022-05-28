@@ -21,8 +21,8 @@ public final class Disjunction extends CommutativeCondition {
   }
 
   @Override
-  public boolean test(TermMap values) {
-    return operands.stream().anyMatch(c -> c.test(values));
+  public boolean test(Context ctx) {
+    return operands.stream().anyMatch(c -> c.test(ctx));
   }
 
   @Override

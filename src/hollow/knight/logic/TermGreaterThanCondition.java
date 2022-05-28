@@ -24,8 +24,8 @@ public final class TermGreaterThanCondition extends Condition {
   }
 
   @Override
-  public boolean test(TermMap values) {
-    return values.get(term) > greater;
+  public boolean test(Context ctx) {
+    return ctx.values().get(term) > greater;
   }
 
   public Term term() {

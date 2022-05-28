@@ -18,8 +18,8 @@ public final class TermEqualToCondition extends Condition {
   }
 
   @Override
-  public boolean test(TermMap values) {
-    return values.get(term) == value;
+  public boolean test(Context ctx) {
+    return ctx.values().get(term) == value;
   }
 
   @Override

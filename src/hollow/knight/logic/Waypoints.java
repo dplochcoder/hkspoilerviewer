@@ -40,8 +40,7 @@ public final class Waypoints {
     return inverse.get(c);
   }
 
-  public static Waypoints parse(JsonObject json, ConditionParser.Context parseCtx)
-      throws ParseException {
+  public static Waypoints parse(JsonObject json) throws ParseException {
     JsonObject lm = json.get("LM").getAsJsonObject();
 
     Map<Term, Condition> waypoints = new HashMap<>();
@@ -52,7 +51,7 @@ public final class Waypoints {
       JsonObject obj = elem.getAsJsonObject();
 
       Term term = Term.create(obj.get("name").getAsString());
-      Condition cond = ConditionParser.parse(parseCtx, obj.get("logic").getAsString());
+      Condition cond = ConditionParser.parse(obj.get("logic").getAsString());
       waypoints.put(term, cond);
     }
 
@@ -71,14 +70,14 @@ public final class Waypoints {
 
         JsonObject targetObj = obj.get("Item").getAsJsonObject();
         Term targetTerm = Term.create(targetObj.get("term").getAsString());
-        Condition targetLogic = ConditionParser.parse(parseCtx,
-            targetObj.get("logic").getAsJsonObject().get("Logic").getAsString());
+        Condition targetLogic = ConditionParser
+            .parse(targetObj.get("logic").getAsJsonObject().get("Logic").getAsString());
         waypoints.put(targetTerm, targetLogic);
 
         JsonObject sourceObj = obj.get("Location").getAsJsonObject();
         Term sourceTerm = Term.create(sourceObj.get("term").getAsString());
-        Condition sourceLogic = ConditionParser.parse(parseCtx,
-            sourceObj.get("logic").getAsJsonObject().get("Logic").getAsString());
+        Condition sourceLogic = ConditionParser
+            .parse(sourceObj.get("logic").getAsJsonObject().get("Logic").getAsString());
         waypoints.put(sourceTerm, sourceLogic);
 
         transitions.put(sourceTerm, targetTerm);

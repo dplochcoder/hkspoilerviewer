@@ -89,7 +89,8 @@ public final class Item {
   void apply(State state) {
     // We can't do state.test() here because item conditions don't necessarily hold to the false ->
     // true paradigm.
-    TermMap effects = logic.test(state.termValues()) ? trueEffects : falseEffects;
+    TermMap effects =
+        logic.test(state.termValues(), state.ctx().notchCosts()) ? trueEffects : falseEffects;
 
     for (Term t : effects.terms()) {
       int cap = Integer.MAX_VALUE;
@@ -149,7 +150,7 @@ public final class Item {
     return obj;
   }
 
-  public static Item parse(ConditionParser.Context ctx, JsonObject item) throws ParseException {
+  public static Item parse(JsonObject item) throws ParseException {
     if (item.get("item") != null) {
       item = item.get("item").getAsJsonObject();
     }
@@ -166,8 +167,7 @@ public final class Item {
     MutableTermMap falseEffects = new MutableTermMap();
     MutableTermMap caps = new MutableTermMap();
     if (item.get("Logic") != null) {
-      logic = ConditionParser.parse(ctx,
-          item.get("Logic").getAsJsonObject().get("Logic").getAsString());
+      logic = ConditionParser.parse(item.get("Logic").getAsJsonObject().get("Logic").getAsString());
       parseEffects(item.get("TrueItem").getAsJsonObject(), trueEffects);
       parseEffects(item.get("FalseItem").getAsJsonObject(), falseEffects);
     } else {

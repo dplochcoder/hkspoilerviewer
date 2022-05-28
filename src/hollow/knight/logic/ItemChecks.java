@@ -200,9 +200,9 @@ public final class ItemChecks {
     arr.forEach(e -> addInternal(ItemCheck.fromJson(this, e.getAsJsonObject())));
   }
 
-  private void parseCheck(JsonElement elem, ConditionParser.Context parseCtx, RoomLabels rooms,
-      boolean vanilla) throws ParseException {
-    Item item = Item.parse(parseCtx, elem.getAsJsonObject().get("Item").getAsJsonObject());
+  private void parseCheck(JsonElement elem, RoomLabels rooms, boolean vanilla)
+      throws ParseException {
+    Item item = Item.parse(elem.getAsJsonObject().get("Item").getAsJsonObject());
     if (!item.types().contains("RandomizerMod.RC.SplitCloakItem")
         && item.types().stream().noneMatch(s -> s.startsWith("RandomizerCore.LogicItems."))) {
       return;
@@ -215,7 +215,7 @@ public final class ItemChecks {
     }
 
     String locName = logicObj.get("Name").getAsString();
-    Condition locAccess = ConditionParser.parse(parseCtx, logicObj.get("Logic").getAsString());
+    Condition locAccess = ConditionParser.parse(logicObj.get("Logic").getAsString());
     Location loc = Location.create(rooms, locName, locAccess);
 
     Costs costs = Costs.none();
@@ -227,21 +227,20 @@ public final class ItemChecks {
     placeNew(loc, item, costs, vanilla);
   }
 
-  public static ItemChecks parse(JsonObject json, ConditionParser.Context parseCtx,
-      RoomLabels roomLabels) throws ParseException {
+  public static ItemChecks parse(JsonObject json, RoomLabels roomLabels) throws ParseException {
     ItemChecks checks = new ItemChecks();
 
     // Parse locations.
     for (JsonElement elem : json.get("itemPlacements").getAsJsonArray()) {
       try {
-        checks.parseCheck(elem, parseCtx, roomLabels, false);
+        checks.parseCheck(elem, roomLabels, false);
       } catch (Exception ex) {
         throw new ParseException(ex.getMessage() + ": " + elem, ex);
       }
     }
     for (JsonElement elem : json.get("Vanilla").getAsJsonArray()) {
       try {
-        checks.parseCheck(elem, parseCtx, roomLabels, true);
+        checks.parseCheck(elem, roomLabels, true);
       } catch (Exception ex) {
         throw new ParseException(ex.getMessage() + ": " + elem, ex);
       }

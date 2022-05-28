@@ -128,10 +128,9 @@ public final class StateContext {
     NotchCosts notchCosts = new NotchCosts();
     notchCosts.parse(rawSpoilerJson);
 
-    ConditionParser.Context parseCtx = new ConditionParser.Context(notchCosts);
-    ItemChecks checks = ItemChecks.parse(rawSpoilerJson, parseCtx, rooms);
     return new StateContext(rawSpoilerJson, icdlJson, packJson, charmIds, rooms, pools, notchCosts,
-        Waypoints.parse(rawSpoilerJson, parseCtx), checks, tolerances, setters);
+        Waypoints.parse(rawSpoilerJson), ItemChecks.parse(rawSpoilerJson, rooms), tolerances,
+        setters);
   }
 
 }
