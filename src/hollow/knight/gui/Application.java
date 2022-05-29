@@ -588,7 +588,6 @@ public final class Application extends JFrame {
     JsonObject saveData = new JsonObject();
     JsonObject rawSpoiler = JsonUtil.loadPath(p).getAsJsonObject();
     JsonObject rawICDL = null;
-    JsonObject rawPack = null;
     Version version = Main.version();
     if (!isRawSpoiler) {
       saveData = rawSpoiler;
@@ -601,12 +600,10 @@ public final class Application extends JFrame {
 
       if (saveData.has("RawICDL")) {
         rawICDL = saveData.get("RawICDL").getAsJsonObject();
-        rawPack = saveData.get("RawPack").getAsJsonObject();
       }
     } else if (p.endsWith("ctx.json")) {
       String parent = p.getParent().toString();
       rawICDL = JsonUtil.loadPath(Paths.get(parent, "ic.json")).getAsJsonObject();
-      rawPack = JsonUtil.loadPath(Paths.get(parent, "pack.json")).getAsJsonObject();
     }
 
     setICDLEnabled(rawICDL != null);
@@ -614,7 +611,7 @@ public final class Application extends JFrame {
     Version finalVersion = version;
     JsonObject finalSaveData = saveData;
 
-    StateContext newCtx = StateContext.parse(rawSpoiler, rawICDL, rawPack);
+    StateContext newCtx = StateContext.parse(rawSpoiler, rawICDL);
     if (isICDL) {
       newCtx.loadMutables(saveData);
     }
@@ -653,7 +650,6 @@ public final class Application extends JFrame {
     saveData.add("RawSpoiler", ctx().rawSpoilerJson());
     if (isICDL) {
       saveData.add("RawICDL", ctx().icdlJson());
-      saveData.add("RawPack", ctx().packJson());
       ctx().checks().compact();
       ctx().saveMutables(saveData);
     }

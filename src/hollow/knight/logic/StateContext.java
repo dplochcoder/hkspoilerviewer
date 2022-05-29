@@ -4,10 +4,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import javax.swing.JOptionPane;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.ImmutableSet;
@@ -18,6 +21,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+import hollow.knight.gui.Main;
 import hollow.knight.util.JsonUtil;
 
 /** Mostly immutable context for a State object. */
@@ -25,7 +29,6 @@ public final class StateContext {
 
   private final JsonObject rawSpoilerJson;
   private final JsonObject icdlJson;
-  private final JsonObject packJson;
   private final CharmIds charmIds;
   private final RoomLabels roomLabels;
   private final Pools pools;
@@ -36,12 +39,11 @@ public final class StateContext {
   private final ImmutableTermMap tolerances;
   private final ImmutableTermMap setters;
 
-  public StateContext(JsonObject rawSpoilerJson, JsonObject icdlJson, JsonObject packJson,
-      CharmIds charmIds, RoomLabels roomLabels, Pools pools, NotchCosts notchCosts,
-      Waypoints waypoints, ItemChecks checks, TermMap tolerances, TermMap setters) {
+  public StateContext(JsonObject rawSpoilerJson, JsonObject icdlJson, CharmIds charmIds,
+      RoomLabels roomLabels, Pools pools, NotchCosts notchCosts, Waypoints waypoints,
+      ItemChecks checks, TermMap tolerances, TermMap setters) {
     this.rawSpoilerJson = rawSpoilerJson;
     this.icdlJson = icdlJson;
-    this.packJson = packJson;
     this.charmIds = charmIds;
     this.roomLabels = roomLabels;
     this.pools = pools;
@@ -58,10 +60,6 @@ public final class StateContext {
 
   public JsonObject icdlJson() {
     return icdlJson;
-  }
-
-  public JsonObject packJson() {
-    return packJson;
   }
 
   public CharmIds charmIds() {
@@ -117,8 +115,8 @@ public final class StateContext {
     }
   }
 
-  public static StateContext parse(JsonObject rawSpoilerJson, JsonObject icdlJson,
-      JsonObject packJson) throws ParseException {
+  public static StateContext parse(JsonObject rawSpoilerJson, JsonObject icdlJson)
+      throws ParseException {
     CharmIds charmIds = CharmIds.load();
     RoomLabels rooms = RoomLabels.load();
     Pools pools = Pools.load();
@@ -143,7 +141,7 @@ public final class StateContext {
     NotchCosts notchCosts = new NotchCosts();
     notchCosts.parse(rawSpoilerJson);
 
-    return new StateContext(rawSpoilerJson, icdlJson, packJson, charmIds, rooms, pools, notchCosts,
+    return new StateContext(rawSpoilerJson, icdlJson, charmIds, rooms, pools, notchCosts,
         Waypoints.parse(rawSpoilerJson), ItemChecks.parse(rawSpoilerJson, rooms), tolerances,
         setters);
   }
@@ -289,11 +287,26 @@ public final class StateContext {
     JsonObject newICDLJson = icdlJson.deepCopy();
     newICDLJson.add("Placements", calculatePlacementsJson(itemJsons, locationJsons));
 
+    String packName = JOptionPane.showInputDialog(null, "Name?");
+    if (packName == null || packName.trim().isEmpty()) {
+      throw new ICDLException("Must enter name");
+    }
+    String packDesc = JOptionPane.showInputDialog(null, "Description?");
+    if (packDesc == null || packDesc.trim().isEmpty()) {
+      packDesc = "Hollow Knight Plando (" + packName.trim() + ")";
+    }
+
+    JsonObject packJson = new JsonObject();
+    packJson.addProperty("Author", "HKSPoilerViewer v" + Main.version() + ", "
+        + LocalDate.now().format(DateTimeFormatter.ISO_DATE));
+    packJson.addProperty("Name", packName.trim());
+    packJson.addProperty("Description", packDesc.trim());
+    packJson.addProperty("SupportsRandoTracking", true);
+
     Files.createDirectories(p);
     Path icdlPath = Paths.get(p.toString(), "ic.json");
     JsonUtil.writeJson(icdlPath.toString(), newICDLJson);
 
-    // TODO: Rewrite pack json
     Path packPath = Paths.get(p.toString(), "pack.json");
     JsonUtil.writeJson(packPath.toString(), packJson);
 

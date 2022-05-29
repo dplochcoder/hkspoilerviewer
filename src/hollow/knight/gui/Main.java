@@ -75,7 +75,7 @@ public final class Main {
           return;
         }
 
-        ctx = StateContext.parse(JsonUtil.loadPath(rawSpoiler).getAsJsonObject(), null, null);
+        ctx = StateContext.parse(JsonUtil.loadPath(rawSpoiler).getAsJsonObject(), null);
         break;
       } catch (Exception ex) {
         GuiUtil.showStackTrace(null, "Error opening RawSpoiler.json: ", ex);
