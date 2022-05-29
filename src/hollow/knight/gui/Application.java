@@ -225,16 +225,28 @@ public final class Application extends JFrame {
     }
   }
 
-  private boolean ensureCheckEditor() {
+  private static enum CheckEditorPresence {
+    NONE, ALREADY_OPEN, OPEN_NOW;
+
+    public boolean isOpen() {
+      return this != NONE;
+    }
+
+    public boolean wasOpen() {
+      return this == ALREADY_OPEN;
+    }
+  }
+
+  private CheckEditorPresence ensureCheckEditor() {
     if (checkEditor != null) {
-      return true;
+      return CheckEditorPresence.ALREADY_OPEN;
     } else if (!isICDL) {
       JOptionPane.showMessageDialog(this, "Must open an ICDL ctx.json file for this action",
           "Requires ICDL", JOptionPane.ERROR_MESSAGE);
-      return false;
+      return CheckEditorPresence.NONE;
     } else {
       openEditor();
-      return true;
+      return CheckEditorPresence.OPEN_NOW;
     }
   }
 
@@ -258,7 +270,7 @@ public final class Application extends JFrame {
   }
 
   private void editSelectedCheck() {
-    if (!ensureCheckEditor()) {
+    if (ensureCheckEditor().isOpen()) {
       return;
     }
 
@@ -271,7 +283,7 @@ public final class Application extends JFrame {
   }
 
   public void copyCheckEditorItem(boolean refreshSearchResults) {
-    if (!ensureCheckEditor()) {
+    if (!ensureCheckEditor().wasOpen()) {
       return;
     }
 

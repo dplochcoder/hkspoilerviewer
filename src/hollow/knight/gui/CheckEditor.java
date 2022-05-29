@@ -332,11 +332,11 @@ public final class CheckEditor extends JFrame implements ItemChecks.Listener {
       public void keyPressed(KeyEvent e) {
         // TODO: Make key codes configurable.
         if (e.getKeyCode() != KeyEvent.VK_C && e.getKeyCode() != KeyEvent.VK_E
-            && e.getKeyCode() != KeyEvent.VK_SPACE && !UP_DOWN_VALUES.containsKey(e.getKeyCode())) {
+            && !UP_DOWN_VALUES.containsKey(e.getKeyCode())) {
           return;
         }
 
-        if (e.getKeyCode() == KeyEvent.VK_C || e.getKeyCode() == KeyEvent.VK_SPACE) {
+        if (e.getKeyCode() == KeyEvent.VK_C) {
           application.copyCheckEditorItem(true);
         } else if (e.getKeyCode() == KeyEvent.VK_E) {
           selectUniqueItemCheck();
