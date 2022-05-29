@@ -295,7 +295,7 @@ public final class Application extends JFrame {
     }
 
     ItemCheck check = searchResultsListModel.getCheck(resultsList.getSelectedIndex());
-    if (check == null && !ensureRandomized(check)) {
+    if (check == null || !ensureRandomized(check)) {
       return;
     }
 
