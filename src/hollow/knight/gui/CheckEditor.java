@@ -366,18 +366,24 @@ public final class CheckEditor extends JFrame implements ItemChecks.Listener {
       @Override
       public void keyPressed(KeyEvent e) {
         // TODO: Make key codes configurable.
-        if (e.getKeyCode() != KeyEvent.VK_C && e.getKeyCode() != KeyEvent.VK_E
-            && !UP_DOWN_VALUES.containsKey(e.getKeyCode())) {
+        if (e.getKeyCode() != KeyEvent.VK_Q && e.getKeyCode() != KeyEvent.VK_C
+            && e.getKeyCode() != KeyEvent.VK_E && !UP_DOWN_VALUES.containsKey(e.getKeyCode())) {
           return;
         }
 
-        if (e.getKeyCode() == KeyEvent.VK_C) {
+        if (e.getKeyCode() == KeyEvent.VK_Q) {
+          itemsList.clearSelection();
+        } else if (e.getKeyCode() == KeyEvent.VK_C) {
           ItemCheck searchCheck = application.getSelectedSearchResultCheck();
           ItemCheck routeCheck = application.getSelectedRouteCheck();
           if ((routeCheck == null) != (searchCheck == null)) {
             application.copyCheckEditorItem(true, routeCheck == null ? searchCheck : routeCheck);
           } else if (routeCheck == searchCheck) {
             application.copyCheckEditorItem(true, routeCheck);
+          } else {
+            JOptionPane.showMessageDialog(CheckEditor.this,
+                "Ambiguous: Different checks selected in Search and Route (Q to deselect)",
+                "Cannot perform action", JOptionPane.WARNING_MESSAGE);
           }
         } else if (e.getKeyCode() == KeyEvent.VK_E) {
           selectUniqueItemCheck();

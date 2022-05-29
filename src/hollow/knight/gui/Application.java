@@ -160,18 +160,18 @@ public final class Application extends JFrame {
       .add("See the queries.json source file for examples of how to author custom queries.")
       .build();
 
-  private static final ImmutableList<String> KS_INFO =
-      ImmutableList.<String>builder().add("UP/DOWN - move through results")
-          .add("W/S - move selected item up/down (bookmarks+route)")
-          .add("X - remove selected item (bookmarks+route)").add("-")
-          .add("SPACE - acquire selected item").add("BACKSPACE - un-acquire last selected item")
-          .add("-").add("I - Insert and search before selected route item")
-          .add("K - Undo insertion point").add("-").add("B - bookmark selected item").add("-")
-          .add("H - hide selected item").add("U - un-hide selected item").add("-")
-          .add("E - (ICDL) edit selected check in the check editor") // FIXME
-          .add("Z - (ICDL) delete selected check")
-          .add("C - (ICDL) copy current item onto selected check")
-          .add("D - (ICDL) duplicate the selected check (mostly for shops)").build();
+  private static final ImmutableList<String> KS_INFO = ImmutableList.<String>builder()
+      .add("Q - clear current selection").add("-").add("UP/DOWN - move through results")
+      .add("W/S - move selected item up/down (bookmarks+route)")
+      .add("X - remove selected item (bookmarks+route)").add("-")
+      .add("SPACE - acquire selected item").add("BACKSPACE - un-acquire last selected item")
+      .add("-").add("I - Insert and search before selected route item")
+      .add("K - Undo insertion point").add("-").add("B - bookmark selected item").add("-")
+      .add("H - hide selected item").add("U - un-hide selected item").add("-")
+      .add("E - (ICDL) edit selected check in the check editor") // FIXME
+      .add("Z - (ICDL) delete selected check")
+      .add("C - (ICDL) copy current item onto selected check")
+      .add("D - (ICDL) duplicate the selected check (mostly for shops)").build();
 
   private ActionListener infoListener(String title, Iterable<String> content) {
     return new ActionListener() {
@@ -277,16 +277,17 @@ public final class Application extends JFrame {
     return true;
   }
 
-  private void editCheck(ItemCheck check) {
+  private boolean editCheck(ItemCheck check) {
     if (!ensureCheckEditor().isOpen()) {
-      return;
+      return false;
     }
 
     if (check == null || !ensureRandomized(check)) {
-      return;
+      return false;
     }
 
     checkEditor.editCheck(check);
+    return true;
   }
 
   public void copyCheckEditorItem(boolean refreshSearchResults, ItemCheck check) {
@@ -765,18 +766,21 @@ public final class Application extends JFrame {
         e.consume();
 
         // TODO: Make key codes configurable.
-        if (e.getKeyCode() != KeyEvent.VK_B && e.getKeyCode() != KeyEvent.VK_W
-            && e.getKeyCode() != KeyEvent.VK_S && e.getKeyCode() != KeyEvent.VK_X
-            && e.getKeyCode() != KeyEvent.VK_DOWN && e.getKeyCode() != KeyEvent.VK_UP
-            && e.getKeyCode() != KeyEvent.VK_H && e.getKeyCode() != KeyEvent.VK_U
-            && e.getKeyCode() != KeyEvent.VK_E && e.getKeyCode() != KeyEvent.VK_C
-            && e.getKeyCode() != KeyEvent.VK_D && e.getKeyCode() != KeyEvent.VK_Z
-            && e.getKeyCode() != KeyEvent.VK_PAGE_DOWN && e.getKeyCode() != KeyEvent.VK_PAGE_UP
-            && e.getKeyCode() != KeyEvent.VK_SPACE && e.getKeyCode() != KeyEvent.VK_BACK_SPACE) {
+        if (e.getKeyCode() != KeyEvent.VK_Q && e.getKeyCode() != KeyEvent.VK_B
+            && e.getKeyCode() != KeyEvent.VK_W && e.getKeyCode() != KeyEvent.VK_S
+            && e.getKeyCode() != KeyEvent.VK_X && e.getKeyCode() != KeyEvent.VK_DOWN
+            && e.getKeyCode() != KeyEvent.VK_UP && e.getKeyCode() != KeyEvent.VK_H
+            && e.getKeyCode() != KeyEvent.VK_U && e.getKeyCode() != KeyEvent.VK_E
+            && e.getKeyCode() != KeyEvent.VK_C && e.getKeyCode() != KeyEvent.VK_D
+            && e.getKeyCode() != KeyEvent.VK_Z && e.getKeyCode() != KeyEvent.VK_PAGE_DOWN
+            && e.getKeyCode() != KeyEvent.VK_PAGE_UP && e.getKeyCode() != KeyEvent.VK_SPACE
+            && e.getKeyCode() != KeyEvent.VK_BACK_SPACE) {
           return;
         }
 
-        if (e.getKeyCode() == KeyEvent.VK_B) {
+        if (e.getKeyCode() == KeyEvent.VK_Q) {
+          resultsList.clearSelection();
+        } else if (e.getKeyCode() == KeyEvent.VK_B) {
           searchResultsListModel.addBookmark(resultsList.getSelectedIndex());
           resultsList.setSelectedIndex(searchResultsListModel.numBookmarks() - 1);
         } else if (e.getKeyCode() == KeyEvent.VK_W || e.getKeyCode() == KeyEvent.VK_S) {
@@ -790,7 +794,10 @@ public final class Application extends JFrame {
         } else if (e.getKeyCode() == KeyEvent.VK_U) {
           searchResultsListModel.unhideResult(resultsList.getSelectedIndex());
         } else if (e.getKeyCode() == KeyEvent.VK_E) {
-          editCheck(getSelectedSearchResultCheck());
+          ItemCheck check = getSelectedSearchResultCheck();
+          if (editCheck(check) && getSelectedRouteCheck() != check) {
+            routeList.clearSelection();
+          }
           return;
         } else if (e.getKeyCode() == KeyEvent.VK_C) {
           copyCheckEditorItem(false, getSelectedSearchResultCheck());
@@ -878,7 +885,9 @@ public final class Application extends JFrame {
       @Override
       public void keyPressed(KeyEvent e) {
         e.consume();
-        if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+        if (e.getKeyCode() == KeyEvent.VK_Q) {
+          routeList.clearSelection();
+        } else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
           routeListModel.removeCheck(routeListModel.getSize() - 1);
           repopulateSearchResults();
         } else if (e.getKeyCode() == KeyEvent.VK_W || e.getKeyCode() == KeyEvent.VK_S) {
@@ -897,7 +906,10 @@ public final class Application extends JFrame {
           routeListModel.setInsertionPoint(routeList.getSelectedIndex());
           repopulateSearchResults();
         } else if (e.getKeyCode() == KeyEvent.VK_E) {
-          editCheck(getSelectedRouteCheck());
+          ItemCheck check = getSelectedRouteCheck();
+          if (editCheck(check) && getSelectedSearchResultCheck() != check) {
+            resultsList.clearSelection();
+          }
           refreshLogic(true);
         } else if (e.getKeyCode() == KeyEvent.VK_C) {
           duplicateCheck(getSelectedRouteCheck());
