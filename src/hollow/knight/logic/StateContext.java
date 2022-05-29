@@ -13,6 +13,7 @@ import java.util.Set;
 import javax.swing.JOptionPane;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.HashMultiset;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multiset;
@@ -267,6 +268,41 @@ public final class StateContext {
     return placements;
   }
 
+  private JsonArray createNewSpoilerPlacements(JsonArray origPlacements) {
+    Map<Term, JsonObject> itemsJson = new HashMap<>();
+    Map<String, JsonObject> locationsJson = new HashMap<>();
+
+    for (JsonElement elem : origPlacements) {
+      JsonObject obj = elem.getAsJsonObject();
+      JsonObject item = obj.get("Item").getAsJsonObject();
+      itemsJson.put(Term.create(item.get("Name").getAsString()), item);
+
+      JsonObject loc = obj.get("Location").getAsJsonObject().deepCopy();
+      String locName =
+          (loc.has("logic") ? loc.get("logic").getAsJsonObject() : loc).get("Name").getAsString();
+      loc.add("costs", JsonNull.INSTANCE);
+      locationsJson.put(locName, loc);
+    }
+
+    JsonArray arr = new JsonArray();
+    ImmutableList<ItemCheck> checks =
+        checks().allChecks().filter(c -> !c.vanilla()).collect(ImmutableList.toImmutableList());
+    for (int i = 0; i < checks.size(); i++) {
+      ItemCheck c = checks.get(i);
+      JsonObject placement = new JsonObject();
+      placement.add("Item", itemsJson.get(c.item().term()));
+
+      JsonObject locObj = locationsJson.get(c.location().name()).deepCopy();
+      locObj.add("costs", c.costs().toRawSpoilerJson());
+      placement.add("Location", locObj);
+
+      placement.addProperty("Index", i);
+      arr.add(placement);
+    }
+
+    return arr;
+  }
+
   public void saveICDL(Path p) throws IOException, ICDLException {
     // Sanitize items and locations into maps.
     Map<Term, JsonObject> itemJsons = new HashMap<>();
@@ -286,6 +322,10 @@ public final class StateContext {
 
     JsonObject newICDLJson = icdlJson.deepCopy();
     newICDLJson.add("Placements", calculatePlacementsJson(itemJsons, locationJsons));
+
+    JsonObject newRawSpoilerJson = rawSpoilerJson.deepCopy();
+    newRawSpoilerJson.add("itemPlacements",
+        createNewSpoilerPlacements(rawSpoilerJson.get("itemPlacements").getAsJsonArray()));
 
     String packName = JOptionPane.showInputDialog(null, "Name?");
     if (packName == null || packName.trim().isEmpty()) {
@@ -310,9 +350,8 @@ public final class StateContext {
     Path packPath = Paths.get(p.toString(), "pack.json");
     JsonUtil.writeJson(packPath.toString(), packJson);
 
-    // TODO: Actually update RawSpoiler.
     Path ctxPath = Paths.get(p.toString(), "ctx.json");
-    JsonUtil.writeJson(ctxPath.toString(), rawSpoilerJson);
+    JsonUtil.writeJson(ctxPath.toString(), newRawSpoilerJson);
   }
 
 }

@@ -63,8 +63,11 @@ public final class Cost {
   public JsonObject toRawSpoilerJson() {
     JsonObject obj = new JsonObject();
     if (type == Type.GEO) {
+      obj.addProperty("$type", "RandomizerMod.RC.LogicGeoCost, RandomizerMod");
+      obj.addProperty("CanReplenishGeoWaypoint", "Can_Replenish_Geo");
       obj.addProperty("GeoAmount", value);
     } else {
+      obj.addProperty("$type", "RandomizerCore.Logic.SimpleCost, RandomizerCore");
       obj.addProperty("term", term.name());
       obj.addProperty("threshold", value);
     }
