@@ -225,15 +225,23 @@ public final class Application extends JFrame {
     }
   }
 
+  public ItemCheck getSelectedSearchResultCheck() {
+    return searchResultsListModel.getCheck(resultsList.getSelectedIndex());
+  }
+
+  public ItemCheck getSelectedRouteCheck() {
+    return routeListModel.getCheck(routeList.getSelectedIndex());
+  }
+
   private static enum CheckEditorPresence {
     NONE, ALREADY_OPEN, OPEN_NOW;
 
     public boolean isOpen() {
-      return this != NONE;
+      return this != CheckEditorPresence.NONE;
     }
 
     public boolean wasOpen() {
-      return this == ALREADY_OPEN;
+      return this == CheckEditorPresence.ALREADY_OPEN;
     }
   }
 
@@ -269,12 +277,11 @@ public final class Application extends JFrame {
     return true;
   }
 
-  private void editSelectedCheck() {
-    if (ensureCheckEditor().isOpen()) {
+  private void editCheck(ItemCheck check) {
+    if (!ensureCheckEditor().isOpen()) {
       return;
     }
 
-    ItemCheck check = searchResultsListModel.getCheck(resultsList.getSelectedIndex());
     if (check == null || !ensureRandomized(check)) {
       return;
     }
@@ -282,54 +289,59 @@ public final class Application extends JFrame {
     checkEditor.editCheck(check);
   }
 
-  public void copyCheckEditorItem(boolean refreshSearchResults) {
+  public void copyCheckEditorItem(boolean refreshSearchResults, ItemCheck check) {
     if (!ensureCheckEditor().wasOpen()) {
       return;
     }
 
     Item item = checkEditor.selectedItem();
-    ItemCheck check = searchResultsListModel.getCheck(resultsList.getSelectedIndex());
     if (item == null || check == null || item.term().equals(check.item().term())
         || !ensureRandomized(check)) {
       return;
     }
 
+    ItemCheck searchCheck = getSelectedSearchResultCheck();
+    ItemCheck routeCheck = getSelectedRouteCheck();
+
     CheckId newId =
         ctx().checks().replace(check.id(), check.location(), item, check.costs(), false);
     refreshLogic(refreshSearchResults);
-    resultsList
-        .setSelectedIndex(searchResultsListModel.indexOfSearchResult(ctx().checks().get(newId)));
+
+    if (searchCheck == check) {
+      resultsList
+          .setSelectedIndex(searchResultsListModel.indexOfSearchResult(ctx().checks().get(newId)));
+    }
+    if (routeCheck == check) {
+      routeList.setSelectedIndex(routeListModel.indexOfRouteCheck(ctx().checks().get(newId)));
+    }
   }
 
-  private void deleteSelectedCheck() {
-    if (!ensureICDL()) {
+  private void deleteCheck(ItemCheck check) {
+    if (!ensureICDL() || check == null || !ensureRandomized(check)) {
       return;
     }
 
-    ItemCheck check = searchResultsListModel.getCheck(resultsList.getSelectedIndex());
-    if (check == null || !ensureRandomized(check)) {
-      return;
-    }
+    ItemCheck searchCheck = getSelectedSearchResultCheck();
+    ItemCheck routeCheck = getSelectedRouteCheck();
 
     ctx().checks().reduceToNothing(c -> c == check);
     refreshLogic(false);
-    resultsList.setSelectedIndex(-1);
+
+    if (searchCheck == check) {
+      resultsList.clearSelection();
+    }
+    if (routeCheck == check) {
+      routeList.clearSelection();
+    }
   }
 
-  private void duplicateSelectedCheck() {
-    if (!ensureICDL()) {
+  public void duplicateCheck(ItemCheck check) {
+    if (!ensureICDL() || check == null) {
       return;
     }
 
-    ItemCheck check = searchResultsListModel.getCheck(resultsList.getSelectedIndex());
-    if (check == null) {
-      return;
-    }
-
-    CheckId newId = ctx().checks().placeNew(check.location(), check.item(), check.costs(), false);
+    ctx().checks().placeNew(check.location(), check.item(), check.costs(), false);
     refreshLogic(false);
-    resultsList
-        .setSelectedIndex(searchResultsListModel.indexOfSearchResult(ctx().checks().get(newId)));
   }
 
   private void editStartingGeo() {
@@ -778,16 +790,16 @@ public final class Application extends JFrame {
         } else if (e.getKeyCode() == KeyEvent.VK_U) {
           searchResultsListModel.unhideResult(resultsList.getSelectedIndex());
         } else if (e.getKeyCode() == KeyEvent.VK_E) {
-          editSelectedCheck();
+          editCheck(getSelectedSearchResultCheck());
           return;
         } else if (e.getKeyCode() == KeyEvent.VK_C) {
-          copyCheckEditorItem(false);
+          copyCheckEditorItem(false, getSelectedSearchResultCheck());
         } else if (e.getKeyCode() == KeyEvent.VK_D) {
-          duplicateSelectedCheck();
+          duplicateCheck(getSelectedSearchResultCheck());
         } else if (e.getKeyCode() == KeyEvent.VK_Z) {
-          deleteSelectedCheck();
+          deleteCheck(getSelectedSearchResultCheck());
         } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-          ItemCheck check = searchResultsListModel.getCheck(resultsList.getSelectedIndex());
+          ItemCheck check = getSelectedSearchResultCheck();
           if (check == null) {
             return;
           }
@@ -884,6 +896,14 @@ public final class Application extends JFrame {
         } else if (e.getKeyCode() == KeyEvent.VK_I) {
           routeListModel.setInsertionPoint(routeList.getSelectedIndex());
           repopulateSearchResults();
+        } else if (e.getKeyCode() == KeyEvent.VK_E) {
+          editCheck(getSelectedRouteCheck());
+          refreshLogic(true);
+        } else if (e.getKeyCode() == KeyEvent.VK_C) {
+          duplicateCheck(getSelectedRouteCheck());
+          repopulateSearchResults();
+        } else if (e.getKeyCode() == KeyEvent.VK_Z) {
+
         } else if (e.getKeyCode() == KeyEvent.VK_K) {
           routeListModel.setInsertionPoint(routeListModel.getSize());
           repopulateSearchResults();

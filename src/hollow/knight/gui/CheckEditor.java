@@ -294,24 +294,59 @@ public final class CheckEditor extends JFrame implements ItemChecks.Listener {
     return itemsListModel.get(itemsList.getSelectedIndex());
   }
 
-  private void selectUniqueItemCheck() {
+  private ItemCheck getSemiUniqueItemCheck() {
     Item item = selectedItem();
     if (item == null) {
-      return;
+      return null;
     }
 
-    Set<ItemCheck> checks = application.ctx().checks().allChecks()
+    ImmutableSet<ItemCheck> checks = application.ctx().checks().allChecks()
         .filter(c -> c.item().term().equals(item.term())).collect(ImmutableSet.toImmutableSet());
-    if (checks.size() != 1) {
-      return;
+    if (checks.isEmpty()) {
+      JOptionPane.showMessageDialog(this, "No checks with this item to edit",
+          "Cannot perform action", JOptionPane.WARNING_MESSAGE);
+      return null;
     }
 
-    ItemCheck check = checks.iterator().next();
+    ItemCheck check = checks.asList().get(0);
+    for (int i = 1; i < checks.size(); i++) {
+      // Check that location and costs match.
+      ItemCheck c = checks.asList().get(i);
+      if (!c.location().name().equals(check.location().name())) {
+        JOptionPane.showMessageDialog(this, "Ambiguous: Item exists at multiple locations",
+            "Cannot perform action", JOptionPane.WARNING_MESSAGE);
+        return null;
+      }
+      if (!c.costs().equals(check.costs())) {
+        JOptionPane.showMessageDialog(this, "Ambiguous: Item has multiple cost types",
+            "Cannot perform action", JOptionPane.WARNING_MESSAGE);
+        return null;
+      }
+    }
+
     if (!application.ensureRandomized(check)) {
+      return null;
+    }
+
+    return check;
+  }
+
+  private void selectUniqueItemCheck() {
+    ItemCheck check = getSemiUniqueItemCheck();
+    if (check == null) {
       return;
     }
 
     editCheck(check);
+  }
+
+  private void duplicateUniqueItemCheck() {
+    ItemCheck check = getSemiUniqueItemCheck();
+    if (check == null) {
+      return;
+    }
+
+    application.duplicateCheck(check);
   }
 
   private WindowListener newWindowListener() {
@@ -337,9 +372,17 @@ public final class CheckEditor extends JFrame implements ItemChecks.Listener {
         }
 
         if (e.getKeyCode() == KeyEvent.VK_C) {
-          application.copyCheckEditorItem(true);
+          ItemCheck searchCheck = application.getSelectedSearchResultCheck();
+          ItemCheck routeCheck = application.getSelectedRouteCheck();
+          if ((routeCheck == null) != (searchCheck == null)) {
+            application.copyCheckEditorItem(true, routeCheck == null ? searchCheck : routeCheck);
+          } else if (routeCheck == searchCheck) {
+            application.copyCheckEditorItem(true, routeCheck);
+          }
         } else if (e.getKeyCode() == KeyEvent.VK_E) {
           selectUniqueItemCheck();
+        } else if (e.getKeyCode() == KeyEvent.VK_D) {
+          duplicateUniqueItemCheck();
         } else {
           // Navigate up or down.
           int delta = UP_DOWN_VALUES.get(e.getKeyCode());

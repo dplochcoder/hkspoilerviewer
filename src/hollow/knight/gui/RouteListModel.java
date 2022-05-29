@@ -95,6 +95,20 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
     return ctx;
   }
 
+  public ItemCheck getCheck(int index) {
+    synchronized (mutex) {
+      if (index < 0 || index >= getSize()) {
+        return null;
+      }
+
+      return route.get(index);
+    }
+  }
+
+  public int indexOfRouteCheck(ItemCheck check) {
+    return route.indexOf(check);
+  }
+
   public State currentState() {
     return getState(insertionPoint - 1);
   }
