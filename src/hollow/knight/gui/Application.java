@@ -106,8 +106,8 @@ public final class Application extends JFrame {
 
     this.searchEngine = new SearchEngine(ctx.roomLabels(), resultFilters);
     this.searchResultsList = createSearchResults();
-    this.searchResultsPane = new JScrollPane(searchResultsList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-        JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+    this.searchResultsPane = new JScrollPane(searchResultsList,
+        JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
     searchResultsPane.setMinimumSize(new Dimension(400, 600));
 
     this.routeList = createRouteList();
@@ -788,7 +788,8 @@ public final class Application extends JFrame {
           searchResultsListModel.moveBookmark(searchResultsList.getSelectedIndex(), up);
           searchResultsList.setSelectedIndex(searchResultsList.getSelectedIndex() + (up ? -1 : 1));
         } else if (e.getKeyCode() == KeyEvent.VK_X) {
-          searchResultsListModel.deleteBookmark(currentState(), searchResultsList.getSelectedIndex());
+          searchResultsListModel.deleteBookmark(currentState(),
+              searchResultsList.getSelectedIndex());
         } else if (e.getKeyCode() == KeyEvent.VK_H) {
           searchResultsListModel.hideResult(searchResultsList.getSelectedIndex());
         } else if (e.getKeyCode() == KeyEvent.VK_U) {
@@ -915,7 +916,8 @@ public final class Application extends JFrame {
           duplicateCheck(getSelectedRouteCheck());
           repopulateSearchResults();
         } else if (e.getKeyCode() == KeyEvent.VK_Z) {
-
+          deleteCheck(getSelectedRouteCheck());
+          refreshLogic(true);
         } else if (e.getKeyCode() == KeyEvent.VK_K) {
           routeListModel.setInsertionPoint(routeListModel.getSize());
           repopulateSearchResults();
