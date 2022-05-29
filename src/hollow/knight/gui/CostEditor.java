@@ -17,9 +17,9 @@ import hollow.knight.logic.Cost;
 import hollow.knight.logic.Term;
 
 public final class CostEditor {
-  private static final ImmutableBiMap<String, Term> COST_TYPES =
-      ImmutableBiMap.of("Charms", Term.charms(), "Essence", Term.essence(), "Geo", Term.geo(),
-          "Grubs", Term.grubs(), "Rancid Eggs", Term.rancidEggs());
+  private static final ImmutableBiMap<String, Term> COST_TYPES = ImmutableBiMap.of("Charms",
+      Term.charms(), "Essence", Term.essence(), "Geo", Term.geo(), "Grubs", Term.grubs(),
+      "Rancid Eggs", Term.rancidEggs(), "Howling Wraiths", Term.scream());
 
   private final JPanel panel;
   private final JComboBox<String> costType;
