@@ -11,7 +11,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -42,9 +41,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.google.gson.internal.Streams;
-import com.google.gson.stream.JsonWriter;
 import hollow.knight.logic.CheckId;
+import hollow.knight.logic.ICDLException;
 import hollow.knight.logic.Item;
 import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.ItemChecks;
@@ -72,6 +70,7 @@ public final class Application extends JFrame {
   private final JMenu icdlMenu;
   private final JMenuItem openEditor;
   private CheckEditor checkEditor;
+  private final JMenuItem saveICDLFolder;
 
   private final Skips skips;
   private final SearchEngine searchEngine;
@@ -95,6 +94,7 @@ public final class Application extends JFrame {
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     openEditor = new JMenuItem("Open Editor");
+    saveICDLFolder = new JMenuItem("Save As ICDL Pack Folder");
     icdlMenu = createICDLMenu();
     setJMenuBar(createMenu());
 
@@ -393,11 +393,24 @@ public final class Application extends JFrame {
     menu.add(new JSeparator());
     openEditor.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed(ActionEvent arg0) {
+      public void actionPerformed(ActionEvent e) {
         openEditor();
       }
     });
     menu.add(openEditor);
+
+    menu.add(new JSeparator());
+    saveICDLFolder.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        try {
+          saveICDLFolder();
+        } catch (IOException | ICDLException ex) {
+          GuiUtil.showStackTrace(Application.this, "Failed to save ICDL folder", ex);
+        }
+      }
+    });
+    menu.add(saveICDLFolder);
 
     return menu;
   }
@@ -505,7 +518,7 @@ public final class Application extends JFrame {
     return bar;
   }
 
-  private static final FileFilter HKS_FILTER = new FileFilter() {
+  private static final FileFilter HKS_OPEN_FILTER = new FileFilter() {
     @Override
     public String getDescription() {
       return "Hollow Knight Spoiler (*.hks, RawSpoiler.json, ctx.json)";
@@ -515,6 +528,30 @@ public final class Application extends JFrame {
     public boolean accept(File f) {
       return f.isDirectory() || f.getName().endsWith(".hks")
           || f.getName().contentEquals("RawSpoiler.json") || f.getName().contentEquals("ctx.json");
+    }
+  };
+
+  private static final FileFilter HKS_SAVE_FILTER = new FileFilter() {
+    @Override
+    public String getDescription() {
+      return "Hollow Knight Spoiler (*.hks)";
+    }
+
+    @Override
+    public boolean accept(File f) {
+      return f.isDirectory() || f.getName().endsWith(".hks");
+    }
+  };
+
+  private static final FileFilter ICDL_FOLDER_FILTER = new FileFilter() {
+    @Override
+    public String getDescription() {
+      return "ICDL Pack Folder";
+    }
+
+    @Override
+    public boolean accept(File f) {
+      return f.isDirectory();
     }
   };
 
@@ -539,7 +576,7 @@ public final class Application extends JFrame {
   private void openFile() throws ParseException, IOException {
     StateContext prevCtx = routeListModel.ctx();
     JFileChooser c = new JFileChooser("Open");
-    c.setFileFilter(HKS_FILTER);
+    c.setFileFilter(HKS_OPEN_FILTER);
 
     if (c.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) {
       return;
@@ -605,7 +642,7 @@ public final class Application extends JFrame {
 
   private void saveFile() throws IOException {
     JFileChooser c = new JFileChooser("Save");
-    c.setFileFilter(HKS_FILTER);
+    c.setFileFilter(HKS_SAVE_FILTER);
 
     if (c.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) {
       return;
@@ -627,9 +664,18 @@ public final class Application extends JFrame {
       path = path + ".hks";
     }
 
-    try (JsonWriter w = new JsonWriter(new FileWriter(path))) {
-      Streams.write(saveData, w);
+    JsonUtil.writeJson(path, saveData);
+  }
+
+  private void saveICDLFolder() throws IOException, ICDLException {
+    JFileChooser c = new JFileChooser("Save");
+    c.setFileFilter(ICDL_FOLDER_FILTER);
+
+    if (c.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) {
+      return;
     }
+
+    ctx().saveICDL(c.getSelectedFile().toPath());
   }
 
   private Skips createSkips() throws ParseException {

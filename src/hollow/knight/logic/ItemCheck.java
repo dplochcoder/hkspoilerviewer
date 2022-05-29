@@ -12,6 +12,8 @@ public abstract class ItemCheck {
 
   public abstract Item item();
 
+  // TODO: Costs apply to the check only in shops.
+  // For non-shops, they apply to the Location. Fix this.
   public abstract Costs costs();
 
   public abstract boolean vanilla();
@@ -26,13 +28,13 @@ public abstract class ItemCheck {
     obj.addProperty("id", id().id());
     obj.addProperty("location", location().name());
     obj.add("item", item().toJson());
-    obj.add("costs", costs().toJson());
+    obj.add("costs", costs().toRawSpoilerJson());
     obj.addProperty("vanilla", vanilla());
     return obj;
   }
 
   public static ItemCheck fromJson(ItemChecks checks, JsonObject json) {
-    return create(CheckId.of(json.get("id").getAsLong()),
+    return create(CheckId.of(json.get("id").getAsInt()),
         checks.getLocation(json.get("location").getAsString()),
         Item.fromJson(checks, json.get("item")), Costs.parse(json.get("costs").getAsJsonArray()),
         json.get("vanilla").getAsBoolean());

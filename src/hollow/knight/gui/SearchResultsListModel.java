@@ -299,12 +299,12 @@ public final class SearchResultsListModel
     if (json != null) {
       JsonObject obj = json.getAsJsonObject();
       for (JsonElement bookmark : obj.get("Bookmarks").getAsJsonArray()) {
-        ItemCheck check = ctx.checks().get(CheckId.of(bookmark.getAsLong()));
+        ItemCheck check = ctx.checks().get(CheckId.of(bookmark.getAsInt()));
         bookmarks.add(check);
         bookmarksSet.add(check);
       }
       for (JsonElement hidden : obj.get("Hidden").getAsJsonArray()) {
-        hiddenResultsSet.add(ctx.checks().get(CheckId.of(hidden.getAsLong())));
+        hiddenResultsSet.add(ctx.checks().get(CheckId.of(hidden.getAsInt())));
       }
     }
   }

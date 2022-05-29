@@ -11,14 +11,14 @@ import com.google.auto.value.AutoValue;
 @AutoValue
 public abstract class CheckId implements Comparable<CheckId> {
 
-  public abstract long id();
+  public abstract int id();
 
   @Override
   public int compareTo(CheckId other) {
     return Long.compare(id(), other.id());
   }
 
-  public static CheckId of(long id) {
+  public static CheckId of(int id) {
     return new AutoValue_CheckId(id);
   }
 

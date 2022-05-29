@@ -255,7 +255,7 @@ public final class CheckEditor extends JFrame implements ItemChecks.Listener {
       costs.add(c);
     }
 
-    Costs newCosts = new Costs(costs);
+    Costs newCosts = new Costs(ImmutableSet.copyOf(costs));
     application.ctx().checks().replace(checkForEdit.id(), checkForEdit.location(),
         checkForEdit.item(), newCosts, false);
     application.refreshLogic(true);

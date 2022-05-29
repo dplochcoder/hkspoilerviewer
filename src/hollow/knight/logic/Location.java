@@ -27,6 +27,10 @@ public abstract class Location {
 
   public abstract String scene();
 
+  public final boolean isShop() {
+    return SHOPS.contains(name());
+  }
+
   public static Location create(RoomLabels rooms, String name, Condition accessCondition)
       throws ParseException {
     return new AutoValue_Location(name, accessCondition, inferScene(rooms, name, accessCondition));

@@ -21,6 +21,7 @@ public abstract class Term implements Comparable<Term> {
     return new AutoValue_Term(name);
   }
 
+  // TODO: Order these.
   private static final Term TRUE = Term.create("TRUE");
 
   public static Term true_() {
@@ -67,6 +68,12 @@ public abstract class Term implements Comparable<Term> {
 
   public static Term charms() {
     return CHARMS;
+  }
+
+  private static final Term SCREAM = Term.create("SCREAM");
+
+  public static Term scream() {
+    return SCREAM;
   }
 
   private static final ImmutableSet<Term> COST_TERMS =

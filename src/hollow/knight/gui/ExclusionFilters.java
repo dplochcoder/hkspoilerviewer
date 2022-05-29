@@ -8,7 +8,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
-import hollow.knight.logic.Location;
 import hollow.knight.logic.RoomLabels;
 import hollow.knight.logic.StateContext;
 
@@ -54,8 +53,7 @@ public final class ExclusionFilters extends SearchResult.Filter {
         ExclusionFilter.create(this, "OUT_OF_LOGIC",
             r -> r.logicType() == SearchResult.LogicType.OUT_OF_LOGIC,
             jcb("Out of Logic (*)", false)),
-        ExclusionFilter.create(this, "SHOPS", r -> Location.shops().contains(r.location().name()),
-            jcb("Shops", true)),
+        ExclusionFilter.create(this, "SHOPS", r -> r.location().isShop(), jcb("Shops", true)),
         ExclusionFilter.create(this, "PURCHASE_LOGIC",
             r -> r.logicType() == SearchResult.LogicType.COST_ACCESSIBLE,
             jcb("Purchase Logic ($)", true)));

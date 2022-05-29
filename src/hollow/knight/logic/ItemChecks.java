@@ -38,7 +38,7 @@ public final class ItemChecks {
   private final Map<Term, Item> itemsByName = new HashMap<>();
   private final BiMultimap<Term, CheckId> idsByItemName = new BiMultimap<>();
 
-  private long nextId = 1;
+  private int nextId = 1;
 
   private ItemChecks() {}
 

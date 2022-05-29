@@ -1,5 +1,6 @@
 package hollow.knight.util;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -9,6 +10,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.google.gson.internal.Streams;
+import com.google.gson.stream.JsonWriter;
 import hollow.knight.logic.ParseException;
 
 public final class JsonUtil {
@@ -28,6 +31,12 @@ public final class JsonUtil {
       return JsonParser.parseString(txt);
     } catch (IOException ex) {
       throw new ParseException("Failed to load " + path + ": " + ex.getMessage());
+    }
+  }
+
+  public static void writeJson(String path, JsonElement json) throws IOException {
+    try (JsonWriter w = new JsonWriter(new FileWriter(path.toString()))) {
+      Streams.write(json, w);
     }
   }
 
