@@ -75,8 +75,8 @@ public final class Application extends JFrame {
   private final Skips skips;
   private final SearchEngine searchEngine;
 
-  private final JList<String> resultsList;
-  private final JScrollPane resultsPane;
+  private final JList<String> searchResultsList;
+  private final JScrollPane searchResultsPane;
   private final JList<String> routeList;
   private final JScrollPane routePane;
 
@@ -105,10 +105,10 @@ public final class Application extends JFrame {
     List<SearchResult.Filter> resultFilters = addFilters(left);
 
     this.searchEngine = new SearchEngine(ctx.roomLabels(), resultFilters);
-    this.resultsList = createSearchResults();
-    this.resultsPane = new JScrollPane(resultsList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+    this.searchResultsList = createSearchResults();
+    this.searchResultsPane = new JScrollPane(searchResultsList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
         JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-    resultsPane.setMinimumSize(new Dimension(400, 600));
+    searchResultsPane.setMinimumSize(new Dimension(400, 600));
 
     this.routeList = createRouteList();
     this.routePane = new JScrollPane(routeList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -117,7 +117,7 @@ public final class Application extends JFrame {
 
     getContentPane().setLayout(new BorderLayout());
     getContentPane().add(left, BorderLayout.LINE_START);
-    getContentPane().add(resultsPane, BorderLayout.CENTER);
+    getContentPane().add(searchResultsPane, BorderLayout.CENTER);
     getContentPane().add(routePane, BorderLayout.LINE_END);
 
     pack();
@@ -226,7 +226,7 @@ public final class Application extends JFrame {
   }
 
   public ItemCheck getSelectedSearchResultCheck() {
-    return searchResultsListModel.getCheck(resultsList.getSelectedIndex());
+    return searchResultsListModel.getCheck(searchResultsList.getSelectedIndex());
   }
 
   public ItemCheck getSelectedRouteCheck() {
@@ -309,7 +309,7 @@ public final class Application extends JFrame {
     refreshLogic(refreshSearchResults);
 
     if (searchCheck == check) {
-      resultsList
+      searchResultsList
           .setSelectedIndex(searchResultsListModel.indexOfSearchResult(ctx().checks().get(newId)));
     }
     if (routeCheck == check) {
@@ -329,7 +329,7 @@ public final class Application extends JFrame {
     refreshLogic(false);
 
     if (searchCheck == check) {
-      resultsList.clearSelection();
+      searchResultsList.clearSelection();
     }
     if (routeCheck == check) {
       routeList.clearSelection();
@@ -779,20 +779,20 @@ public final class Application extends JFrame {
         }
 
         if (e.getKeyCode() == KeyEvent.VK_Q) {
-          resultsList.clearSelection();
+          searchResultsList.clearSelection();
         } else if (e.getKeyCode() == KeyEvent.VK_B) {
-          searchResultsListModel.addBookmark(resultsList.getSelectedIndex());
-          resultsList.setSelectedIndex(searchResultsListModel.numBookmarks() - 1);
+          searchResultsListModel.addBookmark(searchResultsList.getSelectedIndex());
+          searchResultsList.setSelectedIndex(searchResultsListModel.numBookmarks() - 1);
         } else if (e.getKeyCode() == KeyEvent.VK_W || e.getKeyCode() == KeyEvent.VK_S) {
           boolean up = e.getKeyCode() == KeyEvent.VK_W;
-          searchResultsListModel.moveBookmark(resultsList.getSelectedIndex(), up);
-          resultsList.setSelectedIndex(resultsList.getSelectedIndex() + (up ? -1 : 1));
+          searchResultsListModel.moveBookmark(searchResultsList.getSelectedIndex(), up);
+          searchResultsList.setSelectedIndex(searchResultsList.getSelectedIndex() + (up ? -1 : 1));
         } else if (e.getKeyCode() == KeyEvent.VK_X) {
-          searchResultsListModel.deleteBookmark(currentState(), resultsList.getSelectedIndex());
+          searchResultsListModel.deleteBookmark(currentState(), searchResultsList.getSelectedIndex());
         } else if (e.getKeyCode() == KeyEvent.VK_H) {
-          searchResultsListModel.hideResult(resultsList.getSelectedIndex());
+          searchResultsListModel.hideResult(searchResultsList.getSelectedIndex());
         } else if (e.getKeyCode() == KeyEvent.VK_U) {
-          searchResultsListModel.unhideResult(resultsList.getSelectedIndex());
+          searchResultsListModel.unhideResult(searchResultsList.getSelectedIndex());
         } else if (e.getKeyCode() == KeyEvent.VK_E) {
           ItemCheck check = getSelectedSearchResultCheck();
           if (editCheck(check) && getSelectedRouteCheck() != check) {
@@ -819,14 +819,14 @@ public final class Application extends JFrame {
         } else {
           // Navigate up or down.
           int delta = UP_DOWN_VALUES.get(e.getKeyCode());
-          int newIndex = resultsList.getSelectedIndex() + delta;
+          int newIndex = searchResultsList.getSelectedIndex() + delta;
           if (newIndex < 0) {
             newIndex = 0;
-          } else if (newIndex >= resultsList.getModel().getSize()) {
-            newIndex = resultsList.getModel().getSize() - 1;
+          } else if (newIndex >= searchResultsList.getModel().getSize()) {
+            newIndex = searchResultsList.getModel().getSize() - 1;
           }
 
-          resultsList.setSelectedIndex(newIndex);
+          searchResultsList.setSelectedIndex(newIndex);
         }
 
         repopulateSearchResults();
@@ -857,7 +857,7 @@ public final class Application extends JFrame {
     ImmutableList<SearchResult> results = searchEngine.getSearchResults(currentState());
     searchResultsListModel.updateResults(currentState(), results);
 
-    if (needsExpansion(resultsPane) || needsExpansion(routePane)) {
+    if (needsExpansion(searchResultsPane) || needsExpansion(routePane)) {
       pack();
     }
     repaint();
@@ -908,7 +908,7 @@ public final class Application extends JFrame {
         } else if (e.getKeyCode() == KeyEvent.VK_E) {
           ItemCheck check = getSelectedRouteCheck();
           if (editCheck(check) && getSelectedSearchResultCheck() != check) {
-            resultsList.clearSelection();
+            searchResultsList.clearSelection();
           }
           refreshLogic(true);
         } else if (e.getKeyCode() == KeyEvent.VK_C) {
