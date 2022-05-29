@@ -9,12 +9,11 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.common.primitives.Ints;
 import hollow.knight.logic.Cost;
 import hollow.knight.logic.Term;
+import hollow.knight.util.GuiUtil;
 
 public final class CostEditor {
   private static final ImmutableBiMap<String, Term> COST_TYPES = ImmutableBiMap.of("Charms",
@@ -40,7 +39,8 @@ public final class CostEditor {
     panel.add(costType);
 
     this.numericField = new JTextField(6);
-    numericField.getDocument().addDocumentListener(numericFieldDocListener());
+    numericField.getDocument()
+        .addDocumentListener(GuiUtil.newDocumentListener(this::updateNumericFieldColor));
     panel.add(numericField);
 
     moveUp = moveButton("Up", () -> this.upNeighbor);
@@ -59,25 +59,6 @@ public final class CostEditor {
     panel.add(delete);
 
     setCost(cost);
-  }
-
-  private DocumentListener numericFieldDocListener() {
-    return new DocumentListener() {
-      @Override
-      public void changedUpdate(DocumentEvent e) {
-        updateNumericFieldColor();
-      }
-
-      @Override
-      public void insertUpdate(DocumentEvent e) {
-        updateNumericFieldColor();
-      }
-
-      @Override
-      public void removeUpdate(DocumentEvent e) {
-        updateNumericFieldColor();
-      }
-    };
   }
 
   private void updateNumericFieldColor() {

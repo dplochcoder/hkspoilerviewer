@@ -9,9 +9,8 @@ import java.util.Set;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import hollow.knight.logic.Item;
+import hollow.knight.util.GuiUtil;
 
 public final class CheckEditorItemSearchField {
 
@@ -56,22 +55,7 @@ public final class CheckEditorItemSearchField {
 
   private JTextField createTextField() {
     JTextField field = new JTextField(16);
-    field.getDocument().addDocumentListener(new DocumentListener() {
-      @Override
-      public void changedUpdate(DocumentEvent e) {
-        CheckEditorItemSearchField.this.textChanged();
-      }
-
-      @Override
-      public void insertUpdate(DocumentEvent e) {
-        CheckEditorItemSearchField.this.textChanged();
-      }
-
-      @Override
-      public void removeUpdate(DocumentEvent e) {
-        CheckEditorItemSearchField.this.textChanged();
-      }
-    });
+    field.getDocument().addDocumentListener(GuiUtil.newDocumentListener(this::textChanged));
     return field;
   }
 

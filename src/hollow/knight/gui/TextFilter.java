@@ -10,10 +10,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import hollow.knight.logic.RoomLabels;
 import hollow.knight.logic.StateContext;
+import hollow.knight.util.GuiUtil;
 
 public final class TextFilter extends SearchResult.Filter {
 
@@ -49,22 +48,7 @@ public final class TextFilter extends SearchResult.Filter {
 
   private JTextField createTextField() {
     JTextField field = new JTextField(16);
-    field.getDocument().addDocumentListener(new DocumentListener() {
-      @Override
-      public void changedUpdate(DocumentEvent e) {
-        TextFilter.this.filterChanged();
-      }
-
-      @Override
-      public void insertUpdate(DocumentEvent e) {
-        TextFilter.this.filterChanged();
-      }
-
-      @Override
-      public void removeUpdate(DocumentEvent e) {
-        TextFilter.this.filterChanged();
-      }
-    });
+    field.getDocument().addDocumentListener(GuiUtil.newDocumentListener(this::filterChanged));
     return field;
   }
 
