@@ -198,7 +198,8 @@ public final class StateContext {
 
     // Group ItemChecks by Location.
     Multimap<String, ItemCheck> checksByLocation = HashMultimap.create();
-    checks().allChecks().forEach(c -> checksByLocation.put(c.location().name(), c));
+    checks().allChecks().filter(c -> !c.vanilla())
+        .forEach(c -> checksByLocation.put(c.location().name(), c));
 
     // Output by location.
     for (String locName : checksByLocation.keySet()) {
