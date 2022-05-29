@@ -65,7 +65,7 @@ public final class CostEditor {
     String value = numericField.getText();
     Integer intValue = Ints.tryParse(value.trim());
     if (intValue == null || intValue < 0) {
-      numericField.setBackground(Color.red.brighter());
+      numericField.setBackground(new Color(0.7f, 1.0f, 1.0f));
     } else {
       numericField.setBackground(Color.white);
     }
