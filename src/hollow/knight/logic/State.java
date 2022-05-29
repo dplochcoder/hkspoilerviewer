@@ -88,6 +88,7 @@ public class State {
         }
       }
       ctx().checks().allChecks().forEach(c -> {
+        builder.index(c.location().accessCondition());
         if (builder.index(c.condition())) {
           newChecks.add(c);
         }
