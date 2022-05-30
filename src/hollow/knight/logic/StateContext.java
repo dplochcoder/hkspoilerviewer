@@ -241,7 +241,7 @@ public final class StateContext {
         }
 
         JsonObject randoTag = new JsonObject();
-        randoTag.addProperty("$type", "RandomizerMode.IC.RandoItemTag, RandomizerMod");
+        randoTag.addProperty("$type", "RandomizerMod.IC.RandoItemTag, RandomizerMod");
         randoTag.addProperty("id", check.id().id());
         randoTag.addProperty("obtained", false);
         tagsArr.add(randoTag);
