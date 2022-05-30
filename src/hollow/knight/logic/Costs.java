@@ -54,6 +54,10 @@ public final class Costs {
         .value();
   }
 
+  public int getCostTermOrDefault(Term term) {
+    return hasCostTerm(term) ? getCostTerm(term) : 0;
+  }
+
   public JsonArray toRawSpoilerJson() {
     JsonArray arr = new JsonArray();
     costs.forEach(c -> arr.add(c.toRawSpoilerJson()));

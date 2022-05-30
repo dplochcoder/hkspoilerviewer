@@ -2,8 +2,8 @@ package hollow.knight.logic;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Stream;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 
 /** Mutable state of a run; can be deep-copied. */
 public class State {
@@ -30,9 +30,16 @@ public class State {
     return ctx;
   }
 
-  public ImmutableSet<ItemCheck> unobtained() {
-    return ctx.checks().allChecks().filter(id -> !obtains.contains(id))
-        .collect(ImmutableSet.toImmutableSet());
+  public Stream<ItemCheck> obtained() {
+    return obtains.stream();
+  }
+
+  public Stream<ItemCheck> unobtained() {
+    return ctx.checks().allChecks().filter(id -> !obtains.contains(id));
+  }
+
+  public Stream<ItemCheck> accessible() {
+    return potentialState.obtained();
   }
 
   public boolean isAcquired(ItemCheck check) {

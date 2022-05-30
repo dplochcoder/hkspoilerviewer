@@ -1,11 +1,10 @@
 package hollow.knight.gui;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.ImmutableList;
-import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.RoomLabels;
 import hollow.knight.logic.State;
 import hollow.knight.logic.StateContext;
@@ -34,16 +33,13 @@ public final class SearchEngine {
   public ImmutableList<SearchResult> getSearchResults(State state) {
     // Step 1: Collect all results.
     List<SearchResult> results = new ArrayList<>();
-    for (ItemCheck check : state.unobtained()) {
-      SearchResult result = SearchResult.create(check, state);
-      results.add(result);
-    }
+    state.unobtained().forEach(c -> results.add(SearchResult.create(c, state)));
 
     // Step 2: Apply filters.
-    results = results.stream().filter(r -> accept(state.ctx(), r)).collect(Collectors.toList());
+    results.removeIf(r -> !accept(state.ctx(), r));
 
     // Step 3: Sort results.
-    results = results.stream().sorted(this::sortResults).collect(Collectors.toList());
+    Collections.sort(results, this::sortResults);
 
     return ImmutableList.copyOf(results);
   }

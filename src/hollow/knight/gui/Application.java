@@ -3,6 +3,7 @@ package hollow.knight.gui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
@@ -14,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
@@ -79,6 +81,7 @@ public final class Application extends JFrame {
   private final JScrollPane searchResultsPane;
   private final JList<String> routeList;
   private final JScrollPane routePane;
+  private final List<RouteCounter> routeCounters;
 
   public Application(StateContext ctx, Config cfg) throws ParseException {
     this.cfg = cfg;
@@ -110,15 +113,26 @@ public final class Application extends JFrame {
         JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
     searchResultsPane.setMinimumSize(new Dimension(400, 600));
 
+    JPanel rightPane = new JPanel();
+    rightPane.setLayout(new BoxLayout(rightPane, BoxLayout.PAGE_AXIS));
+
     this.routeList = createRouteList();
     this.routePane = new JScrollPane(routeList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
         JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
     routePane.setMinimumSize(new Dimension(250, 600));
+    rightPane.add(routePane);
+
+    this.routeCounters = createRouteCounters();
+    JPanel countersPane = new JPanel();
+    countersPane.setLayout(new GridLayout(routeCounters.size() / 2, 2));
+    routeCounters.forEach(c -> countersPane.add(c.getLabel()));
+    countersPane.setMaximumSize(new Dimension(1_000_000, 160));
+    rightPane.add(countersPane);
 
     getContentPane().setLayout(new BorderLayout());
     getContentPane().add(left, BorderLayout.LINE_START);
     getContentPane().add(searchResultsPane, BorderLayout.CENTER);
-    getContentPane().add(routePane, BorderLayout.LINE_END);
+    getContentPane().add(rightPane, BorderLayout.LINE_END);
 
     pack();
     repopulateSearchResults();
@@ -858,6 +872,7 @@ public final class Application extends JFrame {
   private void repopulateSearchResults() {
     ImmutableList<SearchResult> results = searchEngine.getSearchResults(currentState());
     searchResultsListModel.updateResults(currentState(), results);
+    routeCounters.forEach(c -> c.update(currentState()));
 
     if (needsExpansion(searchResultsPane) || needsExpansion(routePane)) {
       pack();
@@ -951,6 +966,26 @@ public final class Application extends JFrame {
         return c;
       }
     };
+  }
+
+  private List<RouteCounter> createRouteCounters() {
+    List<RouteCounter> list = new ArrayList<>();
+    list.add(new RouteCounter("Grubs", RouteCounter.termFunction(Term.grubs())));
+    list.add(new RouteCounter("$Grubs", RouteCounter.purchaseTermFunction(Term.grubs())));
+    list.add(new RouteCounter("Essence", RouteCounter.termFunction(Term.essence())));
+    list.add(new RouteCounter("$Essence", RouteCounter.purchaseTermFunction(Term.essence())));
+    list.add(new RouteCounter("Charms", RouteCounter.termFunction(Term.charms())));
+    list.add(new RouteCounter("$Charms", RouteCounter.purchaseTermFunction(Term.charms())));
+    list.add(new RouteCounter("Rancid Eggs", RouteCounter.termFunction(Term.rancidEggs())));
+    list.add(
+        new RouteCounter("$Rancid Eggs", RouteCounter.purchaseTermFunction(Term.rancidEggs())));
+    list.add(new RouteCounter("Geo", RouteCounter.termFunction(Term.geo())));
+    list.add(new RouteCounter("$Geo", RouteCounter.purchaseTermFunction(Term.geo())));
+    list.add(new RouteCounter("Relic Geo", RouteCounter::relicGeoCounter));
+    list.add(new RouteCounter("$Relic Geo", RouteCounter::purchaseRelicGeoCounter));
+    list.add(new RouteCounter("Spent Geo", RouteCounter::spentGeoCounter));
+    list.add(new RouteCounter("Spendable Geo", RouteCounter::spendableGeoCounter));
+    return list;
   }
 
   private Query getQueryFromFile() throws ParseException {
