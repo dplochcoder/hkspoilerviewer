@@ -147,7 +147,7 @@ public final class StateContext {
         setters);
   }
 
-  private static ImmutableSet<String> getTagTypes(JsonObject tag) {
+  private static ImmutableSet<String> getTypes(JsonObject tag) {
     return Arrays.stream(tag.get("$type").getAsString().split(", "))
         .collect(ImmutableSet.toImmutableSet());
   }
@@ -156,7 +156,7 @@ public final class StateContext {
     JsonArray newArr = new JsonArray();
     if (obj.has("tags") && obj.get("tags").isJsonArray()) {
       for (JsonElement tag : obj.get("tags").getAsJsonArray()) {
-        ImmutableSet<String> tagTypes = getTagTypes(tag.getAsJsonObject());
+        ImmutableSet<String> tagTypes = getTypes(tag.getAsJsonObject());
         if (Sets.intersection(tagTypes, filterTags).isEmpty()) {
           newArr.add(tag);
         }
@@ -258,6 +258,7 @@ public final class StateContext {
         syncTag.addProperty("Message", "SyncedItemTag");
         tagsArr.add(syncTag);
 
+        itemObj.add("tags", tagsArr);
         itemsArr.add(itemObj);
       }
       locObj.add("Items", itemsArr);
@@ -266,6 +267,41 @@ public final class StateContext {
     }
 
     return placements;
+  }
+
+  private JsonObject withICDLCharmCosts(JsonObject json) {
+    JsonArray modules = json.get("Modules").getAsJsonArray();
+    JsonArray newModules = new JsonArray();
+    for (JsonElement module : modules) {
+      ImmutableSet<String> types = getTypes(module.getAsJsonObject());
+      if (types.contains("ItemChanger.Modules.PlayerDataEditModule")) {
+        JsonArray origEdits = module.getAsJsonObject().get("PDEdits").getAsJsonArray();
+        JsonArray newEdits = new JsonArray();
+        for (JsonElement edit : origEdits) {
+          JsonObject editObj = edit.getAsJsonObject();
+          if (!editObj.get("FieldName").getAsString().startsWith("charmCost_")) {
+            newEdits.add(editObj);
+          }
+        }
+
+        for (int i = 0; i < notchCosts().costs().size(); i++) {
+          JsonObject notchCost = new JsonObject();
+          notchCost.addProperty("Value", notchCosts().notchCost(i + 1));
+          notchCost.addProperty("FieldName", "charmCost_" + (i + 1));
+          newEdits.add(notchCost);
+        }
+
+        JsonObject newModule = module.getAsJsonObject().deepCopy();
+        newModule.add("PDEdits", newEdits);
+        newModules.add(newModule);
+      } else {
+        newModules.add(module);
+      }
+    }
+
+    JsonObject mods = json.deepCopy();
+    mods.add("Modules", newModules);
+    return mods;
   }
 
   private JsonArray createNewSpoilerPlacements(JsonArray origPlacements) {
@@ -322,10 +358,12 @@ public final class StateContext {
 
     JsonObject newICDLJson = icdlJson.deepCopy();
     newICDLJson.add("Placements", calculatePlacementsJson(itemJsons, locationJsons));
+    newICDLJson.add("mods", withICDLCharmCosts(newICDLJson.get("mods").getAsJsonObject()));
 
     JsonObject newRawSpoilerJson = rawSpoilerJson.deepCopy();
     newRawSpoilerJson.add("itemPlacements",
         createNewSpoilerPlacements(rawSpoilerJson.get("itemPlacements").getAsJsonArray()));
+    newRawSpoilerJson.add("notchCosts", notchCosts().toRawSpoilerJsonArray());
 
     String packName = JOptionPane.showInputDialog(null, "Name?");
     if (packName == null || packName.trim().isEmpty()) {

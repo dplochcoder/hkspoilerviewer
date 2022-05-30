@@ -27,11 +27,15 @@ public final class NotchCosts {
     return notchCosts.get(charmId - 1);
   }
 
-  public JsonObject toJson() {
-    JsonObject obj = new JsonObject();
+  public JsonArray toRawSpoilerJsonArray() {
     JsonArray arr = new JsonArray();
     notchCosts.forEach(arr::add);
-    obj.add("notchCosts", arr);
+    return arr;
+  }
+
+  public JsonObject toJson() {
+    JsonObject obj = new JsonObject();
+    obj.add("notchCosts", toRawSpoilerJsonArray());
     return obj;
   }
 
