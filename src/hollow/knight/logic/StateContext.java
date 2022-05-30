@@ -112,12 +112,14 @@ public final class StateContext {
   public void saveMutables(JsonObject obj) {
     obj.add("ICDLItemChecks", checks().toJson());
     obj.add("ICDLNotchCosts", notchCosts().toJson());
+    obj.add("ICDLTolerances", tolerances.toJson());
   }
 
   public void loadMutables(JsonObject obj) {
     if (obj.has("ICDLItemChecks")) {
       checks().fromJson(obj.get("ICDLItemChecks").getAsJsonObject());
       notchCosts().parse(obj.get("ICDLNotchCosts").getAsJsonObject());
+      setTolerances(TermMap.fromJson(obj.get("ICDLTolerances").getAsJsonObject()));
     }
   }
 
