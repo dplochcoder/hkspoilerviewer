@@ -383,7 +383,15 @@ public final class Application extends JFrame {
   }
 
   private void editNotchCosts() {
-    if (NotchCostsEditor.editNotchCosts(this, ctx())) {
+    NotchCostsEditor editor = new NotchCostsEditor(ctx());
+    if (editor.performEdit(this)) {
+      refreshLogic(true);
+    }
+  }
+
+  private void editTolerances() {
+    TolerancesEditor editor = new TolerancesEditor(ctx());
+    if (editor.performEdit(this)) {
       refreshLogic(true);
     }
   }
@@ -429,6 +437,15 @@ public final class Application extends JFrame {
       }
     });
     menu.add(editNotches);
+
+    JMenuItem editTolerances = new JMenuItem("Edit Tolerances");
+    editTolerances.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        editTolerances();
+      }
+    });
+    menu.add(editTolerances);
 
     menu.add(new JSeparator());
     openEditor.addActionListener(new ActionListener() {

@@ -37,7 +37,7 @@ public final class StateContext {
   private final Waypoints waypoints;
   private final ItemChecks checks;
 
-  private final ImmutableTermMap tolerances;
+  private final MutableTermMap tolerances;
   private final ImmutableTermMap setters;
 
   public StateContext(JsonObject rawSpoilerJson, JsonObject icdlJson, CharmIds charmIds,
@@ -51,7 +51,7 @@ public final class StateContext {
     this.notchCosts = notchCosts;
     this.waypoints = waypoints;
     this.checks = checks;
-    this.tolerances = ImmutableTermMap.copyOf(tolerances);
+    this.tolerances = new MutableTermMap(tolerances);
     this.setters = ImmutableTermMap.copyOf(setters);
   }
 
@@ -87,8 +87,13 @@ public final class StateContext {
     return checks;
   }
 
-  public ImmutableTermMap tolerances() {
+  public TermMap tolerances() {
     return tolerances;
+  }
+
+  public void setTolerances(TermMap newTolerances) {
+    tolerances.clear();
+    tolerances.add(newTolerances);
   }
 
   public State newInitialState() {
@@ -339,6 +344,23 @@ public final class StateContext {
     return arr;
   }
 
+  private JsonObject updateInitialProgression(JsonObject initialProgression) {
+    JsonObject obj = initialProgression.deepCopy();
+    JsonArray setters = obj.get("Setters").getAsJsonArray();
+
+    JsonArray newSetters = new JsonArray();
+    for (JsonElement setter : setters) {
+      JsonObject sObj = setter.getAsJsonObject().deepCopy();
+      Term t = Term.create(sObj.get("Term").getAsString());
+      if (Term.costTerms().contains(t)) {
+        sObj.addProperty("Value", tolerances().get(t));
+      }
+      newSetters.add(sObj);
+    }
+    obj.add("Setters", newSetters);
+    return obj;
+  }
+
   public void saveICDL(Path p) throws IOException, ICDLException {
     // Sanitize items and locations into maps.
     Map<Term, JsonObject> itemJsons = new HashMap<>();
@@ -364,6 +386,8 @@ public final class StateContext {
     newRawSpoilerJson.add("itemPlacements",
         createNewSpoilerPlacements(rawSpoilerJson.get("itemPlacements").getAsJsonArray()));
     newRawSpoilerJson.add("notchCosts", notchCosts().toRawSpoilerJsonArray());
+    newRawSpoilerJson.add("InitialProgression",
+        updateInitialProgression(newRawSpoilerJson.get("InitialProgression").getAsJsonObject()));
 
     String packName = JOptionPane.showInputDialog(null, "Name?");
     if (packName == null || packName.trim().isEmpty()) {
