@@ -946,6 +946,8 @@ public final class Application extends JFrame {
           }
           refreshLogic(true);
         } else if (e.getKeyCode() == KeyEvent.VK_C) {
+          copyCheckEditorItem(true, getSelectedRouteCheck());
+        } else if (e.getKeyCode() == KeyEvent.VK_D) {
           duplicateCheck(getSelectedRouteCheck());
           repopulateSearchResults();
         } else if (e.getKeyCode() == KeyEvent.VK_Z) {
