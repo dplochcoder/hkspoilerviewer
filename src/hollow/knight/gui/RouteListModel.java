@@ -15,6 +15,8 @@ import javax.swing.ListModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import javax.swing.filechooser.FileFilter;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -371,10 +373,41 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
   }
 
   @Override
+  public void multipleChecksRemoved(ImmutableSet<ItemCheck> checks) {
+    boolean anyRemoved = false;
+    synchronized (mutex) {
+      anyRemoved = route.removeIf(checks::contains);
+      resultStrings.subList(route.size(), resultStrings.size()).clear();
+    }
+
+    if (anyRemoved) {
+      refreshLogic();
+    }
+  }
+
+  @Override
   public void checkReplaced(ItemCheck before, ItemCheck after) {
     int index = route.indexOf(before);
     if (index != -1) {
       replaceCheck(index, after);
+    }
+  }
+
+  @Override
+  public void multipleChecksReplaced(ImmutableMap<ItemCheck, ItemCheck> replacements) {
+    boolean anyReplaced = false;
+    synchronized (mutex) {
+      for (int i = 0; i < route.size(); i++) {
+        ItemCheck replacement = replacements.get(route.get(i));
+        if (replacement != null) {
+          route.set(i, replacement);
+          anyReplaced = true;
+        }
+      }
+    }
+
+    if (anyReplaced) {
+      refreshLogic();
     }
   }
 

@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
@@ -22,9 +23,21 @@ public final class ItemChecks {
   public interface Listener {
     void checkAdded(ItemCheck check);
 
+    default void multipleChecksAdded(ImmutableSet<ItemCheck> checks) {
+      checks.forEach(this::checkAdded);
+    }
+
     void checkRemoved(ItemCheck check);
 
+    default void multipleChecksRemoved(ImmutableSet<ItemCheck> checks) {
+      checks.forEach(this::checkRemoved);
+    }
+
     void checkReplaced(ItemCheck before, ItemCheck after);
+
+    default void multipleChecksReplaced(ImmutableMap<ItemCheck, ItemCheck> replacements) {
+      replacements.forEach(this::checkReplaced);
+    }
   }
 
   private final Object mutex = new Object();
@@ -124,24 +137,35 @@ public final class ItemChecks {
 
   public void reduceToNothing(Predicate<ItemCheck> filter) {
     // Keep at least one instance of each location alive.
-    Set<CheckId> toRemove = checksById.values().stream().filter(filter).filter(c -> !c.vanilla())
-        .map(ItemCheck::id).collect(ImmutableSet.toImmutableSet());
-    Multimap<String, CheckId> modifiedLocations =
-        Multimaps.index(toRemove, id -> checksById.get(id).location().name());
+    ImmutableSet<ItemCheck> toRemove = checksById.values().stream().filter(filter)
+        .filter(c -> !c.vanilla()).collect(ImmutableSet.toImmutableSet());
+    Multimap<String, ItemCheck> modifiedLocations =
+        Multimaps.index(toRemove, c -> checksById.get(c.id()).location().name());
 
+    ImmutableSet.Builder<ItemCheck> addedBuilder = ImmutableSet.builder();
     for (String loc : modifiedLocations.keySet()) {
       if (loc.equals("Start")) {
         continue;
       }
 
-      Collection<CheckId> removing = modifiedLocations.get(loc);
-      ItemCheck template = checksById.get(idsByLocation.getKey(loc).iterator().next());
+      Collection<ItemCheck> removing = modifiedLocations.get(loc);
+      ItemCheck template = removing.iterator().next();
 
-      removing.forEach(this::remove);
+      removing.forEach(c -> removeInternal(c.id()));
       if (!idsByLocation.containsKey(loc)) {
-        placeNew(template.location(), nothing(), Costs.defaultCosts(template.location().name()),
-            false);
+        ItemCheck toAdd = ItemCheck.create(newId(), template.location(), nothing(),
+            Costs.defaultCosts(template.location().name()), false);
+        addedBuilder.add(toAdd);
+        addInternal(toAdd);
       }
+    }
+
+    if (!toRemove.isEmpty()) {
+      listeners().forEach(l -> l.multipleChecksRemoved(toRemove));
+    }
+    ImmutableSet<ItemCheck> added = addedBuilder.build();
+    if (!added.isEmpty()) {
+      listeners().forEach(l -> l.multipleChecksAdded(added));
     }
   }
 
@@ -149,13 +173,24 @@ public final class ItemChecks {
     ImmutableList<CheckId> sorted =
         checksById.keySet().stream().sorted().collect(ImmutableList.toImmutableList());
 
+    ImmutableMap.Builder<ItemCheck, ItemCheck> replacedBuilder = ImmutableMap.builder();
     for (int i = 0; i < sorted.size(); i++) {
       CheckId id = sorted.get(i);
 
       if (id.id() != i + 1) {
         ItemCheck check = checksById.get(id);
-        replace(id, check.location(), check.item(), check.costs(), check.vanilla());
+        ItemCheck newCheck = ItemCheck.create(CheckId.of(i + 1), check.location(), check.item(),
+            check.costs(), check.vanilla());
+
+        removeInternal(check.id());
+        addInternal(newCheck);
+        replacedBuilder.put(check, newCheck);
       }
+    }
+
+    ImmutableMap<ItemCheck, ItemCheck> replaced = replacedBuilder.build();
+    if (!replaced.isEmpty()) {
+      listeners().forEach(l -> l.multipleChecksReplaced(replaced));
     }
   }
 
