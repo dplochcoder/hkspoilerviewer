@@ -247,6 +247,7 @@ public final class Application extends JFrame {
 
   private CheckEditorPresence ensureCheckEditor() {
     if (checkEditor != null) {
+      checkEditor.requestFocus();
       return CheckEditorPresence.ALREADY_OPEN;
     } else if (!isICDL) {
       JOptionPane.showMessageDialog(this, "Must open an ICDL ctx.json file for this action",
