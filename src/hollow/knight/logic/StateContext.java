@@ -189,7 +189,7 @@ public final class StateContext {
     Multiset<String> assignedSyncIds = HashMultiset.create();
     Map<ItemCheck, String> syncIds = new HashMap<>();
     checks().allChecks().forEach(c -> {
-      String id = c.location().name() + ";" + c.item().term();
+      String id = c.location().name() + ";" + c.item().term().name();
       int prev = assignedSyncIds.add(id, 1);
       syncIds.put(c, id + ((prev > 0) ? String.valueOf(prev + 1) : ""));
     });
