@@ -376,6 +376,8 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
   public void multipleChecksRemoved(ImmutableSet<ItemCheck> checks) {
     boolean anyRemoved = false;
     synchronized (mutex) {
+      insertionPoint -= route.subList(0, insertionPoint).stream().filter(checks::contains).count();
+
       anyRemoved = route.removeIf(checks::contains);
       resultStrings.subList(route.size(), resultStrings.size()).clear();
     }
