@@ -116,6 +116,26 @@ public final class Costs {
         return new Costs(Cost.createGeo(600));
       case "Unbreakable_Strength":
         return new Costs(Cost.createGeo(750));
+      case "Crossroads_Stag":
+        return new Costs(Cost.createGeo(50));
+      case "Queen's_Station_Stag":
+        return new Costs(Cost.createGeo(120));
+      case "Greenpath_Stag":
+        return new Costs(Cost.createGeo(140));
+      case "City_Storerooms_Stag":
+        return new Costs(Cost.createGeo(200));
+      case "Queen's_Gardens_Stag":
+        return new Costs(Cost.createGeo(200));
+      case "Distant_Village_Stag":
+        return new Costs(Cost.createGeo(250));
+      case "Hidden_Station_Stag":
+        return new Costs(Cost.createGeo(300));
+      case "King's_Station_Stag":
+        return new Costs(Cost.createGeo(300));
+      case "Dash_Slash":
+        return new Costs(Cost.createGeo(800));
+      case "Vessel_Fragment-Basin":
+        return new Costs(Cost.createGeo(3000));
       default:
         return none();
     }
