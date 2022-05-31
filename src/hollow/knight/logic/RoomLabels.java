@@ -6,7 +6,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSetMultimap;
 import com.google.gson.JsonObject;
-import hollow.knight.util.JsonUtil;
+import hollow.knight.io.JsonUtil;
 
 public final class RoomLabels {
   public static enum Type {

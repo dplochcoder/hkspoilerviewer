@@ -10,7 +10,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import hollow.knight.logic.Item;
-import hollow.knight.util.GuiUtil;
 
 public final class CheckEditorItemSearchField {
 

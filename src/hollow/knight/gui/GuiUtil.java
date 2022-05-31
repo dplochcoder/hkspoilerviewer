@@ -1,4 +1,4 @@
-package hollow.knight.util;
+package hollow.knight.gui;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;

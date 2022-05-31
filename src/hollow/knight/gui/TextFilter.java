@@ -10,7 +10,6 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import hollow.knight.logic.RoomLabels;
 import hollow.knight.logic.StateContext;
-import hollow.knight.util.GuiUtil;
 
 public final class TextFilter extends SearchResult.Filter {
 

@@ -8,7 +8,6 @@ import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import hollow.knight.logic.RoomLabels;
 import hollow.knight.logic.StateContext;
-import hollow.knight.util.GuiUtil;
 
 public final class ExclusionFilters extends SearchResult.Filter {
   @AutoValue

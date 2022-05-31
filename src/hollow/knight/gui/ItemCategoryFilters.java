@@ -10,10 +10,9 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import hollow.knight.io.JsonUtil;
 import hollow.knight.logic.ParseException;
 import hollow.knight.logic.StateContext;
-import hollow.knight.util.GuiUtil;
-import hollow.knight.util.JsonUtil;
 
 // Canonical filters with check box toggles.
 public final class ItemCategoryFilters extends SearchResult.Filter {

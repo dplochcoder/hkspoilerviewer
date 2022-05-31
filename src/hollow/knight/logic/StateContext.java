@@ -22,8 +22,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import hollow.knight.gui.Main;
-import hollow.knight.util.JsonUtil;
+import hollow.knight.io.JsonUtil;
+import hollow.knight.main.Main;
 
 /** Mostly immutable context for a State object. */
 public final class StateContext {

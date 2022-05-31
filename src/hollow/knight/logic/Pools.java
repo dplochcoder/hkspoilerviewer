@@ -7,7 +7,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import hollow.knight.util.JsonUtil;
+import hollow.knight.io.JsonUtil;
 
 public final class Pools {
 

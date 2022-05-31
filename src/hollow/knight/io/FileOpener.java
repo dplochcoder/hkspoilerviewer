@@ -5,12 +5,11 @@ import java.nio.file.Paths;
 import java.util.List;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonObject;
-import hollow.knight.gui.Main;
 import hollow.knight.logic.ParseException;
 import hollow.knight.logic.SaveInterface;
 import hollow.knight.logic.StateContext;
 import hollow.knight.logic.Version;
-import hollow.knight.util.JsonUtil;
+import hollow.knight.main.Main;
 
 public final class FileOpener {
   private final ImmutableList<SaveInterface> saveInterfaces;

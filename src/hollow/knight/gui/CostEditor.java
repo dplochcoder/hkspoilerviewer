@@ -11,7 +11,6 @@ import com.google.common.collect.ImmutableBiMap;
 import com.google.common.primitives.Ints;
 import hollow.knight.logic.Cost;
 import hollow.knight.logic.Term;
-import hollow.knight.util.GuiUtil;
 
 public final class CostEditor {
   private static final ImmutableBiMap<String, Term> COST_TYPES = ImmutableBiMap.of("Charms",

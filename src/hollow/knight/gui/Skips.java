@@ -14,11 +14,10 @@ import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import hollow.knight.io.JsonUtil;
 import hollow.knight.logic.ParseException;
 import hollow.knight.logic.State;
 import hollow.knight.logic.Term;
-import hollow.knight.util.GuiUtil;
-import hollow.knight.util.JsonUtil;
 
 // UI object for enabling skips not part of the seed settings, to expand logic.
 public final class Skips {

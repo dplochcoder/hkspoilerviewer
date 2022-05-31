@@ -34,7 +34,6 @@ import hollow.knight.logic.Item;
 import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.ItemChecks;
 import hollow.knight.logic.Term;
-import hollow.knight.util.GuiUtil;
 
 // Free-floating UI for editing a single check.
 public final class CheckEditor extends JFrame implements ItemChecks.Listener {

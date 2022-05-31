@@ -42,6 +42,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import hollow.knight.io.FileOpener;
+import hollow.knight.io.JsonUtil;
 import hollow.knight.logic.CheckId;
 import hollow.knight.logic.ICDLException;
 import hollow.knight.logic.Item;
@@ -53,8 +54,7 @@ import hollow.knight.logic.SaveInterface;
 import hollow.knight.logic.State;
 import hollow.knight.logic.StateContext;
 import hollow.knight.logic.Term;
-import hollow.knight.util.GuiUtil;
-import hollow.knight.util.JsonUtil;
+import hollow.knight.main.Main;
 
 public final class Application extends JFrame {
   private static final long serialVersionUID = 1L;

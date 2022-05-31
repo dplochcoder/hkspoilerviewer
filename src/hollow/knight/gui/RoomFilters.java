@@ -19,7 +19,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import hollow.knight.logic.RoomLabels;
 import hollow.knight.logic.StateContext;
-import hollow.knight.util.GuiUtil;
 
 public final class RoomFilters extends SearchResult.Filter {
 

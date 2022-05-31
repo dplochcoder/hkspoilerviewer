@@ -1,4 +1,4 @@
-package hollow.knight.util;
+package hollow.knight.io;
 
 import java.io.FileWriter;
 import java.io.IOException;
