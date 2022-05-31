@@ -3,7 +3,6 @@ package hollow.knight.logic;
 import java.util.Set;
 import java.util.stream.Collectors;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.MoreCollectors;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
@@ -45,17 +44,20 @@ public final class Costs {
     return costs.stream().map(Cost::debugString).collect(Collectors.joining(", ", " (", ")"));
   }
 
+  public boolean hasGeoCost() {
+    return costs.stream().anyMatch(c -> c.type() == Cost.Type.GEO);
+  }
+
+  public int getGeoCost() {
+    return costs.stream().filter(c -> c.type() == Cost.Type.GEO).mapToInt(Cost::value).sum();
+  }
+
   public boolean hasCostTerm(Term term) {
     return costs.stream().anyMatch(c -> c.hasCostTerm(term));
   }
 
   public int getCostTerm(Term term) {
-    return costs.stream().filter(c -> c.hasCostTerm(term)).collect(MoreCollectors.onlyElement())
-        .value();
-  }
-
-  public int getCostTermOrDefault(Term term) {
-    return hasCostTerm(term) ? getCostTerm(term) : 0;
+    return costs.stream().filter(c -> c.hasCostTerm(term)).mapToInt(Cost::value).sum();
   }
 
   public JsonArray toRawSpoilerJson() {

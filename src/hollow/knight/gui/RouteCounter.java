@@ -30,12 +30,12 @@ public final class RouteCounter {
 
   public static Integer spentGeoCounter(State state) {
     // TODO: Fix for area blitz
-    return state.obtained().mapToInt(c -> c.costs().getCostTermOrDefault(Term.geo())).sum();
+    return state.obtained().mapToInt(c -> c.costs().getGeoCost()).sum();
   }
 
   public static Integer spendableGeoCounter(State state) {
     // TODO: Fix for area blitz
-    return state.accessible().mapToInt(c -> c.costs().getCostTermOrDefault(Term.geo())).sum();
+    return state.accessible().mapToInt(c -> c.costs().getGeoCost()).sum();
   }
 
   public static final Function<TermMap, Integer> termMapFunction(Term term) {
