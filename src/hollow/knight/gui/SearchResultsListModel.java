@@ -128,7 +128,7 @@ public final class SearchResultsListModel
       }
 
       index -= results.size() + 1;
-      if (index < 0) {
+      if (index < 0 || index >= hiddenResults.size()) {
         return null;
       }
 
@@ -156,7 +156,7 @@ public final class SearchResultsListModel
       }
 
       index -= results.size() + 1;
-      if (index < 0) {
+      if (index < 0 || index >= hiddenResults.size()) {
         return null;
       }
 
