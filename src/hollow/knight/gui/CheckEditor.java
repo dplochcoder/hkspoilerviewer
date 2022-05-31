@@ -355,17 +355,13 @@ public final class CheckEditor extends JFrame implements ItemChecks.Listener {
         if (e.getKeyCode() == KeyEvent.VK_Q) {
           itemsList.clearSelection();
         } else if (e.getKeyCode() == KeyEvent.VK_C) {
-          ItemCheck searchCheck = application.getSelectedSearchResultCheck();
-          ItemCheck routeCheck = application.getSelectedRouteCheck();
-          if ((routeCheck == null) != (searchCheck == null)) {
-            application.copyCheckEditorItem(routeCheck == null ? searchCheck : routeCheck);
-          } else if (routeCheck == searchCheck) {
-            application.copyCheckEditorItem(routeCheck);
-          } else {
-            JOptionPane.showMessageDialog(CheckEditor.this,
-                "Ambiguous: Different checks selected in Search and Route (Q to deselect)",
+          if (checkForEdit == null) {
+            JOptionPane.showMessageDialog(CheckEditor.this, "No check selected for edit",
                 "Cannot perform action", JOptionPane.WARNING_MESSAGE);
+            return;
           }
+
+          application.copyCheckEditorItem(checkForEdit);
         } else if (e.getKeyCode() == KeyEvent.VK_E) {
           selectUniqueItemCheck();
         } else if (e.getKeyCode() == KeyEvent.VK_D) {
