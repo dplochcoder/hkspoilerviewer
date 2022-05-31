@@ -800,10 +800,12 @@ public final class Application extends JFrame {
         } else if (e.getKeyCode() == KeyEvent.VK_B) {
           searchResultsListModel.addBookmark(searchResultsList.getSelectedIndex());
           searchResultsList.setSelectedIndex(searchResultsListModel.numBookmarks() - 1);
+          repopulateSearchResults();
         } else if (e.getKeyCode() == KeyEvent.VK_W || e.getKeyCode() == KeyEvent.VK_S) {
           boolean up = e.getKeyCode() == KeyEvent.VK_W;
           searchResultsListModel.moveBookmark(searchResultsList.getSelectedIndex(), up);
           searchResultsList.setSelectedIndex(searchResultsList.getSelectedIndex() + (up ? -1 : 1));
+          repopulateSearchResults();
         } else if (e.getKeyCode() == KeyEvent.VK_X) {
           searchResultsListModel.deleteBookmark(currentState(),
               searchResultsList.getSelectedIndex());
