@@ -424,6 +424,11 @@ public final class Application extends JFrame {
     menu.add(openEditor);
 
     menu.add(new JSeparator());
+    JMenuItem importHKS = new JMenuItem("Import HKS");
+    importHKS.addActionListener(GuiUtil.newActionListener(this, this::importHKS));
+    menu.add(importHKS);
+
+    menu.add(new JSeparator());
     saveICDLFolder.addActionListener(GuiUtil.newActionListener(this, this::saveICDLFolder));
     menu.add(saveICDLFolder);
 
@@ -611,6 +616,30 @@ public final class Application extends JFrame {
     }
 
     JsonUtil.writeJson(path, saveData);
+  }
+
+  private void importHKS() throws IOException, ParseException, ICDLException {
+    JFileChooser c = new JFileChooser("Import");
+    c.setFileFilter(HKS_SAVE_FILTER);
+
+    if (c.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) {
+      return;
+    }
+
+    FileOpener opener = new FileOpener(ImmutableList.of());
+    StateContext newCtx = opener.openFile(c.getSelectedFile().toPath());
+
+    ctx().checks().overlayImportChecks(newCtx.checks());
+    if (JOptionPane.showConfirmDialog(this, "Import notch costs?") == JOptionPane.OK_OPTION) {
+      ctx().notchCosts().setCosts(newCtx.notchCosts().costs());
+    }
+
+    if (checkEditor != null) {
+      editCheck(null);
+    }
+    searchResultsList.clearSelection();
+    routeList.clearSelection();
+    refreshLogic();
   }
 
   private void saveICDLFolder() throws IOException, ICDLException {

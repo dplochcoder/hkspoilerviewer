@@ -122,11 +122,13 @@ public final class StateContext {
   }
 
   public void loadMutables(JsonObject obj) {
-    if (obj.has("ICDLItemChecks")) {
-      checks().fromJson(obj.get("ICDLItemChecks").getAsJsonObject());
-      notchCosts().parse(obj.get("ICDLNotchCosts").getAsJsonObject());
-      setTolerances(TermMap.fromJson(obj.get("ICDLTolerances").getAsJsonObject()));
+    if (!obj.has("ICDLItemChecks")) {
+      return;
     }
+
+    checks().fromJson(obj.get("ICDLItemChecks").getAsJsonObject());
+    notchCosts().parse(obj.get("ICDLNotchCosts").getAsJsonObject());
+    setTolerances(TermMap.fromJson(obj.get("ICDLTolerances").getAsJsonObject()));
   }
 
   public static StateContext parse(boolean isHKS, JsonObject rawSpoilerJson, JsonObject icdlJson)

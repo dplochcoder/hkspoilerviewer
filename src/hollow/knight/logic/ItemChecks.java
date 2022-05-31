@@ -14,6 +14,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
+import com.google.common.collect.Sets;
+import com.google.common.collect.Sets.SetView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -192,6 +194,49 @@ public final class ItemChecks {
     if (!replaced.isEmpty()) {
       listeners().forEach(l -> l.multipleChecksReplaced(replaced));
     }
+  }
+
+  public void overlayImportChecks(ItemChecks other) throws ICDLException {
+    // Check that the set of non-vanilla locations being imported is a subset.
+    Set<String> ours = allChecks().filter(c -> !c.vanilla()).map(c -> c.location().name())
+        .collect(ImmutableSet.toImmutableSet());
+    Set<String> theirs = other.allChecks().filter(c -> !c.vanilla()).map(c -> c.location().name())
+        .collect(ImmutableSet.toImmutableSet());
+
+    SetView<String> diff = Sets.difference(theirs, ours);
+    if (!diff.isEmpty()) {
+      throw new ICDLException(
+          "Cannot import: " + diff.size() + " locations in the import are not randomized here");
+    }
+
+    // Remove all checks at the import locations.
+    reduceToNothing(c -> theirs.contains(c.location().name()));
+
+    // Import all checks.
+    Map<String, ItemCheck> defaultChecks = new HashMap<>();
+    allChecks().forEach(c -> defaultChecks.put(c.location().name(), c));
+
+    Map<ItemCheck, ItemCheck> massReplacement = new HashMap<>();
+    Set<ItemCheck> massAdd = new HashSet<>();
+    other.allChecks().filter(c -> !c.vanilla()).forEach(c -> {
+      ItemCheck newCheck = ItemCheck.create(newId(), getLocation(c.location().name()),
+          getItem(c.item().term()), c.costs(), false);
+      addInternal(newCheck);
+
+      ItemCheck nothing = defaultChecks.remove(c.location().name());
+      if (nothing != null) {
+        removeInternal(nothing.id());
+        massReplacement.put(nothing, newCheck);
+      } else {
+        massAdd.add(newCheck);
+      }
+    });
+
+    ImmutableSet<ItemCheck> massAddFinal = ImmutableSet.copyOf(massAdd);
+    listeners().forEach(l -> l.multipleChecksAdded(massAddFinal));
+
+    ImmutableMap<ItemCheck, ItemCheck> massReplacementFinal = ImmutableMap.copyOf(massReplacement);
+    listeners().forEach(l -> l.multipleChecksReplaced(massReplacementFinal));
   }
 
   public ItemCheck get(CheckId id) {
