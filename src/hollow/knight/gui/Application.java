@@ -999,7 +999,7 @@ public final class Application extends JFrame {
     list.add(
         new RouteCounter("$Rancid Eggs", RouteCounter.purchaseTermFunction(Term.rancidEggs())));
     list.add(new RouteCounter("Geo", RouteCounter.termFunction(Term.geo())));
-    list.add(new RouteCounter("$Geo", RouteCounter.purchaseTermFunction(Term.geo())));
+    list.add(new RouteCounter("$Geo", RouteCounter::accessibleGeoMinusRocks));
     list.add(new RouteCounter("Relic Geo", RouteCounter::relicGeoCounter));
     list.add(new RouteCounter("$Relic Geo", RouteCounter::purchaseRelicGeoCounter));
     list.add(new RouteCounter("Spent Geo", RouteCounter::spentGeoCounter));

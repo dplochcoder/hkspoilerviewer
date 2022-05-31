@@ -8,15 +8,22 @@ import hollow.knight.logic.Term;
 import hollow.knight.logic.TermMap;
 
 public final class RouteCounter {
-  public static final Function<State, Integer> termFunction(Term term) {
+  public static Function<State, Integer> termFunction(Term term) {
     return state -> state.get(term);
   }
 
-  public static final Function<State, Integer> purchaseTermFunction(Term term) {
+  public static Function<State, Integer> purchaseTermFunction(Term term) {
     return state -> state.purchaseTermValues().get(term);
   }
 
-  private static final ImmutableMap<Term, Integer> RELIC_VALUES =
+  public static Integer accessibleGeoMinusRocks(State state) {
+    return state.purchaseTermValues().get(Term.geo()) - state.accessible()
+        .filter(c -> c.vanilla() && !state.isAcquired(c)
+            && state.ctx().pools().getPool(c.item().term()).equals("Rock"))
+        .mapToInt(c -> c.item().getEffectValue(Term.geo())).sum();
+  }
+
+  private static ImmutableMap<Term, Integer> RELIC_VALUES =
       ImmutableMap.of(Term.create("Wanderer's_Journal"), 200, Term.create("Hallownest_Seal"), 450,
           Term.create("King's_Idol"), 800, Term.create("Arcane_Egg"), 1200);
 
