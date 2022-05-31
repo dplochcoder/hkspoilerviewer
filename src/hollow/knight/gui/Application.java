@@ -843,7 +843,7 @@ public final class Application extends JFrame {
             routeListModel.removeCheck(routeListModel.getSize() - 1);
             repopulateSearchResults();
           }
-        } else {
+        } else if (UP_DOWN_VALUES.containsKey(e.getKeyCode())) {
           // Navigate up or down.
           int delta = UP_DOWN_VALUES.get(e.getKeyCode());
           int newIndex = searchResultsList.getSelectedIndex() + delta;
@@ -948,8 +948,9 @@ public final class Application extends JFrame {
         } else if (e.getKeyCode() == KeyEvent.VK_K) {
           routeListModel.setInsertionPoint(routeListModel.getSize());
           repopulateSearchResults();
-        } else if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN) {
-          int newIndex = routeList.getSelectedIndex() + (e.getKeyCode() == KeyEvent.VK_UP ? -1 : 1);
+        } else if (UP_DOWN_VALUES.containsKey(e.getKeyCode())) {
+          int delta = UP_DOWN_VALUES.get(e.getKeyCode());
+          int newIndex = routeList.getSelectedIndex() + delta;
           if (newIndex >= 0 && newIndex < routeListModel.getSize()) {
             routeList.setSelectedIndex(newIndex);
           }
