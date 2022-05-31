@@ -258,7 +258,7 @@ public final class CheckEditor extends JFrame implements ItemChecks.Listener {
     Costs newCosts = new Costs(ImmutableSet.copyOf(costs));
     application.ctx().checks().replace(checkForEdit.id(), checkForEdit.location(),
         checkForEdit.item(), newCosts, false);
-    application.refreshLogic(true);
+    application.refreshLogic();
   }
 
   private void updateCheckMetadata() {
@@ -377,9 +377,9 @@ public final class CheckEditor extends JFrame implements ItemChecks.Listener {
           ItemCheck searchCheck = application.getSelectedSearchResultCheck();
           ItemCheck routeCheck = application.getSelectedRouteCheck();
           if ((routeCheck == null) != (searchCheck == null)) {
-            application.copyCheckEditorItem(true, routeCheck == null ? searchCheck : routeCheck);
+            application.copyCheckEditorItem(routeCheck == null ? searchCheck : routeCheck);
           } else if (routeCheck == searchCheck) {
-            application.copyCheckEditorItem(true, routeCheck);
+            application.copyCheckEditorItem(routeCheck);
           } else {
             JOptionPane.showMessageDialog(CheckEditor.this,
                 "Ambiguous: Different checks selected in Search and Route (Q to deselect)",

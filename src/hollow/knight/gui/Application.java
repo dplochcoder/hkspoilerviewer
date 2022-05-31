@@ -228,11 +228,9 @@ public final class Application extends JFrame {
     }
   }
 
-  public void refreshLogic(boolean refreshSearchResults) {
+  public void refreshLogic() {
     routeListModel.refreshLogic();
-    if (refreshSearchResults) {
-      repopulateSearchResults();
-    }
+    repopulateSearchResults();
 
     if (checkEditor != null) {
       checkEditor.repopulateItemResults();
@@ -305,7 +303,7 @@ public final class Application extends JFrame {
     return true;
   }
 
-  public void copyCheckEditorItem(boolean refreshSearchResults, ItemCheck check) {
+  public void copyCheckEditorItem(ItemCheck check) {
     if (!ensureCheckEditor().wasOpen()) {
       return;
     }
@@ -321,7 +319,7 @@ public final class Application extends JFrame {
 
     CheckId newId =
         ctx().checks().replace(check.id(), check.location(), item, check.costs(), false);
-    refreshLogic(refreshSearchResults);
+    refreshLogic();
 
     if (searchCheck == check) {
       searchResultsList
@@ -341,7 +339,7 @@ public final class Application extends JFrame {
     ItemCheck routeCheck = getSelectedRouteCheck();
 
     ctx().checks().reduceToNothing(c -> c == check);
-    refreshLogic(false);
+    refreshLogic();
 
     if (searchCheck == check) {
       searchResultsList.clearSelection();
@@ -357,7 +355,7 @@ public final class Application extends JFrame {
     }
 
     ctx().checks().placeNew(check.location(), check.item(), check.costs(), false);
-    refreshLogic(false);
+    refreshLogic();
   }
 
   private void editStartingGeo() {
@@ -379,20 +377,20 @@ public final class Application extends JFrame {
 
     ctx().checks().replace(check.id(), check.location(), Item.newGeoItem(value), check.costs(),
         false);
-    refreshLogic(true);
+    refreshLogic();
   }
 
   private void editNotchCosts() {
     NotchCostsEditor editor = new NotchCostsEditor(ctx());
     if (editor.performEdit(this)) {
-      refreshLogic(true);
+      refreshLogic();
     }
   }
 
   private void editTolerances() {
     TolerancesEditor editor = new TolerancesEditor(ctx());
     if (editor.performEdit(this)) {
-      refreshLogic(true);
+      refreshLogic();
     }
   }
 
@@ -402,7 +400,7 @@ public final class Application extends JFrame {
       @Override
       public void actionPerformed(ActionEvent e) {
         ctx().checks().reduceToNothing(filter);
-        refreshLogic(true);
+        refreshLogic();
       }
     });
 
@@ -797,19 +795,6 @@ public final class Application extends JFrame {
       public void keyPressed(KeyEvent e) {
         e.consume();
 
-        // TODO: Make key codes configurable.
-        if (e.getKeyCode() != KeyEvent.VK_Q && e.getKeyCode() != KeyEvent.VK_B
-            && e.getKeyCode() != KeyEvent.VK_W && e.getKeyCode() != KeyEvent.VK_S
-            && e.getKeyCode() != KeyEvent.VK_X && e.getKeyCode() != KeyEvent.VK_DOWN
-            && e.getKeyCode() != KeyEvent.VK_UP && e.getKeyCode() != KeyEvent.VK_H
-            && e.getKeyCode() != KeyEvent.VK_U && e.getKeyCode() != KeyEvent.VK_E
-            && e.getKeyCode() != KeyEvent.VK_C && e.getKeyCode() != KeyEvent.VK_D
-            && e.getKeyCode() != KeyEvent.VK_Z && e.getKeyCode() != KeyEvent.VK_PAGE_DOWN
-            && e.getKeyCode() != KeyEvent.VK_PAGE_UP && e.getKeyCode() != KeyEvent.VK_SPACE
-            && e.getKeyCode() != KeyEvent.VK_BACK_SPACE) {
-          return;
-        }
-
         if (e.getKeyCode() == KeyEvent.VK_Q) {
           searchResultsList.clearSelection();
         } else if (e.getKeyCode() == KeyEvent.VK_B) {
@@ -822,22 +807,27 @@ public final class Application extends JFrame {
         } else if (e.getKeyCode() == KeyEvent.VK_X) {
           searchResultsListModel.deleteBookmark(currentState(),
               searchResultsList.getSelectedIndex());
+          repopulateSearchResults();
         } else if (e.getKeyCode() == KeyEvent.VK_H) {
           searchResultsListModel.hideResult(searchResultsList.getSelectedIndex());
+          repopulateSearchResults();
         } else if (e.getKeyCode() == KeyEvent.VK_U) {
           searchResultsListModel.unhideResult(searchResultsList.getSelectedIndex());
+          repopulateSearchResults();
         } else if (e.getKeyCode() == KeyEvent.VK_E) {
           ItemCheck check = getSelectedSearchResultCheck();
           if (editCheck(check) && getSelectedRouteCheck() != check) {
             routeList.clearSelection();
           }
-          return;
         } else if (e.getKeyCode() == KeyEvent.VK_C) {
-          copyCheckEditorItem(false, getSelectedSearchResultCheck());
+          copyCheckEditorItem(getSelectedSearchResultCheck());
+          repopulateSearchResults();
         } else if (e.getKeyCode() == KeyEvent.VK_D) {
           duplicateCheck(getSelectedSearchResultCheck());
+          repopulateSearchResults();
         } else if (e.getKeyCode() == KeyEvent.VK_Z) {
           deleteCheck(getSelectedSearchResultCheck());
+          repopulateSearchResults();
         } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
           ItemCheck check = getSelectedSearchResultCheck();
           if (check == null) {
@@ -845,9 +835,11 @@ public final class Application extends JFrame {
           }
 
           addToRoute(check);
+          repopulateSearchResults();
         } else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
           if (routeListModel.getSize() > 0) {
             routeListModel.removeCheck(routeListModel.getSize() - 1);
+            repopulateSearchResults();
           }
         } else {
           // Navigate up or down.
@@ -861,8 +853,6 @@ public final class Application extends JFrame {
 
           searchResultsList.setSelectedIndex(newIndex);
         }
-
-        repopulateSearchResults();
       }
     };
   }
@@ -944,15 +934,15 @@ public final class Application extends JFrame {
           if (editCheck(check) && getSelectedSearchResultCheck() != check) {
             searchResultsList.clearSelection();
           }
-          refreshLogic(true);
+          refreshLogic();
         } else if (e.getKeyCode() == KeyEvent.VK_C) {
-          copyCheckEditorItem(true, getSelectedRouteCheck());
+          copyCheckEditorItem(getSelectedRouteCheck());
         } else if (e.getKeyCode() == KeyEvent.VK_D) {
           duplicateCheck(getSelectedRouteCheck());
           repopulateSearchResults();
         } else if (e.getKeyCode() == KeyEvent.VK_Z) {
           deleteCheck(getSelectedRouteCheck());
-          refreshLogic(true);
+          refreshLogic();
         } else if (e.getKeyCode() == KeyEvent.VK_K) {
           routeListModel.setInsertionPoint(routeListModel.getSize());
           repopulateSearchResults();
