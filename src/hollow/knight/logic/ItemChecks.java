@@ -9,11 +9,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
+import com.google.common.collect.ComparisonChain;
+import com.google.common.collect.HashMultiset;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
+import com.google.common.collect.Multiset;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.gson.JsonArray;
@@ -53,9 +56,33 @@ public final class ItemChecks {
   private final Map<Term, Item> itemsByName = new HashMap<>();
   private final BiMultimap<Term, CheckId> idsByItemName = new BiMultimap<>();
 
+  private final Multiset<String> originalItemCounts = HashMultiset.create();
+  private final Multiset<String> itemCounts = HashMultiset.create();
+
   private int nextId = 1;
 
   private ItemChecks() {}
+
+  private void calculateOriginalItemCounts() {
+    originalItemCounts.addAll(itemCounts);
+  }
+
+  public ImmutableMap<String, Integer> getICDLItemDiff() {
+    Map<String, Integer> counts = new HashMap<>();
+    for (String key : Sets.union(originalItemCounts.elementSet(), itemCounts.elementSet())) {
+      int diff = itemCounts.count(key) - originalItemCounts.count(key);
+      if (diff != 0) {
+        counts.put(key, diff);
+      }
+    }
+
+    return counts.keySet().stream()
+        .sorted((k1, k2) -> ComparisonChain.start()
+            .compare(Math.abs(counts.getOrDefault(k2, 0)), Math.abs(counts.getOrDefault(k1, 0)))
+            .compare(counts.getOrDefault(k2, 0), counts.getOrDefault(k1, 0)).compare(k1, k2)
+            .result())
+        .collect(ImmutableMap.toImmutableMap(k -> k, k -> counts.get(k)));
+  }
 
   public void addListener(Listener listener) {
     synchronized (mutex) {
@@ -93,13 +120,15 @@ public final class ItemChecks {
     locationsByName.put(check.location().name(), check.location());
     itemsByName.put(check.item().term(), check.item());
     idsByItemName.put(check.item().term(), check.id());
+    itemCounts.add(check.item().term().name());
   }
 
   private void removeInternal(CheckId id) {
-    checksById.remove(id);
+    ItemCheck check = checksById.remove(id);
     idsByCondition.removeValue(id);
     idsByLocation.removeValue(id);
     idsByItemName.removeValue(id);
+    itemCounts.remove(check.item().term().name());
   }
 
   public CheckId placeNew(Location loc, Item item, Costs costs, boolean vanilla) {
@@ -326,6 +355,7 @@ public final class ItemChecks {
       }
     }
 
+    checks.calculateOriginalItemCounts();
     return checks;
   }
 }

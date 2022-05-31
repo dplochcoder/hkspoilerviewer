@@ -350,6 +350,25 @@ public final class Application extends JFrame {
     refreshLogic();
   }
 
+  private void showItemDiffReport() {
+    ImmutableMap<String, Integer> diff = ctx().checks().getICDLItemDiff();
+    if (diff.isEmpty()) {
+      JOptionPane.showMessageDialog(this, "No diff!");
+    } else {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Have placed:\n");
+      diff.forEach((k, v) -> {
+        sb.append(v > 0 ? "+" : "");
+        sb.append(v);
+        sb.append(' ');
+        sb.append(k);
+        sb.append('\n');
+      });
+      JOptionPane.showMessageDialog(this, sb.toString(), "ICDL Item Diff Report",
+          JOptionPane.INFORMATION_MESSAGE);
+    }
+  }
+
   private void editStartingGeo() {
     ItemCheck check = ctx().checks().startChecks().filter(c -> c.item().hasEffectTerm(Term.geo()))
         .findFirst().get();
@@ -405,6 +424,11 @@ public final class Application extends JFrame {
     reset.add(icdlReset("All Randomized Checks", c -> true));
     reset.add(icdlReset("Matching Search Results", searchResultsListModel::isMatchingSearchResult));
     menu.add(reset);
+
+    menu.add(new JSeparator());
+    JMenuItem missingItems = new JMenuItem("Item Diff Report");
+    missingItems.addActionListener(GuiUtil.newActionListener(this, this::showItemDiffReport));
+    menu.add(missingItems);
 
     menu.add(new JSeparator());
     JMenuItem editStartingGeo = new JMenuItem("Edit Starting Geo");
