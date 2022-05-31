@@ -2,8 +2,6 @@ package hollow.knight.gui;
 
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -36,6 +34,7 @@ import hollow.knight.logic.Item;
 import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.ItemChecks;
 import hollow.knight.logic.Term;
+import hollow.knight.util.GuiUtil;
 
 // Free-floating UI for editing a single check.
 public final class CheckEditor extends JFrame implements ItemChecks.Listener {
@@ -78,12 +77,8 @@ public final class CheckEditor extends JFrame implements ItemChecks.Listener {
     this.costButtons = new ArrayList<>();
 
     JButton newCostButton = new JButton("New Cost");
-    newCostButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        addCost(Cost.createGeo(1));
-      }
-    });
+    newCostButton
+        .addActionListener(GuiUtil.newActionListener(this, () -> addCost(Cost.createGeo(1))));
     costButtons.add(newCostButton);
 
     this.addWindowListener(newWindowListener());
@@ -133,23 +128,20 @@ public final class CheckEditor extends JFrame implements ItemChecks.Listener {
 
   private JButton customItemButton(String txt, Function<Integer, Item> itemFn) {
     JButton button = new JButton(txt);
-    button.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        String valueStr = JOptionPane.showInputDialog(CheckEditor.this, "Enter custom amount");
-        if (valueStr == null || valueStr.trim().isEmpty()) {
-          return;
-        }
-
-        Integer val = Ints.tryParse(valueStr);
-        if (val == null || val <= 0) {
-          JOptionPane.showMessageDialog(CheckEditor.this, "Must enter a positive integer");
-          return;
-        }
-
-        application.ctx().checks().addItem(itemFn.apply(val));
+    button.addActionListener(GuiUtil.newActionListener(this, () -> {
+      String valueStr = JOptionPane.showInputDialog(CheckEditor.this, "Enter custom amount");
+      if (valueStr == null || valueStr.trim().isEmpty()) {
+        return;
       }
-    });
+
+      Integer val = Ints.tryParse(valueStr);
+      if (val == null || val <= 0) {
+        JOptionPane.showMessageDialog(CheckEditor.this, "Must enter a positive integer");
+        return;
+      }
+
+      application.ctx().checks().addItem(itemFn.apply(val));
+    }));
     return button;
   }
 
@@ -164,22 +156,12 @@ public final class CheckEditor extends JFrame implements ItemChecks.Listener {
     JPanel panel = new JPanel();
 
     JButton applyCosts = new JButton("Apply Costs");
-    applyCosts.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        applyCosts();
-      }
-    });
+    applyCosts.addActionListener(GuiUtil.newActionListener(this, this::applyCosts));
     panel.add(applyCosts);
     costButtons.add(applyCosts);
 
     JButton resetCosts = new JButton("Reset Costs");
-    resetCosts.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        editCheck(checkForEdit);
-      }
-    });
+    resetCosts.addActionListener(GuiUtil.newActionListener(this, () -> editCheck(checkForEdit)));
     panel.add(resetCosts);
     costButtons.add(resetCosts);
 

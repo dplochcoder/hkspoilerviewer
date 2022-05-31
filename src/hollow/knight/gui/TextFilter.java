@@ -1,7 +1,5 @@
 package hollow.knight.gui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -57,13 +55,10 @@ public final class TextFilter extends SearchResult.Filter {
     group.add(button);
     parent.add(button);
 
-    button.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        TextFilter.this.mode = m;
-        TextFilter.this.filterChanged();
-      }
-    });
+    button.addActionListener(GuiUtil.newActionListener(null, () -> {
+      mode = m;
+      filterChanged();
+    }));
   }
 
   @Override

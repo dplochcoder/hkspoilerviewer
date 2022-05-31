@@ -1,8 +1,6 @@
 package hollow.knight.gui;
 
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JButton;
@@ -14,6 +12,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import hollow.knight.logic.ParseException;
 import hollow.knight.logic.StateContext;
+import hollow.knight.util.GuiUtil;
 import hollow.knight.util.JsonUtil;
 
 // Canonical filters with check box toggles.
@@ -68,12 +67,7 @@ public final class ItemCategoryFilters extends SearchResult.Filter {
     for (String name : filters.keySet()) {
       JCheckBox jcb = new JCheckBox(name);
       jcb.setSelected(false);
-      jcb.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          filterChanged();
-        }
-      });
+      jcb.addActionListener(GuiUtil.newActionListener(null, this::filterChanged));
 
       builder.put(name, jcb);
     }
@@ -83,13 +77,10 @@ public final class ItemCategoryFilters extends SearchResult.Filter {
 
   private JButton createAllButton(String txt, boolean enable) {
     JButton button = new JButton(txt);
-    button.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        filterBoxes.values().forEach(b -> b.setSelected(enable));
-        filterChanged();
-      }
-    });
+    button.addActionListener(GuiUtil.newActionListener(null, () -> {
+      filterBoxes.values().forEach(b -> b.setSelected(enable));
+      filterChanged();
+    }));
 
     return button;
   }

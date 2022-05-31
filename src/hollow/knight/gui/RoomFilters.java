@@ -1,7 +1,5 @@
 package hollow.knight.gui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import hollow.knight.logic.RoomLabels;
 import hollow.knight.logic.StateContext;
+import hollow.knight.util.GuiUtil;
 
 public final class RoomFilters extends SearchResult.Filter {
 
@@ -37,7 +36,7 @@ public final class RoomFilters extends SearchResult.Filter {
     this.selectionLists = createSelectionLists(roomLabels);
     this.activeType = RoomLabels.Type.MAP;
 
-    this.allAreas.addActionListener(allAreasListener());
+    this.allAreas.addActionListener(GuiUtil.newActionListener(null, this::selectAllAreas));
     this.tabPane.addChangeListener(tabChangedListener());
   }
 
@@ -70,15 +69,10 @@ public final class RoomFilters extends SearchResult.Filter {
     return builder.build();
   }
 
-  private ActionListener allAreasListener() {
-    return new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        selectionLists.values().forEach(
-            l -> l.setSelectedIndices(IntStream.range(0, l.getModel().getSize()).toArray()));
-        filterChanged();
-      }
-    };
+  private void selectAllAreas() {
+    selectionLists.values()
+        .forEach(l -> l.setSelectedIndices(IntStream.range(0, l.getModel().getSize()).toArray()));
+    filterChanged();
   }
 
   private ChangeListener tabChangedListener() {

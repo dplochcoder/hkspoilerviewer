@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -188,26 +187,25 @@ public final class Application extends JFrame {
       .add("D - (ICDL) duplicate the selected check (mostly for shops)").build();
 
   private ActionListener infoListener(String title, Iterable<String> content) {
-    return new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+    return GuiUtil.newActionListener(this, () -> showInfo(title, content));
+  }
 
-        for (String info : content) {
-          if (info.contentEquals("-")) {
-            panel.add(new JSeparator());
-          } else {
-            panel.add(new JLabel(info));
-          }
-        }
+  private void showInfo(String title, Iterable<String> content) {
+    JPanel panel = new JPanel();
+    panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 
-        JDialog dialog = new JDialog(Application.this, title);
-        dialog.setContentPane(panel);
-        dialog.pack();
-        dialog.setVisible(true);
+    for (String info : content) {
+      if (info.contentEquals("-")) {
+        panel.add(new JSeparator());
+      } else {
+        panel.add(new JLabel(info));
       }
-    };
+    }
+
+    JDialog dialog = new JDialog(Application.this, title);
+    dialog.setContentPane(panel);
+    dialog.pack();
+    dialog.setVisible(true);
   }
 
   private void addBuiltinQueries(JMenu menu) throws ParseException {
@@ -218,12 +216,7 @@ public final class Application extends JFrame {
       Query query = Query.parse(obj.get("Query").getAsJsonObject());
 
       JMenuItem qItem = new JMenuItem(name);
-      qItem.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          executeQuery(query);
-        }
-      });
+      qItem.addActionListener(GuiUtil.newActionListener(this, () -> executeQuery(query)));
       menu.add(qItem);
     }
   }
@@ -396,13 +389,10 @@ public final class Application extends JFrame {
 
   private JMenuItem icdlReset(String name, Predicate<ItemCheck> filter) {
     JMenuItem item = new JMenuItem(name);
-    item.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        ctx().checks().reduceToNothing(filter);
-        refreshLogic();
-      }
-    });
+    item.addActionListener(GuiUtil.newActionListener(this, () -> {
+      ctx().checks().reduceToNothing(filter);
+      refreshLogic();
+    }));
 
     return item;
   }
@@ -419,52 +409,23 @@ public final class Application extends JFrame {
 
     menu.add(new JSeparator());
     JMenuItem editStartingGeo = new JMenuItem("Edit Starting Geo");
-    editStartingGeo.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        editStartingGeo();
-      }
-    });
+    editStartingGeo.addActionListener(GuiUtil.newActionListener(this, this::editStartingGeo));
     menu.add(editStartingGeo);
 
     JMenuItem editNotches = new JMenuItem("Edit Charm Costs");
-    editNotches.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        editNotchCosts();
-      }
-    });
+    editNotches.addActionListener(GuiUtil.newActionListener(this, this::editNotchCosts));
     menu.add(editNotches);
 
     JMenuItem editTolerances = new JMenuItem("Edit Tolerances");
-    editTolerances.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        editTolerances();
-      }
-    });
+    editTolerances.addActionListener(GuiUtil.newActionListener(this, this::editTolerances));
     menu.add(editTolerances);
 
     menu.add(new JSeparator());
-    openEditor.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        openEditor();
-      }
-    });
+    openEditor.addActionListener(GuiUtil.newActionListener(this, this::openEditor));
     menu.add(openEditor);
 
     menu.add(new JSeparator());
-    saveICDLFolder.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        try {
-          saveICDLFolder();
-        } catch (IOException | ICDLException ex) {
-          GuiUtil.showStackTrace(Application.this, "Failed to save ICDL folder", ex);
-        }
-      }
-    });
+    saveICDLFolder.addActionListener(GuiUtil.newActionListener(this, this::saveICDLFolder));
     menu.add(saveICDLFolder);
 
     return menu;
@@ -521,46 +482,11 @@ public final class Application extends JFrame {
     about.add(v);
     bar.add(about);
 
-    open.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        try {
-          openFile();
-        } catch (Exception ex) {
-          GuiUtil.showStackTrace(Application.this, "Open file failed", ex);
-        }
-
-        repopulateSearchResults();
-      }
-    });
-
-    save.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        try {
-          saveFile();
-        } catch (Exception ex) {
-          GuiUtil.showStackTrace(Application.this, "Save file failed", ex);
-        }
-      }
-    });
-
-    saveToTxt.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        try {
-          Application.this.routeListModel.saveAsTxt(Application.this);
-        } catch (IOException ignore) {
-        }
-      }
-    });
-
-    qFromFile.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        executeQueryFromFile();
-      }
-    });
+    open.addActionListener(GuiUtil.newActionListener(this, this::openFile));
+    save.addActionListener(GuiUtil.newActionListener(this, this::saveFile));
+    saveToTxt
+        .addActionListener(GuiUtil.newActionListener(this, () -> routeListModel.saveAsTxt(this)));
+    qFromFile.addActionListener(GuiUtil.newActionListener(this, this::executeQueryFromFile));
 
     pl.addActionListener(infoListener("Purchase Logic ($)", PL_INFO));
     insert.addActionListener(infoListener("Insert / Rewind", INSERT_INFO));
@@ -676,7 +602,7 @@ public final class Application extends JFrame {
     checksListeners.forEach(prevCtx.checks()::removeListener);
     checksListeners.forEach(newCtx.checks()::addListener);
 
-    repopulateSearchResults();
+    refreshLogic();
 
     if (isRawSpoiler && !isICDL) {
       int option = JOptionPane.showConfirmDialog(this, "Open this RawSpoiler.json on startup?");

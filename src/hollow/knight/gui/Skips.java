@@ -1,8 +1,6 @@
 package hollow.knight.gui;
 
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -19,6 +17,7 @@ import com.google.gson.JsonObject;
 import hollow.knight.logic.ParseException;
 import hollow.knight.logic.State;
 import hollow.knight.logic.Term;
+import hollow.knight.util.GuiUtil;
 import hollow.knight.util.JsonUtil;
 
 // UI object for enabling skips not part of the seed settings, to expand logic.
@@ -46,25 +45,17 @@ public final class Skips {
   private SkipTerm createSkipTerm(String name, Term effectTerm) {
     JCheckBox box = new JCheckBox(name);
     box.setSelected(false);
-    box.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        notifyListeners();
-      }
-    });
+    box.addActionListener(GuiUtil.newActionListener(null, this::notifyListeners));
 
     return SkipTerm.create(effectTerm, box);
   }
 
   private JButton createAllButton(String txt, boolean enable) {
     JButton button = new JButton(txt);
-    button.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        skipTerms.forEach(st -> st.box().setSelected(enable));
-        notifyListeners();
-      }
-    });
+    button.addActionListener(GuiUtil.newActionListener(null, () -> {
+      skipTerms.forEach(st -> st.box().setSelected(enable));
+      notifyListeners();
+    }));
 
     return button;
   }

@@ -1,8 +1,6 @@
 package hollow.knight.gui;
 
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.function.Predicate;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
@@ -10,6 +8,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import hollow.knight.logic.RoomLabels;
 import hollow.knight.logic.StateContext;
+import hollow.knight.util.GuiUtil;
 
 public final class ExclusionFilters extends SearchResult.Filter {
   @AutoValue
@@ -22,13 +21,7 @@ public final class ExclusionFilters extends SearchResult.Filter {
 
     public static ExclusionFilter create(ExclusionFilters filters, String name,
         Predicate<SearchResult> filter, JCheckBox checkBox) {
-      checkBox.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          filters.filterChanged();
-        }
-      });
-
+      checkBox.addActionListener(GuiUtil.newActionListener(null, () -> filters.filterChanged()));
       return new AutoValue_ExclusionFilters_ExclusionFilter(name, filter, checkBox);
     }
   }

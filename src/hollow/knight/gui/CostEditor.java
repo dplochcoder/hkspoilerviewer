@@ -1,8 +1,6 @@
 package hollow.knight.gui;
 
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import javax.swing.JButton;
@@ -47,12 +45,7 @@ public final class CostEditor {
     moveDown = moveButton("Down", () -> this.downNeighbor);
 
     JButton delete = new JButton("Delete");
-    delete.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        onDelete.accept(CostEditor.this);
-      }
-    });
+    delete.addActionListener(GuiUtil.newActionListener(null, () -> onDelete.accept(this)));
 
     panel.add(moveUp);
     panel.add(moveDown);
@@ -84,24 +77,22 @@ public final class CostEditor {
   private JButton moveButton(String name, Supplier<CostEditor> neighbor) {
     JButton button = new JButton(name);
     button.setEnabled(false);
-    button.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        CostEditor swap = neighbor.get();
-        if (swap == null) {
-          return;
-        }
-
-        Cost c1 = getCost();
-        Cost c2 = swap.getCost();
-        if (c1 == null || c2 == null) {
-          return;
-        }
-
-        setCost(c2);
-        swap.setCost(c1);
+    button.addActionListener(GuiUtil.newActionListener(null, () -> {
+      CostEditor swap = neighbor.get();
+      if (swap == null) {
+        return;
       }
-    });
+
+      Cost c1 = getCost();
+      Cost c2 = swap.getCost();
+      if (c1 == null || c2 == null) {
+        return;
+      }
+
+      setCost(c2);
+      swap.setCost(c1);
+    }));
+
     return button;
   }
 
