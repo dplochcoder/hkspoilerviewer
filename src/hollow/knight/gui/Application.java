@@ -746,8 +746,14 @@ public final class Application extends JFrame {
             routeList.clearSelection();
           }
         } else if (e.getKeyCode() == KeyEvent.VK_C) {
-          copyCheckEditorItem(getSelectedSearchResultCheck());
-          repopulateSearchResults();
+          ItemCheck check = getSelectedSearchResultCheck();
+          if (check != null && editCheck(check)) {
+            if (getSelectedRouteCheck() != check) {
+              routeList.clearSelection();
+            }
+            copyCheckEditorItem(check);
+            refreshLogic();
+          }
         } else if (e.getKeyCode() == KeyEvent.VK_D) {
           duplicateCheck(getSelectedSearchResultCheck());
           repopulateSearchResults();
@@ -862,7 +868,14 @@ public final class Application extends JFrame {
           }
           refreshLogic();
         } else if (e.getKeyCode() == KeyEvent.VK_C) {
-          copyCheckEditorItem(getSelectedRouteCheck());
+          ItemCheck check = getSelectedRouteCheck();
+          if (check != null && editCheck(check)) {
+            if (getSelectedSearchResultCheck() != check) {
+              searchResultsList.clearSelection();
+            }
+            copyCheckEditorItem(check);
+            refreshLogic();
+          }
         } else if (e.getKeyCode() == KeyEvent.VK_D) {
           duplicateCheck(getSelectedRouteCheck());
           repopulateSearchResults();
