@@ -5,11 +5,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
+import com.google.common.collect.ImmutableList;
+import hollow.knight.io.FileOpener;
 import hollow.knight.logic.ParseException;
 import hollow.knight.logic.StateContext;
 import hollow.knight.logic.Version;
 import hollow.knight.util.GuiUtil;
-import hollow.knight.util.JsonUtil;
 
 public final class Main {
   private static final String VERSION = "2.0";
@@ -75,7 +76,8 @@ public final class Main {
           return;
         }
 
-        ctx = StateContext.parse(JsonUtil.loadPath(rawSpoiler).getAsJsonObject(), null);
+        FileOpener opener = new FileOpener(ImmutableList.of());
+        ctx = opener.openFile(rawSpoiler);
         break;
       } catch (Exception ex) {
         GuiUtil.showStackTrace(null, "Error opening RawSpoiler.json: ", ex);

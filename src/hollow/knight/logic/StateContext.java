@@ -28,6 +28,7 @@ import hollow.knight.util.JsonUtil;
 /** Mostly immutable context for a State object. */
 public final class StateContext {
 
+  private final boolean isHKS;
   private final JsonObject rawSpoilerJson;
   private final JsonObject icdlJson;
   private final CharmIds charmIds;
@@ -40,9 +41,10 @@ public final class StateContext {
   private final MutableTermMap tolerances;
   private final ImmutableTermMap setters;
 
-  public StateContext(JsonObject rawSpoilerJson, JsonObject icdlJson, CharmIds charmIds,
-      RoomLabels roomLabels, Pools pools, NotchCosts notchCosts, Waypoints waypoints,
-      ItemChecks checks, TermMap tolerances, TermMap setters) {
+  public StateContext(boolean isHKS, JsonObject rawSpoilerJson, JsonObject icdlJson,
+      CharmIds charmIds, RoomLabels roomLabels, Pools pools, NotchCosts notchCosts,
+      Waypoints waypoints, ItemChecks checks, TermMap tolerances, TermMap setters) {
+    this.isHKS = isHKS;
     this.rawSpoilerJson = rawSpoilerJson;
     this.icdlJson = icdlJson;
     this.charmIds = charmIds;
@@ -53,6 +55,10 @@ public final class StateContext {
     this.checks = checks;
     this.tolerances = new MutableTermMap(tolerances);
     this.setters = ImmutableTermMap.copyOf(setters);
+  }
+
+  public boolean isHKS() {
+    return isHKS;
   }
 
   public JsonObject rawSpoilerJson() {
@@ -123,7 +129,7 @@ public final class StateContext {
     }
   }
 
-  public static StateContext parse(JsonObject rawSpoilerJson, JsonObject icdlJson)
+  public static StateContext parse(boolean isHKS, JsonObject rawSpoilerJson, JsonObject icdlJson)
       throws ParseException {
     CharmIds charmIds = CharmIds.load();
     RoomLabels rooms = RoomLabels.load();
@@ -149,7 +155,7 @@ public final class StateContext {
     NotchCosts notchCosts = new NotchCosts();
     notchCosts.parse(rawSpoilerJson);
 
-    return new StateContext(rawSpoilerJson, icdlJson, charmIds, rooms, pools, notchCosts,
+    return new StateContext(isHKS, rawSpoilerJson, icdlJson, charmIds, rooms, pools, notchCosts,
         Waypoints.parse(rawSpoilerJson), ItemChecks.parse(rawSpoilerJson, rooms), tolerances,
         setters);
   }

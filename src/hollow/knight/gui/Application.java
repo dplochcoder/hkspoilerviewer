@@ -13,7 +13,6 @@ import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -42,6 +41,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import hollow.knight.io.FileOpener;
 import hollow.knight.logic.CheckId;
 import hollow.knight.logic.ICDLException;
 import hollow.knight.logic.Item;
@@ -53,7 +53,6 @@ import hollow.knight.logic.SaveInterface;
 import hollow.knight.logic.State;
 import hollow.knight.logic.StateContext;
 import hollow.knight.logic.Term;
-import hollow.knight.logic.Version;
 import hollow.knight.util.GuiUtil;
 import hollow.knight.util.JsonUtil;
 
@@ -563,51 +562,19 @@ public final class Application extends JFrame {
       return;
     }
 
-    Path p = c.getSelectedFile().toPath();
-    boolean isRawSpoiler = !p.toString().endsWith(".hks");
+    Path path = c.getSelectedFile().toPath().toAbsolutePath();
+    FileOpener opener = new FileOpener(saveInterfaces);
+    StateContext newCtx = opener.openFile(path);
 
-    JsonObject saveData = new JsonObject();
-    JsonObject rawSpoiler = JsonUtil.loadPath(p).getAsJsonObject();
-    JsonObject rawICDL = null;
-    Version version = Main.version();
-    if (!isRawSpoiler) {
-      saveData = rawSpoiler;
-      rawSpoiler = saveData.get("RawSpoiler").getAsJsonObject();
-
-      version = Version.parse(saveData.get("Version").getAsString());
-      if (version.major() < Main.version().major()) {
-        throw new ParseException("Unsupported version " + version + " < " + Main.version());
-      }
-
-      if (saveData.has("RawICDL")) {
-        rawICDL = saveData.get("RawICDL").getAsJsonObject();
-      }
-    } else if (p.endsWith("ctx.json")) {
-      String parent = p.getParent().toString();
-      rawICDL = JsonUtil.loadPath(Paths.get(parent, "ic.json")).getAsJsonObject();
-    }
-
-    setICDLEnabled(rawICDL != null);
-
-    Version finalVersion = version;
-    JsonObject finalSaveData = saveData;
-
-    StateContext newCtx = StateContext.parse(rawSpoiler, rawICDL);
-    if (isICDL) {
-      newCtx.loadMutables(saveData);
-    }
-    saveInterfaces.forEach(i -> i.open(finalVersion, newCtx, finalSaveData.get(i.saveName())));
+    setICDLEnabled(newCtx.icdlJson() != null);
     skips.setInitialState(newCtx.newInitialState());
-
     checksListeners.forEach(prevCtx.checks()::removeListener);
     checksListeners.forEach(newCtx.checks()::addListener);
 
-    refreshLogic();
-
-    if (isRawSpoiler && !isICDL) {
+    if (!newCtx.isHKS() && !isICDL) {
       int option = JOptionPane.showConfirmDialog(this, "Open this RawSpoiler.json on startup?");
       if (option == JOptionPane.OK_OPTION) {
-        cfg.set("RAW_SPOILER", p.toAbsolutePath().toString());
+        cfg.set("RAW_SPOILER", path.toString());
         cfg.save();
       }
     }
@@ -616,6 +583,8 @@ public final class Application extends JFrame {
       checkEditor.dispose();
       checkEditor = null;
     }
+
+    refreshLogic();
   }
 
   private void saveFile() throws IOException {
