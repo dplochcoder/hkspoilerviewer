@@ -156,3 +156,12 @@ For example, if you start a plando, then realize after making 100 edits that you
 At any point, you can save your progress as a new ICDL pack folder from the save menu. Simply select `File > Save as ICDL Pack` at any time to checkpoint your progress. This will also save your current bookmarks and route, if you have any open.
 
 You will ideally save your ICDL packs in the `Past Randos` folder, so that you can open them in Hollow Knight for playing/debugging, but you can save them anywhere.
+
+# Future features
+
+  - Undo/Redo functionality, particularly for ICDL work
+  - Generic search engine for better queries
+  - Adding custom geo / essence items
+  - Proper integration with Transcendence (editing notches for Transcendence probably doesn't work right now)
+  - Native support of multi-item check locations (i.e. area blitz)
+  - Graphical UI mode (very very far future, if ever)
