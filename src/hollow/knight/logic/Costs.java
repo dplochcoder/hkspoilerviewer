@@ -124,6 +124,8 @@ public final class Costs {
         return new Costs(Cost.createGeo(120));
       case "Greenpath_Stag":
         return new Costs(Cost.createGeo(140));
+      case "Elevator_Pass":
+        return new Costs(Cost.createGeo(150));
       case "City_Storerooms_Stag":
         return new Costs(Cost.createGeo(200));
       case "Queen's_Gardens_Stag":
