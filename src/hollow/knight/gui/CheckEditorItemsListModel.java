@@ -13,6 +13,7 @@ import com.google.common.collect.Multiset;
 import hollow.knight.logic.Item;
 import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.ItemChecks;
+import hollow.knight.logic.StateContext;
 import hollow.knight.logic.Term;
 
 public final class CheckEditorItemsListModel implements ListModel<String>, ItemChecks.Listener {
@@ -36,7 +37,7 @@ public final class CheckEditorItemsListModel implements ListModel<String>, ItemC
         + item.valueSuffix();
   }
 
-  public void updateResults(List<Item> resultItems) {
+  public void updateResults(StateContext ctx, List<Item> resultItems) {
     List<ListDataListener> listenersCopy;
     int oldSize, newSize;
     synchronized (mutex) {
@@ -45,10 +46,11 @@ public final class CheckEditorItemsListModel implements ListModel<String>, ItemC
 
       this.resultItems.clear();
       this.resultStrings.clear();
-      resultItems.stream().sorted(sorter).forEach(i -> {
-        this.resultItems.add(i);
-        this.resultStrings.add(render(i));
-      });
+      resultItems.stream().filter(i -> ctx.checks().isOriginalNonVanilla(i.term())).sorted(sorter)
+          .forEach(i -> {
+            this.resultItems.add(i);
+            this.resultStrings.add(render(i));
+          });
 
       newSize = resultStrings.size();
     }

@@ -174,7 +174,7 @@ public final class CheckEditor extends JFrame implements ItemChecks.Listener {
   public void repopulateItemResults() {
     ImmutableList<Item> results = application.ctx().checks().allItems()
         .filter(itemSearchField::accept).collect(ImmutableList.toImmutableList());
-    itemsListModel.updateResults(results);
+    itemsListModel.updateResults(application.ctx(), results);
 
     if (needsExpansion(itemsPane)) {
       pack();

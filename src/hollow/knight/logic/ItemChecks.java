@@ -58,6 +58,7 @@ public final class ItemChecks {
 
   private final Multiset<String> originalItemCounts = HashMultiset.create();
   private final Multiset<String> itemCounts = HashMultiset.create();
+  private final Set<Term> originalNonVanillaItems = new HashSet<>();
 
   private int nextId = 1;
 
@@ -65,6 +66,13 @@ public final class ItemChecks {
 
   private void calculateOriginalItemCounts() {
     originalItemCounts.addAll(itemCounts);
+
+    checksById.values().stream().filter(c -> !c.vanilla()).map(c -> c.item().term()).distinct()
+        .forEach(originalNonVanillaItems::add);
+  }
+
+  public boolean isOriginalNonVanilla(Term term) {
+    return originalNonVanillaItems.contains(term);
   }
 
   public ImmutableMap<String, Integer> getICDLItemDiff() {
