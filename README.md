@@ -94,7 +94,7 @@ Your current route can be saved in two formats:
   
 `*.hks` files will save your current route, bookmarks, and hidden results, allowing you to share a route with other users of the HKSpoilerViewer, or simply checkpoint it for yourself in case you want to modify or continue the route later. `*.hks` files are versioned and should be compatible with newer versions of HKSpoilerViewer, but this is not an absolute guarantee.  (Most likely, a 2.0 release will break compatibility with 1.0 save files.) 
 
-# ICDL Edit Mode (NOT YET RELEASED)
+# ICDL Edit Mode
 
 You can also use the HKSpoilerViewer to create Plandos, using the [ICDL](https://github.com/homothetyhk/ItemChangerDataLoader) format. To create a plando, or simply make small modifications to an existing seed, first:
 
@@ -114,19 +114,24 @@ Be careful: HKSpoilerViewer does not (yet) have Undo+Redo functionality, so be s
 ## Placing Items
 
 The ICDL check editor has two separate sections: an Item selector up top, and a Costs editor down below.
-To place a specific Item at a specific location, select the desired Item in the ICDL check editor, and select the desired location/check in the Search Results section in the main window, then hit 'C'. There are no built-in limits for how many of each item is placed within the world, so you will want to actively monitor the total count of placed items in the ICDL check editor to make sure your seed is reasonable.
+To place a specific Item at a specific location, first select the location/check to edit in Search Results or the Route, and tap 'E'. Then, select the Item you want to place in the check editor, and tap C.
 
-Note that this may cause the check to immediately disappear from search results, because it no longer matches the active filters. Generally, in Plando mode, you will want to search by locations, not by items.
+As a shortcut, you can also:
 
-### Custom Items
+  - Tap 'C' directly in Search or Route results. This will select the check for edit and also change its item in one step
+  - Tap 'E' on items in the check editor to edit them without knowing their location. This is only allowed if the item is placed in exactly one unique location + costs.
+  
+The item search results shows the total number of items placed within the seed in parenthesis on the left, so you can target specific total counts easily. To see how your counts differ from the initial randomization settings, select `ICDL > Item Diff Report`.
 
-You can create custom Geo and Essence drops using the named buttons below the Item search list in the ICDL check editor. Doing so will add a new appropriately named geo or essence item to the search results, which you can then select and place wherever desired.
+Note that editing a check may cause it to immediately disappear from search results, because it no longer matches the active search filters. However, it will remain selected in the check editor.
 
 ## Adding Checks
 
 HKSpoilerViewer does not support adding brand new checks to the world, a la [Transcendence](https://github.com/dpinela/Transcendence), but it does support creating new checks at existing locations. This is mostly intended for shops to create new sell-slots, but you could also use this functionality to create area-blitz-like multi-items throughout the world.
 
 To create a new check at an existing location, select that check in Search Results and press 'D'. To remove a check, press 'Z'. Note that removing the last check at a specific location will instead replace that check with a 'Nothing?' check.
+
+Because of the way items are added to the game, if you add multiple items at a single location that is not an established shop, they must all have the same cost (whihc is paid once by the player to acquire all the items). The editor will not prevent you from breaking this rule while editing, but you will not be able to save ICDL pack folders while this rule is broken. In a future version of HKSpoilerViewer, this may be improved to natively support multi-item checks.
 
 ## Setting Shop Costs
 
@@ -138,7 +143,13 @@ HKSpoilerViewer does not restrict what costs you set and where, but these may no
 
 ## Editing Context
 
-You can edit Starting Geo and charm notch costs from the ICDL menu. Each of these opens a text editor, which you modify and then close. The only restrictions are that geo and notch costs be non-negative integers.
+You can edit Starting Geo, charm notch costs, and logical tolerances from the ICDL menu. Each of these opens a text editor, which you modify and then close. The only restrictions are that geo and notch costs be non-negative integers.
+
+## Importing
+
+The ICDL editor does not allow you to modify vanilla checks, and there is no easy way to fix this once the save is already created. As a work-around, you can create a new randomizer save with the correct randomizer settings, then import your old save (.hks) on top of the new one. This will replace all the item checks in the new save that share randomized locations with the old save, with the checks in the old save.
+
+For example, if you start a plando, then realize after making 100 edits that you forgot to randomize grimmkin flames, you can create a new seed that does randomize grimmkin flames, then import your old (incomplete) save onto the new one so you don't lose work.
 
 ## Saving
 
