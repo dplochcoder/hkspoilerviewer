@@ -19,7 +19,7 @@ public class PoolsCategoryFilter extends ItemCategoryFilter {
 
   @Override
   public boolean accept(StateContext ctx, ItemCheck itemCheck) {
-    return pools.contains(ctx.pools().getPool(itemCheck.item().term()));
+    return pools.contains(itemCheck.item().getPool(ctx.pools()));
   }
 
   public static PoolsCategoryFilter parse(String name, JsonArray array) {

@@ -2,6 +2,7 @@ package hollow.knight.logic;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonArray;
@@ -11,6 +12,7 @@ import com.google.gson.JsonPrimitive;
 
 public final class Item {
   private final Term term;
+  private final Optional<String> pool;
   private final ImmutableSet<String> types;
   private final Condition logic;
   private final ImmutableTermMap trueEffects;
@@ -18,9 +20,10 @@ public final class Item {
   private final ImmutableTermMap caps;
   private final boolean fromJson;
 
-  private Item(Term term, Set<String> types, Condition logic, TermMap trueEffects,
-      TermMap falseEffects, TermMap caps) {
+  private Item(Term term, Optional<String> pool, Set<String> types, Condition logic,
+      TermMap trueEffects, TermMap falseEffects, TermMap caps) {
     this.term = term;
+    this.pool = pool;
     this.types = ImmutableSet.copyOf(types);
     this.logic = logic;
     this.trueEffects = ImmutableTermMap.copyOf(trueEffects);
@@ -29,8 +32,9 @@ public final class Item {
     this.fromJson = true;
   }
 
-  private Item(Term term, Set<String> types, Term effectTerm, int value) {
+  private Item(Term term, String pool, Set<String> types, Term effectTerm, int value) {
     this.term = term;
+    this.pool = Optional.of(pool);
     this.types = ImmutableSet.copyOf(types);
     this.logic = Condition.alwaysTrue();
 
@@ -46,18 +50,23 @@ public final class Item {
       ImmutableSet.of("RandomizerMod.RC.CustomGeoItem", "RandomizerMod");
 
   public static Item newGeoItem(int value) {
-    return new Item(Term.create(value + "_Geo"), GEO_TYPES, Term.geo(), value);
+    return new Item(Term.create(value + "_Geo"), "Geo", GEO_TYPES, Term.geo(), value);
   }
 
   private static final ImmutableSet<String> ESSENCE_TYPES =
       ImmutableSet.of("RandomizerCore.LogicItems.SingleItem", "RandomizerCore");
 
   public static Item newEssenceItem(int value) {
-    return new Item(Term.create(value + "_Essence"), ESSENCE_TYPES, Term.essence(), value);
+    return new Item(Term.create(value + "_Essence"), "DreamWarrior", ESSENCE_TYPES, Term.essence(),
+        value);
   }
 
   public Term term() {
     return term;
+  }
+
+  public String getPool(Pools pools) {
+    return pool.orElseGet(() -> pools.getPool(term()));
   }
 
   public String displayName() {
@@ -125,6 +134,7 @@ public final class Item {
     }
 
     JsonObject obj = json.getAsJsonObject();
+    String pool = obj.get("pool").getAsString();
     Term term = Term.create(obj.get("term").getAsString());
     Set<String> types = new HashSet<>();
     JsonArray typesArr = obj.get("types").getAsJsonArray();
@@ -132,7 +142,7 @@ public final class Item {
     Term effectTerm = Term.create(obj.get("effectTerm").getAsString());
     int value = obj.get("value").getAsInt();
 
-    return new Item(term, types, effectTerm, value);
+    return new Item(term, pool, types, effectTerm, value);
   }
 
   public JsonElement toJson() {
@@ -141,6 +151,7 @@ public final class Item {
     }
 
     JsonObject obj = new JsonObject();
+    obj.addProperty("pool", pool.get());
     obj.add("term", new JsonPrimitive(term().name()));
     JsonArray types = new JsonArray();
     types().forEach(types::add);
@@ -151,6 +162,11 @@ public final class Item {
   }
 
   public static Item parse(JsonObject item) throws ParseException {
+    Optional<String> pool = Optional.empty();
+    if (item.has("ItemDef")) {
+      pool = Optional.of(item.get("ItemDef").getAsJsonObject().get("Pool").getAsString());
+    }
+
     if (item.get("item") != null) {
       item = item.get("item").getAsJsonObject();
     }
@@ -181,6 +197,6 @@ public final class Item {
     Set<String> types = Arrays.stream(item.get("$type").getAsString().split(", "))
         .collect(ImmutableSet.toImmutableSet());
 
-    return new Item(name, types, logic, trueEffects, falseEffects, caps);
+    return new Item(name, pool, types, logic, trueEffects, falseEffects, caps);
   }
 }
