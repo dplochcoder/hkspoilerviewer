@@ -163,7 +163,7 @@ public final class Item {
 
   public static Item parse(JsonObject item) throws ParseException {
     Optional<String> pool = Optional.empty();
-    if (item.has("ItemDef")) {
+    if (item.has("ItemDef") && item.get("ItemDef").isJsonObject()) {
       pool = Optional.of(item.get("ItemDef").getAsJsonObject().get("Pool").getAsString());
     }
 
