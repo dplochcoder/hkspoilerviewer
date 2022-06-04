@@ -109,10 +109,17 @@ public class State {
     }
     dirtyTerms.clear();
 
+    if (potentialState == null) {
+      potentialState = this.deepCopy();
+      toleranceValues =
+          new SumTermMap(ImmutableList.of(potentialState.termValues, ctx.tolerances()));
+    }
+
     // Iterate waypoints.
     while (!newWaypoints.isEmpty()) {
       for (Term t : newWaypoints) {
         set(t, 1);
+        potentialState.set(t, 1);
       }
 
       newWaypoints.clear();
@@ -121,12 +128,6 @@ public class State {
         ctx().checks().getByCondition(c).forEach(newChecks::add);
       }
       dirtyTerms.clear();
-    }
-
-    if (potentialState == null) {
-      potentialState = this.deepCopy();
-      toleranceValues =
-          new SumTermMap(ImmutableList.of(potentialState.termValues, ctx.tolerances()));
     }
 
     // Acquire all accessible item checks.
