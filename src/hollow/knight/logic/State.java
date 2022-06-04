@@ -131,7 +131,9 @@ public class State {
     }
 
     // Acquire all accessible item checks.
-    newChecks.removeAll(potentialState.obtains);
+    for (Condition c : potentialState.graph.update(potentialState, potentialState.dirtyTerms)) {
+      ctx().checks().getByCondition(c).forEach(newChecks::add);
+    }
     while (!newChecks.isEmpty()) {
       newChecks.forEach(potentialState::acquireCheck);
       newChecks.clear();
