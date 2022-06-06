@@ -2,8 +2,10 @@ package hollow.knight.logic;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Sets;
 
 /** Mutable state of a run; can be deep-copied. */
 public class State {
@@ -55,13 +57,6 @@ public class State {
     termValues.set(term, value);
   }
 
-  public void dumpTerms() {
-    for (Term t : termValues.terms().stream().sorted((t1, t2) -> t1.name().compareTo(t2.name()))
-        .collect(ImmutableList.toImmutableList())) {
-      System.err.println(t + ": " + termValues.get(t));
-    }
-  }
-
   public void acquireCheck(ItemCheck check) {
     if (!obtains.add(check)) {
       return;
@@ -80,6 +75,10 @@ public class State {
     } else {
       return c.test(termValues(), ctx().notchCosts());
     }
+  }
+
+  public boolean purchaseTest(Condition c) {
+    return potentialState.test(c);
   }
 
   // Iteratively apply logic to grant access to items / areas.
@@ -106,6 +105,9 @@ public class State {
         newWaypoints.addAll(ctx.waypoints().getTerms(c));
         ctx().checks().getByCondition(c).forEach(newChecks::add);
       }
+      if (potentialState != null) {
+        potentialState.graph.update(potentialState, dirtyTerms);
+      }
     }
     dirtyTerms.clear();
 
@@ -127,21 +129,44 @@ public class State {
         newWaypoints.addAll(ctx.waypoints().getTerms(c));
         ctx().checks().getByCondition(c).forEach(newChecks::add);
       }
+      potentialState.graph.update(potentialState, dirtyTerms);
       dirtyTerms.clear();
     }
 
-    // Acquire all accessible item checks.
-    for (Condition c : potentialState.graph.update(potentialState, potentialState.dirtyTerms)) {
+    // Determine all accessible waypoints and checks.
+    Supplier<Set<Term>> costTerms =
+        () -> Sets.intersection(Term.costTerms(), potentialState.dirtyTerms);
+    for (Condition c : potentialState.graph.update(potentialState, costTerms.get())) {
+      newWaypoints.addAll(ctx().waypoints().getTerms(c));
       ctx().checks().getByCondition(c).forEach(newChecks::add);
     }
-    while (!newChecks.isEmpty()) {
-      newChecks.forEach(potentialState::acquireCheck);
-      newChecks.clear();
+    potentialState.dirtyTerms.clear();
 
-      for (Condition c : potentialState.graph.update(potentialState, potentialState.dirtyTerms)) {
-        ctx().checks().getByCondition(c).forEach(newChecks::add);
+    while (!newWaypoints.isEmpty() || !newChecks.isEmpty()) {
+      if (!newWaypoints.isEmpty()) {
+        // Evaluate new waypoints.
+        newWaypoints.forEach(t -> potentialState.set(t, 1));
+        potentialState.dirtyTerms.clear();
+
+        Set<Term> copy = new HashSet<>(newWaypoints);
+        newWaypoints.clear();
+
+        for (Condition c : potentialState.graph.update(potentialState, copy)) {
+          newWaypoints.addAll(ctx().waypoints().getTerms(c));
+          ctx().checks().getByCondition(c).forEach(newChecks::add);
+        }
       }
-      potentialState.dirtyTerms.clear();
+
+      if (!newChecks.isEmpty()) {
+        newChecks.forEach(potentialState::acquireCheck);
+        newChecks.clear();
+
+        for (Condition c : potentialState.graph.update(potentialState, costTerms.get())) {
+          newWaypoints.addAll(ctx().waypoints().getTerms(c));
+          ctx().checks().getByCondition(c).forEach(newChecks::add);
+        }
+        potentialState.dirtyTerms.clear();
+      }
     }
   }
 

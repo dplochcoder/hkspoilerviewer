@@ -43,6 +43,11 @@ public final class TermGreaterThanCondition extends Condition {
   }
 
   @Override
+  public String debugString() {
+    return term.name() + ">" + greater;
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (!(o instanceof TermGreaterThanCondition)) {
       return false;

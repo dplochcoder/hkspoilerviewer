@@ -289,7 +289,7 @@ public final class ItemChecks {
   }
 
   public Stream<ItemCheck> startChecks() {
-    return idsByLocation.getKey("Start").stream().map(checksById::get);
+    return idsByLocation.getValue("Start").stream().map(checksById::get);
   }
 
   public Item nothing() {
@@ -297,7 +297,7 @@ public final class ItemChecks {
   }
 
   public Stream<ItemCheck> getByCondition(Condition c) {
-    return idsByCondition.getKey(c).stream().map(checksById::get);
+    return idsByCondition.getValue(c).stream().map(checksById::get);
   }
 
   public JsonObject toJson() {

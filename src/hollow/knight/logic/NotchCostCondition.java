@@ -40,6 +40,11 @@ public final class NotchCostCondition extends Condition {
   }
 
   @Override
+  public String debugString() {
+    return "NOTCHES > $NotchCost" + charmIds;
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (!(o instanceof NotchCostCondition)) {
       return false;
@@ -51,5 +56,4 @@ public final class NotchCostCondition extends Condition {
   public static NotchCostCondition of(List<Integer> charmIds) {
     return (NotchCostCondition) (new NotchCostCondition(charmIds).intern());
   }
-
 }

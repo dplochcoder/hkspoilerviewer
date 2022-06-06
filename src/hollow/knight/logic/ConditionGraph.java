@@ -65,7 +65,7 @@ public final class ConditionGraph {
     while (!queue.isEmpty()) {
       Set<Condition> next = new HashSet<>();
       for (Condition c : queue) {
-        for (CommutativeCondition cc : new HashSet<>(children.getValue(c))) {
+        for (CommutativeCondition cc : new HashSet<>(children.getKey(c))) {
           updateChildren(cc, c, next);
         }
       }

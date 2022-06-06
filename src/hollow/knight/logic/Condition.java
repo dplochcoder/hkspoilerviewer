@@ -54,6 +54,8 @@ public abstract class Condition {
   // May contain duplicates, not efficient.
   public abstract Stream<Term> locationTerms();
 
+  public abstract String debugString();
+
   @Override
   public final int hashCode() {
     return hashCode;
@@ -85,6 +87,11 @@ public abstract class Condition {
     @Override
     public Stream<Term> locationTerms() {
       return Stream.of();
+    }
+
+    @Override
+    public String debugString() {
+      return value ? "TRUE" : "FALSE";
     }
 
     @Override

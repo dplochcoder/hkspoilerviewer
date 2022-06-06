@@ -1,6 +1,7 @@
 package hollow.knight.logic;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public final class Disjunction extends CommutativeCondition {
   private Disjunction(Set<Condition> operands) {
@@ -33,4 +34,9 @@ public final class Disjunction extends CommutativeCondition {
     }
   }
 
+  @Override
+  public String debugString() {
+    return operands.stream().map(Condition::debugString)
+        .collect(Collectors.joining(") || (", "(", ")"));
+  }
 }

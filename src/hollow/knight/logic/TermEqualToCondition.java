@@ -34,6 +34,11 @@ public final class TermEqualToCondition extends Condition {
   }
 
   @Override
+  public String debugString() {
+    return term.name() + "=" + value;
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (!(o instanceof TermEqualToCondition)) {
       return false;

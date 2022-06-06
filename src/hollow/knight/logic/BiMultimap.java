@@ -65,7 +65,7 @@ public final class BiMultimap<K, V> {
     return keysToValues.containsKey(key);
   }
 
-  public Collection<V> getKey(K key) {
+  public Collection<V> getValue(K key) {
     return keysToValues.get(key);
   }
 
@@ -73,7 +73,7 @@ public final class BiMultimap<K, V> {
     return valuesToKeys.containsKey(value);
   }
 
-  public Collection<K> getValue(V value) {
+  public Collection<K> getKey(V value) {
     return valuesToKeys.get(value);
   }
 }

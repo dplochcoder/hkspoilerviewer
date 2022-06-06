@@ -117,6 +117,8 @@ public abstract class SearchResult {
           state.ctx().notchCosts())) {
         return LogicType.COST_ACCESSIBLE;
       }
+    } else if (state.purchaseTest(itemCheck.condition())) {
+      return LogicType.COST_ACCESSIBLE;
     }
 
     return LogicType.OUT_OF_LOGIC;
