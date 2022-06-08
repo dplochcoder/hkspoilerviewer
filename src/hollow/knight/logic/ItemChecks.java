@@ -223,17 +223,23 @@ public final class ItemChecks {
     }
   }
 
+  private int compareIdsVanillaLast(CheckId id1, CheckId id2) {
+    return ComparisonChain.start()
+        .compareFalseFirst(checksById.get(id1).vanilla(), checksById.get(id2).vanilla())
+        .compare(id1.id(), id2.id()).result();
+  }
+
   public void compact() {
-    ImmutableList<CheckId> sorted =
-        checksById.keySet().stream().sorted().collect(ImmutableList.toImmutableList());
+    ImmutableList<CheckId> sorted = checksById.keySet().stream().sorted(this::compareIdsVanillaLast)
+        .collect(ImmutableList.toImmutableList());
 
     ImmutableMap.Builder<ItemCheck, ItemCheck> replacedBuilder = ImmutableMap.builder();
     for (int i = 0; i < sorted.size(); i++) {
       CheckId id = sorted.get(i);
 
-      if (id.id() != i + 1) {
+      if (id.id() != i) {
         ItemCheck check = checksById.get(id);
-        ItemCheck newCheck = ItemCheck.create(CheckId.of(i + 1), check.location(), check.item(),
+        ItemCheck newCheck = ItemCheck.create(CheckId.of(i), check.location(), check.item(),
             check.costs(), check.vanilla());
 
         removeInternal(check.id());

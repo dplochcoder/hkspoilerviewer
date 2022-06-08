@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -344,7 +345,7 @@ public final class StateContext {
     return mods;
   }
 
-  private JsonArray createNewSpoilerPlacements(JsonArray origPlacements) {
+  private JsonArray createNewSpoilerPlacements(JsonArray origPlacements) throws ICDLException {
     Map<Term, JsonObject> itemsJson = new HashMap<>();
     Map<String, JsonObject> locationsJson = new HashMap<>();
 
@@ -361,10 +362,14 @@ public final class StateContext {
     }
 
     JsonArray arr = new JsonArray();
-    ImmutableList<ItemCheck> checks =
-        checks().allChecks().filter(c -> !c.vanilla()).collect(ImmutableList.toImmutableList());
+    ImmutableList<ItemCheck> checks = checks().allChecks().filter(c -> !c.vanilla())
+        .sorted(Comparator.comparing(c -> c.id().id())).collect(ImmutableList.toImmutableList());
     for (int i = 0; i < checks.size(); i++) {
       ItemCheck c = checks.get(i);
+      if (c.id().id() != i) {
+        throw new ICDLException("Placement indices don't match ids");
+      }
+
       JsonObject placement = new JsonObject();
       placement.add("Item", itemsJson.get(c.item().term()));
 

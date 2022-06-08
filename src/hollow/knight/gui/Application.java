@@ -674,6 +674,7 @@ public final class Application extends JFrame {
       return;
     }
 
+    ctx().checks().compact();
     ctx().saveICDL(c.getSelectedFile().toPath());
   }
 
