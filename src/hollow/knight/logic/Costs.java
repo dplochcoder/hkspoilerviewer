@@ -29,6 +29,10 @@ public final class Costs {
     this(ImmutableSet.of(cost));
   }
 
+  public boolean isNone() {
+    return costs.isEmpty();
+  }
+
   public ImmutableSet<Cost> costs() {
     return costs;
   }
@@ -138,8 +142,6 @@ public final class Costs {
         return new Costs(Cost.createGeo(300));
       case "Dash_Slash":
         return new Costs(Cost.createGeo(800));
-      case "Vessel_Fragment-Basin":
-        return new Costs(Cost.createGeo(3000));
       default:
         return none();
     }

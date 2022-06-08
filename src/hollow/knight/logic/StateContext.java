@@ -196,6 +196,26 @@ public final class StateContext {
     sanitizeTags(location, LOCATION_TAGS_TO_SANITIZE);
   }
 
+  private boolean hasInherentCost(JsonObject obj) {
+    if (!obj.has("Location")) {
+      return false;
+    }
+
+    JsonElement tags = obj.get("Location").getAsJsonObject().get("tags");
+    if (tags.isJsonNull()) {
+      return false;
+    }
+
+    for (JsonElement tag : tags.getAsJsonArray()) {
+      if (tag.getAsJsonObject().has("Inherent")
+          && tag.getAsJsonObject().get("Inherent").getAsBoolean()) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   private JsonObject calculatePlacementsJson(Map<Term, JsonObject> itemJsons,
       Map<String, JsonObject> locationJsons) throws ICDLException {
     JsonObject placements = new JsonObject();
@@ -208,7 +228,6 @@ public final class StateContext {
       int prev = assignedSyncIds.add(id, 1);
       syncIds.put(c, id + ((prev > 0) ? String.valueOf(prev + 1) : ""));
     });
-
 
     // Group ItemChecks by Location.
     Multimap<String, ItemCheck> checksByLocation = HashMultimap.create();
@@ -226,6 +245,12 @@ public final class StateContext {
         if (costsSet.size() != 1) {
           throw new ICDLException("Error: Multiple items at " + locName
               + " have differing costs. This is only supported for shops.");
+        }
+
+        Costs costs = costsSet.iterator().next();
+        if (hasInherentCost(locObj) && !costs.isNone()) {
+          throw new ICDLException("Error: Location '" + loc.name()
+              + "' has an inherent cost. It cannot be assigned a separate cost");
         }
 
         locObj.add("Cost", costsSet.iterator().next().toICDLJson());
