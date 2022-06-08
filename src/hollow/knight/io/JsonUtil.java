@@ -36,6 +36,7 @@ public final class JsonUtil {
 
   public static void writeJson(String path, JsonElement json) throws IOException {
     try (JsonWriter w = new JsonWriter(new FileWriter(path.toString()))) {
+      w.setIndent("  ");
       Streams.write(json, w);
     }
   }
