@@ -255,6 +255,10 @@ public final class ItemChecks {
     Set<String> theirs = other.allChecks().filter(c -> !c.vanilla()).map(c -> c.location().name())
         .collect(ImmutableSet.toImmutableSet());
 
+    // Don't touch Start.
+    ours.remove("Start");
+    theirs.remove("Start");
+
     SetView<String> diff = Sets.difference(theirs, ours);
     if (!diff.isEmpty()) {
       throw new ICDLException(
