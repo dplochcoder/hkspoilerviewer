@@ -21,6 +21,8 @@ public final class CheckEditorItemsListModel implements ListModel<String>, ItemC
   private final Object mutex = new Object();
   private final Set<ListDataListener> listeners = new HashSet<>();
 
+  private final ItemChecks checks;
+
   private final Multiset<Term> itemCounts = HashMultiset.create();
   private final List<Item> resultItems = new ArrayList<>();
   private final List<String> resultStrings = new ArrayList<>();
@@ -28,13 +30,20 @@ public final class CheckEditorItemsListModel implements ListModel<String>, ItemC
       Comparator.comparing(item -> item.displayName().toLowerCase());
 
   public CheckEditorItemsListModel(ItemChecks checks) {
+    this.checks = checks;
+
     checks.allChecks().forEach(c -> itemCounts.add(c.item().term()));
     checks.addListener(this);
   }
 
+  private String diffSuffix(Term term) {
+    int diff = itemCounts.count(term) - checks.originalItemCount(term.name());
+    return diff == 0 ? "" : ((diff > 0 ? ", +" : ", ") + diff);
+  }
+
   private String render(Item item) {
-    return "(" + itemCounts.count(item.term()) + ") " + item.displayName() + " "
-        + item.valueSuffix();
+    return "(" + itemCounts.count(item.term()) + diffSuffix(item.term()) + ") " + item.displayName()
+        + " " + item.valueSuffix();
   }
 
   public void updateResults(StateContext ctx, List<Item> resultItems) {

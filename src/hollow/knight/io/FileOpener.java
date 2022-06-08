@@ -5,6 +5,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonObject;
+import hollow.knight.logic.ICDLException;
 import hollow.knight.logic.ParseException;
 import hollow.knight.logic.SaveInterface;
 import hollow.knight.logic.StateContext;
@@ -18,7 +19,7 @@ public final class FileOpener {
     this.saveInterfaces = ImmutableList.copyOf(saveInterfaces);
   }
 
-  public StateContext openFile(Path path) throws ParseException {
+  public StateContext openFile(Path path) throws ParseException, ICDLException {
     boolean isHKS = path.toString().endsWith(".hks");
 
     JsonObject saveData = new JsonObject();

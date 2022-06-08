@@ -121,7 +121,7 @@ public final class StateContext {
     obj.add("ICDLTolerances", tolerances.toJson());
   }
 
-  public void loadMutables(JsonObject obj) {
+  public void loadMutables(JsonObject obj) throws ICDLException {
     if (!obj.has("ICDLItemChecks")) {
       return;
     }

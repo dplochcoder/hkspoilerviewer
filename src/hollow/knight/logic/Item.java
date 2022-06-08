@@ -128,7 +128,7 @@ public final class Item {
     }
   }
 
-  public static Item fromJson(ItemChecks checks, JsonElement json) {
+  public static Item fromJson(ItemChecks checks, JsonElement json) throws ICDLException {
     if (json.isJsonPrimitive()) {
       return checks.getItem(Term.create(json.getAsString()));
     }

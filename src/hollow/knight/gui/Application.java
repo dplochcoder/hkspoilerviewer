@@ -582,7 +582,7 @@ public final class Application extends JFrame {
     icdlMenu.setToolTipText(enable ? "" : "Open an ICDL ctx.json file to enable ICDL features");
   }
 
-  private void openFile() throws ParseException, IOException {
+  private void openFile() throws ParseException, IOException, ICDLException {
     StateContext prevCtx = routeListModel.ctx();
     JFileChooser c = new JFileChooser("Open");
     c.setFileFilter(HKS_OPEN_FILTER);

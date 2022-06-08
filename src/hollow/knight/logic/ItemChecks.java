@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.HashMultiset;
@@ -73,6 +74,10 @@ public final class ItemChecks {
 
   public boolean isOriginalNonVanilla(Term term) {
     return originalNonVanillaItems.contains(term);
+  }
+
+  public int originalItemCount(String name) {
+    return originalItemCounts.count(name);
   }
 
   public ImmutableMap<String, Integer> getICDLItemDiff() {
@@ -166,12 +171,22 @@ public final class ItemChecks {
     listeners().forEach(l -> l.checkRemoved(check));
   }
 
-  public Location getLocation(String name) {
-    return locationsByName.get(name);
+  public Location getLocation(String name) throws ICDLException {
+    Location loc = locationsByName.get(name);
+    if (loc == null) {
+      throw new ICDLException("Unknown location: " + name);
+    }
+
+    return loc;
   }
 
-  public Item getItem(Term term) {
-    return itemsByName.get(term);
+  public Item getItem(Term term) throws ICDLException {
+    Item item = itemsByName.get(term);
+    if (item == null) {
+      throw new ICDLException("Unknown item: " + term.name());
+    }
+
+    return item;
   }
 
   public void reduceToNothing(Predicate<ItemCheck> filter) {
@@ -234,16 +249,17 @@ public final class ItemChecks {
   }
 
   public void overlayImportChecks(ItemChecks other) throws ICDLException {
-    // Check that the set of non-vanilla locations being imported is a subset.
-    Set<String> ours = allChecks().filter(c -> !c.vanilla()).map(c -> c.location().name())
-        .collect(ImmutableSet.toImmutableSet());
+    // Check that the set of non-vanilla locations being imported is a subset of all our locations.
+    Set<String> ours =
+        allChecks().map(c -> c.location().name()).collect(ImmutableSet.toImmutableSet());
     Set<String> theirs = other.allChecks().filter(c -> !c.vanilla()).map(c -> c.location().name())
         .collect(ImmutableSet.toImmutableSet());
 
     SetView<String> diff = Sets.difference(theirs, ours);
     if (!diff.isEmpty()) {
       throw new ICDLException(
-          "Cannot import: " + diff.size() + " locations in the import are not randomized here");
+          "Cannot import: " + diff.size() + " locations in the import are not randomized here: "
+              + diff.stream().sorted().collect(Collectors.joining("\n")));
     }
 
     // Remove all checks at the import locations.
@@ -255,7 +271,13 @@ public final class ItemChecks {
 
     Map<ItemCheck, ItemCheck> massReplacement = new HashMap<>();
     Set<ItemCheck> massAdd = new HashSet<>();
-    other.allChecks().filter(c -> !c.vanilla()).forEach(c -> {
+
+    Iterable<ItemCheck> checks = () -> other.allChecks().iterator();
+    for (ItemCheck c : checks) {
+      if (c.vanilla()) {
+        continue;
+      }
+
       ItemCheck newCheck = ItemCheck.create(newId(), getLocation(c.location().name()),
           getItem(c.item().term()), c.costs(), false);
       addInternal(newCheck);
@@ -267,7 +289,7 @@ public final class ItemChecks {
       } else {
         massAdd.add(newCheck);
       }
-    });
+    }
 
     ImmutableSet<ItemCheck> massAddFinal = ImmutableSet.copyOf(massAdd);
     listeners().forEach(l -> l.multipleChecksAdded(massAddFinal));
@@ -308,13 +330,15 @@ public final class ItemChecks {
     return obj;
   }
 
-  public void fromJson(JsonObject obj) {
+  public void fromJson(JsonObject obj) throws ICDLException {
     // Remove all item checks
     ImmutableSet<CheckId> ids = ImmutableSet.copyOf(checksById.keySet());
     ids.forEach(this::removeInternal);
 
     JsonArray arr = obj.get("checks").getAsJsonArray();
-    arr.forEach(e -> addInternal(ItemCheck.fromJson(this, e.getAsJsonObject())));
+    for (JsonElement e : arr) {
+      addInternal(ItemCheck.fromJson(this, e.getAsJsonObject()));
+    }
   }
 
   private void parseCheck(JsonElement elem, RoomLabels rooms, boolean vanilla)
