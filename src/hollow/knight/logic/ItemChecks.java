@@ -2,6 +2,7 @@ package hollow.knight.logic;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -10,7 +11,9 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import com.google.common.collect.BiMap;
 import com.google.common.collect.ComparisonChain;
+import com.google.common.collect.HashBiMap;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -49,7 +52,7 @@ public final class ItemChecks {
   private final Object mutex = new Object();
   private final Set<Listener> listeners = new HashSet<>();
 
-  private final Map<CheckId, ItemCheck> checksById = new HashMap<>();
+  private final BiMap<CheckId, ItemCheck> checksById = HashBiMap.create();
   private final BiMultimap<Condition, CheckId> idsByCondition = new BiMultimap<>();
   private final BiMultimap<String, CheckId> idsByLocation = new BiMultimap<>();
 
@@ -150,6 +153,30 @@ public final class ItemChecks {
 
     listeners().forEach(l -> l.checkAdded(check));
     return check.id();
+  }
+
+  public void addMultiple(ImmutableSet<ItemCheck> checks) {
+    if (checks.isEmpty()) {
+      return;
+    }
+
+    checks.forEach(this::addInternal);
+    listeners().forEach(l -> l.multipleChecksAdded(checks));
+  }
+
+  public void removeMultiple(ImmutableSet<CheckId> checkIds) {
+    if (checkIds.isEmpty()) {
+      return;
+    }
+
+    ImmutableSet.Builder<ItemCheck> checksBuilder = ImmutableSet.builder();
+    checkIds.forEach(id -> {
+      checksBuilder.add(checksById.get(id));
+      removeInternal(id);
+    });
+
+    ImmutableSet<ItemCheck> checks = checksBuilder.build();
+    listeners().forEach(l -> l.multipleChecksRemoved(checks));
   }
 
   public CheckId replace(CheckId prevId, Location loc, Item item, Costs costs, boolean vanilla) {
@@ -314,6 +341,12 @@ public final class ItemChecks {
 
   public Stream<ItemCheck> allChecks() {
     return checksById.values().stream();
+  }
+
+  private final Set<ItemCheck> allChecksSet = Collections.unmodifiableSet(checksById.values());
+
+  public Set<ItemCheck> allChecksSet() {
+    return allChecksSet;
   }
 
   public Stream<Item> allItems() {
