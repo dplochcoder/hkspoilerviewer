@@ -9,7 +9,7 @@ import com.google.common.primitives.Ints;
 public final class ConditionParser {
   private interface Atom {
     public enum Type {
-      CONDITION, TERM, DISJUNCTION_OPERATOR, CONJUNCTION_OPERATOR, LEFT_PAREN, RIGHT_PAREN, GREATER_THAN, EQUAL_TO, NUMERIC_LITERAL,
+      CONDITION, TERM, DISJUNCTION_OPERATOR, CONJUNCTION_OPERATOR, LEFT_PAREN, RIGHT_PAREN, GREATER_THAN, LESS_THAN, EQUAL_TO, NUMERIC_LITERAL,
     };
 
     Type type();
@@ -90,14 +90,15 @@ public final class ConditionParser {
   }
 
   private static final ImmutableList<Atom.Type> OPERATION_ORDER =
-      ImmutableList.of(Atom.Type.GREATER_THAN, Atom.Type.EQUAL_TO, Atom.Type.CONJUNCTION_OPERATOR,
-          Atom.Type.DISJUNCTION_OPERATOR);
+      ImmutableList.of(Atom.Type.GREATER_THAN, Atom.Type.LESS_THAN, Atom.Type.EQUAL_TO,
+          Atom.Type.CONJUNCTION_OPERATOR, Atom.Type.DISJUNCTION_OPERATOR);
 
   private static final Atom OR = new SingletonType(Atom.Type.DISJUNCTION_OPERATOR);
   private static final Atom AND = new SingletonType(Atom.Type.CONJUNCTION_OPERATOR);
   private static final Atom LPAREN = new SingletonType(Atom.Type.LEFT_PAREN);
   private static final Atom RPAREN = new SingletonType(Atom.Type.RIGHT_PAREN);
   private static final Atom GT = new SingletonType(Atom.Type.GREATER_THAN);
+  private static final Atom LT = new SingletonType(Atom.Type.LESS_THAN);
   private static final Atom EQ = new SingletonType(Atom.Type.EQUAL_TO);
 
   public static Condition parse(String text) throws ParseException {
@@ -223,6 +224,7 @@ public final class ConditionParser {
         }
       }
       case GREATER_THAN:
+      case LESS_THAN:
       case EQUAL_TO: {
         if (op == Atom.Type.GREATER_THAN && left.type() == Atom.Type.TERM
             && right.type() == Atom.Type.TERM) {
@@ -242,6 +244,8 @@ public final class ConditionParser {
         int value = ((NumericAtom) right).value();
         if (op == Atom.Type.GREATER_THAN) {
           return TermGreaterThanCondition.of(term, value);
+        } else if (op == Atom.Type.LESS_THAN) {
+          return TermLessThanCondition.of(term, value);
         } else {
           return TermEqualToCondition.of(term, value);
         }
@@ -269,6 +273,8 @@ public final class ConditionParser {
         closeAtom(RPAREN);
       } else if (ch == '>') {
         closeAtom(GT);
+      } else if (ch == '<') {
+        closeAtom(LT);
       } else if (ch == '=') {
         closeAtom(EQ);
       } else {
