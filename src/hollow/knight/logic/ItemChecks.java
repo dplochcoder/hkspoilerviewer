@@ -60,6 +60,7 @@ public final class ItemChecks {
   private final Map<String, Location> locationsByName = new HashMap<>();
   private final Map<Term, Item> itemsByName = new HashMap<>();
   private final BiMultimap<Term, CheckId> idsByItemName = new BiMultimap<>();
+  private final Multiset<Term> effectTerms = HashMultiset.create();
 
   private final Multiset<String> originalItemCounts = HashMultiset.create();
   private final Multiset<String> itemCounts = HashMultiset.create();
@@ -129,6 +130,10 @@ public final class ItemChecks {
     itemsByName.put(item.term(), item);
   }
 
+  public boolean isEffectTerm(Term term) {
+    return effectTerms.count(term) > 0;
+  }
+
   private void addInternal(ItemCheck check) {
     checksById.put(check.id(), check);
     idsByCondition.put(check.condition(), check.id());
@@ -138,6 +143,7 @@ public final class ItemChecks {
     itemsByName.put(check.item().term(), check.item());
     idsByItemName.put(check.item().term(), check.id());
     itemCounts.add(check.item().term().name());
+    check.item().effectTerms().forEach(effectTerms::add);
   }
 
   private void removeInternal(CheckId id) {
@@ -146,6 +152,7 @@ public final class ItemChecks {
     idsByLocation.removeValue(id);
     idsByItemName.removeValue(id);
     itemCounts.remove(check.item().term().name());
+    check.item().effectTerms().forEach(effectTerms::remove);
   }
 
   public CheckId placeNew(Location loc, Item item, Costs costs, boolean vanilla) {

@@ -94,6 +94,10 @@ public final class StateContext {
     return checks;
   }
 
+  public boolean isMutableTerm(Term term) {
+    return waypoints.allWaypoints().contains(term) || checks.isEffectTerm(term);
+  }
+
   public TermMap tolerances() {
     return tolerances;
   }

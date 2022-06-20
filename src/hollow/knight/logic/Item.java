@@ -4,7 +4,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Streams;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -83,6 +85,10 @@ public final class Item {
 
   public int getEffectValue(Term term) {
     return trueEffects.get(term);
+  }
+
+  public Stream<Term> effectTerms() {
+    return Streams.concat(trueEffects.terms().stream(), falseEffects.terms().stream()).distinct();
   }
 
   public String valueSuffix() {

@@ -25,8 +25,13 @@ public final class NotchCostCondition extends Condition {
   }
 
   @Override
-  public boolean test(Condition.Context ctx) {
+  public boolean test(Context ctx) {
     return ctx.values().get(Term.notches()) > notchCost(ctx.notchCosts());
+  }
+
+  @Override
+  public boolean permanentlyFalse(ConditionGraph.IndexContext ctx) {
+    return false;
   }
 
   @Override

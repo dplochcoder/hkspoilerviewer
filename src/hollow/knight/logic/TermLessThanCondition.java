@@ -24,6 +24,13 @@ public final class TermLessThanCondition extends Condition {
     return ctx.values().get(term) < less;
   }
 
+  @Override
+  public boolean permanentlyFalse(ConditionGraph.IndexContext ctx) {
+    // Less-than conditions should never be part of indexed logic, since they can transition true ->
+    // false.
+    throw new UnsupportedOperationException("Less-than operations should not be indexed");
+  }
+
   public Term term() {
     return term;
   }

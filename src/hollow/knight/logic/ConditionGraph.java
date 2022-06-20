@@ -2,12 +2,39 @@ package hollow.knight.logic;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Predicate;
 import com.google.common.collect.Sets;
 
 // A mutable record of all Condition evaluations, updated incrementally.
 // Assumes all conditions can only transition from false -> true, and that term values can only
 // increase.
 public final class ConditionGraph {
+
+  public static final class IndexContext {
+    private final Condition.Context conditionCtx;
+    private final Predicate<Term> mutableTermTester;
+
+    public IndexContext(Condition.Context conditionCtx, Predicate<Term> mutableTermTester) {
+      this.conditionCtx = conditionCtx;
+      this.mutableTermTester = mutableTermTester;
+    }
+
+    public Condition.Context conditionCtx() {
+      return conditionCtx;
+    }
+
+    public TermMap values() {
+      return conditionCtx.values();
+    }
+
+    public NotchCosts notchCosts() {
+      return conditionCtx.notchCosts();
+    }
+
+    public boolean isMutableTerm(Term term) {
+      return mutableTermTester.test(term);
+    }
+  }
 
   // All true conditions are stored here.
   private final Set<Condition> trueConditions;
@@ -79,33 +106,36 @@ public final class ConditionGraph {
     return updates;
   }
 
-  public static Builder builder(Condition.Context ctx) {
+  public static Builder builder(IndexContext ctx) {
     return new Builder(ctx);
   }
 
   public static final class Builder {
-    private final Condition.Context ctx;
+    private final IndexContext ctx;
     private final Set<Condition> indexed = new HashSet<>();
 
     private final Set<Condition> trueConditions = new HashSet<>();
     private final BiMultimap<CommutativeCondition, Condition> children = new BiMultimap<>();
     private final TermConditionIndex termIndex = new TermConditionIndex();
 
-    private Builder(Condition.Context ctx) {
+    private Builder(IndexContext ctx) {
       this.ctx = ctx;
     }
 
-    public Condition.Context ctx() {
+    public IndexContext ctx() {
       return ctx;
     }
 
     public boolean index(Condition c) {
       if (indexed.add(c)) {
-        if (c.test(ctx)) {
+        if (c.test(ctx.conditionCtx())) {
           trueConditions.add(c);
           return true;
         } else {
-          c.index(this);
+          if (!c.permanentlyFalse(ctx)) {
+            c.index(this);
+          }
+
           return false;
         }
       } else {
@@ -119,7 +149,7 @@ public final class ConditionGraph {
 
     public boolean indexChild(CommutativeCondition parent, Condition child) {
       boolean childTrue = index(child);
-      if (!childTrue) {
+      if (!childTrue && !child.permanentlyFalse(ctx)) {
         children.put(parent, child);
       }
       return childTrue;

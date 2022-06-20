@@ -23,6 +23,12 @@ public final class TermEqualToCondition extends Condition {
   }
 
   @Override
+  public boolean permanentlyFalse(ConditionGraph.IndexContext ctx) {
+    // Equal-to conditions are always based on initial state.
+    return true;
+  }
+
+  @Override
   public void index(ConditionGraph.Builder builder) {
     // An equal-to condition is always based on initial state, and should never change.
     // So we don't index it.

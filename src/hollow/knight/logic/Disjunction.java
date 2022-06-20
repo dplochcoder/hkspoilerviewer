@@ -27,6 +27,11 @@ public final class Disjunction extends CommutativeCondition {
   }
 
   @Override
+  public boolean permanentlyFalse(ConditionGraph.IndexContext ctx) {
+    return operands.stream().allMatch(c -> c.permanentlyFalse(ctx));
+  }
+
+  @Override
   public void index(ConditionGraph.Builder builder) {
     for (Condition c : operands) {
       builder.index(c);

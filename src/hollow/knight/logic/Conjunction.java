@@ -27,6 +27,11 @@ public final class Conjunction extends CommutativeCondition {
   }
 
   @Override
+  public boolean permanentlyFalse(ConditionGraph.IndexContext ctx) {
+    return operands.stream().anyMatch(c -> !c.test(ctx.conditionCtx()) && c.permanentlyFalse(ctx));
+  }
+
+  @Override
   public void index(ConditionGraph.Builder builder) {
     for (Condition c : operands) {
       if (!builder.index(c)) {

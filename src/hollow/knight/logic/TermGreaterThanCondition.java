@@ -28,6 +28,11 @@ public final class TermGreaterThanCondition extends Condition {
     return ctx.values().get(term) > greater;
   }
 
+  @Override
+  public boolean permanentlyFalse(ConditionGraph.IndexContext ctx) {
+    return !ctx.isMutableTerm(term);
+  }
+
   public Term term() {
     return term;
   }

@@ -50,6 +50,11 @@ public abstract class Condition {
   // Never invoked on a Condition already evaluating to true.
   public abstract void index(ConditionGraph.Builder builder);
 
+  // Returns true if this Condition is currently false and will never evaluate to true under
+  // ordinary progression. (For instance, a check on initial conditions.)
+  // Never invoked on a Condition already evaluating to true.
+  public abstract boolean permanentlyFalse(ConditionGraph.IndexContext ctx);
+
   // Generic terms in this condition possibly related to location; used to infer scenes.
   // May contain duplicates, not efficient.
   public abstract Stream<Term> locationTerms();
@@ -90,6 +95,11 @@ public abstract class Condition {
     @Override
     public boolean test(Context ctx) {
       return value;
+    }
+
+    @Override
+    public boolean permanentlyFalse(ConditionGraph.IndexContext ctx) {
+      return true;
     }
 
     @Override

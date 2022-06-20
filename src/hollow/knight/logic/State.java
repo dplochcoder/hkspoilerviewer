@@ -86,8 +86,8 @@ public class State {
     Set<Term> newWaypoints = new HashSet<>();
     Set<ItemCheck> newChecks = new HashSet<>();
     if (graph == null) {
-      ConditionGraph.Builder builder =
-          ConditionGraph.builder(new Condition.Context(termValues(), ctx().notchCosts()));
+      ConditionGraph.Builder builder = ConditionGraph.builder(new ConditionGraph.IndexContext(
+          new Condition.Context(termValues(), ctx().notchCosts()), ctx()::isMutableTerm));
       for (Term t : ctx.waypoints().allWaypoints()) {
         if (builder.index(ctx.waypoints().getCondition(t))) {
           newWaypoints.add(t);
