@@ -40,4 +40,10 @@ public final class Conjunction extends CommutativeCondition {
     return operands.stream().map(Condition::debugString)
         .collect(Collectors.joining(") && (", "(", ")"));
   }
+
+  @Override
+  public String debugEvaluation(Context ctx) {
+    return "(" + operands.stream().map(c -> c.debugEvaluation(ctx))
+        .collect(Collectors.joining(") && (", "(", ")")) + ")=" + test(ctx);
+  }
 }

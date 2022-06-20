@@ -45,6 +45,12 @@ public final class NotchCostCondition extends Condition {
   }
 
   @Override
+  public String debugEvaluation(Context ctx) {
+    return "(" + ctx.values().get(Term.notches()) + ">" + notchCost(ctx.notchCosts()) + ")="
+        + test(ctx);
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (!(o instanceof NotchCostCondition)) {
       return false;

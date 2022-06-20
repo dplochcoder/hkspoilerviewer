@@ -56,6 +56,17 @@ public abstract class Condition {
 
   public abstract String debugString();
 
+  public abstract String debugEvaluation(Context ctx);
+
+  public final String debugEvaluation(TermMap values, NotchCosts notchCosts) {
+    return debugEvaluation(new Context(values, notchCosts));
+  }
+
+  @Override
+  public final String toString() {
+    return "Condition[" + debugString() + "]";
+  }
+
   @Override
   public final int hashCode() {
     return hashCode;
@@ -92,6 +103,11 @@ public abstract class Condition {
     @Override
     public String debugString() {
       return value ? "TRUE" : "FALSE";
+    }
+
+    @Override
+    public String debugEvaluation(Context ctx) {
+      return debugString();
     }
 
     @Override
