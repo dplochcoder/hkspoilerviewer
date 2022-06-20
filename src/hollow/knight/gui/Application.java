@@ -438,11 +438,6 @@ public final class Application extends JFrame {
     missingItems.addActionListener(GuiUtil.newActionListener(this, this::showItemDiffReport));
     menu.add(missingItems);
 
-    menu.add(new JSeparator());
-    JMenuItem editStartingGeo = new JMenuItem("Edit Starting Geo");
-    editStartingGeo.addActionListener(GuiUtil.newActionListener(this, this::editStartingGeo));
-    menu.add(editStartingGeo);
-
     JMenuItem editNotches = new JMenuItem("Edit Charm Costs");
     editNotches.addActionListener(GuiUtil.newActionListener(this, this::editNotchCosts));
     menu.add(editNotches);

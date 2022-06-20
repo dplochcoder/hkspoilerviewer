@@ -23,6 +23,9 @@
   "Name" : "Levers",
   "Pools" : [ "Levers" ]
 }, {
+  "Name" : "Benches",
+  "Pools" : [ "Benches" ]
+}, {
   "Name" : "Essence",
   "EffectTerm" : "ESSENCE"
 }, {

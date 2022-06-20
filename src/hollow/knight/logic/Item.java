@@ -125,6 +125,8 @@ public final class Item {
       }
     } else if (obj.get("item") != null) {
       parseEffects(obj.get("item").getAsJsonObject(), out);
+    } else if (obj.get("$type").getAsString().contains("RandomizerCore.LogicItems.BoolItem")) {
+      out.add(Term.create(obj.get("Term").getAsString()), 1);
     }
   }
 
