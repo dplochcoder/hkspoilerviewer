@@ -960,6 +960,13 @@ public final class Application extends JFrame {
     list.add(new RouteCounter("Rancid Eggs", RouteCounter.termFunction(Term.rancidEggs())));
     list.add(
         new RouteCounter("$Rancid Eggs", RouteCounter.purchaseTermFunction(Term.rancidEggs())));
+    list.add(new RouteCounter("Dream Nails", RouteCounter.termFunction(Term.dreamNail())));
+    list.add(new RouteCounter("$Dream Nails", RouteCounter.purchaseTermFunction(Term.dreamNail())));
+    list.add(new RouteCounter("Dreamers", RouteCounter.termFunction(Term.dreamer())));
+    list.add(new RouteCounter("$Dreamers", RouteCounter.purchaseTermFunction(Term.dreamer())));
+    list.add(new RouteCounter("White Fragments", RouteCounter.termFunction(Term.whiteFragment())));
+    list.add(new RouteCounter("$White Fragments",
+        RouteCounter.purchaseTermFunction(Term.whiteFragment())));
     list.add(new RouteCounter("Geo", RouteCounter.termFunction(Term.geo())));
     list.add(new RouteCounter("$Geo", RouteCounter::accessibleGeoMinusRocks));
     list.add(new RouteCounter("Relic Geo", RouteCounter::relicGeoCounter));

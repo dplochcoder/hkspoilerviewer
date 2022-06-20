@@ -52,6 +52,24 @@ public abstract class Term implements Comparable<Term> {
     return CAN_REPLENISH_GEO;
   }
 
+  private static final Term DREAM_NAIL = Term.create("DREAMNAIL");
+
+  public static Term dreamNail() {
+    return DREAM_NAIL;
+  }
+
+  private static final Term DREAMER = Term.create("DREAMER");
+
+  public static Term dreamer() {
+    return DREAMER;
+  }
+
+  private static final Term WHITE_FRAGMENT = Term.create("WHITEFRAGMENT");
+
+  public static Term whiteFragment() {
+    return WHITE_FRAGMENT;
+  }
+
   private static final Term GRUBS = Term.create("GRUBS");
 
   public static Term grubs() {
