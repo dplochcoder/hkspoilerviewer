@@ -1,6 +1,7 @@
 package hollow.knight.logic;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableMap;
@@ -9,9 +10,8 @@ import com.google.common.collect.Sets;
 
 @AutoValue
 public abstract class Location {
-  private static final ImmutableMap<String, String> SCENE_OVERRIDES = ImmutableMap.of(
-      "Mask_Shard-Grey_Mourner", "Room_Mansion", "Vessel_Fragment-Basin", "Abyss_04", "Dash_Slash",
-      "Room_nailmaster_03", "Geo_Rock-Crossroads_Tram", "Crossroads_46", "Start", "Start");
+  private static final ImmutableMap<String, String> SCENE_OVERRIDES = ImmutableMap
+      .of("Geo_Rock-Crossroads_Tram", "Crossroads_46", "Start", "Start", "Bench-Godhome_Roof", "");
 
   private static final ImmutableSet<String> SHOPS =
       ImmutableSet.of("Egg_Shop", "Grubfather", "Iselda", "Leg_Eater", "Salubra", "Seer", "Sly",
@@ -31,9 +31,11 @@ public abstract class Location {
     return SHOPS.contains(name());
   }
 
-  public static Location create(RoomLabels rooms, String name, Condition accessCondition)
-      throws ParseException {
-    return new AutoValue_Location(name, accessCondition, inferScene(rooms, name, accessCondition));
+  public static Location create(RoomLabels rooms, String name, Condition accessCondition,
+      Optional<String> sceneName) throws ParseException {
+    String scene =
+        sceneName.isPresent() ? sceneName.get() : inferScene(rooms, name, accessCondition);
+    return new AutoValue_Location(name, accessCondition, scene);
   }
 
   private static String inferScene(RoomLabels rooms, String name, Condition accessCondition)

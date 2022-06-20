@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -400,7 +401,14 @@ public final class ItemChecks {
 
     String locName = logicObj.get("Name").getAsString();
     Condition locAccess = ConditionParser.parse(logicObj.get("Logic").getAsString());
-    Location loc = Location.create(rooms, locName, locAccess);
+
+    Optional<String> scene = Optional.empty();
+    if (locObj.has("LocationDef")) {
+      scene =
+          Optional.of(locObj.get("LocationDef").getAsJsonObject().get("SceneName").getAsString());
+    }
+
+    Location loc = Location.create(rooms, locName, locAccess, scene);
 
     Costs costs = Costs.none();
     JsonElement costsObj = locObj.get("costs");
