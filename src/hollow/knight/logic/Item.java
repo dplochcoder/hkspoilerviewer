@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Streams;
+import com.google.common.collect.MoreCollectors;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -16,21 +16,14 @@ public final class Item {
   private final Term term;
   private final Optional<String> pool;
   private final ImmutableSet<String> types;
-  private final Condition logic;
-  private final ImmutableTermMap trueEffects;
-  private final ImmutableTermMap falseEffects;
-  private final ImmutableTermMap caps;
+  private final ItemEffects effects;
   private final boolean fromJson;
 
-  private Item(Term term, Optional<String> pool, Set<String> types, Condition logic,
-      TermMap trueEffects, TermMap falseEffects, TermMap caps) {
+  private Item(Term term, Optional<String> pool, Set<String> types, ItemEffects effects) {
     this.term = term;
     this.pool = pool;
     this.types = ImmutableSet.copyOf(types);
-    this.logic = logic;
-    this.trueEffects = ImmutableTermMap.copyOf(trueEffects);
-    this.falseEffects = ImmutableTermMap.copyOf(falseEffects);
-    this.caps = ImmutableTermMap.copyOf(caps);
+    this.effects = effects;
     this.fromJson = true;
   }
 
@@ -38,13 +31,12 @@ public final class Item {
     this.term = term;
     this.pool = Optional.of(pool);
     this.types = ImmutableSet.copyOf(types);
-    this.logic = Condition.alwaysTrue();
 
     MutableTermMap termMap = new MutableTermMap();
     termMap.add(effectTerm, value);
-    this.trueEffects = ImmutableTermMap.copyOf(termMap);
-    this.falseEffects = ImmutableTermMap.empty();
-    this.caps = ImmutableTermMap.empty();
+    this.effects =
+        new TermMapItemEffects(Condition.alwaysTrue(), termMap, TermMap.empty(), TermMap.empty());
+
     this.fromJson = false;
   }
 
@@ -80,15 +72,15 @@ public final class Item {
   }
 
   public boolean hasEffectTerm(Term term) {
-    return trueEffects.get(term) != 0 || falseEffects.get(term) != 0;
+    return effects.hasEffectTerm(term);
   }
 
   public int getEffectValue(Term term) {
-    return trueEffects.get(term);
+    return effects.getEffectValue(term);
   }
 
   public Stream<Term> effectTerms() {
-    return Streams.concat(trueEffects.terms().stream(), falseEffects.terms().stream()).distinct();
+    return effects.effectTerms();
   }
 
   public String valueSuffix() {
@@ -102,37 +94,55 @@ public final class Item {
   }
 
   void apply(State state) {
-    // We can't do state.test() here because item conditions don't necessarily hold to the false ->
-    // true paradigm.
-    TermMap effects =
-        logic.test(state.termValues(), state.ctx().notchCosts()) ? trueEffects : falseEffects;
-
-    for (Term t : effects.terms()) {
-      int cap = Integer.MAX_VALUE;
-      if (caps.terms().contains(t)) {
-        cap = caps.get(t);
-      }
-
-      int newVal = Math.min(state.get(t) + effects.get(t), cap);
-      state.set(t, newVal);
-    }
+    effects.apply(state);
   }
 
-  private static void parseEffect(JsonObject obj, MutableTermMap out) {
+  private static ItemEffects parseEffects(JsonObject obj) throws ParseException {
+    ImmutableSet<String> types = Arrays.stream(obj.get("$type").getAsString().split(", "))
+        .collect(ImmutableSet.toImmutableSet());
+
+    if (types.contains("RandomizerMod.RC.SplitCloakItem")) {
+      return new SplitCloakItemEffects(obj.get("LeftBiased").getAsBoolean());
+    }
+
+    if (types.contains("RandomizerCore.LogicItems.BoolItem")) {
+      MutableTermMap effects = new MutableTermMap();
+      effects.add(Term.create(obj.get("Term").getAsString()), 1);
+
+      return new TermMapItemEffects(Condition.alwaysTrue(), effects, TermMap.empty(), effects);
+    }
+
+    Condition logic = Condition.alwaysTrue();
+    MutableTermMap trueEffects = new MutableTermMap();
+    MutableTermMap falseEffects = new MutableTermMap();
+    MutableTermMap caps = new MutableTermMap();
+    if (obj.get("Logic") != null) {
+      logic = ConditionParser.parse(obj.get("Logic").getAsJsonObject().get("Logic").getAsString());
+      parseEffectsMap(obj.get("TrueItem").getAsJsonObject(), trueEffects);
+      parseEffectsMap(obj.get("FalseItem").getAsJsonObject(), falseEffects);
+    } else {
+      parseEffectsMap(obj, trueEffects);
+    }
+    if (obj.get("Cap") != null) {
+      parseEffectsMap(obj.get("Cap").getAsJsonObject(), caps);
+    }
+
+    return new TermMapItemEffects(logic, trueEffects, falseEffects, caps);
+  }
+
+  private static void parseSingleEffect(JsonObject obj, MutableTermMap out) {
     out.add(Term.create(obj.get("Term").getAsString()), obj.get("Value").getAsInt());
   }
 
-  private static void parseEffects(JsonObject obj, MutableTermMap out) {
-    if (obj.get("Effect") != null) {
-      parseEffect(obj.get("Effect").getAsJsonObject(), out);
-    } else if (obj.get("Effects") != null) {
+  private static void parseEffectsMap(JsonObject obj, MutableTermMap out) {
+    if (obj.has("Effect")) {
+      parseSingleEffect(obj.get("Effect").getAsJsonObject(), out);
+    } else if (obj.has("Effects")) {
       for (JsonElement elem : obj.get("Effects").getAsJsonArray()) {
-        parseEffect(elem.getAsJsonObject(), out);
+        parseSingleEffect(elem.getAsJsonObject(), out);
       }
-    } else if (obj.get("item") != null) {
-      parseEffects(obj.get("item").getAsJsonObject(), out);
-    } else if (obj.get("$type").getAsString().contains("RandomizerCore.LogicItems.BoolItem")) {
-      out.add(Term.create(obj.get("Term").getAsString()), 1);
+    } else if (obj.has("item")) {
+      parseEffectsMap(obj.get("item").getAsJsonObject(), out);
     }
   }
 
@@ -163,9 +173,9 @@ public final class Item {
     obj.add("term", new JsonPrimitive(term().name()));
     JsonArray types = new JsonArray();
     types().forEach(types::add);
-    Term effectTerm = trueEffects.terms().iterator().next();
+    Term effectTerm = effects.effectTerms().collect(MoreCollectors.onlyElement());
     obj.addProperty("effectTerm", effectTerm.name());
-    obj.addProperty("value", trueEffects.get(effectTerm));
+    obj.addProperty("value", effects.getEffectValue(effectTerm));
     return obj;
   }
 
@@ -186,25 +196,9 @@ public final class Item {
       name = Term.create(item.get("logic").getAsJsonObject().get("Name").getAsString());
     }
 
-    Condition logic = Condition.alwaysTrue();
-    MutableTermMap trueEffects = new MutableTermMap();
-    MutableTermMap falseEffects = new MutableTermMap();
-    MutableTermMap caps = new MutableTermMap();
-    if (item.get("Logic") != null) {
-      logic = ConditionParser.parse(item.get("Logic").getAsJsonObject().get("Logic").getAsString());
-      parseEffects(item.get("TrueItem").getAsJsonObject(), trueEffects);
-      parseEffects(item.get("FalseItem").getAsJsonObject(), falseEffects);
-    } else {
-      parseEffects(item, trueEffects);
-    }
-
-    if (item.get("Cap") != null) {
-      parseEffect(item.get("Cap").getAsJsonObject(), caps);
-    }
-
     Set<String> types = Arrays.stream(item.get("$type").getAsString().split(", "))
         .collect(ImmutableSet.toImmutableSet());
 
-    return new Item(name, pool, types, logic, trueEffects, falseEffects, caps);
+    return new Item(name, pool, types, parseEffects(item));
   }
 }
