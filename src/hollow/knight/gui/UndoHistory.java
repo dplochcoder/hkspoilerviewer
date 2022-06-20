@@ -44,13 +44,10 @@ public final class UndoHistory {
       this.notchCosts = new ArrayList<>(copy.notchCosts);
     }
 
-    public void clear() {
+    public void reset(CheckpointInterface other) {
       checks.clear();
       notchCosts.clear();
-    }
 
-    public void reset(CheckpointInterface other) {
-      clear();
       checks.addAll(other.checks());
       notchCosts.addAll(other.notchCosts());
     }

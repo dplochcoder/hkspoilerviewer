@@ -166,6 +166,14 @@ public final class Application extends JFrame {
       .add("Route items before and after the insertion point can still be removed or swapped.")
       .build();
 
+  private static final ImmutableList<String> ICDL_INFO = ImmutableList.<String>builder().add(
+      "ICDL edit mode allows you to create plandos, by setting the items at every check location.")
+      .add(
+          "You can save your progress while working as an .hks file to preserve all information, including the item counts for the originally generated seed.")
+      .add(
+          "When done, select 'Export as ICDL pack folder' to save your work in a format that can be opened in HK.")
+      .build();
+
   private static final ImmutableList<String> QUERIES_INFO = ImmutableList.<String>builder().add(
       "Queries enable partial spoiler formats by surfacing specific info about a seed without revealing all of it.")
       .add("Several pre-built queries are included, but custom ones can be used as well.").add("-")
@@ -500,6 +508,9 @@ public final class Application extends JFrame {
     JMenuItem insert = new JMenuItem("Insertions / Rewind");
     about.add(insert);
     about.add(new JSeparator());
+    JMenuItem icdl = new JMenuItem("ICDL");
+    about.add(icdl);
+    about.add(new JSeparator());
     JMenuItem aboutQueries = new JMenuItem("Queries");
     about.add(aboutQueries);
     about.add(new JSeparator());
@@ -518,6 +529,7 @@ public final class Application extends JFrame {
 
     pl.addActionListener(infoListener("Purchase Logic ($)", PL_INFO));
     insert.addActionListener(infoListener("Insert / Rewind", INSERT_INFO));
+    icdl.addActionListener(infoListener("Queries", ICDL_INFO));
     aboutQueries.addActionListener(infoListener("Queries", QUERIES_INFO));
     ks.addActionListener(infoListener("Keyboard Shortcuts", KS_INFO));
     v.addActionListener(

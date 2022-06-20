@@ -60,7 +60,8 @@ public final class NotchCostsEditor extends ComplexTextEditor {
   protected void finish() throws FormException {
     SetView<Term> diff = Sets.difference(costs.keySet(), ctx.charmIds().charmTerms());
     if (!diff.isEmpty()) {
-      throw new FormException("Missing charm costs: " + diff);
+      throw new FormException("Missing charm costs: "
+          + diff.stream().map(Term::name).sorted().collect(ImmutableList.toImmutableList()));
     }
 
     List<Integer> listCosts = new ArrayList<>(costs.values());
