@@ -1,16 +1,14 @@
 package hollow.knight.logic;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 
 // A bi-directional multimap, supporting many-to-many associations.
 public final class BiMultimap<K, V> {
 
-  private final Multimap<K, V> keysToValues = HashMultimap.create();
-  private final Multimap<V, K> valuesToKeys = HashMultimap.create();
+  private final HashMultimap<K, V> keysToValues = HashMultimap.create();
+  private final HashMultimap<V, K> valuesToKeys = HashMultimap.create();
 
   public BiMultimap() {}
 
@@ -65,7 +63,7 @@ public final class BiMultimap<K, V> {
     return keysToValues.containsKey(key);
   }
 
-  public Collection<V> getValue(K key) {
+  public Set<V> getValue(K key) {
     return keysToValues.get(key);
   }
 
@@ -73,7 +71,7 @@ public final class BiMultimap<K, V> {
     return valuesToKeys.containsKey(value);
   }
 
-  public Collection<K> getKey(V value) {
+  public Set<K> getKey(V value) {
     return valuesToKeys.get(value);
   }
 }
