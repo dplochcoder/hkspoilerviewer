@@ -2,9 +2,7 @@ package hollow.knight.gui;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import javax.swing.ListModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
@@ -13,13 +11,13 @@ import com.google.common.collect.Multiset;
 import hollow.knight.logic.Item;
 import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.ItemChecks;
+import hollow.knight.logic.ListenerManager;
 import hollow.knight.logic.StateContext;
 import hollow.knight.logic.Term;
 
 public final class CheckEditorItemsListModel implements ListModel<String>, ItemChecks.Listener {
 
-  private final Object mutex = new Object();
-  private final Set<ListDataListener> listeners = new HashSet<>();
+  private final ListenerManager<ListDataListener> listeners = new ListenerManager<>();
 
   private final ItemChecks checks;
 
@@ -47,38 +45,28 @@ public final class CheckEditorItemsListModel implements ListModel<String>, ItemC
   }
 
   public void updateResults(StateContext ctx, List<Item> resultItems) {
-    List<ListDataListener> listenersCopy;
-    int oldSize, newSize;
-    synchronized (mutex) {
-      oldSize = this.resultStrings.size();
-      listenersCopy = new ArrayList<>(listeners);
+    int oldSize = this.resultStrings.size();
 
-      this.resultItems.clear();
-      this.resultStrings.clear();
-      resultItems.stream().filter(i -> ctx.checks().isOriginalNonVanilla(i.term())).sorted(sorter)
-          .forEach(i -> {
-            this.resultItems.add(i);
-            this.resultStrings.add(render(i));
-          });
+    this.resultItems.clear();
+    this.resultStrings.clear();
+    resultItems.stream().filter(i -> ctx.checks().isOriginalNonVanilla(i.term())).sorted(sorter)
+        .forEach(i -> {
+          this.resultItems.add(i);
+          this.resultStrings.add(render(i));
+        });
 
-      newSize = resultStrings.size();
-    }
-
+    int newSize = resultStrings.size();
     ListDataEvent e =
         new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, 0, Math.max(oldSize, newSize));
-    for (ListDataListener listener : listenersCopy) {
-      listener.contentsChanged(e);
-    }
+    listeners.forEach(l -> l.contentsChanged(e));
   }
 
   public Item get(int index) {
-    synchronized (mutex) {
-      if (index < 0 || index >= resultItems.size()) {
-        return null;
-      }
-
-      return resultItems.get(index);
+    if (index < 0 || index >= resultItems.size()) {
+      return null;
     }
+
+    return resultItems.get(index);
   }
 
   @Override
@@ -99,30 +87,21 @@ public final class CheckEditorItemsListModel implements ListModel<String>, ItemC
 
   @Override
   public void addListDataListener(ListDataListener listener) {
-    synchronized (mutex) {
-      listeners.add(listener);
-    }
+    listeners.add(listener);
   }
 
   @Override
   public String getElementAt(int index) {
-    synchronized (mutex) {
-      return resultStrings.get(index);
-    }
+    return resultStrings.get(index);
   }
 
   @Override
   public int getSize() {
-    synchronized (mutex) {
-      return resultStrings.size();
-    }
+    return resultStrings.size();
   }
 
   @Override
   public void removeListDataListener(ListDataListener listener) {
-    synchronized (mutex) {
-      listeners.remove(listener);
-    }
+    listeners.remove(listener);
   }
-
 }

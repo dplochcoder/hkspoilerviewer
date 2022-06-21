@@ -1,13 +1,12 @@
 package hollow.knight.gui;
 
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 import com.google.auto.value.AutoValue;
 import hollow.knight.logic.CheckId;
 import hollow.knight.logic.Costs;
 import hollow.knight.logic.Item;
 import hollow.knight.logic.ItemCheck;
+import hollow.knight.logic.ListenerManager;
 import hollow.knight.logic.Location;
 import hollow.knight.logic.State;
 import hollow.knight.logic.StateContext;
@@ -19,30 +18,20 @@ public abstract class SearchResult {
   }
 
   public abstract static class Filter {
-    private final Object mutex = new Object();
-    private final Set<FilterChangedListener> listeners = new HashSet<>();
+    private final ListenerManager<FilterChangedListener> listeners = new ListenerManager<>();
 
     public abstract boolean accept(StateContext ctx, SearchResult result);
 
     protected final void filterChanged() {
-      Set<FilterChangedListener> listenersCopy = new HashSet<>();
-      synchronized (mutex) {
-        listenersCopy.addAll(listeners);
-      }
-
-      listenersCopy.forEach(FilterChangedListener::filterChanged);
+      listeners.forEach(FilterChangedListener::filterChanged);
     }
 
     public void addListener(FilterChangedListener listener) {
-      synchronized (mutex) {
-        listeners.add(listener);
-      }
+      listeners.add(listener);
     }
 
     public void removeListener(FilterChangedListener listener) {
-      synchronized (mutex) {
-        listeners.remove(listener);
-      }
+      listeners.remove(listener);
     }
   }
 

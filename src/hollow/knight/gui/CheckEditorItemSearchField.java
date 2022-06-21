@@ -3,13 +3,12 @@ package hollow.knight.gui;
 import java.awt.Container;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import hollow.knight.logic.Item;
+import hollow.knight.logic.ListenerManager;
 
 public final class CheckEditorItemSearchField {
 
@@ -18,8 +17,7 @@ public final class CheckEditorItemSearchField {
     void textChanged();
   }
 
-  private final Object mutex = new Object();
-  private final Set<Listener> listeners = new HashSet<>();
+  private final ListenerManager<Listener> listeners = new ListenerManager<>();
 
   private final JPanel searchPanel;
   private final JTextField textField;
@@ -32,11 +30,7 @@ public final class CheckEditorItemSearchField {
   }
 
   private void textChanged() {
-    List<Listener> copy = new ArrayList<>();
-    synchronized (mutex) {
-      copy.addAll(listeners);
-    }
-    copy.forEach(Listener::textChanged);
+    listeners.forEach(Listener::textChanged);
   }
 
   public boolean accept(Item item) {
@@ -59,15 +53,11 @@ public final class CheckEditorItemSearchField {
   }
 
   public void addListener(Listener listener) {
-    synchronized (mutex) {
-      listeners.add(listener);
-    }
+    listeners.add(listener);
   }
 
   public void removeListener(Listener listener) {
-    synchronized (mutex) {
-      listeners.remove(listener);
-    }
+    listeners.remove(listener);
   }
 
   public void addToGui(Container container) {

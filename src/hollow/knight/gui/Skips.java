@@ -2,9 +2,7 @@ package hollow.knight.gui;
 
 import java.awt.GridLayout;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -15,6 +13,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import hollow.knight.io.JsonUtil;
+import hollow.knight.logic.ListenerManager;
 import hollow.knight.logic.ParseException;
 import hollow.knight.logic.State;
 import hollow.knight.logic.Term;
@@ -39,7 +38,7 @@ public final class Skips {
 
   private final ImmutableList<SkipTerm> skipTerms;
   private final JPanel panel = new JPanel();
-  private final Set<Listener> listeners = new HashSet<>();
+  private final ListenerManager<Listener> listeners = new ListenerManager<>();
 
   private SkipTerm createSkipTerm(String name, Term effectTerm) {
     JCheckBox box = new JCheckBox(name);
@@ -75,17 +74,15 @@ public final class Skips {
     panel.add(this.panel);
   }
 
-  public synchronized void addListener(Listener listener) {
+  public void addListener(Listener listener) {
     listeners.add(listener);
   }
 
-  public synchronized void removeListener(Listener listener) {
+  public void removeListener(Listener listener) {
     listeners.remove(listener);
   }
 
-  private synchronized void notifyListeners() {
-    ImmutableList<Listener> listeners =
-        this.listeners.stream().collect(ImmutableList.toImmutableList());
+  private void notifyListeners() {
     listeners.forEach(Listener::skipsUpdated);
   }
 

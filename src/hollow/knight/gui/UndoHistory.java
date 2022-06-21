@@ -16,11 +16,18 @@ import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Sets;
 import hollow.knight.logic.CheckId;
 import hollow.knight.logic.ItemCheck;
+import hollow.knight.logic.ListenerManager;
 import hollow.knight.logic.StateContext;
 
 public final class UndoHistory {
 
-  public interface CheckpointInterface {
+  public interface Listener {
+    void newSnapshot(int index);
+
+    void truncated(int lastIndex);
+  }
+
+  private interface CheckpointInterface {
     Set<ItemCheck> checks();
 
     List<Integer> notchCosts();
@@ -124,6 +131,8 @@ public final class UndoHistory {
     }
   }
 
+  private final ListenerManager<Listener> listeners = new ListenerManager<>();
+
   private final List<String> labels = new ArrayList<>();
   private final SortedMap<Integer, Checkpoint> checkpoints = new TreeMap<>();
   private final ListMultimap<Integer, Delta> deltas = ArrayListMultimap.create();
@@ -175,6 +184,8 @@ public final class UndoHistory {
     List<Delta> keyDeltas = deltas.get(checkpointIndex);
     keyDeltas.subList(index - checkpointIndex, keyDeltas.size()).clear();
     deltaSum = keyDeltas.stream().mapToInt(Delta::size).sum();
+
+    listeners.forEach(l -> l.truncated(nextIndex - 1));
   }
 
   public void reset(String label, StateContext ctx) {
@@ -188,10 +199,12 @@ public final class UndoHistory {
     checkpointIndex = 0;
     nextIndex = 1;
     deltaSum = 0;
+
+    listeners.forEach(l -> l.truncated(0));
   }
 
   // Records the current state, with the given label. Returns its index.
-  public int record(String label, StateContext ctx) {
+  public void record(String label, StateContext ctx) {
     CheckpointInterface next = new StateContextView(ctx);
     Delta delta = Delta.compute(current, next);
     current.applyDelta(delta);
@@ -206,7 +219,8 @@ public final class UndoHistory {
       deltaSum += delta.size();
     }
 
-    return nextIndex++;
+    int copy = nextIndex++;
+    listeners.forEach(l -> l.newSnapshot(copy));
   }
 
   private void applyDelta(Delta delta, StateContext ctx) {
@@ -218,5 +232,13 @@ public final class UndoHistory {
       delta.updatedNotchCosts().forEach(updatedNotchCosts::set);
       ctx.notchCosts().setCosts(updatedNotchCosts);
     }
+  }
+
+  public void addListener(Listener listener) {
+    listeners.add(listener);
+  }
+
+  public void removeListener(Listener listener) {
+    listeners.remove(listener);
   }
 }

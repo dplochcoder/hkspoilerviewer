@@ -15,6 +15,7 @@ import com.google.gson.JsonObject;
 import hollow.knight.logic.CheckId;
 import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.ItemChecks;
+import hollow.knight.logic.ListenerManager;
 import hollow.knight.logic.SaveInterface;
 import hollow.knight.logic.State;
 import hollow.knight.logic.StateContext;
@@ -23,9 +24,7 @@ import hollow.knight.logic.Version;
 public final class SearchResultsListModel
     implements ListModel<String>, ItemChecks.Listener, SaveInterface {
 
-  // TODO: Move this common code into a parent class.
-  private final Object mutex = new Object();
-  private final Set<ListDataListener> listeners = new HashSet<>();
+  private final ListenerManager<ListDataListener> listeners = new ListenerManager<>();
 
   private final Set<ItemCheck> bookmarksSet = new HashSet<>();
   private final Set<ItemCheck> hiddenResultsSet = new HashSet<>();
@@ -35,15 +34,13 @@ public final class SearchResultsListModel
   private final List<SearchResult> hiddenResults = new ArrayList<>();
   private final List<String> resultStrings = new ArrayList<>();
 
-  public int numBookmarks() {
-    synchronized (mutex) {
-      return bookmarks.size();
-    }
-  }
-
   private static final String SEPARATOR = "----------------------------------------";
 
   private final Set<ItemCheck> matchingResults = new HashSet<>();
+
+  public int numBookmarks() {
+    return bookmarks.size();
+  }
 
   public boolean isMatchingSearchResult(ItemCheck check) {
     return matchingResults.contains(check);
@@ -67,101 +64,88 @@ public final class SearchResultsListModel
     matchingResults.clear();
     newResults.forEach(r -> matchingResults.add(r.itemCheck()));
 
-    List<ListDataListener> listenersCopy;
-    int oldSize, newSize;
-    synchronized (mutex) {
-      oldSize = this.resultStrings.size();
-      listenersCopy = new ArrayList<>(listeners);
+    int oldSize = this.resultStrings.size();
 
-      results.clear();
-      resultStrings.clear();
-      hiddenResults.clear();
-      for (SearchResult r : newResults) {
-        if (hiddenResultsSet.contains(r.itemCheck())) {
-          hiddenResults.add(r);
-        } else if (!bookmarksSet.contains(r.itemCheck())) {
-          results.add(r);
-        }
+    results.clear();
+    resultStrings.clear();
+    hiddenResults.clear();
+    for (SearchResult r : newResults) {
+      if (hiddenResultsSet.contains(r.itemCheck())) {
+        hiddenResults.add(r);
+      } else if (!bookmarksSet.contains(r.itemCheck())) {
+        results.add(r);
       }
-
-      bookmarks.forEach(b -> resultStrings.add(SearchResult.create(b, state).render()));
-      resultStrings.add(SEPARATOR);
-      results.forEach(r -> resultStrings.add(r.render()));
-      resultStrings.add(SEPARATOR);
-      hiddenResults.forEach(r -> resultStrings.add(r.render()));
-
-      newSize = resultStrings.size();
     }
+
+    bookmarks.forEach(b -> resultStrings.add(SearchResult.create(b, state).render()));
+    resultStrings.add(SEPARATOR);
+    results.forEach(r -> resultStrings.add(r.render()));
+    resultStrings.add(SEPARATOR);
+    hiddenResults.forEach(r -> resultStrings.add(r.render()));
+
+    int newSize = resultStrings.size();
 
     ListDataEvent e =
         new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, 0, Math.max(oldSize, newSize));
-    for (ListDataListener listener : listenersCopy) {
-      listener.contentsChanged(e);
-    }
+    listeners.forEach(l -> l.contentsChanged(e));
   }
 
   public void removeBookmark(ItemCheck check) {
-    synchronized (mutex) {
-      if (bookmarksSet.remove(check)) {
-        bookmarks.remove(check);
-      }
+    if (bookmarksSet.remove(check)) {
+      bookmarks.remove(check);
     }
   }
 
   public ItemCheck getCheck(int index) {
-    synchronized (mutex) {
-      if (index < 0) {
-        return null;
-      }
-
-      if (index < bookmarks.size()) {
-        return bookmarks.get(index);
-      }
-
-      index -= bookmarks.size() + 1;
-      if (index < 0) {
-        return null;
-      }
-
-      if (index < results.size()) {
-        return results.get(index).itemCheck();
-      }
-
-      index -= results.size() + 1;
-      if (index < 0 || index >= hiddenResults.size()) {
-        return null;
-      }
-
-      return hiddenResults.get(index).itemCheck();
+    if (index < 0) {
+      return null;
     }
+
+    if (index < bookmarks.size()) {
+      return bookmarks.get(index);
+    }
+
+    index -= bookmarks.size() + 1;
+    if (index < 0) {
+      return null;
+    }
+
+    if (index < results.size()) {
+      return results.get(index).itemCheck();
+    }
+
+    index -= results.size() + 1;
+    if (index < 0 || index >= hiddenResults.size()) {
+      return null;
+    }
+
+    return hiddenResults.get(index).itemCheck();
   }
 
   public SearchResult getResult(State state, int index) {
-    synchronized (mutex) {
-      if (index < 0) {
-        return null;
-      }
-
-      if (index < bookmarks.size()) {
-        return SearchResult.create(bookmarks.get(index), state);
-      }
-
-      index -= bookmarks.size() + 1;
-      if (index < 0) {
-        return null;
-      }
-
-      if (index < results.size()) {
-        return results.get(index);
-      }
-
-      index -= results.size() + 1;
-      if (index < 0 || index >= hiddenResults.size()) {
-        return null;
-      }
-
-      return hiddenResults.get(index);
+    if (index < 0) {
+      return null;
     }
+
+    if (index < bookmarks.size()) {
+      return SearchResult.create(bookmarks.get(index), state);
+    }
+
+    index -= bookmarks.size() + 1;
+    if (index < 0) {
+      return null;
+    }
+
+    if (index < results.size()) {
+      return results.get(index);
+    }
+
+    index -= results.size() + 1;
+    if (index < 0 || index >= hiddenResults.size()) {
+      return null;
+    }
+
+    return hiddenResults.get(index);
   }
 
   private void brighten(Component c) {
@@ -184,68 +168,56 @@ public final class SearchResultsListModel
   }
 
   public void addBookmark(int index) {
-    synchronized (mutex) {
-      ItemCheck check = getCheck(index);
-      if (check == null) {
-        return;
-      }
+    ItemCheck check = getCheck(index);
+    if (check == null) {
+      return;
+    }
 
-      if (bookmarksSet.add(check)) {
-        bookmarks.add(check);
-        hiddenResultsSet.remove(check);
-      }
+    if (bookmarksSet.add(check)) {
+      bookmarks.add(check);
+      hiddenResultsSet.remove(check);
     }
   }
 
   public void moveBookmark(int index, boolean up) {
-    synchronized (mutex) {
-      if (index >= bookmarks.size()) {
-        return;
-      }
-
-      int otherIndex = index + (up ? -1 : 1);
-      if (otherIndex < 0 || otherIndex >= bookmarks.size()) {
-        return;
-      }
-
-      ItemCheck a = bookmarks.get(index);
-      ItemCheck b = bookmarks.get(otherIndex);
-      bookmarks.set(index, b);
-      bookmarks.set(otherIndex, a);
+    if (index >= bookmarks.size()) {
+      return;
     }
+
+    int otherIndex = index + (up ? -1 : 1);
+    if (otherIndex < 0 || otherIndex >= bookmarks.size()) {
+      return;
+    }
+
+    ItemCheck a = bookmarks.get(index);
+    ItemCheck b = bookmarks.get(otherIndex);
+    bookmarks.set(index, b);
+    bookmarks.set(otherIndex, a);
   }
 
   public void deleteBookmark(State state, int index) {
-    synchronized (mutex) {
-      if (index >= bookmarks.size()) {
-        return;
-      }
-
-      bookmarksSet.remove(bookmarks.remove(index));
+    if (index >= bookmarks.size()) {
+      return;
     }
+
+    bookmarksSet.remove(bookmarks.remove(index));
   }
 
   public void hideResult(int index) {
-    synchronized (mutex) {
-      ItemCheck check = getCheck(index);
+    ItemCheck check = getCheck(index);
 
-      hiddenResultsSet.add(check);
-      if (bookmarksSet.remove(check)) {
-        bookmarks.remove(check);
-      }
+    hiddenResultsSet.add(check);
+    if (bookmarksSet.remove(check)) {
+      bookmarks.remove(check);
     }
   }
 
   public void unhideResult(int index) {
-    synchronized (mutex) {
-      hiddenResultsSet.remove(getCheck(index));
-    }
+    hiddenResultsSet.remove(getCheck(index));
   }
 
   public void unhideResult(ItemCheck check) {
-    synchronized (mutex) {
-      hiddenResultsSet.remove(check);
-    }
+    hiddenResultsSet.remove(check);
   }
 
   @Override
@@ -311,30 +283,22 @@ public final class SearchResultsListModel
 
   @Override
   public void addListDataListener(ListDataListener listener) {
-    synchronized (mutex) {
-      listeners.add(listener);
-    }
+    listeners.add(listener);
   }
 
   @Override
   public String getElementAt(int index) {
-    synchronized (mutex) {
-      return resultStrings.get(index);
-    }
+    return resultStrings.get(index);
   }
 
   @Override
   public int getSize() {
-    synchronized (mutex) {
-      return resultStrings.size();
-    }
+    return resultStrings.size();
   }
 
   @Override
   public void removeListDataListener(ListDataListener listener) {
-    synchronized (mutex) {
-      listeners.remove(listener);
-    }
+    listeners.remove(listener);
   }
 
 }

@@ -1,11 +1,9 @@
 package hollow.knight.logic;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -50,8 +48,7 @@ public final class ItemChecks {
     }
   }
 
-  private final Object mutex = new Object();
-  private final Set<Listener> listeners = new HashSet<>();
+  private final ListenerManager<Listener> listeners = new ListenerManager<>();
 
   private final BiMap<CheckId, ItemCheck> checksById = HashBiMap.create();
   private final BiMultimap<Condition, CheckId> idsByCondition = new BiMultimap<>();
@@ -103,23 +100,11 @@ public final class ItemChecks {
   }
 
   public void addListener(Listener listener) {
-    synchronized (mutex) {
-      listeners.add(listener);
-    }
+    listeners.add(listener);
   }
 
   public void removeListener(Listener listener) {
-    synchronized (mutex) {
-      listeners.remove(listener);
-    }
-  }
-
-  private Stream<Listener> listeners() {
-    List<Listener> listeners;
-    synchronized (mutex) {
-      listeners = new ArrayList<>(this.listeners);
-    }
-    return listeners.stream();
+    listeners.remove(listener);
   }
 
   private CheckId newId() {
@@ -159,7 +144,7 @@ public final class ItemChecks {
     ItemCheck check = ItemCheck.create(newId(), loc, item, costs, vanilla);
     addInternal(check);
 
-    listeners().forEach(l -> l.checkAdded(check));
+    listeners.forEach(l -> l.checkAdded(check));
     return check.id();
   }
 
@@ -169,7 +154,7 @@ public final class ItemChecks {
     }
 
     checks.forEach(this::addInternal);
-    listeners().forEach(l -> l.multipleChecksAdded(checks));
+    listeners.forEach(l -> l.multipleChecksAdded(checks));
   }
 
   public void removeMultiple(ImmutableSet<CheckId> checkIds) {
@@ -184,7 +169,7 @@ public final class ItemChecks {
     });
 
     ImmutableSet<ItemCheck> checks = checksBuilder.build();
-    listeners().forEach(l -> l.multipleChecksRemoved(checks));
+    listeners.forEach(l -> l.multipleChecksRemoved(checks));
   }
 
   public CheckId replace(CheckId prevId, Location loc, Item item, Costs costs, boolean vanilla) {
@@ -195,7 +180,7 @@ public final class ItemChecks {
     removeInternal(prevId);
     addInternal(after);
 
-    listeners().forEach(l -> l.checkReplaced(before, after));
+    listeners.forEach(l -> l.checkReplaced(before, after));
     return id;
   }
 
@@ -203,7 +188,7 @@ public final class ItemChecks {
     ItemCheck check = checksById.get(id);
     removeInternal(id);
 
-    listeners().forEach(l -> l.checkRemoved(check));
+    listeners.forEach(l -> l.checkRemoved(check));
   }
 
   public Location getLocation(String name) throws ICDLException {
@@ -250,11 +235,11 @@ public final class ItemChecks {
     }
 
     if (!toRemove.isEmpty()) {
-      listeners().forEach(l -> l.multipleChecksRemoved(toRemove));
+      listeners.forEach(l -> l.multipleChecksRemoved(toRemove));
     }
     ImmutableSet<ItemCheck> added = addedBuilder.build();
     if (!added.isEmpty()) {
-      listeners().forEach(l -> l.multipleChecksAdded(added));
+      listeners.forEach(l -> l.multipleChecksAdded(added));
     }
   }
 
@@ -285,7 +270,7 @@ public final class ItemChecks {
 
     ImmutableMap<ItemCheck, ItemCheck> replaced = replacedBuilder.build();
     if (!replaced.isEmpty()) {
-      listeners().forEach(l -> l.multipleChecksReplaced(replaced));
+      listeners.forEach(l -> l.multipleChecksReplaced(replaced));
     }
   }
 
@@ -337,10 +322,10 @@ public final class ItemChecks {
     }
 
     ImmutableSet<ItemCheck> massAddFinal = ImmutableSet.copyOf(massAdd);
-    listeners().forEach(l -> l.multipleChecksAdded(massAddFinal));
+    listeners.forEach(l -> l.multipleChecksAdded(massAddFinal));
 
     ImmutableMap<ItemCheck, ItemCheck> massReplacementFinal = ImmutableMap.copyOf(massReplacement);
-    listeners().forEach(l -> l.multipleChecksReplaced(massReplacementFinal));
+    listeners.forEach(l -> l.multipleChecksReplaced(massReplacementFinal));
   }
 
   public ItemCheck get(CheckId id) {
