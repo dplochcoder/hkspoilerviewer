@@ -36,7 +36,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.filechooser.FileFilter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.primitives.Ints;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -375,28 +374,6 @@ public final class Application extends JFrame {
       JOptionPane.showMessageDialog(this, sb.toString(), "ICDL Item Diff Report",
           JOptionPane.INFORMATION_MESSAGE);
     }
-  }
-
-  private void editStartingGeo() {
-    ItemCheck check = ctx().checks().startChecks().filter(c -> c.item().hasEffectTerm(Term.geo()))
-        .findFirst().get();
-    int geo = check.item().getEffectValue(Term.geo());
-
-    String newGeo =
-        JOptionPane.showInputDialog(this, "Enter new Starting Geo", String.valueOf(geo));
-    if (newGeo == null || newGeo.trim().isEmpty()) {
-      return;
-    }
-
-    Integer value = Ints.tryParse(newGeo.trim());
-    if (value == null || value < 0) {
-      JOptionPane.showMessageDialog(this, "Must be a non-negative integer");
-      return;
-    }
-
-    ctx().checks().replace(check.id(), check.location(), Item.newGeoItem(value), check.costs(),
-        false);
-    refreshLogic();
   }
 
   private void editNotchCosts() {
