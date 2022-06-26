@@ -33,7 +33,7 @@ public final class SearchEngine {
   public ImmutableList<SearchResult> getSearchResults(State state) {
     // Step 1: Collect all results.
     List<SearchResult> results = new ArrayList<>();
-    state.unobtained().forEach(c -> results.add(SearchResult.create(c, state)));
+    state.ctx().checks().allChecks().forEach(c -> results.add(SearchResult.create(c, state)));
 
     // Step 2: Apply filters.
     results.removeIf(r -> !accept(state.ctx(), r));

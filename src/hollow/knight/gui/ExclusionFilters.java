@@ -25,6 +25,7 @@ public final class ExclusionFilters extends SearchResult.Filter {
     }
   }
 
+  private final RouteListModel routeListModel;
   private final ImmutableList<ExclusionFilter> filters;
   private final JPanel filtersPanel;
 
@@ -36,6 +37,10 @@ public final class ExclusionFilters extends SearchResult.Filter {
 
   private ImmutableList<ExclusionFilter> createFilters(RoomLabels roomLabels) {
     return ImmutableList.of(
+        ExclusionFilter.create(this, "UNROUTED",
+            r -> !routeListModel.finalState().isAcquired(r.itemCheck()), jcb("Unrouted", true)),
+        ExclusionFilter.create(this, "ROUTED",
+            r -> routeListModel.finalState().isAcquired(r.itemCheck()), jcb("Routed (R)", false)),
         ExclusionFilter.create(this, "NON_VANILLA", r -> !r.itemCheck().vanilla(),
             jcb("Randomized", true)),
         ExclusionFilter.create(this, "VANILLA", r -> r.itemCheck().vanilla(),
@@ -51,7 +56,8 @@ public final class ExclusionFilters extends SearchResult.Filter {
             jcb("Purchase Logic ($)", true)));
   }
 
-  public ExclusionFilters(RoomLabels roomLabels) {
+  public ExclusionFilters(RoomLabels roomLabels, RouteListModel routeListModel) {
+    this.routeListModel = routeListModel;
     this.filters = createFilters(roomLabels);
     this.filtersPanel = new JPanel();
 

@@ -60,8 +60,8 @@ public final class Application extends JFrame {
 
   private final Config cfg;
   private final SearchResult.FilterChangedListener filterChangedListener;
-  private final SearchResultsListModel searchResultsListModel;
   private final RouteListModel routeListModel;
+  private final SearchResultsListModel searchResultsListModel;
   private final ImmutableList<SaveInterface> saveInterfaces;
   private final ImmutableList<ItemChecks.Listener> checksListeners;
 
@@ -83,8 +83,9 @@ public final class Application extends JFrame {
   public Application(StateContext ctx, Config cfg) throws ParseException {
     this.cfg = cfg;
     this.filterChangedListener = () -> repopulateSearchResults();
-    this.searchResultsListModel = new SearchResultsListModel();
     this.routeListModel = new RouteListModel(ctx);
+    this.searchResultsListModel =
+        new SearchResultsListModel(c -> this.routeListModel.finalState().isAcquired(c));
     this.saveInterfaces = ImmutableList.of(searchResultsListModel, routeListModel);
     this.checksListeners = ImmutableList.of(searchResultsListModel, routeListModel);
 
@@ -693,13 +694,10 @@ public final class Application extends JFrame {
     this.skips.addToGui(parent);
 
     parent.add(new JSeparator());
-    ExclusionFilters excFilters = new ExclusionFilters(ctx().roomLabels());
+    ExclusionFilters excFilters = new ExclusionFilters(ctx().roomLabels(), routeListModel);
     excFilters.addListener(filterChangedListener);
     excFilters.addGuiToPanel(parent);
     searchFilters.add(excFilters);
-
-    // No GUI
-    searchFilters.add(routeListModel.futureCheckFilter());
 
     return searchFilters.build();
   }
@@ -838,8 +836,6 @@ public final class Application extends JFrame {
   }
 
   private void addToRoute(ItemCheck check) {
-    searchResultsListModel.removeBookmark(check);
-    searchResultsListModel.unhideResult(check);
     routeListModel.addToRoute(check);
 
     repopulateSearchResults();

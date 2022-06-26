@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 import javax.swing.ListModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
@@ -38,6 +39,12 @@ public final class SearchResultsListModel
 
   private final Set<ItemCheck> matchingResults = new HashSet<>();
 
+  private final Predicate<ItemCheck> isRouted;
+
+  public SearchResultsListModel(Predicate<ItemCheck> isRouted) {
+    this.isRouted = isRouted;
+  }
+
   public int numBookmarks() {
     return bookmarks.size();
   }
@@ -60,6 +67,10 @@ public final class SearchResultsListModel
     return -1;
   }
 
+  private String render(SearchResult result) {
+    return (isRouted.test(result.itemCheck()) ? "(R) " : "") + result.render();
+  }
+
   public void updateResults(State state, List<SearchResult> newResults) {
     matchingResults.clear();
     newResults.forEach(r -> matchingResults.add(r.itemCheck()));
@@ -77,11 +88,11 @@ public final class SearchResultsListModel
       }
     }
 
-    bookmarks.forEach(b -> resultStrings.add(SearchResult.create(b, state).render()));
+    bookmarks.forEach(b -> resultStrings.add(render(SearchResult.create(b, state))));
     resultStrings.add(SEPARATOR);
-    results.forEach(r -> resultStrings.add(r.render()));
+    results.forEach(r -> resultStrings.add(render(r)));
     resultStrings.add(SEPARATOR);
-    hiddenResults.forEach(r -> resultStrings.add(r.render()));
+    hiddenResults.forEach(r -> resultStrings.add(render(r)));
 
     int newSize = resultStrings.size();
 

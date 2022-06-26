@@ -40,23 +40,12 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
   private final List<String> resultStrings = new ArrayList<>();
 
   private final ListenerManager<ListDataListener> listeners = new ListenerManager<>();
-  private final SearchResult.Filter futureFilter;
 
   public RouteListModel(StateContext ctx) {
     this.ctx = ctx;
     this.initialState = ctx.newInitialState();
     this.currentState = this.initialState.deepCopy();
     this.finalState = this.initialState.deepCopy();
-    this.futureFilter = new SearchResult.Filter() {
-      @Override
-      public boolean accept(StateContext ctx, SearchResult result) {
-        return !finalState.isAcquired(result.itemCheck());
-      }
-    };
-  }
-
-  public SearchResult.Filter futureCheckFilter() {
-    return this.futureFilter;
   }
 
   public void saveAsTxt(Component parent) throws IOException {
@@ -106,7 +95,11 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
   }
 
   public State currentState() {
-    return getState(insertionPoint - 1);
+    return currentState;
+  }
+
+  public State finalState() {
+    return finalState;
   }
 
   private State getState(int index) {
@@ -183,6 +176,10 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
   }
 
   public void addToRoute(ItemCheck check) {
+    if (finalState.isAcquired(check)) {
+      return;
+    }
+
     currentState.acquireCheck(check);
     currentState.normalize();
 

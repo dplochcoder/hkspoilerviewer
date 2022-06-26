@@ -218,10 +218,6 @@ public final class ItemChecks {
 
     ImmutableSet.Builder<ItemCheck> addedBuilder = ImmutableSet.builder();
     for (String loc : modifiedLocations.keySet()) {
-      if (loc.equals("Start")) {
-        continue;
-      }
-
       Collection<ItemCheck> removing = modifiedLocations.get(loc);
       ItemCheck template = removing.iterator().next();
 
