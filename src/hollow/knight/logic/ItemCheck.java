@@ -27,7 +27,7 @@ public abstract class ItemCheck {
     JsonObject obj = new JsonObject();
     obj.addProperty("id", id().id());
     obj.addProperty("location", location().name());
-    obj.add("item", item().toJson());
+    obj.add("item", item().toRawSpoilerJson());
     obj.add("costs", costs().toRawSpoilerJson());
     obj.addProperty("vanilla", vanilla());
     return obj;
@@ -36,8 +36,8 @@ public abstract class ItemCheck {
   public static ItemCheck fromJson(ItemChecks checks, JsonObject json) throws ICDLException {
     return create(CheckId.of(json.get("id").getAsInt()),
         checks.getLocation(json.get("location").getAsString()),
-        Item.fromJson(checks, json.get("item")), Costs.parse(json.get("costs").getAsJsonArray()),
-        json.get("vanilla").getAsBoolean());
+        Item.fromRawSpoilerJson(checks, json.get("item")),
+        Costs.parse(json.get("costs").getAsJsonArray()), json.get("vanilla").getAsBoolean());
   }
 
   public static ItemCheck create(CheckId id, Location loc, Item item, Costs costs,

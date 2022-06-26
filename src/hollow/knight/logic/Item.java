@@ -17,14 +17,14 @@ public final class Item {
   private final Optional<String> pool;
   private final ImmutableSet<String> types;
   private final ItemEffects effects;
-  private final boolean fromJson;
+  private final boolean fromOriginalJson;
 
   private Item(Term term, Optional<String> pool, Set<String> types, ItemEffects effects) {
     this.term = term;
     this.pool = pool;
     this.types = ImmutableSet.copyOf(types);
     this.effects = effects;
-    this.fromJson = true;
+    this.fromOriginalJson = true;
   }
 
   private Item(Term term, String pool, Set<String> types, Term effectTerm, int value) {
@@ -37,7 +37,7 @@ public final class Item {
     this.effects =
         new TermMapItemEffects(Condition.alwaysTrue(), termMap, TermMap.empty(), TermMap.empty());
 
-    this.fromJson = false;
+    this.fromOriginalJson = false;
   }
 
   private static final ImmutableSet<String> GEO_TYPES =
@@ -97,6 +97,10 @@ public final class Item {
     effects.apply(state);
   }
 
+  public boolean isCustom() {
+    return !fromOriginalJson;
+  }
+
   private static ItemEffects parseEffects(JsonObject obj) throws ParseException {
     ImmutableSet<String> types = Arrays.stream(obj.get("$type").getAsString().split(", "))
         .collect(ImmutableSet.toImmutableSet());
@@ -146,7 +150,7 @@ public final class Item {
     }
   }
 
-  public static Item fromJson(ItemChecks checks, JsonElement json) throws ICDLException {
+  public static Item fromRawSpoilerJson(ItemChecks checks, JsonElement json) throws ICDLException {
     if (json.isJsonPrimitive()) {
       return checks.getItem(Term.create(json.getAsString()));
     }
@@ -163,8 +167,8 @@ public final class Item {
     return new Item(term, pool, types, effectTerm, value);
   }
 
-  public JsonElement toJson() {
-    if (fromJson) {
+  public JsonElement toRawSpoilerJson() {
+    if (fromOriginalJson) {
       return new JsonPrimitive(term().name());
     }
 
@@ -173,10 +177,72 @@ public final class Item {
     obj.add("term", new JsonPrimitive(term().name()));
     JsonArray types = new JsonArray();
     types().forEach(types::add);
+    obj.add("types", types);
     Term effectTerm = effects.effectTerms().collect(MoreCollectors.onlyElement());
     obj.addProperty("effectTerm", effectTerm.name());
     obj.addProperty("value", effects.getEffectValue(effectTerm));
     return obj;
+  }
+
+  public JsonObject toICDLJson() throws ICDLException {
+    Term effectTerm = effects.effectTerms().collect(MoreCollectors.onlyElement());
+    int effectValue = effects.getEffectValue(effectTerm);
+    if (effectTerm.equals(Term.geo())) {
+      JsonObject obj = new JsonObject();
+      obj.addProperty("$type", "ItemChanger.Items.SpawnGeoItem, ItemChanger");
+      obj.addProperty("amount", effectValue);
+      obj.addProperty("name", term.name());
+      obj.addProperty("obtainState", "Unobtained");
+
+      JsonObject uiDef = new JsonObject();
+      uiDef.addProperty("$type", "ItemChanger.UIDefs.MsgUIDef, ItemChanger");
+
+      JsonObject name = new JsonObject();
+      name.addProperty("$type", "ItemChanger.BoxedString, ItemChanger");
+      name.addProperty("Value", effectValue + " Geo");
+      uiDef.add("name", name);
+      JsonObject shopDesc = new JsonObject();
+      shopDesc.addProperty("$type", "ItemChanger.LanguageString, ItemChanger");
+      shopDesc.addProperty("sheet", "UI");
+      shopDesc.addProperty("key", "ITEMCHANGER_DESC_GEO");
+      uiDef.add("shopDesc", shopDesc);
+      JsonObject sprite = new JsonObject();
+      sprite.addProperty("$type", "ItemChanger.ItemChangerSprite, ItemChanger");
+      sprite.addProperty("key", "ShopIcons.Geo");
+      uiDef.add("sprite", sprite);
+
+      obj.add("UIDef", uiDef);
+      return obj;
+    } else if (effectTerm.equals(Term.essence())) {
+      JsonObject obj = new JsonObject();
+      obj.addProperty("$type", "ItemChanger.Items.EssenceItem, ItemChanger");
+      obj.addProperty("amount", effectValue);
+      obj.addProperty("name", term.name());
+      obj.addProperty("obtainState", "Unobtained");
+
+      JsonObject uiDef = new JsonObject();
+      uiDef.addProperty("$type", "ItemChanger.UIDefs.MsgUIDef, ItemChanger");
+
+      JsonObject name = new JsonObject();
+      name.addProperty("$type", "ItemChanger.LanguageString, ItemChanger");
+      name.addProperty("sheet", "UI");
+      name.addProperty("key", "ITEMCHANGER_NAME_ESSENCE_" + effectValue);
+      uiDef.add("name", name);
+      JsonObject shopDesc = new JsonObject();
+      shopDesc.addProperty("$type", "ItemChanger.LanguageString, ItemChanger");
+      shopDesc.addProperty("sheet", "UI");
+      shopDesc.addProperty("key", "ITEMCHANGER_DESC_ESSENCE");
+      uiDef.add("shopDesc", shopDesc);
+      JsonObject sprite = new JsonObject();
+      sprite.addProperty("$type", "ItemChanger.ItemChangerSprite, ItemChanger");
+      sprite.addProperty("key", "ShopIcons.Essence");
+      uiDef.add("sprite", sprite);
+
+      obj.add("UIDef", uiDef);
+      return obj;
+    } else {
+      throw new ICDLException("Unsupported custom item type: " + effectTerm);
+    }
   }
 
   public static Item parse(JsonObject item) throws ParseException {

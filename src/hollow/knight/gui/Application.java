@@ -95,7 +95,7 @@ public final class Application extends JFrame {
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     openEditor = new JMenuItem("Open Editor");
-    saveICDLFolder = new JMenuItem("Save As ICDL Pack Folder");
+    saveICDLFolder = new JMenuItem("Export As ICDL Pack Folder");
     icdlMenu = createICDLMenu();
     setJMenuBar(createMenu());
 

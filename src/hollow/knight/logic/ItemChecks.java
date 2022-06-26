@@ -200,6 +200,10 @@ public final class ItemChecks {
     return loc;
   }
 
+  public boolean hasItem(Term term) {
+    return itemsByName.containsKey(term);
+  }
+
   public Item getItem(Term term) throws ICDLException {
     Item item = itemsByName.get(term);
     if (item == null) {

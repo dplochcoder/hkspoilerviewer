@@ -49,8 +49,8 @@ public final class CheckEditorItemsListModel implements ListModel<String>, ItemC
 
     this.resultItems.clear();
     this.resultStrings.clear();
-    resultItems.stream().filter(i -> ctx.checks().isOriginalNonVanilla(i.term())).sorted(sorter)
-        .forEach(i -> {
+    resultItems.stream().filter(i -> i.isCustom() || ctx.checks().isOriginalNonVanilla(i.term()))
+        .sorted(sorter).forEach(i -> {
           this.resultItems.add(i);
           this.resultStrings.add(render(i));
         });

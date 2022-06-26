@@ -274,9 +274,10 @@ public final class StateContext {
       // Add items
       JsonArray itemsArr = new JsonArray();
       for (ItemCheck check : checksByLocation.get(locName)) {
-        // TODO: Handle custom geo + essence
-        JsonObject itemObj = itemJsons.get(check.item().term()).deepCopy();
-        tagsArr = itemObj.get("tags").getAsJsonArray().deepCopy();
+        JsonObject itemObj = check.item().isCustom() ? check.item().toICDLJson()
+            : itemJsons.get(check.item().term()).deepCopy();
+        tagsArr =
+            itemObj.has("tags") ? itemObj.get("tags").getAsJsonArray().deepCopy() : new JsonArray();
 
         if (loc.isShop()) {
           JsonObject costTag = new JsonObject();

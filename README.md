@@ -131,7 +131,11 @@ HKSpoilerViewer does not support adding brand new checks to the world, a la [Tra
 
 To create a new check at an existing location, select that check in Search Results and press 'D'. To remove a check, press 'Z'. Note that removing the last check at a specific location will instead replace that check with a 'Nothing?' check.
 
-Because of the way items are added to the game, if you add multiple items at a single location that is not an established shop, they must all have the same cost (whihc is paid once by the player to acquire all the items). The editor will not prevent you from breaking this rule while editing, but you will not be able to save ICDL pack folders while this rule is broken. In a future version of HKSpoilerViewer, this may be improved to natively support multi-item checks.
+Because of the way items are added to the game, if you add multiple items at a single location that is not an established shop, they must all have the same cost (which is paid once by the player to acquire all the items). The editor will not prevent you from breaking this rule while editing, but you will not be able to export ICDL pack folders while this rule is broken. In a future version of HKSpoilerViewer, this may be improved to natively support multi-item checks.
+
+## Custom Items
+
+The CheckEditor supports creating custom Geo and Essence items, which give the player an arbitrary, specified amount of geo or essence respectively. To add custom geo or essence to your save, simply click the 'Add Custom Geo' or other button in the check editor, then assign that newly created item (e.g. `123_Geo`) to the location you want it placed it. This is the canonical mechanism for editing starting geo.
 
 ## Setting Shop Costs
 
@@ -141,9 +145,13 @@ You can also tap 'E' if you have the item selected in the ICDL Check Editor, how
 
 HKSpoilerViewer does not restrict what costs you set and where, but these may not work correctly outside of their standard locations. (In particular, there will be no UI to clue in the blind player as to what's required, outside of standard shop UIs.)
 
+## Editing Starting Items
+
+You can view starting items by enabling the 'Routed' filter in search, as well as the 'Vanilla' filter for built-ins like nail swings and Focus. While you cannot edit or delete vanilla items, you can add additional ones, such as custom geo, essence, even charms and movement. Simply duplicate (D) a Start check, then assign whatever item you want to the duplicate.
+
 ## Editing Context
 
-You can edit Starting Geo, charm notch costs, and logical tolerances from the ICDL menu. Each of these opens a text editor, which you modify and then close. The only restrictions are that geo and notch costs be non-negative integers.
+You can edit charm notch costs, and logical tolerances from the ICDL menu. Each of these opens a text editor, which you modify and then close. The only restrictions are that geo and notch costs be non-negative integers.
 
 ## Importing
 
@@ -151,17 +159,15 @@ The ICDL editor does not allow you to modify vanilla checks, and there is no eas
 
 For example, if you start a plando, then realize after making 100 edits that you forgot to randomize grimmkin flames, you can create a new seed that does randomize grimmkin flames, then import your old (incomplete) save onto the new one so you don't lose work.
 
-## Saving
+## Saving and Exporting
 
-At any point, you can save your progress as a new ICDL pack folder from the save menu. Simply select `File > Save as ICDL Pack` at any time to checkpoint your progress. This will also save your current bookmarks and route, if you have any open.
+At any point, you can save your progress as an hks file. The hks file is self-contained and you do not need to keep the original spoiler or ICDL files around to use it. It also preserves all of your bookmarks and routing info that you were using.
 
-You will ideally save your ICDL packs in the `Past Randos` folder, so that you can open them in Hollow Knight for playing/debugging, but you can save them anywhere.
+When you're ready to try out your save in Hollow Knight, select 'Export as ICDL Pack Folder' from the ICDL menu. If there are no errors, you'll be asked for a name and description of the pack folder, which will appear in the UI when the user browses 'Past Randos'. You'll ideally want to save your pack folders in the Past Randos directory, but you can save them anywhere.
 
 # Future features
 
   - Undo/Redo functionality, particularly for ICDL work
-  - Generic search engine for better queries
-  - Adding custom geo / essence items
   - Proper integration with Transcendence (editing notches for Transcendence probably doesn't work right now)
   - Native support of multi-item check locations (i.e. area blitz)
   - Graphical UI mode (very very far future, if ever)

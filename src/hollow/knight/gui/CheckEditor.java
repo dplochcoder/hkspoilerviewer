@@ -139,7 +139,15 @@ public final class CheckEditor extends JFrame implements ItemChecks.Listener {
         return;
       }
 
-      application.ctx().checks().addItem(itemFn.apply(val));
+      Item item = itemFn.apply(val);
+      if (application.ctx().checks().hasItem(item.term())) {
+        JOptionPane.showMessageDialog(CheckEditor.this,
+            "Custom item " + item.term().name() + " already exists");
+        return;
+      }
+
+      application.ctx().checks().addItem(item);
+      repopulateItemResults();
     }));
     return button;
   }
