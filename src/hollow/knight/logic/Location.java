@@ -1,12 +1,12 @@
 package hollow.knight.logic;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import com.google.gson.JsonObject;
 
 @AutoValue
 public abstract class Location {
@@ -23,6 +23,8 @@ public abstract class Location {
 
   public abstract String name();
 
+  public abstract boolean isTransition();
+
   public abstract Condition accessCondition();
 
   public abstract String scene();
@@ -31,11 +33,24 @@ public abstract class Location {
     return SHOPS.contains(name());
   }
 
-  public static Location create(RoomLabels rooms, String name, Condition accessCondition,
-      Optional<String> sceneName) throws ParseException {
-    String scene =
-        sceneName.isPresent() ? sceneName.get() : inferScene(rooms, name, accessCondition);
-    return new AutoValue_Location(name, accessCondition, scene);
+  public static Location parse(RoomLabels rooms, JsonObject obj, boolean isTransition)
+      throws ParseException {
+    JsonObject logicObj = obj;
+    if (logicObj.has("logic")) {
+      logicObj = logicObj.get("logic").getAsJsonObject();
+    }
+
+    String name = logicObj.get("Name").getAsString();
+    Condition locAccess = ConditionParser.parse(logicObj.get("Logic").getAsString());
+
+    String scene;
+    if (obj.has("LocationDef")) {
+      scene = obj.get("LocationDef").getAsJsonObject().get("SceneName").getAsString();
+    } else {
+      scene = inferScene(rooms, name, locAccess);
+    }
+
+    return new AutoValue_Location(name, isTransition, locAccess, scene);
   }
 
   private static String inferScene(RoomLabels rooms, String name, Condition accessCondition)

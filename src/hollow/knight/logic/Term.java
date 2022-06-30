@@ -101,6 +101,12 @@ public abstract class Term implements Comparable<Term> {
     return COST_TERMS;
   }
 
+  private static final Term NOTHING_TRANSITION = Term.create("Tutorial_01[top1]");
+
+  public static final Term nothingTransition() {
+    return NOTHING_TRANSITION;
+  }
+
   private static final Term NOTHING = Term.create("Lumafly_Escape");
 
   public static Term nothing() {

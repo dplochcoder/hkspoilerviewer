@@ -32,7 +32,7 @@ public final class SplitCloakItemEffects implements ItemEffects {
   public void apply(State state) {
     boolean hasLeft = state.get(LEFT_DASH) > 0;
     boolean hasRight = state.get(RIGHT_DASH) > 0;
-    boolean hasShade = state.get(LEFT_DASH) > 2 || state.get(RIGHT_DASH) > 2;
+    boolean hasShade = state.get(LEFT_DASH) >= 2 || state.get(RIGHT_DASH) >= 2;
 
     if (hasLeft && hasRight) {
       if (!hasShade) {

@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -377,30 +376,17 @@ public final class ItemChecks {
     }
   }
 
-  private void parseCheck(JsonElement elem, RoomLabels rooms, boolean vanilla)
+  private void parseCheckUnsafe(JsonElement elem, RoomLabels rooms, boolean vanilla)
       throws ParseException {
     Item item = Item.parse(elem.getAsJsonObject().get("Item").getAsJsonObject());
     if (!item.types().contains("RandomizerMod.RC.SplitCloakItem")
+        && !item.types().contains("RandomizerCore.Logic.LogicTransition")
         && item.types().stream().noneMatch(s -> s.startsWith("RandomizerCore.LogicItems."))) {
       return;
     }
 
     JsonObject locObj = elem.getAsJsonObject().get("Location").getAsJsonObject();
-    JsonObject logicObj = locObj;
-    if (logicObj.has("logic")) {
-      logicObj = logicObj.get("logic").getAsJsonObject();
-    }
-
-    String locName = logicObj.get("Name").getAsString();
-    Condition locAccess = ConditionParser.parse(logicObj.get("Logic").getAsString());
-
-    Optional<String> scene = Optional.empty();
-    if (locObj.has("LocationDef")) {
-      scene =
-          Optional.of(locObj.get("LocationDef").getAsJsonObject().get("SceneName").getAsString());
-    }
-
-    Location loc = Location.create(rooms, locName, locAccess, scene);
+    Location loc = Location.parse(rooms, locObj, item.isTransition());
 
     Costs costs = Costs.none();
     JsonElement costsObj = locObj.get("costs");
@@ -411,23 +397,30 @@ public final class ItemChecks {
     placeNew(loc, item, costs, vanilla);
   }
 
+  private void parseCheckSafe(JsonElement elem, RoomLabels rooms, boolean vanilla)
+      throws ParseException {
+    try {
+      parseCheckUnsafe(elem, rooms, vanilla);
+    } catch (Exception ex) {
+      throw new ParseException(ex.getMessage() + ": " + elem, ex);
+    }
+  }
+
   public static ItemChecks parse(JsonObject json, RoomLabels roomLabels) throws ParseException {
     ItemChecks checks = new ItemChecks();
 
     // Parse locations.
     for (JsonElement elem : json.get("itemPlacements").getAsJsonArray()) {
-      try {
-        checks.parseCheck(elem, roomLabels, false);
-      } catch (Exception ex) {
-        throw new ParseException(ex.getMessage() + ": " + elem, ex);
+      checks.parseCheckSafe(elem, roomLabels, false);
+    }
+    JsonElement transitionPlacements = json.get("transitionPlacements");
+    if (!transitionPlacements.isJsonNull()) {
+      for (JsonElement elem : transitionPlacements.getAsJsonArray()) {
+        checks.parseCheckSafe(elem, roomLabels, false);
       }
     }
     for (JsonElement elem : json.get("Vanilla").getAsJsonArray()) {
-      try {
-        checks.parseCheck(elem, roomLabels, true);
-      } catch (Exception ex) {
-        throw new ParseException(ex.getMessage() + ": " + elem, ex);
-      }
+      checks.parseCheckSafe(elem, roomLabels, true);
     }
 
     checks.calculateOriginalItemCounts();

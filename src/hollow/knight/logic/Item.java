@@ -71,6 +71,10 @@ public final class Item {
     return types;
   }
 
+  public boolean isTransition() {
+    return types().contains("RandomizerCore.Logic.LogicTransition");
+  }
+
   public boolean hasEffectTerm(Term term) {
     return effects.hasEffectTerm(term);
   }
@@ -112,6 +116,13 @@ public final class Item {
     if (types.contains("RandomizerCore.LogicItems.BoolItem")) {
       MutableTermMap effects = new MutableTermMap();
       effects.add(Term.create(obj.get("Term").getAsString()), 1);
+
+      return new TermMapItemEffects(Condition.alwaysTrue(), effects, TermMap.empty(), effects);
+    }
+
+    if (types.contains("RandomizerCore.Logic.LogicTransition")) {
+      MutableTermMap effects = new MutableTermMap();
+      effects.add(Term.create(obj.get("term").getAsString()), 1);
 
       return new TermMapItemEffects(Condition.alwaysTrue(), effects, TermMap.empty(), effects);
     }

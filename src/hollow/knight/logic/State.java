@@ -2,18 +2,35 @@ package hollow.knight.logic;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Supplier;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Sets;
 
 /** Mutable state of a run; can be deep-copied. */
 public class State {
+  public enum TransitionStrategy {
+    NONE, VANILLA, ALL;
+
+    public boolean autoAcquire(ItemCheck check) {
+      switch (this) {
+        case NONE:
+          return false;
+        case VANILLA:
+          return check.isTransition() && check.vanilla();
+        case ALL:
+          return check.isTransition();
+      }
+      throw new AssertionError("Impossible: " + this);
+    }
+  }
+
   private final StateContext ctx;
+  private TransitionStrategy transitionStrategy = TransitionStrategy.VANILLA;
 
   private final MutableTermMap termValues = new MutableTermMap();
   private ConditionGraph graph = null;
   private final Set<ItemCheck> obtains = new HashSet<>();
+  private final Set<ItemCheck> accessibleUnobtained = new HashSet<>();
 
   private final Set<Term> dirtyTerms = new HashSet<>();
 
@@ -32,12 +49,12 @@ public class State {
     return ctx;
   }
 
-  public Stream<ItemCheck> obtained() {
-    return obtains.stream();
+  public void setTransitionStrategy(TransitionStrategy transitionStrategy) {
+    this.transitionStrategy = transitionStrategy;
   }
 
-  public Stream<ItemCheck> unobtained() {
-    return ctx.checks().allChecks().filter(id -> !obtains.contains(id));
+  public Stream<ItemCheck> obtained() {
+    return obtains.stream();
   }
 
   public Stream<ItemCheck> accessible() {
@@ -57,10 +74,20 @@ public class State {
     termValues.set(term, value);
   }
 
+  private void acquireWaypoint(Term waypoint) {
+    if (get(waypoint) == 0) {
+      set(waypoint, 1);
+      if (potentialState != null) {
+        potentialState.acquireWaypoint(waypoint);
+      }
+    }
+  }
+
   public void acquireCheck(ItemCheck check) {
     if (!obtains.add(check)) {
       return;
     }
+    accessibleUnobtained.remove(check);
 
     if (potentialState != null) {
       potentialState.acquireCheck(check);
@@ -79,6 +106,48 @@ public class State {
 
   public boolean purchaseTest(Condition c) {
     return potentialState.test(c);
+  }
+
+  private void updateGraph(Set<Term> updateTerms, Set<Term> waypointsOut,
+      Set<ItemCheck> checksOut) {
+    for (Condition c : graph.update(this, updateTerms)) {
+      waypointsOut.addAll(ctx().waypoints().getTerms(c));
+      ctx().checks().getByCondition(c).forEach(checksOut::add);
+    }
+  }
+
+  // Recursively acquire waypoints (all) and checks that match the predicate.
+  // `newWaypoints` and `newChecks` are iterated on until empty. Checks deemed accessible but
+  // not acquired are placed into `unacquiredSink`.
+  private void recursivelyUpdateGraph(Set<Term> newWaypoints, Set<ItemCheck> newChecks,
+      Set<ItemCheck> unacquiredSink, Predicate<ItemCheck> acquire, Set<Term> checkUpdateTerms) {
+    while (!newWaypoints.isEmpty() || !newChecks.isEmpty()) {
+      if (!newWaypoints.isEmpty()) {
+        // Evaluate new waypoints.
+        newWaypoints.forEach(this::acquireWaypoint);
+        dirtyTerms.clear();
+
+        Set<Term> copy = new HashSet<>(newWaypoints);
+        newWaypoints.clear();
+
+        updateGraph(copy, newWaypoints, newChecks);
+      }
+
+      if (!newChecks.isEmpty()) {
+        for (ItemCheck check : newChecks) {
+          if (acquire.test(check)) {
+            acquireCheck(check);
+            unacquiredSink.remove(check);
+          } else {
+            unacquiredSink.add(check);
+          }
+        }
+        newChecks.clear();
+
+        updateGraph(checkUpdateTerms, newWaypoints, newChecks);
+        dirtyTerms.clear();
+      }
+    }
   }
 
   // Iteratively apply logic to grant access to items / areas.
@@ -101,73 +170,24 @@ public class State {
       });
       graph = builder.build();
     } else {
-      for (Condition c : graph.update(this, dirtyTerms)) {
-        newWaypoints.addAll(ctx.waypoints().getTerms(c));
-        ctx().checks().getByCondition(c).forEach(newChecks::add);
-      }
-      if (potentialState != null) {
-        potentialState.graph.update(potentialState, dirtyTerms);
-      }
+      updateGraph(dirtyTerms, newWaypoints, newChecks);
+      dirtyTerms.clear();
     }
-    dirtyTerms.clear();
+
+    recursivelyUpdateGraph(newWaypoints, newChecks, accessibleUnobtained,
+        transitionStrategy::autoAcquire, dirtyTerms);
 
     if (potentialState == null) {
       potentialState = this.deepCopy();
       toleranceValues =
           new SumTermMap(ImmutableList.of(potentialState.termValues, ctx.tolerances()));
+    } else {
+      potentialState.updateGraph(potentialState.dirtyTerms, newWaypoints, newChecks);
+      potentialState.dirtyTerms.clear();
     }
 
-    // Iterate waypoints.
-    while (!newWaypoints.isEmpty()) {
-      for (Term t : newWaypoints) {
-        set(t, 1);
-        potentialState.set(t, 1);
-      }
-
-      newWaypoints.clear();
-      for (Condition c : graph.update(this, dirtyTerms)) {
-        newWaypoints.addAll(ctx.waypoints().getTerms(c));
-        ctx().checks().getByCondition(c).forEach(newChecks::add);
-      }
-      potentialState.graph.update(potentialState, dirtyTerms);
-      dirtyTerms.clear();
-    }
-
-    // Determine all accessible waypoints and checks.
-    Supplier<Set<Term>> costTerms =
-        () -> Sets.intersection(Term.costTerms(), potentialState.dirtyTerms);
-    for (Condition c : potentialState.graph.update(potentialState, costTerms.get())) {
-      newWaypoints.addAll(ctx().waypoints().getTerms(c));
-      ctx().checks().getByCondition(c).forEach(newChecks::add);
-    }
-    potentialState.dirtyTerms.clear();
-
-    while (!newWaypoints.isEmpty() || !newChecks.isEmpty()) {
-      if (!newWaypoints.isEmpty()) {
-        // Evaluate new waypoints.
-        newWaypoints.forEach(t -> potentialState.set(t, 1));
-        potentialState.dirtyTerms.clear();
-
-        Set<Term> copy = new HashSet<>(newWaypoints);
-        newWaypoints.clear();
-
-        for (Condition c : potentialState.graph.update(potentialState, copy)) {
-          newWaypoints.addAll(ctx().waypoints().getTerms(c));
-          ctx().checks().getByCondition(c).forEach(newChecks::add);
-        }
-      }
-
-      if (!newChecks.isEmpty()) {
-        newChecks.forEach(potentialState::acquireCheck);
-        newChecks.clear();
-
-        for (Condition c : potentialState.graph.update(potentialState, costTerms.get())) {
-          newWaypoints.addAll(ctx().waypoints().getTerms(c));
-          ctx().checks().getByCondition(c).forEach(newChecks::add);
-        }
-        potentialState.dirtyTerms.clear();
-      }
-    }
+    potentialState.recursivelyUpdateGraph(newWaypoints, newChecks, accessibleUnobtained,
+        c -> !c.isTransition() || transitionStrategy.autoAcquire(c), Term.costTerms());
   }
 
   public TermMap termValues() {
@@ -185,6 +205,8 @@ public class State {
     copy.obtains.addAll(this.obtains);
     copy.dirtyTerms.clear();
     copy.dirtyTerms.addAll(this.dirtyTerms);
+    copy.accessibleUnobtained.clear();
+    copy.accessibleUnobtained.addAll(this.accessibleUnobtained);
     if (graph != null) {
       copy.graph = graph.deepCopy();
     }

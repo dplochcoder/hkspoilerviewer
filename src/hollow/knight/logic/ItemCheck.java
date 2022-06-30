@@ -2,6 +2,7 @@ package hollow.knight.logic;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
+import com.google.common.base.Preconditions;
 import com.google.gson.JsonObject;
 
 @AutoValue
@@ -17,6 +18,10 @@ public abstract class ItemCheck {
   public abstract Costs costs();
 
   public abstract boolean vanilla();
+
+  public final boolean isTransition() {
+    return location().isTransition();
+  }
 
   @Memoized
   public Condition condition() {
@@ -42,6 +47,7 @@ public abstract class ItemCheck {
 
   public static ItemCheck create(CheckId id, Location loc, Item item, Costs costs,
       boolean vanilla) {
+    Preconditions.checkArgument(item.isTransition() == loc.isTransition(), "Transition type mismatch");
     return new AutoValue_ItemCheck(id, loc, item, costs, vanilla);
   }
 
