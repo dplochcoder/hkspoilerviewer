@@ -47,7 +47,8 @@ public abstract class ItemCheck {
 
   public static ItemCheck create(CheckId id, Location loc, Item item, Costs costs,
       boolean vanilla) {
-    Preconditions.checkArgument(item.isTransition() == loc.isTransition(), "Transition type mismatch");
+    Preconditions.checkArgument(item.isTransition() == loc.isTransition(),
+        "Transition type mismatch");
     return new AutoValue_ItemCheck(id, loc, item, costs, vanilla);
   }
 

@@ -200,6 +200,7 @@ public class State {
 
   public State deepCopy() {
     State copy = new State(ctx);
+    copy.transitionStrategy = this.transitionStrategy;
     copy.termValues.clear();
     this.termValues.terms().forEach(t -> copy.termValues.set(t, get(t)));
     copy.obtains.addAll(this.obtains);

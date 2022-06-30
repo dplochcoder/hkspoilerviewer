@@ -116,7 +116,6 @@ public final class StateContext {
       state.set(t, setters.get(t));
     }
 
-    state.normalize();
     return state;
   }
 

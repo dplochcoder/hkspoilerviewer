@@ -71,6 +71,7 @@ public final class Application extends JFrame {
   private CheckEditor checkEditor;
   private final JMenuItem saveICDLFolder;
 
+  private final TransitionRouting transitionRouting;
   private final Skips skips;
   private final SearchEngine searchEngine;
 
@@ -102,6 +103,7 @@ public final class Application extends JFrame {
     JPanel left = new JPanel();
     BoxLayout layout = new BoxLayout(left, BoxLayout.PAGE_AXIS);
     left.setLayout(layout);
+    this.transitionRouting = createTransitionRouting();
     this.skips = createSkips();
     List<SearchResult.Filter> resultFilters = addFilters(left);
 
@@ -133,7 +135,7 @@ public final class Application extends JFrame {
     getContentPane().add(rightPane, BorderLayout.LINE_END);
 
     pack();
-    repopulateSearchResults();
+    refreshLogic();
     setVisible(true);
   }
 
@@ -581,7 +583,7 @@ public final class Application extends JFrame {
     StateContext newCtx = opener.openFile(path);
 
     setICDLEnabled(newCtx.icdlJson() != null);
-    skips.setInitialState(newCtx.newInitialState());
+    skips.inferDefaultSkips(newCtx.newInitialState());
     checksListeners.forEach(prevCtx.checks()::removeListener);
     checksListeners.forEach(newCtx.checks()::addListener);
 
@@ -665,9 +667,17 @@ public final class Application extends JFrame {
 
   private Skips createSkips() throws ParseException {
     Skips skips = Skips.load();
-    skips.setInitialState(ctx().newInitialState());
-    skips.addListener(this::skipsUpdated);
+    skips.inferDefaultSkips(ctx().newInitialState());
+    skips.addListener(this::refreshLogic);
+    routeListModel.addStateInitializer(skips);
     return skips;
+  }
+
+  private TransitionRouting createTransitionRouting() {
+    TransitionRouting transitionRouting = new TransitionRouting();
+    transitionRouting.addListener(this::refreshLogic);
+    routeListModel.addStateInitializer(transitionRouting);
+    return transitionRouting;
   }
 
   private List<SearchResult.Filter> addFilters(JPanel parent) throws ParseException {
@@ -691,6 +701,9 @@ public final class Application extends JFrame {
     searchFilters.add(roomsFilter);
 
     parent.add(new JSeparator());
+    this.transitionRouting.addToGui(parent);
+
+    parent.add(new JSeparator());
     this.skips.addToGui(parent);
 
     parent.add(new JSeparator());
@@ -700,11 +713,6 @@ public final class Application extends JFrame {
     searchFilters.add(excFilters);
 
     return searchFilters.build();
-  }
-
-  private void skipsUpdated() {
-    routeListModel.updateSkips(skips);
-    repopulateSearchResults();
   }
 
   private JList<String> createSearchResults() {

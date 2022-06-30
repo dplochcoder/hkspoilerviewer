@@ -47,7 +47,7 @@ public final class ItemChecks {
     }
   }
 
-  private final ListenerManager<Listener> listeners = new ListenerManager<>();
+  private final SynchronizedEntityManager<Listener> listeners = new SynchronizedEntityManager<>();
 
   private final BiMap<CheckId, ItemCheck> checksById = HashBiMap.create();
   private final BiMultimap<Condition, CheckId> idsByCondition = new BiMultimap<>();

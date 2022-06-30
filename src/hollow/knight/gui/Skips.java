@@ -13,13 +13,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import hollow.knight.io.JsonUtil;
-import hollow.knight.logic.ListenerManager;
 import hollow.knight.logic.ParseException;
 import hollow.knight.logic.State;
+import hollow.knight.logic.SynchronizedEntityManager;
 import hollow.knight.logic.Term;
 
 // UI object for enabling skips not part of the seed settings, to expand logic.
-public final class Skips {
+public final class Skips implements RouteListModel.StateInitializer {
 
   public static interface Listener {
     void skipsUpdated();
@@ -38,7 +38,7 @@ public final class Skips {
 
   private final ImmutableList<SkipTerm> skipTerms;
   private final JPanel panel = new JPanel();
-  private final ListenerManager<Listener> listeners = new ListenerManager<>();
+  private final SynchronizedEntityManager<Listener> listeners = new SynchronizedEntityManager<>();
 
   private SkipTerm createSkipTerm(String name, Term effectTerm) {
     JCheckBox box = new JCheckBox(name);
@@ -86,7 +86,7 @@ public final class Skips {
     listeners.forEach(Listener::skipsUpdated);
   }
 
-  public void setInitialState(State state) {
+  public void inferDefaultSkips(State state) {
     for (SkipTerm st : skipTerms) {
       boolean isInSettings = state.get(st.effectTerm()) > 0;
       st.box().setEnabled(!isInSettings);
@@ -94,7 +94,8 @@ public final class Skips {
     }
   }
 
-  public void applySkips(State state) {
+  @Override
+  public void initializeState(State state) {
     for (SkipTerm st : skipTerms) {
       if (st.box().isSelected()) {
         Term t = st.effectTerm();

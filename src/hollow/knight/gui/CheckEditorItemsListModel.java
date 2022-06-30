@@ -11,13 +11,13 @@ import com.google.common.collect.Multiset;
 import hollow.knight.logic.Item;
 import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.ItemChecks;
-import hollow.knight.logic.ListenerManager;
+import hollow.knight.logic.SynchronizedEntityManager;
 import hollow.knight.logic.StateContext;
 import hollow.knight.logic.Term;
 
 public final class CheckEditorItemsListModel implements ListModel<String>, ItemChecks.Listener {
 
-  private final ListenerManager<ListDataListener> listeners = new ListenerManager<>();
+  private final SynchronizedEntityManager<ListDataListener> listeners = new SynchronizedEntityManager<>();
 
   private final ItemChecks checks;
 

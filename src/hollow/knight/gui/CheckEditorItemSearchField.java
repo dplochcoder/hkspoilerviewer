@@ -8,7 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import hollow.knight.logic.Item;
-import hollow.knight.logic.ListenerManager;
+import hollow.knight.logic.SynchronizedEntityManager;
 
 public final class CheckEditorItemSearchField {
 
@@ -17,7 +17,7 @@ public final class CheckEditorItemSearchField {
     void textChanged();
   }
 
-  private final ListenerManager<Listener> listeners = new ListenerManager<>();
+  private final SynchronizedEntityManager<Listener> listeners = new SynchronizedEntityManager<>();
 
   private final JPanel searchPanel;
   private final JTextField textField;

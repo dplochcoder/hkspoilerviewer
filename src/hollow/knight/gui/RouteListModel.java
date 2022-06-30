@@ -21,14 +21,17 @@ import com.google.gson.JsonObject;
 import hollow.knight.logic.CheckId;
 import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.ItemChecks;
-import hollow.knight.logic.ListenerManager;
 import hollow.knight.logic.SaveInterface;
 import hollow.knight.logic.State;
 import hollow.knight.logic.StateContext;
+import hollow.knight.logic.SynchronizedEntityManager;
 import hollow.knight.logic.Version;
 
 public final class RouteListModel implements ItemChecks.Listener, ListModel<String>, SaveInterface {
 
+  public interface StateInitializer {
+    void initializeState(State state);
+  }
 
   private StateContext ctx;
   private State initialState; // No checks
@@ -39,13 +42,23 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
   private final List<ItemCheck> route = new ArrayList<>();
   private final List<String> resultStrings = new ArrayList<>();
 
-  private final ListenerManager<ListDataListener> listeners = new ListenerManager<>();
+  private final SynchronizedEntityManager<StateInitializer> stateInitializers =
+      new SynchronizedEntityManager<>();
+  private final SynchronizedEntityManager<ListDataListener> listeners =
+      new SynchronizedEntityManager<>();
 
   public RouteListModel(StateContext ctx) {
     this.ctx = ctx;
-    this.initialState = ctx.newInitialState();
+    this.initialState = newInitialState();
     this.currentState = this.initialState.deepCopy();
     this.finalState = this.initialState.deepCopy();
+  }
+
+  private State newInitialState() {
+    State state = ctx.newInitialState();
+    stateInitializers.forEach(i -> i.initializeState(state));
+    state.normalize();
+    return state;
   }
 
   public void saveAsTxt(Component parent) throws IOException {
@@ -145,31 +158,6 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
       currentState.acquireCheck(route.get(i));
     }
     currentState.normalize();
-
-    ListDataEvent e = new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, 0, getSize());
-    listeners.forEach(l -> l.contentsChanged(e));
-  }
-
-  public void updateSkips(Skips skips) {
-    initialState = ctx.newInitialState();
-    skips.applySkips(initialState);
-
-    finalState = initialState.deepCopy();
-    for (int i = 0; i < route.size(); i++) {
-      if (i == insertionPoint) {
-        currentState = finalState.deepCopy();
-      }
-
-      SearchResult newResult = SearchResult.create(route.get(i), finalState);
-      resultStrings.set(i, newResult.render());
-
-      finalState.acquireCheck(route.get(i));
-      finalState.normalize();
-    }
-
-    if (route.size() == insertionPoint) {
-      currentState = finalState.deepCopy();
-    }
 
     ListDataEvent e = new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, 0, getSize());
     listeners.forEach(l -> l.contentsChanged(e));
@@ -297,7 +285,7 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
   }
 
   public void refreshLogic() {
-    finalState = ctx.newInitialState();
+    finalState = newInitialState();
     for (int i = 0; i < getSize(); i++) {
       ItemCheck check = route.get(i);
       resultStrings.set(i, SearchResult.create(check, finalState).render());
@@ -383,7 +371,7 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
   @Override
   public void open(Version version, StateContext ctx, JsonElement json) {
     this.ctx = ctx;
-    this.initialState = ctx.newInitialState();
+    this.initialState = newInitialState();
     this.currentState = this.initialState.deepCopy();
     this.finalState = this.initialState.deepCopy();
     this.insertionPoint = 0;
@@ -415,5 +403,13 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
   @Override
   public void removeListDataListener(ListDataListener listener) {
     listeners.remove(listener);
+  }
+
+  public void addStateInitializer(StateInitializer stateInitializer) {
+    stateInitializers.add(stateInitializer);
+  }
+
+  public void removeStateInitializer(StateInitializer stateInitializer) {
+    stateInitializers.remove(stateInitializer);
   }
 }

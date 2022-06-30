@@ -16,7 +16,7 @@ import com.google.gson.JsonObject;
 import hollow.knight.logic.CheckId;
 import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.ItemChecks;
-import hollow.knight.logic.ListenerManager;
+import hollow.knight.logic.SynchronizedEntityManager;
 import hollow.knight.logic.SaveInterface;
 import hollow.knight.logic.State;
 import hollow.knight.logic.StateContext;
@@ -25,7 +25,7 @@ import hollow.knight.logic.Version;
 public final class SearchResultsListModel
     implements ListModel<String>, ItemChecks.Listener, SaveInterface {
 
-  private final ListenerManager<ListDataListener> listeners = new ListenerManager<>();
+  private final SynchronizedEntityManager<ListDataListener> listeners = new SynchronizedEntityManager<>();
 
   private final Set<ItemCheck> bookmarksSet = new HashSet<>();
   private final Set<ItemCheck> hiddenResultsSet = new HashSet<>();

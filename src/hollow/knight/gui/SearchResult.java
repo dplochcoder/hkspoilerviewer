@@ -6,10 +6,10 @@ import hollow.knight.logic.CheckId;
 import hollow.knight.logic.Costs;
 import hollow.knight.logic.Item;
 import hollow.knight.logic.ItemCheck;
-import hollow.knight.logic.ListenerManager;
 import hollow.knight.logic.Location;
 import hollow.knight.logic.State;
 import hollow.knight.logic.StateContext;
+import hollow.knight.logic.SynchronizedEntityManager;
 
 @AutoValue
 public abstract class SearchResult {
@@ -18,7 +18,8 @@ public abstract class SearchResult {
   }
 
   public abstract static class Filter {
-    private final ListenerManager<FilterChangedListener> listeners = new ListenerManager<>();
+    private final SynchronizedEntityManager<FilterChangedListener> listeners =
+        new SynchronizedEntityManager<>();
 
     public abstract boolean accept(StateContext ctx, SearchResult result);
 

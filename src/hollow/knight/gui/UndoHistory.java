@@ -16,8 +16,8 @@ import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Sets;
 import hollow.knight.logic.CheckId;
 import hollow.knight.logic.ItemCheck;
-import hollow.knight.logic.ListenerManager;
 import hollow.knight.logic.StateContext;
+import hollow.knight.logic.SynchronizedEntityManager;
 
 public final class UndoHistory {
 
@@ -131,7 +131,7 @@ public final class UndoHistory {
     }
   }
 
-  private final ListenerManager<Listener> listeners = new ListenerManager<>();
+  private final SynchronizedEntityManager<Listener> listeners = new SynchronizedEntityManager<>();
 
   private final List<String> labels = new ArrayList<>();
   private final SortedMap<Integer, Checkpoint> checkpoints = new TreeMap<>();
