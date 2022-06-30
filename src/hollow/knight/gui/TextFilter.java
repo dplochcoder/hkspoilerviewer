@@ -28,11 +28,13 @@ public final class TextFilter extends SearchResult.Filter {
   private final JPanel searchPanel = new JPanel();
   private final JPanel modePanel = new JPanel();
 
+  private final SceneNicknames sceneNicknames;
   private final RoomLabels roomLabels;
   private final JTextField textField;
   private Mode mode = Mode.BOTH;
 
-  public TextFilter(RoomLabels roomLabels) {
+  public TextFilter(SceneNicknames sceneNicknames, RoomLabels roomLabels) {
+    this.sceneNicknames = sceneNicknames;
     this.roomLabels = roomLabels;
 
     searchPanel.add(new JLabel("Search:"));
@@ -81,7 +83,7 @@ public final class TextFilter extends SearchResult.Filter {
     List<String> tokens = new ArrayList<>();
     if (mode != Mode.LOCATION) {
       tokens.add(result.item().term().name().toLowerCase());
-      tokens.add(result.item().displayName().toLowerCase());
+      tokens.add(result.item().displayName(sceneNicknames).toLowerCase());
     }
 
     if (mode != Mode.ITEM) {

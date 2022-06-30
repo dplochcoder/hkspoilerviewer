@@ -11,27 +11,31 @@ import com.google.common.collect.Multiset;
 import hollow.knight.logic.Item;
 import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.ItemChecks;
-import hollow.knight.logic.SynchronizedEntityManager;
 import hollow.knight.logic.StateContext;
+import hollow.knight.logic.SynchronizedEntityManager;
 import hollow.knight.logic.Term;
 
 public final class CheckEditorItemsListModel implements ListModel<String>, ItemChecks.Listener {
 
-  private final SynchronizedEntityManager<ListDataListener> listeners = new SynchronizedEntityManager<>();
+  private final SynchronizedEntityManager<ListDataListener> listeners =
+      new SynchronizedEntityManager<>();
 
+  private final SceneNicknames sceneNicknames;
   private final ItemChecks checks;
 
   private final Multiset<Term> itemCounts = HashMultiset.create();
   private final List<Item> resultItems = new ArrayList<>();
   private final List<String> resultStrings = new ArrayList<>();
-  private final Comparator<Item> sorter =
-      Comparator.comparing(item -> item.displayName().toLowerCase());
+  private final Comparator<Item> sorter;
 
-  public CheckEditorItemsListModel(ItemChecks checks) {
+  public CheckEditorItemsListModel(SceneNicknames sceneNicknames, ItemChecks checks) {
+    this.sceneNicknames = sceneNicknames;
     this.checks = checks;
 
     checks.allChecks().forEach(c -> itemCounts.add(c.item().term()));
     checks.addListener(this);
+
+    this.sorter = Comparator.comparing(item -> item.displayName(sceneNicknames).toLowerCase());
   }
 
   private String diffSuffix(Term term) {
@@ -40,8 +44,8 @@ public final class CheckEditorItemsListModel implements ListModel<String>, ItemC
   }
 
   private String render(Item item) {
-    return "(" + itemCounts.count(item.term()) + diffSuffix(item.term()) + ") " + item.displayName()
-        + " " + item.valueSuffix();
+    return "(" + itemCounts.count(item.term()) + diffSuffix(item.term()) + ") "
+        + item.displayName(sceneNicknames) + " " + item.valueSuffix();
   }
 
   public void updateResults(StateContext ctx, List<Item> resultItems) {

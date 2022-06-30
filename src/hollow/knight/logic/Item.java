@@ -11,6 +11,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import hollow.knight.gui.SceneNicknames;
 
 public final class Item {
   private final Term term;
@@ -63,8 +64,14 @@ public final class Item {
     return pool.orElseGet(() -> pools.getPool(term()));
   }
 
-  public String displayName() {
-    return term().equals(Term.nothing()) ? "Nothing?" : term().name();
+  public String displayName(SceneNicknames sceneNicknames) {
+    if (isTransition()) {
+      return sceneNicknames.nickname(term.name());
+    } else if (term().equals(Term.nothing())) {
+      return "Nothing?";
+    } else {
+      return term().name();
+    }
   }
 
   public ImmutableSet<String> types() {

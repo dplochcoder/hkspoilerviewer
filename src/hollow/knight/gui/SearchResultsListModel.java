@@ -16,16 +16,17 @@ import com.google.gson.JsonObject;
 import hollow.knight.logic.CheckId;
 import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.ItemChecks;
-import hollow.knight.logic.SynchronizedEntityManager;
 import hollow.knight.logic.SaveInterface;
 import hollow.knight.logic.State;
 import hollow.knight.logic.StateContext;
+import hollow.knight.logic.SynchronizedEntityManager;
 import hollow.knight.logic.Version;
 
 public final class SearchResultsListModel
     implements ListModel<String>, ItemChecks.Listener, SaveInterface {
 
-  private final SynchronizedEntityManager<ListDataListener> listeners = new SynchronizedEntityManager<>();
+  private final SynchronizedEntityManager<ListDataListener> listeners =
+      new SynchronizedEntityManager<>();
 
   private final Set<ItemCheck> bookmarksSet = new HashSet<>();
   private final Set<ItemCheck> hiddenResultsSet = new HashSet<>();
@@ -39,9 +40,11 @@ public final class SearchResultsListModel
 
   private final Set<ItemCheck> matchingResults = new HashSet<>();
 
+  private final SceneNicknames sceneNicknames;
   private final Predicate<ItemCheck> isRouted;
 
-  public SearchResultsListModel(Predicate<ItemCheck> isRouted) {
+  public SearchResultsListModel(SceneNicknames sceneNicknames, Predicate<ItemCheck> isRouted) {
+    this.sceneNicknames = sceneNicknames;
     this.isRouted = isRouted;
   }
 
@@ -68,7 +71,7 @@ public final class SearchResultsListModel
   }
 
   private String render(SearchResult result) {
-    return (isRouted.test(result.itemCheck()) ? "(R) " : "") + result.render();
+    return (isRouted.test(result.itemCheck()) ? "(R) " : "") + result.render(sceneNicknames);
   }
 
   public void updateResults(State state, List<SearchResult> newResults) {
