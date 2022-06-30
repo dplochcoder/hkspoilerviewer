@@ -1,44 +1,26 @@
 package hollow.knight.gui;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import hollow.knight.logic.ItemCheck;
-import hollow.knight.logic.ParseException;
 import hollow.knight.logic.StateContext;
+import hollow.knight.logic.Term;
 
-public abstract class ItemCategoryFilter {
+public interface ItemCategoryFilter {
+  boolean accept(StateContext ctx, ItemCheck itemCheck);
 
-  private final String name;
-
-  protected ItemCategoryFilter(String name) {
-    this.name = name;
+  public static ItemCategoryFilter forTerms(String term1, String... rest) {
+    ImmutableSet<Term> terms =
+        Lists.asList(term1, rest).stream().map(Term::create).collect(ImmutableSet.toImmutableSet());
+    return (ctx, itemCheck) -> terms.contains(itemCheck.item().term());
   }
 
-  public final String name() {
-    return name;
+  public static ItemCategoryFilter forPools(String pool1, String... rest) {
+    ImmutableSet<String> pools = ImmutableSet.copyOf(Lists.asList(pool1, rest));
+    return (ctx, itemCheck) -> pools.contains(itemCheck.item().getPool(ctx.pools()));
   }
 
-  public abstract boolean accept(StateContext ctx, ItemCheck itemCheck);
-
-  public static ItemCategoryFilter parse(JsonObject obj) throws ParseException {
-    String name = obj.get("Name").getAsString();
-
-    JsonElement items = obj.get("Items");
-    if (items != null) {
-      return ExplicitItemCategoryFilter.parse(name, items.getAsJsonArray());
-    }
-
-    JsonElement effectTerm = obj.get("EffectTerm");
-    if (effectTerm != null) {
-      return EffectItemCategoryFilter.parse(name, effectTerm.getAsString());
-    }
-
-    JsonElement pools = obj.get("Pools");
-    if (pools != null) {
-      return PoolsCategoryFilter.parse(name, pools.getAsJsonArray());
-    }
-
-    throw new ParseException("Unsupported filter: " + name);
+  public static ItemCategoryFilter forEffect(Term effectTerm) {
+    return (ctx, itemCheck) -> itemCheck.item().hasEffectTerm(effectTerm);
   }
-
 }

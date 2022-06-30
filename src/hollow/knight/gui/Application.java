@@ -679,7 +679,7 @@ public final class Application extends JFrame {
     searchFilters.add(textFilter);
 
     parent.add(new JSeparator());
-    ItemCategoryFilters itemFilter = ItemCategoryFilters.load();
+    ItemCategoryFilters itemFilter = new ItemCategoryFilters();
     itemFilter.addListener(filterChangedListener);
     itemFilter.addGuiToPanel(parent);
     searchFilters.add(itemFilter);
