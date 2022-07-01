@@ -288,7 +288,8 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
   }
 
   public void refreshLogic() {
-    finalState = newInitialState();
+    initialState = newInitialState();
+    finalState = initialState.deepCopy();
     for (int i = 0; i < getSize(); i++) {
       ItemCheck check = route.get(i);
       resultStrings.set(i, SearchResult.create(check, finalState).render(sceneNicknames));
