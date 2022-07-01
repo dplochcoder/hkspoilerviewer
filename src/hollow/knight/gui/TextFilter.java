@@ -88,6 +88,7 @@ public final class TextFilter extends SearchResult.Filter {
 
     if (mode != Mode.ITEM) {
       tokens.add(result.location().name().toLowerCase());
+      tokens.add(result.location().displayName(sceneNicknames).toLowerCase());
       tokens.add(result.location().scene().toLowerCase());
       tokens.add(roomLabels.get(result.location().scene(), RoomLabels.Type.MAP).toLowerCase());
       tokens.add(roomLabels.get(result.location().scene(), RoomLabels.Type.TITLE).toLowerCase());
