@@ -43,6 +43,7 @@ public final class ItemCategoryFilters extends SearchResult.Filter {
         .put("Keys", ItemCategoryFilter.forPools("Key"))
         .put("Levers", ItemCategoryFilter.forPools("Levers"))
         .put("Benches", ItemCategoryFilter.forPools("Benches"))
+        .put("Transitions", (ctx, check) -> check.isTransition())
         .put("Essence", ItemCategoryFilter.forEffect(Term.essence()))
         .put("Charms", ItemCategoryFilter.forPools("Charm"))
         .put("Rancid Eggs", ItemCategoryFilter.forEffect(Term.rancidEggs()))

@@ -6,6 +6,7 @@ import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.StateContext;
 import hollow.knight.logic.Term;
 
+@FunctionalInterface
 public interface ItemCategoryFilter {
   boolean accept(StateContext ctx, ItemCheck itemCheck);
 
