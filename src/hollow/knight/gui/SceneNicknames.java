@@ -9,10 +9,18 @@ import hollow.knight.logic.ParseException;
 
 public final class SceneNicknames {
 
-  private final ImmutableMap<String, String> nicknames;
+  private ImmutableMap<String, String> nicknames;
 
   private SceneNicknames(Map<String, String> nicknames) {
     this.nicknames = ImmutableMap.copyOf(nicknames);
+  }
+
+  public void refresh() {
+    try {
+      nicknames = load().nicknames;
+    } catch (ParseException ex) {
+      throw new AssertionError("Impossible");
+    }
   }
 
   public String nickname(String transitionName) {
