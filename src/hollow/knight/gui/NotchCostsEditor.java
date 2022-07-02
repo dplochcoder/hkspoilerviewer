@@ -12,6 +12,7 @@ import com.google.common.primitives.Ints;
 import hollow.knight.logic.StateContext;
 import hollow.knight.logic.Term;
 
+// TODO: Figure out how to plug in Transcendence
 public final class NotchCostsEditor extends ComplexTextEditor {
 
   private final StateContext ctx;
