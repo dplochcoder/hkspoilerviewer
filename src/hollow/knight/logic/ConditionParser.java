@@ -2,7 +2,7 @@ package hollow.knight.logic;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.google.common.base.Verify;
+import java.util.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.primitives.Ints;
 
@@ -188,23 +188,6 @@ public final class ConditionParser {
     return newAtoms;
   }
 
-  private static final String NOTCH_COST_PREFIX = "$NotchCost[";
-  private static final String NOTCH_COST_SUFFIX = "]";
-
-  private static List<Integer> parseNotchCostCharmIds(String notchCost) {
-    Verify.verify(notchCost.startsWith(NOTCH_COST_PREFIX), notchCost);
-    Verify.verify(notchCost.endsWith(NOTCH_COST_SUFFIX), notchCost);
-
-    List<Integer> charmIds = new ArrayList<>();
-    for (String str : notchCost
-        .substring(NOTCH_COST_PREFIX.length(), notchCost.length() - NOTCH_COST_SUFFIX.length())
-        .split(",")) {
-      charmIds.add(Integer.parseInt(str));
-    }
-
-    return charmIds;
-  }
-
   private static Condition parseBinaryOp(Atom.Type op, Atom left, Atom right)
       throws ParseException {
     switch (op) {
@@ -231,13 +214,13 @@ public final class ConditionParser {
           TermAtom lTerm = (TermAtom) left;
           TermAtom rTerm = (TermAtom) right;
 
-          if (lTerm.term().name().contentEquals("NOTCHES")
-              && rTerm.term().name().startsWith(NOTCH_COST_PREFIX)) {
-            return NotchCostCondition.of(parseNotchCostCharmIds(rTerm.term().name()));
+          Optional<Condition> cond = NotchCostCondition.tryParse(lTerm.term(), rTerm.term());
+          if (cond.isPresent()) {
+            return cond.get();
           }
         }
         if (left.type() != Atom.Type.TERM || right.type() != Atom.Type.NUMERIC_LITERAL) {
-          throw new ParseException("Unsupported operator");
+          throw new ParseException("Unsupported operator (" + left + " " + op + " " + right + ")");
         }
 
         Term term = ((TermAtom) left).term();
