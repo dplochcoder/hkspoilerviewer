@@ -158,6 +158,9 @@ public final class StateContext {
       }
     }
 
+    String startLoc = rawSpoilerJson.get("StartDef").getAsJsonObject().get("Name").getAsString();
+    setters.set(Term.create("$StartLocation[" + startLoc + "]"), 1);
+
     NotchCosts notchCosts = new NotchCosts();
     notchCosts.parse(rawSpoilerJson);
 
