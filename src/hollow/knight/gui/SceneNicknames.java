@@ -16,21 +16,7 @@ public final class SceneNicknames {
   }
 
   public String nickname(String transitionName) {
-    String exact = nicknames.get(transitionName);
-    if (exact != null) {
-      return exact;
-    }
-
-    int bIndex = transitionName.indexOf('[');
-    if (bIndex != -1) {
-      String prefix = transitionName.substring(0, bIndex);
-      String replace = nicknames.get(prefix);
-      if (replace != null) {
-        return replace + transitionName.substring(bIndex);
-      }
-    }
-
-    return transitionName;
+    return nicknames.getOrDefault(transitionName, transitionName);
   }
 
   public static SceneNicknames load() throws ParseException {
@@ -38,8 +24,15 @@ public final class SceneNicknames {
         JsonUtil.loadResource(SceneNicknames.class, "scene_nicknames.json").getAsJsonObject();
 
     Map<String, String> nicks = new HashMap<>();
-    for (String key : obj.keySet()) {
-      nicks.put(key, obj.get(key).getAsString());
+    for (String scene : obj.keySet()) {
+      JsonObject kObj = obj.get(scene).getAsJsonObject();
+      String sName = kObj.get("Name").getAsString();
+
+      JsonObject gObj = kObj.get("Gates").getAsJsonObject();
+      for (String gate : gObj.keySet()) {
+        String gName = gObj.get(gate).getAsString();
+        nicks.put(scene + "[" + gate + "]", sName + "[" + gName + "]");
+      }
     }
     return new SceneNicknames(nicks);
   }
