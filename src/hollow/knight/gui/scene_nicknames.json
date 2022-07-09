@@ -2,11 +2,11 @@
   "Abyss_01": {
     "Name": "City_Broken_Elevator",
     "Gates": {
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
-      "left3": "TODO_left3",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2"
+      "left1": "Left-Dung_Defender",
+      "left2": "Left-Spike_Tunnel",
+      "left3": "Left-Broken_Bridge",
+      "right1": "Right-City",
+      "right2": "Right-Spike_Tunnel"
     }
   },
   "Abyss_02": {
@@ -120,8 +120,8 @@
   "Abyss_19": {
     "Name": "Basin_Broken_Vessel_Grub",
     "Gates": {
-      "bot1": "TODO_bot1",
-      "bot2": "TODO_bot2",
+      "bot1": "Bot-To_Simple_Key_Backwards",
+      "bot2": "Bot-To_Simple_Key_Forwards",
       "left1": "Left",
       "right1": "Right"
     }
@@ -129,8 +129,8 @@
   "Abyss_20": {
     "Name": "Basin_Simple_Key",
     "Gates": {
-      "top1": "TODO_top1",
-      "top2": "TODO_top2"
+      "top1": "Top-Broken_Vessel",
+      "top2": "Top-Grub"
     }
   },
   "Abyss_21": {
@@ -207,7 +207,7 @@
   "Crossroads_02": {
     "Name": "Crossroads_Outside_Temple",
     "Gates": {
-      "door1": "TODO_door1",
+      "door1": "Door-Black_Egg_Temple",
       "left1": "Left",
       "right1": "Right"
     }
@@ -216,19 +216,19 @@
     "Name": "Crossroads_Outside_Stag",
     "Gates": {
       "bot1": "Bot",
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2",
+      "left1": "Left-False_Knight",
+      "left2": "Left-Stag",
+      "right1": "Right-Tram",
+      "right2": "Right-Peaks_Toll",
       "top1": "Top"
     }
   },
   "Crossroads_04": {
     "Name": "Crossroads_Gruz_Mother",
     "Gates": {
-      "door1": "TODO_door1",
-      "door_Mender_House": "TODO_door_Mender_House",
-      "door_charmshop": "TODO_door_charmshop",
+      "door1": "Door-Sly_Rescue",
+      "door_Mender_House": "Door-Mender_Bug",
+      "door_charmshop": "Door-Salubra",
       "left1": "Left",
       "right1": "Right",
       "top1": "Top"
@@ -244,7 +244,7 @@
   "Crossroads_06": {
     "Name": "Crossroads_Outside_Mound",
     "Gates": {
-      "door1": "TODO_door1",
+      "door1": "Door-Ancestral_Mound",
       "left1": "Left",
       "right1": "Right"
     }
@@ -253,20 +253,20 @@
     "Name": "Crossroads_Gruzzer",
     "Gates": {
       "bot1": "Bot",
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
-      "left3": "TODO_left3",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2"
+      "left1": "Left-Grubfather",
+      "left2": "Left-Greenpath",
+      "left3": "Left-Mawlek",
+      "right1": "Right-Well",
+      "right2": "Right-Grub"
     }
   },
   "Crossroads_08": {
     "Name": "Crossroads_Aspid_Arena",
     "Gates": {
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2"
+      "left1": "Left-Cornifer",
+      "left2": "Left-Fungal",
+      "right1": "Right-Hot_Spring",
+      "right2": "Right-Goam_Mask_Shard"
     }
   },
   "Crossroads_09": {
@@ -307,10 +307,10 @@
   "Crossroads_14": {
     "Name": "Crossroads_Outside_Myla",
     "Gates": {
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2"
+      "left1": "Left-Black_Egg",
+      "left2": "Left-Above_Lever",
+      "right1": "Right-Guarded_Grub",
+      "right2": "Right-Crystal_Peak"
     }
   },
   "Crossroads_15": {
@@ -332,15 +332,15 @@
     "Name": "Crossroads_Fungal_Entrance",
     "Gates": {
       "bot1": "Bot",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2"
+      "right1": "Right-Aspid_Arena",
+      "right2": "Right-Goam_Journal"
     }
   },
   "Crossroads_19": {
     "Name": "Crossroads_Before_Gruz_Mother",
     "Gates": {
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
+      "left1": "Left-Upper",
+      "left2": "Left-Lower_to_Elevator",
       "right1": "Right",
       "top1": "Top"
     }
@@ -370,8 +370,8 @@
     "Name": "Crossroads_Outside_Tram",
     "Gates": {
       "bot1": "Bot",
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
+      "left1": "Left-Upper",
+      "left2": "Left-Grub",
       "right1": "Right"
     }
   },
@@ -390,10 +390,10 @@
   "Crossroads_33": {
     "Name": "Crossroads_Cornifer",
     "Gates": {
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2",
+      "left1": "Left-Mawlek",
+      "left2": "Left-Acid_Grub",
+      "right1": "Right-Ancestral_Mound",
+      "right2": "Right-Aspid_Arena",
       "top1": "Top"
     }
   },
@@ -407,8 +407,8 @@
   "Crossroads_36": {
     "Name": "Crossroads_Mawlek_Middle",
     "Gates": {
-      "right1": "TODO_right1",
-      "right2": "TODO_right2"
+      "right1": "Right-Mawlek_Entrance",
+      "right2": "Right-Mawlek_Fight"
     }
   },
   "Crossroads_37": {
@@ -517,8 +517,8 @@
   "Deepnest_01": {
     "Name": "Fungal_Deepnest_Fall",
     "Gates": {
-      "bot1": "TODO_bot1",
-      "bot2": "TODO_bot2",
+      "bot1": "Bot-Shortcut",
+      "bot2": "Bot-Pit_Fall",
       "left1": "Left",
       "right1": "Right"
     }
@@ -527,25 +527,25 @@
     "Name": "Deepnest_Upper_Cornifer",
     "Gates": {
       "bot1": "Bot",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2",
-      "top1": "TODO_top1",
-      "top2": "TODO_top2"
+      "right1": "Right-Upper",
+      "right2": "Right-Lower",
+      "top1": "Top-Escape",
+      "top2": "Top-Pit_Fall"
     }
   },
   "Deepnest_02": {
     "Name": "Deepnest_Outside_Mimics",
     "Gates": {
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
+      "left1": "Left-Upper",
+      "left2": "Left-Lower",
       "right1": "Right"
     }
   },
   "Deepnest_03": {
     "Name": "Deepnest_Left_Of_Hot_Spring",
     "Gates": {
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
+      "left1": "Left-Upper",
+      "left2": "Left-Lower",
       "right1": "Right",
       "top1": "Top"
     }
@@ -559,18 +559,18 @@
   "Deepnest_10": {
     "Name": "Deepnest_Distant_Village",
     "Gates": {
-      "door1": "TODO_door1",
-      "door2": "TODO_door2",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2",
-      "right3": "TODO_right3"
+      "door1": "Door-Beast's_Den",
+      "door2": "Door-Brumm",
+      "right1": "Right-Stag",
+      "right2": "Right-To_Darknest",
+      "right3": "Right-To_Midwife"
     }
   },
   "Deepnest_14": {
     "Name": "Deepnest_Failed_Tramway_Bench",
     "Gates": {
-      "bot1": "TODO_bot1",
-      "bot2": "TODO_bot2",
+      "bot1": "Bot-Zote",
+      "bot2": "Bot-Not_Zote",
       "left1": "Left",
       "right1": "Right"
     }
@@ -595,16 +595,16 @@
     "Name": "Deepnest_Failed_Tramway_Lifeblood",
     "Gates": {
       "bot1": "Bot",
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
+      "left1": "Left-Upper",
+      "left2": "Left-Lower",
       "right1": "Right"
     }
   },
   "Deepnest_26b": {
     "Name": "Deepnest_Tram_Pass",
     "Gates": {
-      "right1": "TODO_right1",
-      "right2": "TODO_right2"
+      "right1": "Right-Upper",
+      "right2": "Right-Lower"
     }
   },
   "Deepnest_30": {
@@ -618,8 +618,8 @@
   "Deepnest_31": {
     "Name": "Deepnest_Nosk_Corridor",
     "Gates": {
-      "right1": "TODO_right1",
-      "right2": "TODO_right2"
+      "right1": "Right-Entrance",
+      "right2": "Right-Nosk"
     }
   },
   "Deepnest_32": {
@@ -632,8 +632,8 @@
     "Name": "Deepnest_Zote_Arena",
     "Gates": {
       "bot1": "Bot",
-      "top1": "TODO_top1",
-      "top2": "TODO_top2"
+      "top1": "Top-Left",
+      "top2": "Top-Right"
     }
   },
   "Deepnest_34": {
@@ -676,7 +676,7 @@
   "Deepnest_39": {
     "Name": "Deepnest_Whispering_Root",
     "Gates": {
-      "door1": "TODO_door1",
+      "door1": "Door-Weaver's_Den",
       "left1": "Left",
       "right1": "Right",
       "top1": "Top"
@@ -691,8 +691,8 @@
   "Deepnest_41": {
     "Name": "Deepnest_Midwife",
     "Gates": {
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
+      "left1": "Left-Upper",
+      "left2": "Left-Lower",
       "right1": "Right"
     }
   },
@@ -735,8 +735,8 @@
   "Deepnest_East_02": {
     "Name": "Edge_Above_Hive",
     "Gates": {
-      "bot1": "TODO_bot1",
-      "bot2": "TODO_bot2",
+      "bot1": "Bot-Outside_Hive",
+      "bot2": "Bot-Hive_Grub",
       "right1": "Right",
       "top1": "Top"
     }
@@ -744,28 +744,28 @@
   "Deepnest_East_03": {
     "Name": "Edge_Entrance",
     "Gates": {
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2",
-      "top1": "TODO_top1",
-      "top2": "TODO_top2"
+      "left1": "Left-King_Stag",
+      "left2": "Left-Lower_Edge",
+      "right1": "Right-Acid_Skip",
+      "right2": "Right-Lower",
+      "top1": "Top-Journal",
+      "top2": "Top-Pit_Fall"
     }
   },
   "Deepnest_East_04": {
     "Name": "Edge_Bardoon",
     "Gates": {
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2"
+      "left1": "Left-Upper_Edge",
+      "left2": "Left-Acid_Skip",
+      "right1": "Right-Lifeblood",
+      "right2": "Right-Edge_Camp"
     }
   },
   "Deepnest_East_06": {
     "Name": "Edge_Outside_Oro",
     "Gates": {
       "bot1": "Bot",
-      "door1": "TODO_door1",
+      "door1": "Door-Oro",
       "left1": "Left",
       "right1": "Right",
       "top1": "Top"
@@ -774,10 +774,10 @@
   "Deepnest_East_07": {
     "Name": "Edge_Whispering_Root",
     "Gates": {
-      "bot1": "TODO_bot1",
-      "bot2": "TODO_bot2",
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
+      "bot1": "Bot-Journal",
+      "bot2": "Bot-Pit_Fall",
+      "left1": "Left-Upper",
+      "left2": "Left-Tower_of_Love",
       "right1": "Right"
     }
   },
@@ -827,7 +827,7 @@
   "Deepnest_East_14": {
     "Name": "Edge_Below_Oro",
     "Gates": {
-      "door1": "TODO_door1",
+      "door1": "Door-420_Geo_Rock",
       "left1": "Left",
       "top2": "Top"
     }
@@ -869,8 +869,8 @@
   "Deepnest_East_Hornet": {
     "Name": "Edge_Hornet_Sentinel_Arena",
     "Gates": {
-      "left1": "TODO_left1",
-      "left2": "TODO_left2"
+      "left1": "Left-Camp",
+      "left2": "Left-King's_Brand"
     }
   },
   "Deepnest_Spider_Town": {
@@ -949,8 +949,8 @@
     "Name": "Greenpath_First_Hornet_Sighting",
     "Gates": {
       "left1": "Left",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2"
+      "right1": "Right-Waterfall_Bench",
+      "right2": "Right-Cornifer"
     }
   },
   "Fungus1_03": {
@@ -1017,8 +1017,8 @@
     "Gates": {
       "bot1": "Bot",
       "left1": "Left",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2",
+      "right1": "Right-Bench",
+      "right2": "Right-Stone_Sanctuary",
       "top1": "Top"
     }
   },
@@ -1045,7 +1045,7 @@
   "Fungus1_15": {
     "Name": "Greenpath_Outside_Sheo",
     "Gates": {
-      "door1": "TODO_door1",
+      "door1": "Door-Sheo",
       "right1": "Right"
     }
   },
@@ -1073,8 +1073,8 @@
   "Fungus1_20_v02": {
     "Name": "Greenpath_Vengefly_King",
     "Gates": {
-      "bot1": "TODO_bot1",
-      "bot2": "TODO_bot2",
+      "bot1": "Bot-Left",
+      "bot2": "Bot-Right",
       "right1": "Right"
     }
   },
@@ -1118,7 +1118,7 @@
   "Fungus1_26": {
     "Name": "Greenpath_Lake_Of_Unn",
     "Gates": {
-      "door_SlugShrine": "TODO_door_SlugShrine",
+      "door_SlugShrine": "Door-Bench",
       "left1": "Left",
       "right1": "Right"
     }
@@ -1165,7 +1165,7 @@
   "Fungus1_34": {
     "Name": "Greenpath_Stone_Sanctuary_Entrance",
     "Gates": {
-      "door1": "TODO_door1",
+      "door1": "Door-Sanctuary",
       "left1": "Left"
     }
   },
@@ -1197,9 +1197,9 @@
   "Fungus2_01": {
     "Name": "Fungal_Queen's_Station",
     "Gates": {
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
-      "left3": "TODO_left3",
+      "left1": "Left-Fog_Canyon",
+      "left2": "Left-Stag",
+      "left3": "Left-Willoh",
       "right1": "Right"
     }
   },
@@ -1221,8 +1221,8 @@
     "Name": "Fungal_Below_Ogres",
     "Gates": {
       "left1": "Left",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2",
+      "right1": "Right-Upper",
+      "right2": "Right-Lower",
       "top1": "Top"
     }
   },
@@ -1236,10 +1236,10 @@
   "Fungus2_06": {
     "Name": "Fungal_Outside_Leg_Eater",
     "Gates": {
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2",
+      "left1": "Left-Shrumal_Ogres",
+      "left2": "Left-Whispering_Root",
+      "right1": "Right-Leg_Eater",
+      "right2": "Right-Lower",
       "top1": "Top"
     }
   },
@@ -1253,8 +1253,8 @@
   "Fungus2_08": {
     "Name": "Fungal_Outside_Elder_Hu",
     "Gates": {
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
+      "left1": "Left-Upper",
+      "left2": "Left-Cloth",
       "right1": "Right"
     }
   },
@@ -1269,15 +1269,15 @@
     "Name": "Fungal_Left_Of_Pilgrim's_Way",
     "Gates": {
       "bot1": "Bot",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2"
+      "right1": "Right-Cloth",
+      "right2": "Right-Pilgrim's_Way"
     }
   },
   "Fungus2_11": {
     "Name": "Fungal_Epogo",
     "Gates": {
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
+      "left1": "Left-Bouncy_Grub",
+      "left2": "Left-Mantis_Village_Root",
       "right1": "Right",
       "top1": "Top"
     }
@@ -1292,8 +1292,8 @@
   "Fungus2_13": {
     "Name": "Fungal_Bretta_Bench",
     "Gates": {
-      "left2": "TODO_left2",
-      "left3": "TODO_left3",
+      "left2": "Left-Mantis_Village",
+      "left3": "Left-Bretta",
       "top1": "Top"
     }
   },
@@ -1353,16 +1353,16 @@
   "Fungus2_23": {
     "Name": "Fungal_Dashmaster",
     "Gates": {
-      "right1": "TODO_right1",
-      "right2": "TODO_right2"
+      "right1": "Right-Bench",
+      "right2": "Right-Waterways"
     }
   },
   "Fungus2_25": {
     "Name": "Deepnest_Lower_Cornifer",
     "Gates": {
       "right1": "Right",
-      "top1": "TODO_top1",
-      "top2": "TODO_top2"
+      "top1": "Top-Into_Deepnest",
+      "top2": "Top-Fungal_Core"
     }
   },
   "Fungus2_26": {
@@ -1374,8 +1374,8 @@
   "Fungus2_28": {
     "Name": "Fungal_Shrumal_Warrior_Loop",
     "Gates": {
-      "left1": "TODO_left1",
-      "left2": "TODO_left2"
+      "left1": "Left-Upper",
+      "left2": "Left-Lower"
     }
   },
   "Fungus2_29": {
@@ -1421,19 +1421,19 @@
     "Name": "Fog_Upper_West_Tall",
     "Gates": {
       "left1": "Left",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2",
+      "right1": "Right-Cornifer",
+      "right2": "Right-Lower_West",
       "top1": "Top"
     }
   },
   "Fungus3_02": {
     "Name": "Fog_Lower_West_Tall",
     "Gates": {
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
-      "left3": "TODO_left3",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2"
+      "left1": "Left-Upper_West",
+      "left2": "Left-QGA",
+      "left3": "Left-Millibelle",
+      "right1": "Right-Archives",
+      "right2": "Right-Queen's_Station"
     }
   },
   "Fungus3_03": {
@@ -1446,18 +1446,18 @@
   "Fungus3_04": {
     "Name": "Gardens_Before_Petra_Arena",
     "Gates": {
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2"
+      "left1": "Left-To_Traitor_Lord",
+      "left2": "Left-To_Stag",
+      "right1": "Right-Rancid_Egg",
+      "right2": "Right-Petra_Arena"
     }
   },
   "Fungus3_05": {
     "Name": "Gardens_Petra_Arena",
     "Gates": {
       "left1": "Left",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2"
+      "right1": "Right-Cornifer_Bench",
+      "right2": "Right-Whispering_Root"
     }
   },
   "Fungus3_08": {
@@ -1478,8 +1478,8 @@
   "Fungus3_11": {
     "Name": "Gardens_Whispering_Root",
     "Gates": {
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
+      "left1": "Left-Petra_Arena",
+      "left2": "Left-Lower",
       "right1": "Right"
     }
   },
@@ -1487,9 +1487,9 @@
     "Name": "Gardens_Outside_Stag",
     "Gates": {
       "bot1": "Bot",
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
-      "left3": "TODO_left3",
+      "left1": "Left-Frogs",
+      "left2": "Left-Stag",
+      "left3": "Left-Traitor's_Grave",
       "right1": "Right"
     }
   },
@@ -1540,9 +1540,9 @@
   "Fungus3_26": {
     "Name": "Fog_East_Tall",
     "Gates": {
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
-      "left3": "TODO_left3",
+      "left1": "Left-Charm_Notch",
+      "left2": "Left-Cornifer",
+      "left3": "Left-Archives",
       "right1": "Right",
       "top1": "Top"
     }
@@ -1598,14 +1598,14 @@
     "Name": "Fog_Overgrown_Mound_Entrance",
     "Gates": {
       "bot1": "Bot",
-      "door1": "TODO_door1",
+      "door1": "Door-Overgrown_Mound",
       "right1": "Right"
     }
   },
   "Fungus3_47": {
     "Name": "Fog_Archives_Entrance",
     "Gates": {
-      "door1": "TODO_door1",
+      "door1": "Door-Archives",
       "left1": "Left",
       "right1": "Right"
     }
@@ -1614,9 +1614,9 @@
     "Name": "Gardens_Outside_White_Lady",
     "Gates": {
       "bot1": "Bot",
-      "door1": "TODO_door1",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2"
+      "door1": "Door-White_Lady",
+      "right1": "Right-Traitor_Lord",
+      "right2": "Right-Lower"
     }
   },
   "Fungus3_49": {
@@ -1684,7 +1684,7 @@
   "GG_Waterways": {
     "Name": "Waterways_Junk_Pit",
     "Gates": {
-      "door1": "TODO_door1",
+      "door1": "Door-Nailsmith_Shortcut",
       "right1": "Right"
     }
   },
@@ -1709,19 +1709,19 @@
     "Gates": {}
   },
   "Hive_01": {
-    "Name": "Hive_Entrance",
+    "Name": "Hive_Entrance_And_Bench",
     "Gates": {
       "left1": "Left",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2"
+      "right1": "Right-From_Entrance",
+      "right2": "Right-From_Bench"
     }
   },
   "Hive_02": {
     "Name": "Hive_Whispering_Root",
     "Gates": {
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
-      "left3": "TODO_left3"
+      "left1": "Left-Upper",
+      "left2": "Left-Entrance",
+      "left3": "Left-Bench"
     }
   },
   "Hive_03": {
@@ -1736,16 +1736,16 @@
     "Name": "Hive_Outside_Shortcut",
     "Gates": {
       "left1": "Left",
-      "right2": "TODO_right2",
-      "right3": "TODO_right3",
+      "right2": "Right-Mask_Shard_Shortcut",
+      "right3": "Right-Upper",
       "top1": "Top"
     }
   },
   "Hive_04": {
     "Name": "Hive_Mask_Shard",
     "Gates": {
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
+      "left1": "Left-Upper",
+      "left2": "Left-From_Mask_Shard",
       "right1": "Right"
     }
   },
@@ -1767,8 +1767,8 @@
     "Gates": {
       "left1": "Left",
       "right1": "Right",
-      "top1": "TODO_top1",
-      "top2": "TODO_top2"
+      "top1": "Top-Dive_Entrance",
+      "top2": "Top-Pog_Axe"
     }
   },
   "Mines_03": {
@@ -1782,9 +1782,9 @@
   "Mines_04": {
     "Name": "Crystal_Entrance_Conveyors",
     "Gates": {
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
-      "left3": "TODO_left3",
+      "left1": "Left-Spike_Grub",
+      "left2": "Left-Bench_Upper",
+      "left3": "Left-Bench_Lower",
       "right1": "Right",
       "top1": "Top"
     }
@@ -1793,8 +1793,8 @@
     "Name": "Crystal_Above_Spike_Grub",
     "Gates": {
       "bot1": "Bot",
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
+      "left1": "Left-Cornifer",
+      "left2": "Left-Deep_Focus",
       "right1": "Right",
       "top1": "Top"
     }
@@ -1869,19 +1869,19 @@
     "Name": "Crystal_East_Tall",
     "Gates": {
       "bot1": "Bot",
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
-      "left3": "TODO_left3",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2"
+      "left1": "Left-Quirrel_Overlook",
+      "left2": "Left-Crystal_Guardian",
+      "left3": "Left-Crushers_Grub",
+      "right1": "Right-Crown",
+      "right2": "Right-Crystal_Heart"
     }
   },
   "Mines_23": {
     "Name": "Crystal_Crown_Whispering_Root",
     "Gates": {
       "left1": "Left",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2",
+      "right1": "Right-Crown",
+      "right2": "Right-Grub",
       "top1": "Top"
     }
   },
@@ -1902,7 +1902,7 @@
     "Name": "Crystal_Outside_Mound",
     "Gates": {
       "bot1": "Bot",
-      "door1": "TODO_door1",
+      "door1": "Door-Crystallized_Mound",
       "left1": "Left"
     }
   },
@@ -1910,8 +1910,8 @@
     "Name": "Crystal_Dark_Bench",
     "Gates": {
       "left1": "Left",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2"
+      "right1": "Right-Upper",
+      "right2": "Right-Lower"
     }
   },
   "Mines_30": {
@@ -1943,8 +1943,8 @@
   "Mines_34": {
     "Name": "Crystal_Crown_Peak",
     "Gates": {
-      "bot1": "TODO_bot1",
-      "bot2": "TODO_bot2",
+      "bot1": "Bot-To_Ascent",
+      "bot2": "Bot-Pit_Fall",
       "left1": "Left"
     }
   },
@@ -1987,11 +1987,11 @@
     "Name": "Grounds_Whispering_Root",
     "Gates": {
       "bot1": "Bot",
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
-      "left3": "TODO_left3",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2"
+      "left1": "Left-Dream_Nail",
+      "left2": "Left-Seer",
+      "left3": "Left-Dreamshield",
+      "right1": "Right-Glade",
+      "right2": "Right-Stag"
     }
   },
   "RestingGrounds_06": {
@@ -2024,15 +2024,15 @@
     "Name": "Grounds_Crypts",
     "Gates": {
       "left1": "Left",
-      "top1": "TODO_top1",
-      "top2": "TODO_top2"
+      "top1": "Top-Grounds",
+      "top2": "Top-Grey_Mourner"
     }
   },
   "RestingGrounds_12": {
     "Name": "Grounds_Outside_Grey_Mourner",
     "Gates": {
       "bot1": "Bot",
-      "door_Mansion": "TODO_door_Mansion"
+      "door_Mansion": "Door-Grey_Mourner"
     }
   },
   "RestingGrounds_17": {
@@ -2067,8 +2067,8 @@
   "Room_Colosseum_02": {
     "Name": "Edge_Colo_Bench",
     "Gates": {
-      "top1": "TODO_top1",
-      "top2": "TODO_top2"
+      "top1": "Top-Colosseum",
+      "top2": "Top-Pale_Lurker"
     }
   },
   "Room_Colosseum_Bronze": {
@@ -2248,8 +2248,8 @@
     "Name": "City_Rafters",
     "Gates": {
       "left1": "Left",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2",
+      "right1": "Right-Upper",
+      "right2": "Right-Lower",
       "top1": "Top"
     }
   },
@@ -2257,18 +2257,18 @@
     "Name": "City_Outside_Nailsmith",
     "Gates": {
       "bot1": "Bot",
-      "door1": "TODO_door1",
+      "door1": "Door-Nailsmith",
       "right1": "Right"
     }
   },
   "Ruins1_05": {
     "Name": "City_Grub_Above_Lemm",
     "Gates": {
-      "bot1": "TODO_bot1",
-      "bot2": "TODO_bot2",
-      "bot3": "TODO_bot3",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2",
+      "bot1": "Bot-DLC_Entrance",
+      "bot2": "Bot-DLC_Exit",
+      "bot3": "Bot-Skyway",
+      "right1": "Right-Soul_Twister_Arena",
+      "right2": "Right-Spire_Bridge",
       "top1": "Top"
     }
   },
@@ -2286,9 +2286,9 @@
     "Gates": {
       "bot1": "Bot",
       "left2": "Left",
-      "top1": "TODO_top1",
-      "top2": "TODO_top2",
-      "top3": "TODO_top3"
+      "top1": "Top-DLC_Entrance",
+      "top2": "Top-DLC_Exit",
+      "top3": "Top-Skyway"
     }
   },
   "Ruins1_06": {
@@ -2317,8 +2317,8 @@
     "Name": "City_Corridor_to_Spire",
     "Gates": {
       "left1": "Left",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2"
+      "right1": "Right-From_Skyway",
+      "right2": "Right-From_Fountain_Lever"
     }
   },
   "Ruins1_23": {
@@ -2326,26 +2326,26 @@
     "Gates": {
       "bot1": "Bot",
       "left1": "Left",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2",
+      "right1": "Right-Soul_Warrior",
+      "right2": "Right-Shortcut",
       "top1": "Top"
     }
   },
   "Ruins1_24": {
     "Name": "City_Soul_Master_Arena",
     "Gates": {
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2"
+      "left1": "Left-To_Rewards",
+      "left2": "Left-From_Underpass",
+      "right1": "Right-Upper",
+      "right2": "Right-From_Underpass"
     }
   },
   "Ruins1_25": {
     "Name": "City_Sanctum_East_Elevators",
     "Gates": {
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
-      "left3": "TODO_left3"
+      "left1": "Left-Spell_Twister",
+      "left2": "Left-Soul_Warrior",
+      "left3": "Left-Shortcut"
     }
   },
   "Ruins1_27": {
@@ -2373,8 +2373,8 @@
     "Name": "City_Sanctum_Spell_Twister",
     "Gates": {
       "bot1": "Bot",
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
+      "left1": "Left-Soul_Master",
+      "left2": "Left-Soul_Master_Underpass",
       "right1": "Right"
     }
   },
@@ -2382,24 +2382,24 @@
     "Name": "City_Toll_Bench",
     "Gates": {
       "bot1": "Bot",
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
-      "left3": "TODO_left3",
+      "left1": "Left-Storerooms",
+      "left2": "Left-Shade_Soul_Exit",
+      "left3": "Left-Elegant_Door",
       "right1": "Right"
     }
   },
   "Ruins1_31b": {
     "Name": "City_Shade_Soul_Arena",
     "Gates": {
-      "right1": "TODO_right1",
-      "right2": "TODO_right2"
+      "right1": "Right-Upper",
+      "right2": "Right-Lower"
     }
   },
   "Ruins1_32": {
     "Name": "City_Soul_Master_Rewards",
     "Gates": {
-      "right1": "TODO_right1",
-      "right2": "TODO_right2"
+      "right1": "Right-Soul_Master",
+      "right2": "Right-Soul_Master_Underpass"
     }
   },
   "Ruins2_01": {
@@ -2421,8 +2421,8 @@
   "Ruins2_03": {
     "Name": "City_Spire_Watchers",
     "Gates": {
-      "bot1": "TODO_bot1",
-      "bot2": "TODO_bot2",
+      "bot1": "Bot-From_Watcher_Knights",
+      "bot2": "Bot-From_Grub",
       "top1": "Top"
     }
   },
@@ -2431,8 +2431,8 @@
     "Gates": {
       "bot1": "Bot",
       "left1": "Left",
-      "top1": "TODO_top1",
-      "top2": "TODO_top2"
+      "top1": "Top-Watcher_Knights",
+      "top2": "Top-Grub"
     }
   },
   "Ruins2_04": {
@@ -2444,8 +2444,8 @@
       "door_Ruin_House_03": "Door-Emilitia",
       "left1": "Left-Watcher's_Spire",
       "left2": "Left-Broken_Elevator",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2"
+      "right1": "Right-Upper",
+      "right2": "Right-Lower"
     }
   },
   "Ruins2_05": {
@@ -2459,8 +2459,8 @@
   "Ruins2_06": {
     "Name": "City_King's_Station",
     "Gates": {
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
+      "left1": "Left-Upper",
+      "left2": "Left-Lower",
       "right1": "Right-Stag",
       "right2": "Right-Edge",
       "top1": "Top"
@@ -2524,15 +2524,15 @@
   "Ruins_Bathhouse": {
     "Name": "City_Pleasure_House_Bench",
     "Gates": {
-      "door1": "TODO_door1",
+      "door1": "Door-Entrance",
       "right1": "Right"
     }
   },
   "Ruins_Elevator": {
     "Name": "City_Pleasure_House_Elevator",
     "Gates": {
-      "left1": "TODO_left1",
-      "left2": "TODO_left2"
+      "left1": "Left-Bottom",
+      "left2": "Left-Top"
     }
   },
   "Ruins_House_01": {
@@ -2590,11 +2590,11 @@
   "Waterways_02": {
     "Name": "Waterways_Main_Bench",
     "Gates": {
-      "bot1": "TODO_bot1",
-      "bot2": "TODO_bot2",
-      "top1": "TODO_top1",
-      "top2": "TODO_top2",
-      "top3": "TODO_top3"
+      "bot1": "Bot-Flukemarm",
+      "bot2": "Bot-Isma's_Spike_Tunnel",
+      "top1": "Top-Middle",
+      "top2": "Top-Dung_Defender",
+      "top3": "Top-East_Grub"
     }
   },
   "Waterways_03": {
@@ -2607,8 +2607,8 @@
     "Name": "Waterways_Hidden_Grub",
     "Gates": {
       "bot1": "Bot",
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
+      "left1": "Left-Upper",
+      "left2": "Left-Lower",
       "right1": "Right"
     }
   },
@@ -2616,15 +2616,15 @@
     "Name": "Waterways_Mask_Shard",
     "Gates": {
       "left1": "Left",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2"
+      "right1": "Right-Upper",
+      "right2": "Right-Lower"
     }
   },
   "Waterways_05": {
     "Name": "Waterways_Dung_Defender_Arena",
     "Gates": {
-      "bot1": "TODO_bot1",
-      "bot2": "TODO_bot2",
+      "bot1": "Bot-Waterways_Main",
+      "bot2": "Bot-King's_Idol",
       "right1": "Right"
     }
   },
@@ -2638,18 +2638,18 @@
   "Waterways_07": {
     "Name": "Waterways_Left_Of_Isma's_Grove",
     "Gates": {
-      "door1": "TODO_door1",
+      "door1": "Door-Emilitia_Shortcut",
       "left1": "Left",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2",
+      "right1": "Right-Dung_Defender_Entrance",
+      "right2": "Right-Acid_Shortcut",
       "top1": "Top"
     }
   },
   "Waterways_08": {
     "Name": "Waterways_Outside_Flukemarm",
     "Gates": {
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
+      "left1": "Left-Flukemarm",
+      "left2": "Left-Junk_Pit",
       "top1": "Top"
     }
   },
@@ -2669,15 +2669,15 @@
   "Waterways_13": {
     "Name": "Waterways_Isma's_Grove",
     "Gates": {
-      "left1": "TODO_left1",
-      "left2": "TODO_left2"
+      "left1": "Left-Dung_Defender_Entrance",
+      "left2": "Left-Acid_Shortcut"
     }
   },
   "Waterways_14": {
     "Name": "Waterways_Edge_Acid_Corridor",
     "Gates": {
-      "bot1": "TODO_bot1",
-      "bot2": "TODO_bot2"
+      "bot1": "Bot-Isma's_Grove",
+      "bot2": "Bot-Edge"
     }
   },
   "Waterways_15": {
@@ -2704,8 +2704,8 @@
     "Name": "Palace_Hub",
     "Gates": {
       "bot1": "Bot",
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
+      "left1": "Left-Upper",
+      "left2": "Left-Leftside_Entrance",
       "right1": "Right",
       "top1": "Top"
     }
@@ -2720,10 +2720,10 @@
   "White_Palace_05": {
     "Name": "Palace_Saw_Room",
     "Gates": {
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2"
+      "left1": "Left-Upper_Exit",
+      "left2": "Left-Lower_Entrance",
+      "right1": "Right-Upper_Entrance",
+      "right2": "Right-Lower_Exit"
     }
   },
   "White_Palace_06": {
@@ -2757,7 +2757,7 @@
   "White_Palace_11": {
     "Name": "Palace_Outside",
     "Gates": {
-      "door2": "TODO_door2"
+      "door2": "Door-Entrance"
     }
   },
   "White_Palace_12": {
@@ -2770,9 +2770,9 @@
   "White_Palace_13": {
     "Name": "Palace_Thorn_Jump",
     "Gates": {
-      "left1": "TODO_left1",
-      "left2": "TODO_left2",
-      "left3": "TODO_left3",
+      "left1": "Left-Upper",
+      "left2": "Left-Final_Lever",
+      "left3": "Left-Workshop_Exit",
       "right1": "Right"
     }
   },
@@ -2787,15 +2787,15 @@
     "Name": "Palace_Caged_Lever",
     "Gates": {
       "left1": "Left",
-      "right1": "TODO_right1",
-      "right2": "TODO_right2"
+      "right1": "Right-Upper",
+      "right2": "Right-Lower"
     }
   },
   "White_Palace_16": {
     "Name": "Palace_Saw_Climb",
     "Gates": {
-      "left1": "TODO_left1",
-      "left2": "TODO_left2"
+      "left1": "Left-Upper",
+      "left2": "Left-Lower"
     }
   },
   "White_Palace_17": {
