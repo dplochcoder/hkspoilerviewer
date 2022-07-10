@@ -346,7 +346,12 @@ public final class Application extends JFrame {
     ItemCheck searchCheck = getSelectedSearchResultCheck();
     ItemCheck routeCheck = getSelectedRouteCheck();
 
-    ctx().checks().reduceToNothing(c -> c == check);
+    try {
+      ctx().checks().reduceToNothing(c -> c == check);
+    } catch (ICDLException ex) {
+      GuiUtil.showStackTrace(this, "Failed to delete", ex);
+      return;
+    }
     refreshLogic();
 
     if (searchCheck == check) {

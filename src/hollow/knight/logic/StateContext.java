@@ -230,7 +230,7 @@ public final class StateContext {
     // Assign ItemSync ids.
     Multiset<String> assignedSyncIds = HashMultiset.create();
     Map<ItemCheck, String> syncIds = new HashMap<>();
-    checks().allChecks().forEach(c -> {
+    checks().allChecks().filter(c -> !c.isTransition()).forEach(c -> {
       String id = c.location().name() + ";" + c.item().term().name();
       int prev = assignedSyncIds.add(id, 1);
       syncIds.put(c, id + ((prev > 0) ? String.valueOf(prev + 1) : ""));
@@ -238,7 +238,7 @@ public final class StateContext {
 
     // Group ItemChecks by Location.
     Multimap<String, ItemCheck> checksByLocation = HashMultimap.create();
-    checks().allChecks().filter(c -> !c.vanilla())
+    checks().allChecks().filter(c -> !c.vanilla() && !c.isTransition())
         .forEach(c -> checksByLocation.put(c.location().name(), c));
 
     // Output by location.
@@ -352,7 +352,31 @@ public final class StateContext {
     return mods;
   }
 
-  private JsonArray createNewSpoilerPlacements(JsonArray origPlacements) throws ICDLException {
+  private static void setSceneGate(String tName, JsonObject obj) {
+    int l = tName.indexOf("[");
+    int r = tName.indexOf("]");
+    obj.addProperty("SceneName", tName.substring(0, l));
+    obj.addProperty("GateName", tName.substring(l + 1, r));
+  }
+
+  private JsonArray calculateTransitionOverrides() {
+    JsonArray out = new JsonArray();
+    checks().allChecks().filter(c -> !c.vanilla() && c.isTransition()).forEach(c -> {
+      JsonObject override = new JsonObject();
+      JsonObject key = new JsonObject();
+      setSceneGate(c.location().name(), key);
+      override.add("Key", key);
+      JsonObject value = new JsonObject();
+      value.addProperty("$type", "ItemChanger.Transition, ItemChanger");
+      setSceneGate(c.item().term().name(), value);
+      override.add("Value", value);
+      out.add(override);
+    });
+
+    return out;
+  }
+
+  private JsonArray createNewSpoilerItemPlacements(JsonArray origPlacements) throws ICDLException {
     Map<Term, JsonObject> itemsJson = new HashMap<>();
     Map<String, JsonObject> locationsJson = new HashMap<>();
 
@@ -369,7 +393,8 @@ public final class StateContext {
     }
 
     JsonArray arr = new JsonArray();
-    ImmutableList<ItemCheck> checks = checks().allChecks().filter(c -> !c.vanilla())
+    ImmutableList<ItemCheck> checks = checks().allChecks()
+        .filter(c -> !c.vanilla() && !c.isTransition())
         .sorted(Comparator.comparing(c -> c.id().id())).collect(ImmutableList.toImmutableList());
     for (int i = 0; i < checks.size(); i++) {
       ItemCheck c = checks.get(i);
@@ -387,6 +412,27 @@ public final class StateContext {
       placement.addProperty("Index", i);
       arr.add(placement);
     }
+
+    return arr;
+  }
+
+  private JsonArray createNewSpoilerTransitionPlacements(JsonArray origPlacements)
+      throws ICDLException {
+    Map<String, JsonObject> transitionsJson = new HashMap<>();
+    for (JsonElement elem : origPlacements) {
+      JsonObject target = elem.getAsJsonObject().get("Target").getAsJsonObject();
+      transitionsJson.put(target.get("Name").getAsString(), target);
+      JsonObject source = elem.getAsJsonObject().get("Source").getAsJsonObject();
+      transitionsJson.put(source.get("Name").getAsString(), source);
+    }
+
+    JsonArray arr = new JsonArray();
+    checks().allChecks().filter(c -> !c.vanilla() && c.isTransition()).forEach(c -> {
+      JsonObject obj = new JsonObject();
+      obj.add("Target", transitionsJson.get(c.item().term().name()));
+      obj.add("Source", transitionsJson.get(c.location().name()));
+      arr.add(obj);
+    });
 
     return arr;
   }
@@ -428,10 +474,13 @@ public final class StateContext {
     JsonObject newICDLJson = icdlJson.deepCopy();
     newICDLJson.add("Placements", calculatePlacementsJson(itemJsons, locationJsons));
     newICDLJson.add("mods", withICDLCharmCosts(newICDLJson.get("mods").getAsJsonObject()));
+    newICDLJson.add("TransitionOverrides", calculateTransitionOverrides());
 
     JsonObject newRawSpoilerJson = rawSpoilerJson.deepCopy();
     newRawSpoilerJson.add("itemPlacements",
-        createNewSpoilerPlacements(rawSpoilerJson.get("itemPlacements").getAsJsonArray()));
+        createNewSpoilerItemPlacements(rawSpoilerJson.get("itemPlacements").getAsJsonArray()));
+    newRawSpoilerJson.add("transitionPlacements", createNewSpoilerTransitionPlacements(
+        rawSpoilerJson.get("transitionPlacements").getAsJsonArray()));
     newRawSpoilerJson.add("notchCosts", notchCosts().toRawSpoilerJsonArray());
     newRawSpoilerJson.add("InitialProgression",
         updateInitialProgression(newRawSpoilerJson.get("InitialProgression").getAsJsonObject()));

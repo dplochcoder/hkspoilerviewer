@@ -212,7 +212,7 @@ public final class ItemChecks {
     return item;
   }
 
-  public void reduceToNothing(Predicate<ItemCheck> filter) {
+  public void reduceToNothing(Predicate<ItemCheck> filter) throws ICDLException {
     // Keep at least one instance of each location alive.
     ImmutableSet<ItemCheck> toRemove = checksById.values().stream().filter(filter)
         .filter(c -> !c.vanilla()).collect(ImmutableSet.toImmutableSet());
@@ -226,7 +226,8 @@ public final class ItemChecks {
 
       removing.forEach(c -> removeInternal(c.id()));
       if (!idsByLocation.containsKey(loc)) {
-        ItemCheck toAdd = ItemCheck.create(newId(), template.location(), nothing(),
+        ItemCheck toAdd = ItemCheck.create(newId(), template.location(),
+            template.isTransition() ? kingsPassTransition() : nothing(),
             Costs.defaultCosts(template.location().name()), false);
         addedBuilder.add(toAdd);
         addInternal(toAdd);
@@ -242,14 +243,16 @@ public final class ItemChecks {
     }
   }
 
-  private int compareIdsVanillaLast(CheckId id1, CheckId id2) {
-    return ComparisonChain.start()
-        .compareFalseFirst(checksById.get(id1).vanilla(), checksById.get(id2).vanilla())
-        .compare(id1.id(), id2.id()).result();
+  private int compareIds(CheckId id1, CheckId id2) {
+    ItemCheck c1 = checksById.get(id1);
+    ItemCheck c2 = checksById.get(id2);
+    return ComparisonChain.start().compareFalseFirst(c1.vanilla(), c2.vanilla())
+        .compareFalseFirst(c1.isTransition(), c2.isTransition()).compare(id1.id(), id2.id())
+        .result();
   }
 
   public void compact() {
-    ImmutableList<CheckId> sorted = checksById.keySet().stream().sorted(this::compareIdsVanillaLast)
+    ImmutableList<CheckId> sorted = checksById.keySet().stream().sorted(this::compareIds)
         .collect(ImmutableList.toImmutableList());
 
     ImmutableMap.Builder<ItemCheck, ItemCheck> replacedBuilder = ImmutableMap.builder();
@@ -349,8 +352,12 @@ public final class ItemChecks {
     return idsByLocation.getValue("Start").stream().map(checksById::get);
   }
 
-  public Item nothing() {
-    return itemsByName.get(Term.nothing());
+  public Item kingsPassTransition() throws ICDLException {
+    return getItem(Term.create("Tutorial_01[top1]"));
+  }
+
+  public Item nothing() throws ICDLException {
+    return getItem(Term.nothing());
   }
 
   public Stream<ItemCheck> getByCondition(Condition c) {
