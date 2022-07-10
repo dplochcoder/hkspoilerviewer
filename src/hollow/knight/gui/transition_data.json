@@ -347,11 +347,11 @@
         }
       },
       "Left": {
-        "left1": {
-          "Alias": "Left-Main"
-        },
         "left2": {
           "Alias": "Left-Stag_Nest"
+        },
+        "left1": {
+          "Alias": "Left-Main"
         }
       },
       "Right": {
@@ -471,11 +471,11 @@
         }
       },
       "Right": {
-        "right1": {
-          "Alias": "Right-Tram"
-        },
         "right2": {
           "Alias": "Right-Peaks_Toll"
+        },
+        "right1": {
+          "Alias": "Right-Tram"
         }
       },
       "Bot": {
