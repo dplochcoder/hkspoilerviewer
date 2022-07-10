@@ -88,9 +88,11 @@ public final class NotchCostCondition extends Condition {
     if (rTerm.name().startsWith(UNSAFE_PREFIX)) {
       safe = false;
       ids = rTerm.name().substring(UNSAFE_PREFIX.length(), rTerm.name().length() - 1);
-    } else {
+    } else if (rTerm.name().startsWith(SAFE_PREFIX)) {
       safe = true;
       ids = rTerm.name().substring(SAFE_PREFIX.length(), rTerm.name().length() - 1);
+    } else {
+      return Optional.empty();
     }
 
     Set<Integer> charmIds =
