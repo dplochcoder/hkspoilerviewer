@@ -11,7 +11,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import hollow.knight.gui.SceneNicknames;
+import hollow.knight.gui.TransitionData;
 
 public final class Item {
   private final Term term;
@@ -64,9 +64,9 @@ public final class Item {
     return pool.orElseGet(() -> pools.getPool(term()));
   }
 
-  public String displayName(SceneNicknames sceneNicknames) {
+  public String displayName(TransitionData transitionData) {
     if (isTransition()) {
-      return sceneNicknames.nickname(term.name());
+      return transitionData.alias(term.name());
     } else if (term().equals(Term.nothing())) {
       return "Nothing?";
     } else {

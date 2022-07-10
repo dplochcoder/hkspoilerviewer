@@ -34,7 +34,7 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
     void initializeState(State state);
   }
 
-  private final SceneNicknames sceneNicknames;
+  private final TransitionData transitionData;
   private StateContext ctx;
   private State initialState; // No checks
   private State currentState; // All checks up to but excluding insertionPoint
@@ -49,8 +49,8 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
   private final SynchronizedEntityManager<ListDataListener> listeners =
       new SynchronizedEntityManager<>();
 
-  public RouteListModel(SceneNicknames sceneNicknames, StateContext ctx) {
-    this.sceneNicknames = sceneNicknames;
+  public RouteListModel(TransitionData transitionData, StateContext ctx) {
+    this.transitionData = transitionData;
     this.ctx = ctx;
     this.initialState = newInitialState();
     this.currentState = this.initialState.deepCopy();
@@ -182,13 +182,13 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
 
     this.route.add(insertionPoint, check);
     this.resultStrings.add(insertionPoint,
-        SearchResult.create(check, currentState).render(sceneNicknames));
+        SearchResult.create(check, currentState).render(transitionData));
     ++insertionPoint;
 
     finalState = currentState.deepCopy();
     for (int i = insertionPoint; i < route.size(); i++) {
       SearchResult newResult = SearchResult.create(route.get(i), finalState);
-      resultStrings.set(i, newResult.render(sceneNicknames));
+      resultStrings.set(i, newResult.render(transitionData));
 
       finalState.acquireCheck(check);
       finalState.normalize();
@@ -221,8 +221,8 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
 
     route.set(before, b);
     route.set(after, a);
-    resultStrings.set(before, SearchResult.create(b, newState1).render(sceneNicknames));
-    resultStrings.set(after, SearchResult.create(a, newState2).render(sceneNicknames));
+    resultStrings.set(before, SearchResult.create(b, newState1).render(transitionData));
+    resultStrings.set(after, SearchResult.create(a, newState2).render(transitionData));
 
     if (insertionPoint == after) {
       currentState = newState1;
@@ -244,7 +244,7 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
       finalState.normalize();
 
       route.set(i - 1, check);
-      resultStrings.set(i - 1, SearchResult.create(check, finalState).render(sceneNicknames));
+      resultStrings.set(i - 1, SearchResult.create(check, finalState).render(transitionData));
     }
 
     route.remove(route.size() - 1);
@@ -276,7 +276,7 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
     route.set(index, replacement);
     for (int i = index; i < getSize(); i++) {
       ItemCheck check = route.get(i);
-      resultStrings.set(i, SearchResult.create(check, finalState).render(sceneNicknames));
+      resultStrings.set(i, SearchResult.create(check, finalState).render(transitionData));
 
       finalState.acquireCheck(check);
       finalState.normalize();
@@ -299,7 +299,7 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
     finalState = initialState.deepCopy();
     for (int i = 0; i < getSize(); i++) {
       ItemCheck check = route.get(i);
-      resultStrings.set(i, SearchResult.create(check, finalState).render(sceneNicknames));
+      resultStrings.set(i, SearchResult.create(check, finalState).render(transitionData));
       if (i == insertionPoint) {
         currentState = finalState.deepCopy();
       }

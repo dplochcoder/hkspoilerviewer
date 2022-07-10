@@ -41,11 +41,11 @@ public final class SearchResultsListModel
 
   private final Set<ItemCheck> matchingResults = new HashSet<>();
 
-  private final SceneNicknames sceneNicknames;
+  private final TransitionData transitionData;
   private final Predicate<ItemCheck> isRouted;
 
-  public SearchResultsListModel(SceneNicknames sceneNicknames, Predicate<ItemCheck> isRouted) {
-    this.sceneNicknames = sceneNicknames;
+  public SearchResultsListModel(TransitionData transitionData, Predicate<ItemCheck> isRouted) {
+    this.transitionData = transitionData;
     this.isRouted = isRouted;
   }
 
@@ -72,7 +72,7 @@ public final class SearchResultsListModel
   }
 
   private String render(SearchResult result) {
-    return (isRouted.test(result.itemCheck()) ? "(R) " : "") + result.render(sceneNicknames);
+    return (isRouted.test(result.itemCheck()) ? "(R) " : "") + result.render(transitionData);
   }
 
   public void updateResults(State state, List<SearchResult> newResults) {

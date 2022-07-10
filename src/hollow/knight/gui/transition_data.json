@@ -1,0 +1,6080 @@
+{
+  "Abyss_01": {
+    "Alias": "City_Broken_Elevator",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-Dung_Defender"
+        },
+        "left2": {
+          "Alias": "Left-Spike_Tunnel"
+        },
+        "left3": {
+          "Alias": "Left-Broken_Bridge"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-City"
+        },
+        "right2": {
+          "Alias": "Right-Spike_Tunnel"
+        }
+      }
+    }
+  },
+  "Abyss_02": {
+    "Alias": "Basin_Broken_Bridge",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Abyss_03": {
+    "Alias": "Basin_Tram",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot-Pale_Ore"
+        },
+        "bot2": {
+          "Alias": "Bot-Fountain"
+        }
+      }
+    }
+  },
+  "Abyss_03_b": {
+    "Alias": "Deepnest_Tram",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Abyss_03_c": {
+    "Alias": "Edge_Tram",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Abyss_04": {
+    "Alias": "Basin_Fountain",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Abyss_05": {
+    "Alias": "Basin_Palace_Grounds",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Abyss_06_Core": {
+    "Alias": "Abyss_Core",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left-Lifeblood_Core"
+        },
+        "left3": {
+          "Alias": "Left-Abyss_Shriek"
+        }
+      },
+      "Right": {
+        "right2": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Abyss_08": {
+    "Alias": "Abyss_Lifeblood_Core",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Abyss_09": {
+    "Alias": "Abyss_Lighthouse_Climb",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-Exit_Void_Tendrils"
+        },
+        "right2": {
+          "Alias": "Right-Lighthouse"
+        },
+        "right3": {
+          "Alias": "Right-Shade_Cloak"
+        }
+      }
+    }
+  },
+  "Abyss_10": {
+    "Alias": "Abyss_Shade_Cloak",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-Void_Tendrils"
+        },
+        "left2": {
+          "Alias": "Left-Abyss_Lighthouse"
+        }
+      }
+    }
+  },
+  "Abyss_12": {
+    "Alias": "Abyss_Shriek",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Abyss_15": {
+    "Alias": "Abyss_Birthplace",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      }
+    }
+  },
+  "Abyss_16": {
+    "Alias": "Abyss_Corridor_to_Lighthouse",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Abyss_17": {
+    "Alias": "Basin_Cloth",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      }
+    }
+  },
+  "Abyss_18": {
+    "Alias": "Basin_Corridor_to_Broken_Vessel",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Abyss_19": {
+    "Alias": "Basin_Broken_Vessel_Grub",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot-To_Simple_Key_Backwards"
+        },
+        "bot2": {
+          "Alias": "Bot-To_Simple_Key_Forwards"
+        }
+      }
+    }
+  },
+  "Abyss_20": {
+    "Alias": "Basin_Simple_Key",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top-Broken_Vessel"
+        },
+        "top2": {
+          "Alias": "Top-Grub"
+        }
+      }
+    }
+  },
+  "Abyss_21": {
+    "Alias": "Basin_Monarch_Wings",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Abyss_22": {
+    "Alias": "Basin_Hidden_Station",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Abyss_Lighthouse_room": {
+    "Alias": "Abyss_Lighthouse",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Cliffs_01": {
+    "Alias": "Cliffs_Main",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right-Gorb"
+        },
+        "right2": {
+          "Alias": "Right-Joni's"
+        },
+        "right3": {
+          "Alias": "Right-Baldur's_Shell"
+        },
+        "right4": {
+          "Alias": "Right-Grimm_Lantern"
+        }
+      }
+    }
+  },
+  "Cliffs_02": {
+    "Alias": "Cliffs_Gorb",
+    "Gates": {
+      "Door": {
+        "door1": {
+          "Alias": "Door-Mato"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left-Main"
+        },
+        "left2": {
+          "Alias": "Left-Stag_Nest"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot-Cliffs_Shortcut"
+        },
+        "bot2": {
+          "Alias": "Bot-Game_Start"
+        }
+      }
+    }
+  },
+  "Cliffs_03": {
+    "Alias": "Cliffs_Stag_Nest",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Cliffs_04": {
+    "Alias": "Cliffs_Joni's_Dark",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Cliffs_05": {
+    "Alias": "Cliffs_Joni's_Pickup",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Cliffs_06": {
+    "Alias": "Cliffs_Grimm_Lantern",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Crossroads_01": {
+    "Alias": "Crossroads_Well",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Crossroads_02": {
+    "Alias": "Crossroads_Outside_Temple",
+    "Gates": {
+      "Door": {
+        "door1": {
+          "Alias": "Door-Black_Egg_Temple"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Crossroads_03": {
+    "Alias": "Crossroads_Outside_Stag",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left-False_Knight"
+        },
+        "left2": {
+          "Alias": "Left-Stag"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-Tram"
+        },
+        "right2": {
+          "Alias": "Right-Peaks_Toll"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Crossroads_04": {
+    "Alias": "Crossroads_Gruz_Mother",
+    "Gates": {
+      "Door": {
+        "door1": {
+          "Alias": "Door-Sly_Rescue"
+        },
+        "door_Mender_House": {
+          "Alias": "Door-Mender_Bug"
+        },
+        "door_charmshop": {
+          "Alias": "Door-Salubra"
+        }
+      },
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Crossroads_05": {
+    "Alias": "Crossroads_Central_Grub",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Crossroads_06": {
+    "Alias": "Crossroads_Outside_Mound",
+    "Gates": {
+      "Door": {
+        "door1": {
+          "Alias": "Door-Ancestral_Mound"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Crossroads_07": {
+    "Alias": "Crossroads_Gruzzer",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-Grubfather"
+        },
+        "left2": {
+          "Alias": "Left-Greenpath"
+        },
+        "left3": {
+          "Alias": "Left-Mawlek"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-Well"
+        },
+        "right2": {
+          "Alias": "Right-Grub"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Crossroads_08": {
+    "Alias": "Crossroads_Aspid_Arena",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-Cornifer"
+        },
+        "left2": {
+          "Alias": "Left-Fungal"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-Hot_Spring"
+        },
+        "right2": {
+          "Alias": "Right-Goam_Mask_Shard"
+        }
+      }
+    }
+  },
+  "Crossroads_09": {
+    "Alias": "Crossroads_Mawlek_Boss",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Crossroads_10": {
+    "Alias": "Crossroads_False_Knight_Arena",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Crossroads_11_alt": {
+    "Alias": "Crossroads_Greenpath_Entrance",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Crossroads_12": {
+    "Alias": "Crossroads_Corridor_to_Acid_Grub",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Crossroads_13": {
+    "Alias": "Crossroads_Goam_Mask_Shard",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Crossroads_14": {
+    "Alias": "Crossroads_Outside_Myla",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-Black_Egg"
+        },
+        "left2": {
+          "Alias": "Left-Above_Lever"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-Guarded_Grub"
+        },
+        "right2": {
+          "Alias": "Right-Crystal_Peak"
+        }
+      }
+    }
+  },
+  "Crossroads_15": {
+    "Alias": "Crossroads_Corridor_to_Tram",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Crossroads_16": {
+    "Alias": "Crossroads_Above_Lever",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Crossroads_18": {
+    "Alias": "Crossroads_Fungal_Entrance",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right-Aspid_Arena"
+        },
+        "right2": {
+          "Alias": "Right-Goam_Journal"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Crossroads_19": {
+    "Alias": "Crossroads_Before_Gruz_Mother",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left-Upper"
+        },
+        "left2": {
+          "Alias": "Left-Lower_to_Elevator"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Crossroads_21": {
+    "Alias": "Crossroads_Outside_False_Knight",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Crossroads_22": {
+    "Alias": "Crossroads_Glowing_Womb_Arena",
+    "Gates": {
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Crossroads_25": {
+    "Alias": "Crossroads_Mawlek_Entrance",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Crossroads_27": {
+    "Alias": "Crossroads_Outside_Tram",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-Upper"
+        },
+        "left2": {
+          "Alias": "Left-Grub"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Crossroads_30": {
+    "Alias": "Crossroads_Hot_Spring",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Crossroads_31": {
+    "Alias": "Crossroads_Spike_Grub",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Crossroads_33": {
+    "Alias": "Crossroads_Cornifer",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left-Mawlek"
+        },
+        "left2": {
+          "Alias": "Left-Acid_Grub"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-Ancestral_Mound"
+        },
+        "right2": {
+          "Alias": "Right-Aspid_Arena"
+        }
+      }
+    }
+  },
+  "Crossroads_35": {
+    "Alias": "Crossroads_Acid_Grub",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Crossroads_36": {
+    "Alias": "Crossroads_Mawlek_Middle",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right-Mawlek_Entrance"
+        },
+        "right2": {
+          "Alias": "Right-Mawlek_Fight"
+        }
+      }
+    }
+  },
+  "Crossroads_37": {
+    "Alias": "Crossroads_Vessel_Fragment",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Crossroads_38": {
+    "Alias": "Crossroads_Grubfather",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Crossroads_39": {
+    "Alias": "Crossroads_Corridor_Right_of_Temple",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Crossroads_40": {
+    "Alias": "Crossroads_Corridor_Right_of_Central_Grub",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Crossroads_42": {
+    "Alias": "Crossroads_Right_Of_Mask_Shard",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Crossroads_43": {
+    "Alias": "Crossroads_Corridor_to_Elevator",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Crossroads_45": {
+    "Alias": "Crossroads_Myla",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Crossroads_46": {
+    "Alias": "Crossroads_Tram",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Crossroads_46b": {
+    "Alias": "Grounds_Tram",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Crossroads_47": {
+    "Alias": "Crossroads_Stag",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Crossroads_48": {
+    "Alias": "Crossroads_Guarded_Grub",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Crossroads_49": {
+    "Alias": "Crossroads_Elevator",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Crossroads_49b": {
+    "Alias": "City_Left_Elevator",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Crossroads_50": {
+    "Alias": "Grounds_Blue_Lake",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Crossroads_52": {
+    "Alias": "Crossroads_Goam_Journal",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Crossroads_ShamanTemple": {
+    "Alias": "Crossroads_Ancestral_Mound",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Deepnest_01": {
+    "Alias": "Fungal_Deepnest_Fall",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot-Shortcut"
+        },
+        "bot2": {
+          "Alias": "Bot-Pit_Fall"
+        }
+      }
+    }
+  },
+  "Deepnest_01b": {
+    "Alias": "Deepnest_Upper_Cornifer",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top-Escape"
+        },
+        "top2": {
+          "Alias": "Top-Pit_Fall"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-Upper"
+        },
+        "right2": {
+          "Alias": "Right-Lower"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Deepnest_02": {
+    "Alias": "Deepnest_Outside_Mimics",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-Upper"
+        },
+        "left2": {
+          "Alias": "Left-Lower"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Deepnest_03": {
+    "Alias": "Deepnest_Left_Of_Hot_Spring",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left-Upper"
+        },
+        "left2": {
+          "Alias": "Left-Lower"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Deepnest_09": {
+    "Alias": "Deepnest_Distant_Village_Stag",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Deepnest_10": {
+    "Alias": "Deepnest_Distant_Village",
+    "Gates": {
+      "Door": {
+        "door1": {
+          "Alias": "Door-Beast's_Den"
+        },
+        "door2": {
+          "Alias": "Door-Brumm"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-Stag"
+        },
+        "right2": {
+          "Alias": "Right-To_Darknest"
+        },
+        "right3": {
+          "Alias": "Right-To_Midwife"
+        }
+      }
+    }
+  },
+  "Deepnest_14": {
+    "Alias": "Deepnest_Failed_Tramway_Bench",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot-Zote"
+        },
+        "bot2": {
+          "Alias": "Bot-Not_Zote"
+        }
+      }
+    }
+  },
+  "Deepnest_16": {
+    "Alias": "Deepnest_After_Lower_Cornifer",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Deepnest_17": {
+    "Alias": "Deepnest_Garpede_Corridor_Below_Cornifer",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Deepnest_26": {
+    "Alias": "Deepnest_Failed_Tramway_Lifeblood",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-Upper"
+        },
+        "left2": {
+          "Alias": "Left-Lower"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Deepnest_26b": {
+    "Alias": "Deepnest_Tram_Pass",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right-Upper"
+        },
+        "right2": {
+          "Alias": "Right-Lower"
+        }
+      }
+    }
+  },
+  "Deepnest_30": {
+    "Alias": "Deepnest_Hot_Spring",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Deepnest_31": {
+    "Alias": "Deepnest_Nosk_Corridor",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right-Entrance"
+        },
+        "right2": {
+          "Alias": "Right-Nosk"
+        }
+      }
+    }
+  },
+  "Deepnest_32": {
+    "Alias": "Deepnest_Nosk_Arena",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Deepnest_33": {
+    "Alias": "Deepnest_Zote_Arena",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top-Left"
+        },
+        "top2": {
+          "Alias": "Top-Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Deepnest_34": {
+    "Alias": "Deepnest_First_Devout",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Deepnest_35": {
+    "Alias": "Deepnest_Outside_Galien",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Deepnest_36": {
+    "Alias": "Deepnest_Mimics",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Deepnest_37": {
+    "Alias": "Deepnest_Corridor_to_Tram",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Deepnest_38": {
+    "Alias": "Deepnest_Vessel_Fragment",
+    "Gates": {
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Deepnest_39": {
+    "Alias": "Deepnest_Whispering_Root",
+    "Gates": {
+      "Door": {
+        "door1": {
+          "Alias": "Door-Weaver's_Den"
+        }
+      },
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Deepnest_40": {
+    "Alias": "Deepnest_Galien_Arena",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Deepnest_41": {
+    "Alias": "Deepnest_Midwife",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-Upper"
+        },
+        "left2": {
+          "Alias": "Left-Lower"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Deepnest_42": {
+    "Alias": "Deepnest_Outside_Mask_Maker",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Deepnest_43": {
+    "Alias": "Gardens_Corridor_To_Deepnest",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Deepnest_44": {
+    "Alias": "Deepnest_Sharp_Shadow",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      }
+    }
+  },
+  "Deepnest_45_v02": {
+    "Alias": "Deepnest_Weaver's_Den",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Deepnest_East_01": {
+    "Alias": "Edge_Left_Of_Hive",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Deepnest_East_02": {
+    "Alias": "Edge_Above_Hive",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot-Outside_Hive"
+        },
+        "bot2": {
+          "Alias": "Bot-Hive_Grub"
+        }
+      }
+    }
+  },
+  "Deepnest_East_03": {
+    "Alias": "Edge_Entrance",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top-Journal"
+        },
+        "top2": {
+          "Alias": "Top-Pit_Fall"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left-King_Stag"
+        },
+        "left2": {
+          "Alias": "Left-Lower_Edge"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-Acid_Skip"
+        },
+        "right2": {
+          "Alias": "Right-Lower"
+        }
+      }
+    }
+  },
+  "Deepnest_East_04": {
+    "Alias": "Edge_Bardoon",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-Upper_Edge"
+        },
+        "left2": {
+          "Alias": "Left-Acid_Skip"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-Lifeblood"
+        },
+        "right2": {
+          "Alias": "Right-Edge_Camp"
+        }
+      }
+    }
+  },
+  "Deepnest_East_06": {
+    "Alias": "Edge_Outside_Oro",
+    "Gates": {
+      "Door": {
+        "door1": {
+          "Alias": "Door-Oro"
+        }
+      },
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Deepnest_East_07": {
+    "Alias": "Edge_Whispering_Root",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-Upper"
+        },
+        "left2": {
+          "Alias": "Left-Tower_of_Love"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot-Journal"
+        },
+        "bot2": {
+          "Alias": "Bot-Pit_Fall"
+        }
+      }
+    }
+  },
+  "Deepnest_East_08": {
+    "Alias": "Edge_Great_Hopper_Idol",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Deepnest_East_09": {
+    "Alias": "Edge_Corridor_Outside_Colosseum",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Deepnest_East_10": {
+    "Alias": "Edge_Markoth_Arena",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Deepnest_East_11": {
+    "Alias": "Edge_Below_Camp_Bench",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Deepnest_East_12": {
+    "Alias": "Edge_Hornet_Sentinel_Corridor",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Deepnest_East_13": {
+    "Alias": "Edge_Camp_Bench",
+    "Gates": {
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Deepnest_East_14": {
+    "Alias": "Edge_Below_Oro",
+    "Gates": {
+      "Door": {
+        "door1": {
+          "Alias": "Door-420_Geo_Rock"
+        }
+      },
+      "Top": {
+        "top2": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Deepnest_East_14b": {
+    "Alias": "Edge_Quick_Slash",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Deepnest_East_15": {
+    "Alias": "Edge_Lifeblood",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Deepnest_East_16": {
+    "Alias": "Edge_Oro_Scarecrow",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Deepnest_East_17": {
+    "Alias": "Edge_420_Geo_Rock",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Deepnest_East_18": {
+    "Alias": "Edge_Outside_Markoth",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Right": {
+        "right2": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Deepnest_East_Hornet": {
+    "Alias": "Edge_Hornet_Sentinel_Arena",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-Camp"
+        },
+        "left2": {
+          "Alias": "Left-King's_Brand"
+        }
+      }
+    }
+  },
+  "Deepnest_Spider_Town": {
+    "Alias": "Deepnest_Beast's_Den",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Dream_01_False_Knight": {
+    "Alias": "Dream_Failed_Champion",
+    "Gates": {}
+  },
+  "Dream_02_Mage_Lord": {
+    "Alias": "Dream_Soul_Tyrant",
+    "Gates": {}
+  },
+  "Dream_03_Infected_Knight": {
+    "Alias": "Dream_Lost_Kin",
+    "Gates": {}
+  },
+  "Dream_04_White_Defender": {
+    "Alias": "Dream_White_Defender",
+    "Gates": {}
+  },
+  "Dream_Abyss": {
+    "Alias": "Dream_Abyss",
+    "Gates": {}
+  },
+  "Dream_Backer_Shrine": {
+    "Alias": "Dream_Outside_Shrine",
+    "Gates": {}
+  },
+  "Dream_Final": {
+    "Alias": "Egg_Radiance",
+    "Gates": {}
+  },
+  "Dream_Guardian_Hegemol": {
+    "Alias": "Dream_Herrah",
+    "Gates": {}
+  },
+  "Dream_Guardian_Lurien": {
+    "Alias": "Dream_Lurien",
+    "Gates": {}
+  },
+  "Dream_Guardian_Monomon": {
+    "Alias": "Dream_Monomon",
+    "Gates": {}
+  },
+  "Dream_Mighty_Zote": {
+    "Alias": "Dream_Grey_Prince_Zote",
+    "Gates": {}
+  },
+  "Dream_Nailcollection": {
+    "Alias": "Dream_Nail",
+    "Gates": {}
+  },
+  "Dream_Room_Believer_Shrine": {
+    "Alias": "Dream_Shrine_of_Believers",
+    "Gates": {}
+  },
+  "Fungus1_01": {
+    "Alias": "Greenpath_Entrance",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus1_01b": {
+    "Alias": "Greenpath_Waterfall_Bench",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus1_02": {
+    "Alias": "Greenpath_First_Hornet_Sighting",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-Waterfall_Bench"
+        },
+        "right2": {
+          "Alias": "Right-Cornifer"
+        }
+      }
+    }
+  },
+  "Fungus1_03": {
+    "Alias": "Greenpath_Storerooms",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Fungus1_04": {
+    "Alias": "Greenpath_Hornet",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus1_05": {
+    "Alias": "Greenpath_Outside_Thorns",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Fungus1_06": {
+    "Alias": "Greenpath_Cornifer",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Fungus1_07": {
+    "Alias": "Greenpath_Outside_Hunter",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus1_08": {
+    "Alias": "Greenpath_Hunter",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Fungus1_09": {
+    "Alias": "Greenpath_Sheo_Gauntlet",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus1_10": {
+    "Alias": "Greenpath_Acid_Bridge",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus1_11": {
+    "Alias": "Greenpath_Above_Fog_Canyon",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-Bench"
+        },
+        "right2": {
+          "Alias": "Right-Stone_Sanctuary"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Fungus1_12": {
+    "Alias": "Greenpath_MMC_Corridor",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus1_13": {
+    "Alias": "Greenpath_Whispering_Root",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus1_14": {
+    "Alias": "Greenpath_Thorns_of_Agony",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Fungus1_15": {
+    "Alias": "Greenpath_Outside_Sheo",
+    "Gates": {
+      "Door": {
+        "door1": {
+          "Alias": "Door-Sheo"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus1_16_alt": {
+    "Alias": "Greenpath_Stag",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus1_17": {
+    "Alias": "Greenpath_Charger_Corridor",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus1_19": {
+    "Alias": "Greenpath_Above_Sanctuary_Bench",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Fungus1_20_v02": {
+    "Alias": "Greenpath_Vengefly_King",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot-Left"
+        },
+        "bot2": {
+          "Alias": "Bot-Right"
+        }
+      }
+    }
+  },
+  "Fungus1_21": {
+    "Alias": "Greenpath_Outside_Hornet",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Fungus1_22": {
+    "Alias": "Greenpath_Outside_Stag",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Fungus1_23": {
+    "Alias": "Gardens_First_Loodle_Corridor",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus1_24": {
+    "Alias": "Gardens_Cornifer",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Fungus1_25": {
+    "Alias": "Greenpath_Corridor_to_Unn",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus1_26": {
+    "Alias": "Greenpath_Lake_Of_Unn",
+    "Gates": {
+      "Door": {
+        "door_SlugShrine": {
+          "Alias": "Door-Bench"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus1_28": {
+    "Alias": "Cliffs_Baldur's_Shell",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-Cliffs_Main"
+        },
+        "left2": {
+          "Alias": "Left-Greenpath"
+        }
+      }
+    }
+  },
+  "Fungus1_29": {
+    "Alias": "Greenpath_Massive_Moss_Charger",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus1_30": {
+    "Alias": "Greenpath_Below_Toll_Bench",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top-Stag_Lever"
+        },
+        "top3": {
+          "Alias": "Top-Toll_Bench"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus1_31": {
+    "Alias": "Greenpath_Toll",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Fungus1_32": {
+    "Alias": "Greenpath_Moss_Knight_Arena",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Fungus1_34": {
+    "Alias": "Greenpath_Stone_Sanctuary_Entrance",
+    "Gates": {
+      "Door": {
+        "door1": {
+          "Alias": "Door-Sanctuary"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Fungus1_35": {
+    "Alias": "Greenpath_Stone_Sanctuary",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus1_36": {
+    "Alias": "Greenpath_Stone_Sanctuary_Mask_Shard",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Fungus1_37": {
+    "Alias": "Greenpath_Sanctuary_Bench",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Fungus1_Slug": {
+    "Alias": "Greenpath_Unn",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus2_01": {
+    "Alias": "Fungal_Queen's_Station",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-Fog_Canyon"
+        },
+        "left2": {
+          "Alias": "Left-Stag"
+        },
+        "left3": {
+          "Alias": "Left-Willoh"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus2_02": {
+    "Alias": "Fungal_Queen's_Stag",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus2_03": {
+    "Alias": "Fungal_Outside_Queen's",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Fungus2_04": {
+    "Alias": "Fungal_Below_Ogres",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-Upper"
+        },
+        "right2": {
+          "Alias": "Right-Lower"
+        }
+      }
+    }
+  },
+  "Fungus2_05": {
+    "Alias": "Fungal_Shrumal_Ogres",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Fungus2_06": {
+    "Alias": "Fungal_Outside_Leg_Eater",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left-Shrumal_Ogres"
+        },
+        "left2": {
+          "Alias": "Left-Whispering_Root"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-Leg_Eater"
+        },
+        "right2": {
+          "Alias": "Right-Lower"
+        }
+      }
+    }
+  },
+  "Fungus2_07": {
+    "Alias": "Fungal_Shrumal_Warrior_Acid_Bridge",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus2_08": {
+    "Alias": "Fungal_Outside_Elder_Hu",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-Upper"
+        },
+        "left2": {
+          "Alias": "Left-Cloth"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus2_09": {
+    "Alias": "Fungal_Cloth_Corridor",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus2_10": {
+    "Alias": "Fungal_Left_Of_Pilgrim's_Way",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right-Cloth"
+        },
+        "right2": {
+          "Alias": "Right-Pilgrim's_Way"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Fungus2_11": {
+    "Alias": "Fungal_Epogo",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left-Bouncy_Grub"
+        },
+        "left2": {
+          "Alias": "Left-Mantis_Village_Root"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus2_12": {
+    "Alias": "Fungal_Mantis_Corridor",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Fungus2_13": {
+    "Alias": "Fungal_Bretta_Bench",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left2": {
+          "Alias": "Left-Mantis_Village"
+        },
+        "left3": {
+          "Alias": "Left-Bretta"
+        }
+      }
+    }
+  },
+  "Fungus2_14": {
+    "Alias": "Fungal_Mantis_Village",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot3": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Fungus2_15": {
+    "Alias": "Fungal_Mantis_Lords",
+    "Gates": {
+      "Top": {
+        "top3": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus2_17": {
+    "Alias": "Fungal_Above_Mantis_Village",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Fungus2_18": {
+    "Alias": "Fungal_Cornifer",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Fungus2_19": {
+    "Alias": "Fungal_Right_Of_Spore_Shroom",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Fungus2_20": {
+    "Alias": "Fungal_Spore_Shroom",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus2_21": {
+    "Alias": "Fungal_Pilgrim's_Way",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus2_23": {
+    "Alias": "Fungal_Dashmaster",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right-Bench"
+        },
+        "right2": {
+          "Alias": "Right-Waterways"
+        }
+      }
+    }
+  },
+  "Fungus2_25": {
+    "Alias": "Deepnest_Lower_Cornifer",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top-Into_Deepnest"
+        },
+        "top2": {
+          "Alias": "Top-Fungal_Core"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus2_26": {
+    "Alias": "Fungal_Leg_Eater",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Fungus2_28": {
+    "Alias": "Fungal_Shrumal_Warrior_Loop",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-Upper"
+        },
+        "left2": {
+          "Alias": "Left-Lower"
+        }
+      }
+    }
+  },
+  "Fungus2_29": {
+    "Alias": "Fungal_Core_Upper",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Fungus2_30": {
+    "Alias": "Fungal_Core_Lower",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Fungus2_31": {
+    "Alias": "Fungal_Mantis_Rewards",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Fungus2_32": {
+    "Alias": "Fungal_Elder_Hu",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Fungus2_33": {
+    "Alias": "Fungal_Leg_Eater_Root",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus2_34": {
+    "Alias": "Fungal_Willoh",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus3_01": {
+    "Alias": "Fog_Upper_West_Tall",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-Cornifer"
+        },
+        "right2": {
+          "Alias": "Right-Lower_West"
+        }
+      }
+    }
+  },
+  "Fungus3_02": {
+    "Alias": "Fog_Lower_West_Tall",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-Upper_West"
+        },
+        "left2": {
+          "Alias": "Left-QGA"
+        },
+        "left3": {
+          "Alias": "Left-Millibelle"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-Archives"
+        },
+        "right2": {
+          "Alias": "Right-Queen's_Station"
+        }
+      }
+    }
+  },
+  "Fungus3_03": {
+    "Alias": "Fog_Queen's_Gardens_Acid_Entrance",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus3_04": {
+    "Alias": "Gardens_Before_Petra_Arena",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-To_Traitor_Lord"
+        },
+        "left2": {
+          "Alias": "Left-To_Stag"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-Rancid_Egg"
+        },
+        "right2": {
+          "Alias": "Right-Petra_Arena"
+        }
+      }
+    }
+  },
+  "Fungus3_05": {
+    "Alias": "Gardens_Petra_Arena",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-Cornifer_Bench"
+        },
+        "right2": {
+          "Alias": "Right-Whispering_Root"
+        }
+      }
+    }
+  },
+  "Fungus3_08": {
+    "Alias": "Gardens_Lower_Petra_Corridor",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus3_10": {
+    "Alias": "Gardens_Main_Arena",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Fungus3_11": {
+    "Alias": "Gardens_Whispering_Root",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-Petra_Arena"
+        },
+        "left2": {
+          "Alias": "Left-Lower"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus3_13": {
+    "Alias": "Gardens_Outside_Stag",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-Frogs"
+        },
+        "left2": {
+          "Alias": "Left-Stag"
+        },
+        "left3": {
+          "Alias": "Left-Traitor's_Grave"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Fungus3_21": {
+    "Alias": "Gardens_Corridor_to_Traitor_Lord",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus3_22": {
+    "Alias": "Gardens_Upper_Grub",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Fungus3_23": {
+    "Alias": "Gardens_Traitor_Lord_Arena",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus3_24": {
+    "Alias": "Fog_Corridor_to_Overgrown_Mound",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus3_25": {
+    "Alias": "Fog_Cornifer",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus3_25b": {
+    "Alias": "Fog_Corridor_to_Cornifer",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus3_26": {
+    "Alias": "Fog_East_Tall",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left-Charm_Notch"
+        },
+        "left2": {
+          "Alias": "Left-Cornifer"
+        },
+        "left3": {
+          "Alias": "Left-Archives"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus3_27": {
+    "Alias": "Fog_Corridor_to_Archives",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus3_28": {
+    "Alias": "Fog_Charm_Notch",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus3_30": {
+    "Alias": "Fog_Lifeblood",
+    "Gates": {
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Fungus3_34": {
+    "Alias": "Gardens_Entrance",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus3_35": {
+    "Alias": "Fog_Millibelle",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus3_39": {
+    "Alias": "Gardens_Moss_Prophet",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus3_40": {
+    "Alias": "Gardens_Gardens_Stag",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus3_44": {
+    "Alias": "Fog_Overgrown_Mound_Entrance",
+    "Gates": {
+      "Door": {
+        "door1": {
+          "Alias": "Door-Overgrown_Mound"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Fungus3_47": {
+    "Alias": "Fog_Archives_Entrance",
+    "Gates": {
+      "Door": {
+        "door1": {
+          "Alias": "Door-Archives"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus3_48": {
+    "Alias": "Gardens_Outside_White_Lady",
+    "Gates": {
+      "Door": {
+        "door1": {
+          "Alias": "Door-White_Lady"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-Traitor_Lord"
+        },
+        "right2": {
+          "Alias": "Right-Lower"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Fungus3_49": {
+    "Alias": "Gardens_Traitor's_Child's_Grave",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus3_50": {
+    "Alias": "Gardens_Toll_Bench",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Fungus3_archive": {
+    "Alias": "Fog_Archives_Bench",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Fungus3_archive_02": {
+    "Alias": "Fog_Uumuu_Arena",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      }
+    }
+  },
+  "GG_Atrium": {
+    "Alias": "Godhome_Atrium",
+    "Gates": {}
+  },
+  "GG_Atrium_Roof": {
+    "Alias": "Godhome_Roof",
+    "Gates": {}
+  },
+  "GG_Blue_Room": {
+    "Alias": "Godhome_Lifeblood",
+    "Gates": {}
+  },
+  "GG_Land_Of_Storms": {
+    "Alias": "Godhome_Land_Of_Storms",
+    "Gates": {}
+  },
+  "GG_Lurker": {
+    "Alias": "Edge_Pale_Lurker",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "GG_Mighty_Zote": {
+    "Alias": "Invincible_Fearless_Sensual_Mysterious_Enchanting_Vigorous_Diligent_Overwhelming_Gorgeous_Passionate_Terrifying_Beautiful_Zote",
+    "Gates": {}
+  },
+  "GG_Pipeway": {
+    "Alias": "Waterways_Flukemunga_Corridor",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "GG_Unlock_Wastes": {
+    "Alias": "Godhome_Godtuner",
+    "Gates": {}
+  },
+  "GG_Waterways": {
+    "Alias": "Waterways_Junk_Pit",
+    "Gates": {
+      "Door": {
+        "door1": {
+          "Alias": "Door-Nailsmith_Shortcut"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "GG_Workshop": {
+    "Alias": "Godhome_Hall_Of_Gods",
+    "Gates": {}
+  },
+  "Grimm_Divine": {
+    "Alias": "Grimm_Divine",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Grimm_Main_Tent": {
+    "Alias": "Grimm_Tent",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Grimm_Nightmare": {
+    "Alias": "Grimm_NKG",
+    "Gates": {}
+  },
+  "Hive_01": {
+    "Alias": "Hive_Entrance_And_Bench",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-From_Entrance"
+        },
+        "right2": {
+          "Alias": "Right-From_Bench"
+        }
+      }
+    }
+  },
+  "Hive_02": {
+    "Alias": "Hive_Whispering_Root",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-Upper"
+        },
+        "left2": {
+          "Alias": "Left-Entrance"
+        },
+        "left3": {
+          "Alias": "Left-Bench"
+        }
+      }
+    }
+  },
+  "Hive_03": {
+    "Alias": "Hive_Outside_Grub",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Hive_03_c": {
+    "Alias": "Hive_Outside_Shortcut",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right2": {
+          "Alias": "Right-Mask_Shard_Shortcut"
+        },
+        "right3": {
+          "Alias": "Right-Upper"
+        }
+      }
+    }
+  },
+  "Hive_04": {
+    "Alias": "Hive_Mask_Shard",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-Upper"
+        },
+        "left2": {
+          "Alias": "Left-From_Mask_Shard"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Hive_05": {
+    "Alias": "Hive_Knight_Arena",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Mines_01": {
+    "Alias": "Crystal_Dive_Entrance",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Mines_02": {
+    "Alias": "Crystal_Main_Entrance",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top-Dive_Entrance"
+        },
+        "top2": {
+          "Alias": "Top-Pog_Axe"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Mines_03": {
+    "Alias": "Crystal_Spike_Grub",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Mines_04": {
+    "Alias": "Crystal_Entrance_Conveyors",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left-Spike_Grub"
+        },
+        "left2": {
+          "Alias": "Left-Bench_Upper"
+        },
+        "left3": {
+          "Alias": "Left-Bench_Lower"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Mines_05": {
+    "Alias": "Crystal_Above_Spike_Grub",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left-Cornifer"
+        },
+        "left2": {
+          "Alias": "Left-Deep_Focus"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Mines_06": {
+    "Alias": "Crystal_Deep_Focus_Gauntlet",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Mines_07": {
+    "Alias": "Crystal_Dark_Room",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Mines_10": {
+    "Alias": "Crystal_Elevator_Entrance",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Mines_11": {
+    "Alias": "Crystal_Left_Of_Guardian",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Mines_13": {
+    "Alias": "Crystal_Top_Corridor",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Mines_16": {
+    "Alias": "Crystal_Mimic",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      }
+    }
+  },
+  "Mines_17": {
+    "Alias": "Crystal_Corridor_to_Spike_Grub",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Mines_18": {
+    "Alias": "Crystal_Guardian_Bench",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Mines_19": {
+    "Alias": "Crystal_Grub_Crushers",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Mines_20": {
+    "Alias": "Crystal_East_Tall",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-Quirrel_Overlook"
+        },
+        "left2": {
+          "Alias": "Left-Crystal_Guardian"
+        },
+        "left3": {
+          "Alias": "Left-Crushers_Grub"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-Crown"
+        },
+        "right2": {
+          "Alias": "Right-Crystal_Heart"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Mines_23": {
+    "Alias": "Crystal_Crown_Whispering_Root",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-Crown"
+        },
+        "right2": {
+          "Alias": "Right-Grub"
+        }
+      }
+    }
+  },
+  "Mines_24": {
+    "Alias": "Crystal_Crown_Grub",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Mines_25": {
+    "Alias": "Crystal_Crown_Climb",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Mines_28": {
+    "Alias": "Crystal_Outside_Mound",
+    "Gates": {
+      "Door": {
+        "door1": {
+          "Alias": "Door-Crystallized_Mound"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Mines_29": {
+    "Alias": "Crystal_Dark_Bench",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-Upper"
+        },
+        "right2": {
+          "Alias": "Right-Lower"
+        }
+      }
+    }
+  },
+  "Mines_30": {
+    "Alias": "Crystal_Cornifer",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Mines_31": {
+    "Alias": "Crystal_Crystal_Heart_Gauntlet",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Mines_32": {
+    "Alias": "Crystal_Enraged_Guardian_Arena",
+    "Gates": {
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Mines_33": {
+    "Alias": "Crossroads_Peak_Dark_Toll",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Mines_34": {
+    "Alias": "Crystal_Crown_Peak",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot-To_Ascent"
+        },
+        "bot2": {
+          "Alias": "Bot-Pit_Fall"
+        }
+      }
+    }
+  },
+  "Mines_35": {
+    "Alias": "Crystal_Mound",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Mines_36": {
+    "Alias": "Crystal_Deep_Focus",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Mines_37": {
+    "Alias": "Crystal_Chest_Crushers",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "RestingGrounds_02": {
+    "Alias": "Grounds_Xero",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "RestingGrounds_04": {
+    "Alias": "Grounds_Dream_Nail_Entrance",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "RestingGrounds_05": {
+    "Alias": "Grounds_Whispering_Root",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-Dream_Nail"
+        },
+        "left2": {
+          "Alias": "Left-Seer"
+        },
+        "left3": {
+          "Alias": "Left-Dreamshield"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-Glade"
+        },
+        "right2": {
+          "Alias": "Right-Stag"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "RestingGrounds_06": {
+    "Alias": "Grounds_Corridor_Below_Xero",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "RestingGrounds_07": {
+    "Alias": "Grounds_Seer",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "RestingGrounds_08": {
+    "Alias": "Grounds_Spirit's_Glade",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "RestingGrounds_09": {
+    "Alias": "Grounds_Stag",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "RestingGrounds_10": {
+    "Alias": "Grounds_Crypts",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top-Grounds"
+        },
+        "top2": {
+          "Alias": "Top-Grey_Mourner"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "RestingGrounds_12": {
+    "Alias": "Grounds_Outside_Grey_Mourner",
+    "Gates": {
+      "Door": {
+        "door_Mansion": {
+          "Alias": "Door-Grey_Mourner"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "RestingGrounds_17": {
+    "Alias": "Grounds_Dreamshield",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Room_Bretta": {
+    "Alias": "Bretta",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Room_Bretta_Basement": {
+    "Alias": "Bretta_Basement",
+    "Gates": {}
+  },
+  "Room_Charm_Shop": {
+    "Alias": "Salubra",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Room_Colosseum_01": {
+    "Alias": "Edge_Colo_Entrance",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Room_Colosseum_02": {
+    "Alias": "Edge_Colo_Bench",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top-Colosseum"
+        },
+        "top2": {
+          "Alias": "Top-Pale_Lurker"
+        }
+      }
+    }
+  },
+  "Room_Colosseum_Bronze": {
+    "Alias": "Edge_Colo_1_Arena",
+    "Gates": {}
+  },
+  "Room_Colosseum_Gold": {
+    "Alias": "Edge_Colo_3_Arena",
+    "Gates": {}
+  },
+  "Room_Colosseum_Silver": {
+    "Alias": "Edge_Colo_2_Arena",
+    "Gates": {}
+  },
+  "Room_Colosseum_Spectate": {
+    "Alias": "Edge_Colo_Spectate",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Room_Final_Boss_Atrium": {
+    "Alias": "Egg_Bench",
+    "Gates": {}
+  },
+  "Room_Final_Boss_Core": {
+    "Alias": "Egg_Hollow_Knight",
+    "Gates": {}
+  },
+  "Room_Fungus_Shaman": {
+    "Alias": "Fog_Overgrown_Mound",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Room_GG_Shortcut": {
+    "Alias": "Waterways_Fluke_Hermit",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Room_Jinn": {
+    "Alias": "Jinn",
+    "Gates": {}
+  },
+  "Room_Mansion": {
+    "Alias": "Grounds_Grey_Mourner",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Room_Mask_Maker": {
+    "Alias": "Deepnest_Mask_Maker",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Room_Mender_House": {
+    "Alias": "Crossroads_Menderbug",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Room_Ouiji": {
+    "Alias": "Jiji",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Room_Queen": {
+    "Alias": "Gardens_White_Lady",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Room_Slug_Shrine": {
+    "Alias": "Greenpath_Unn_Bench",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Room_Sly_Storeroom": {
+    "Alias": "Sly_Basement",
+    "Gates": {}
+  },
+  "Room_Town_Stag_Station": {
+    "Alias": "Dirtmouth_Stag",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Room_Tram": {
+    "Alias": "Lower_Tram",
+    "Gates": {}
+  },
+  "Room_Tram_RG": {
+    "Alias": "Upper_Tram",
+    "Gates": {}
+  },
+  "Room_Wyrm": {
+    "Alias": "Edge_Cast-Off_Shell",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Room_mapper": {
+    "Alias": "Iselda",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Room_nailmaster": {
+    "Alias": "Cliffs_Mato",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Room_nailmaster_02": {
+    "Alias": "Greenpath_Sheo",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Room_nailmaster_03": {
+    "Alias": "Edge_Oro",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Room_nailsmith": {
+    "Alias": "City_Nailsmith",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Room_ruinhouse": {
+    "Alias": "Crossroads_Rescue_Sly",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Room_shop": {
+    "Alias": "Sly",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Room_spider_small": {
+    "Alias": "Deepnest_Brumm",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Room_temple": {
+    "Alias": "Black_Egg_Temple",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Ruins1_01": {
+    "Alias": "City_Pilgrim's_Entrance",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Ruins1_02": {
+    "Alias": "City_Quirrel_Bench",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Ruins1_03": {
+    "Alias": "City_Rafters",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-Upper"
+        },
+        "right2": {
+          "Alias": "Right-Lower"
+        }
+      }
+    }
+  },
+  "Ruins1_04": {
+    "Alias": "City_Outside_Nailsmith",
+    "Gates": {
+      "Door": {
+        "door1": {
+          "Alias": "Door-Nailsmith"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Ruins1_05": {
+    "Alias": "City_Grub_Above_Lemm",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-Soul_Twister_Arena"
+        },
+        "right2": {
+          "Alias": "Right-Spire_Bridge"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot-DLC_Entrance"
+        },
+        "bot2": {
+          "Alias": "Bot-DLC_Exit"
+        },
+        "bot3": {
+          "Alias": "Bot-Skyway"
+        }
+      }
+    }
+  },
+  "Ruins1_05b": {
+    "Alias": "City_Lemm",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Ruins1_05c": {
+    "Alias": "City_Egg_Above_Lemm",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top-DLC_Entrance"
+        },
+        "top2": {
+          "Alias": "Top-DLC_Exit"
+        },
+        "top3": {
+          "Alias": "Top-Skyway"
+        }
+      },
+      "Left": {
+        "left2": {
+          "Alias": "Left"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Ruins1_06": {
+    "Alias": "City_Corridor_to_Storerooms",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Ruins1_09": {
+    "Alias": "City_Soul_Twister_Arena",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Ruins1_17": {
+    "Alias": "City_Whispering_Root",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Ruins1_18": {
+    "Alias": "City_Corridor_to_Spire",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-From_Skyway"
+        },
+        "right2": {
+          "Alias": "Right-From_Fountain_Lever"
+        }
+      }
+    }
+  },
+  "Ruins1_23": {
+    "Alias": "City_Sanctum_Entrance",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-Soul_Warrior"
+        },
+        "right2": {
+          "Alias": "Right-Shortcut"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Ruins1_24": {
+    "Alias": "City_Soul_Master_Arena",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-To_Rewards"
+        },
+        "left2": {
+          "Alias": "Left-From_Underpass"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-Upper"
+        },
+        "right2": {
+          "Alias": "Right-From_Underpass"
+        }
+      }
+    }
+  },
+  "Ruins1_25": {
+    "Alias": "City_Sanctum_East_Elevators",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-Spell_Twister"
+        },
+        "left2": {
+          "Alias": "Left-Soul_Warrior"
+        },
+        "left3": {
+          "Alias": "Left-Shortcut"
+        }
+      }
+    }
+  },
+  "Ruins1_27": {
+    "Alias": "City_Hollow_Knight_Fountain",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Ruins1_28": {
+    "Alias": "City_Storerooms",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Ruins1_29": {
+    "Alias": "City_Storerooms_Stag",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Ruins1_30": {
+    "Alias": "City_Sanctum_Spell_Twister",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-Soul_Master"
+        },
+        "left2": {
+          "Alias": "Left-Soul_Master_Underpass"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Ruins1_31": {
+    "Alias": "City_Toll_Bench",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-Storerooms"
+        },
+        "left2": {
+          "Alias": "Left-Shade_Soul_Exit"
+        },
+        "left3": {
+          "Alias": "Left-Elegant_Door"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Ruins1_31b": {
+    "Alias": "City_Shade_Soul_Arena",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right-Upper"
+        },
+        "right2": {
+          "Alias": "Right-Lower"
+        }
+      }
+    }
+  },
+  "Ruins1_32": {
+    "Alias": "City_Soul_Master_Rewards",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right-Soul_Master"
+        },
+        "right2": {
+          "Alias": "Right-Soul_Master_Underpass"
+        }
+      }
+    }
+  },
+  "Ruins2_01": {
+    "Alias": "City_Spire_Great_Husk",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left2": {
+          "Alias": "Left"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Ruins2_01_b": {
+    "Alias": "City_Spire_Base",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Ruins2_03": {
+    "Alias": "City_Spire_Watchers",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot-From_Watcher_Knights"
+        },
+        "bot2": {
+          "Alias": "Bot-From_Grub"
+        }
+      }
+    }
+  },
+  "Ruins2_03b": {
+    "Alias": "City_Spire_Below_Watchers",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top-Watcher_Knights"
+        },
+        "top2": {
+          "Alias": "Top-Grub"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Ruins2_04": {
+    "Alias": "City_Right_Hub",
+    "Gates": {
+      "Door": {
+        "door_Ruin_Elevator": {
+          "Alias": "Door-Pleasure_House"
+        },
+        "door_Ruin_House_01": {
+          "Alias": "Door-Guarded_Grub"
+        },
+        "door_Ruin_House_02": {
+          "Alias": "Door-Gorgeous_Husk"
+        },
+        "door_Ruin_House_03": {
+          "Alias": "Door-Emilitia"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left-Watcher's_Spire"
+        },
+        "left2": {
+          "Alias": "Left-Broken_Elevator"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-Upper"
+        },
+        "right2": {
+          "Alias": "Right-Lower"
+        }
+      }
+    }
+  },
+  "Ruins2_05": {
+    "Alias": "City_Above_King's",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Ruins2_06": {
+    "Alias": "City_King's_Station",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left-Upper"
+        },
+        "left2": {
+          "Alias": "Left-Lower"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-Stag"
+        },
+        "right2": {
+          "Alias": "Right-Edge"
+        }
+      }
+    }
+  },
+  "Ruins2_07": {
+    "Alias": "City_Grub_Below_King's",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Ruins2_08": {
+    "Alias": "City_King's_Stag",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Ruins2_09": {
+    "Alias": "City_King's_Vessel_Fragment",
+    "Gates": {
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Ruins2_10": {
+    "Alias": "Grounds_Elevator",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Ruins2_10b": {
+    "Alias": "City_Right_Elevator",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-Colosseum"
+        },
+        "right2": {
+          "Alias": "Right-Above_King's"
+        }
+      }
+    }
+  },
+  "Ruins2_11": {
+    "Alias": "City_Collector_Arena",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Ruins2_11_b": {
+    "Alias": "City_Tower_of_Love",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Ruins2_Watcher_Room": {
+    "Alias": "City_Lurien_Elevator",
+    "Gates": {
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Ruins_Bathhouse": {
+    "Alias": "City_Pleasure_House_Bench",
+    "Gates": {
+      "Door": {
+        "door1": {
+          "Alias": "Door-Entrance"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Ruins_Elevator": {
+    "Alias": "City_Pleasure_House_Elevator",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-Bottom"
+        },
+        "left2": {
+          "Alias": "Left-Top"
+        }
+      }
+    }
+  },
+  "Ruins_House_01": {
+    "Alias": "City_Guarded_Grub",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Ruins_House_02": {
+    "Alias": "City_Gorgeous_Husk",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Ruins_House_03": {
+    "Alias": "City_Emilitia",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-Door"
+        },
+        "left2": {
+          "Alias": "Left-Waterways"
+        }
+      }
+    }
+  },
+  "Town": {
+    "Alias": "Dirtmouth",
+    "Gates": {
+      "Door": {
+        "door_bretta": {
+          "Alias": "Door-Bretta"
+        },
+        "door_jiji": {
+          "Alias": "Door-Jiji"
+        },
+        "door_mapper": {
+          "Alias": "Door-Iselda"
+        },
+        "door_sly": {
+          "Alias": "Door-Sly"
+        },
+        "door_station": {
+          "Alias": "Door-Dirtmouth_Stag"
+        },
+        "room_divine": {
+          "Alias": "Door-Divine"
+        },
+        "room_grimm": {
+          "Alias": "Door-Grimm"
+        }
+      },
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Tutorial_01": {
+    "Alias": "King's_Pass",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top-Game_Start"
+        },
+        "top2": {
+          "Alias": "Top-Cliffs"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Waterways_01": {
+    "Alias": "Waterways_Entrance",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Waterways_02": {
+    "Alias": "Waterways_Main_Bench",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top-Middle"
+        },
+        "top2": {
+          "Alias": "Top-Dung_Defender"
+        },
+        "top3": {
+          "Alias": "Top-East_Grub"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot-Flukemarm"
+        },
+        "bot2": {
+          "Alias": "Bot-Isma's_Spike_Tunnel"
+        }
+      }
+    }
+  },
+  "Waterways_03": {
+    "Alias": "Waterways_Tuk",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "Waterways_04": {
+    "Alias": "Waterways_Hidden_Grub",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-Upper"
+        },
+        "left2": {
+          "Alias": "Left-Lower"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "Waterways_04b": {
+    "Alias": "Waterways_Mask_Shard",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-Upper"
+        },
+        "right2": {
+          "Alias": "Right-Lower"
+        }
+      }
+    }
+  },
+  "Waterways_05": {
+    "Alias": "Waterways_Dung_Defender_Arena",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot-Waterways_Main"
+        },
+        "bot2": {
+          "Alias": "Bot-King's_Idol"
+        }
+      }
+    }
+  },
+  "Waterways_06": {
+    "Alias": "Waterways_Corridor_to_Broken_Elevator",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Waterways_07": {
+    "Alias": "Waterways_Left_Of_Isma's_Grove",
+    "Gates": {
+      "Door": {
+        "door1": {
+          "Alias": "Door-Emilitia_Shortcut"
+        }
+      },
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-Dung_Defender_Entrance"
+        },
+        "right2": {
+          "Alias": "Right-Acid_Shortcut"
+        }
+      }
+    }
+  },
+  "Waterways_08": {
+    "Alias": "Waterways_Outside_Flukemarm",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left-Flukemarm"
+        },
+        "left2": {
+          "Alias": "Left-Junk_Pit"
+        }
+      }
+    }
+  },
+  "Waterways_09": {
+    "Alias": "Waterways_Cornifer",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Waterways_12": {
+    "Alias": "Waterways_Flukemarm_Arena",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "Waterways_13": {
+    "Alias": "Waterways_Isma's_Grove",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-Dung_Defender_Entrance"
+        },
+        "left2": {
+          "Alias": "Left-Acid_Shortcut"
+        }
+      }
+    }
+  },
+  "Waterways_14": {
+    "Alias": "Waterways_Edge_Acid_Corridor",
+    "Gates": {
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot-Isma's_Grove"
+        },
+        "bot2": {
+          "Alias": "Bot-Edge"
+        }
+      }
+    }
+  },
+  "Waterways_15": {
+    "Alias": "Waterways_Dung_Defender's_Cave",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      }
+    }
+  },
+  "White_Palace_01": {
+    "Alias": "Palace_Entrance",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "White_Palace_02": {
+    "Alias": "Palace_First_Mold",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "White_Palace_03_hub": {
+    "Alias": "Palace_Hub",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left-Upper"
+        },
+        "left2": {
+          "Alias": "Left-Leftside_Entrance"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "White_Palace_04": {
+    "Alias": "Palace_Left_Of_Hub",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Right": {
+        "right2": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "White_Palace_05": {
+    "Alias": "Palace_Saw_Room",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-Upper_Exit"
+        },
+        "left2": {
+          "Alias": "Left-Lower_Entrance"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-Upper_Entrance"
+        },
+        "right2": {
+          "Alias": "Right-Lower_Exit"
+        }
+      }
+    }
+  },
+  "White_Palace_06": {
+    "Alias": "Palace_Balcony",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "White_Palace_07": {
+    "Alias": "Palace_Lamp_Pogo",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "White_Palace_08": {
+    "Alias": "Palace_Workshop",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "White_Palace_09": {
+    "Alias": "Palace_Throne",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "White_Palace_11": {
+    "Alias": "Palace_Outside",
+    "Gates": {
+      "Door": {
+        "door2": {
+          "Alias": "Door-Entrance"
+        }
+      }
+    }
+  },
+  "White_Palace_12": {
+    "Alias": "Palace_Spike_Drop",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "White_Palace_13": {
+    "Alias": "Palace_Thorn_Jump",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-Upper"
+        },
+        "left2": {
+          "Alias": "Left-Final_Lever"
+        },
+        "left3": {
+          "Alias": "Left-Workshop_Exit"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "White_Palace_14": {
+    "Alias": "Palace_Hell_Corridor",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "White_Palace_15": {
+    "Alias": "Palace_Caged_Lever",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right-Upper"
+        },
+        "right2": {
+          "Alias": "Right-Lower"
+        }
+      }
+    }
+  },
+  "White_Palace_16": {
+    "Alias": "Palace_Saw_Climb",
+    "Gates": {
+      "Left": {
+        "left1": {
+          "Alias": "Left-Upper"
+        },
+        "left2": {
+          "Alias": "Left-Lower"
+        }
+      }
+    }
+  },
+  "White_Palace_17": {
+    "Alias": "POP_Lever",
+    "Gates": {
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      },
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  },
+  "White_Palace_18": {
+    "Alias": "POP_Entrance",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Right": {
+        "right1": {
+          "Alias": "Right"
+        }
+      }
+    }
+  },
+  "White_Palace_19": {
+    "Alias": "POP_Vertical",
+    "Gates": {
+      "Top": {
+        "top1": {
+          "Alias": "Top"
+        }
+      },
+      "Left": {
+        "left1": {
+          "Alias": "Left"
+        }
+      }
+    }
+  },
+  "White_Palace_20": {
+    "Alias": "POP_Final",
+    "Gates": {
+      "Bot": {
+        "bot1": {
+          "Alias": "Bot"
+        }
+      }
+    }
+  }
+}

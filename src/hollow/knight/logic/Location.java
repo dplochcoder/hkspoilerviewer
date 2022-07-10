@@ -7,7 +7,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonObject;
-import hollow.knight.gui.SceneNicknames;
+import hollow.knight.gui.TransitionData;
 
 @AutoValue
 public abstract class Location {
@@ -24,8 +24,8 @@ public abstract class Location {
 
   public abstract String name();
 
-  public final String displayName(SceneNicknames sceneNicknames) {
-    return isTransition() ? sceneNicknames.nickname(name()) : name();
+  public final String displayName(TransitionData transitionData) {
+    return isTransition() ? transitionData.alias(name()) : name();
   }
 
   public abstract boolean isTransition();

@@ -60,9 +60,9 @@ public final class CheckEditor extends JFrame implements ItemChecks.Listener {
     this.application = application;
 
     this.itemsListModel =
-        new CheckEditorItemsListModel(application.sceneNicknames(), application.ctx().checks());
+        new CheckEditorItemsListModel(application.transitionData(), application.ctx().checks());
 
-    this.itemSearchField = new CheckEditorItemSearchField(application.sceneNicknames());
+    this.itemSearchField = new CheckEditorItemSearchField(application.transitionData());
     this.itemSearchField.addListener(() -> repopulateItemResults());
     this.itemsList = createItemsList();
     this.itemsPane = new JScrollPane(itemsList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
@@ -257,7 +257,7 @@ public final class CheckEditor extends JFrame implements ItemChecks.Listener {
       itemLabel.setText("Item: <none selected>");
       locationLabel.setText("Location: <none selected>");
     } else {
-      itemLabel.setText("Item: " + checkForEdit.item().displayName(application.sceneNicknames())
+      itemLabel.setText("Item: " + checkForEdit.item().displayName(application.transitionData())
           + " " + checkForEdit.item().valueSuffix());
       locationLabel.setText("Location: " + checkForEdit.location().name());
     }

@@ -10,13 +10,13 @@ import hollow.knight.logic.State;
 import hollow.knight.logic.StateContext;
 
 public final class SearchEngine {
-  private final SceneNicknames sceneNicknames;
+  private final TransitionData transitionData;
   private final RoomLabels roomLabels;
   private final List<SearchResult.Filter> resultFilters;
 
-  public SearchEngine(SceneNicknames sceneNicknames, RoomLabels roomLabels,
+  public SearchEngine(TransitionData transitionData, RoomLabels roomLabels,
       List<SearchResult.Filter> resultFilters) {
-    this.sceneNicknames = sceneNicknames;
+    this.transitionData = transitionData;
     this.roomLabels = roomLabels;
     this.resultFilters = resultFilters;
   }
@@ -29,8 +29,8 @@ public final class SearchEngine {
     return ComparisonChain.start()
         .compare(roomLabels.get(r1.location().scene(), RoomLabels.Type.MAP),
             roomLabels.get(r2.location().scene(), RoomLabels.Type.MAP))
-        .compare(r1.item().displayName(sceneNicknames).toLowerCase(),
-            r2.item().displayName(sceneNicknames).toLowerCase())
+        .compare(r1.item().displayName(transitionData).toLowerCase(),
+            r2.item().displayName(transitionData).toLowerCase())
         .compare(r1.location().name(), r2.location().name()).result();
   }
 

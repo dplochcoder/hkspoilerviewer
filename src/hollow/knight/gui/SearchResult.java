@@ -66,7 +66,7 @@ public abstract class SearchResult {
 
   public abstract Optional<Integer> notchCost();
 
-  public final String render(SceneNicknames sceneNicknames) {
+  public final String render(TransitionData transitionData) {
     StringBuilder sb = new StringBuilder();
     if (logicType() == LogicType.OUT_OF_LOGIC) {
       sb.append('*');
@@ -77,11 +77,11 @@ public abstract class SearchResult {
       sb.append('#');
     }
 
-    sb.append(item().displayName(sceneNicknames));
+    sb.append(item().displayName(transitionData));
     sb.append(' ');
     sb.append(valueSuffix());
     sb.append("- ");
-    sb.append(location().displayName(sceneNicknames));
+    sb.append(location().displayName(transitionData));
     sb.append(costSuffix());
 
     return sb.toString();

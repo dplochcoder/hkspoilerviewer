@@ -59,7 +59,7 @@ public final class Application extends JFrame {
   private static final long serialVersionUID = 1L;
 
   private final Config cfg;
-  private final SceneNicknames sceneNicknames;
+  private final TransitionData transitionData;
   private final SearchResult.FilterChangedListener filterChangedListener;
   private final RouteListModel routeListModel;
   private final SearchResultsListModel searchResultsListModel;
@@ -84,10 +84,10 @@ public final class Application extends JFrame {
 
   public Application(StateContext ctx, Config cfg) throws ParseException {
     this.cfg = cfg;
-    this.sceneNicknames = SceneNicknames.load();
+    this.transitionData = TransitionData.load();
     this.filterChangedListener = () -> repopulateSearchResults();
-    this.routeListModel = new RouteListModel(sceneNicknames, ctx);
-    this.searchResultsListModel = new SearchResultsListModel(sceneNicknames,
+    this.routeListModel = new RouteListModel(transitionData, ctx);
+    this.searchResultsListModel = new SearchResultsListModel(transitionData,
         c -> this.routeListModel.finalState().isAcquired(c));
     this.saveInterfaces = ImmutableList.of(searchResultsListModel, routeListModel);
     this.checksListeners = ImmutableList.of(searchResultsListModel, routeListModel);
@@ -109,7 +109,7 @@ public final class Application extends JFrame {
     this.skips = createSkips();
     List<SearchResult.Filter> resultFilters = addFilters(left);
 
-    this.searchEngine = new SearchEngine(sceneNicknames, ctx.roomLabels(), resultFilters);
+    this.searchEngine = new SearchEngine(transitionData, ctx.roomLabels(), resultFilters);
     this.searchResultsList = createSearchResults();
     this.searchResultsPane = new JScrollPane(searchResultsList,
         JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -141,8 +141,8 @@ public final class Application extends JFrame {
     setVisible(true);
   }
 
-  public SceneNicknames sceneNicknames() {
-    return sceneNicknames;
+  public TransitionData transitionData() {
+    return transitionData;
   }
 
   public StateContext ctx() {
@@ -709,7 +709,7 @@ public final class Application extends JFrame {
   private List<SearchResult.Filter> addFilters(JPanel parent) throws ParseException {
     ImmutableList.Builder<SearchResult.Filter> searchFilters = ImmutableList.builder();
 
-    TextFilter textFilter = new TextFilter(sceneNicknames, ctx().roomLabels());
+    TextFilter textFilter = new TextFilter(transitionData, ctx().roomLabels());
     textFilter.addListener(filterChangedListener);
     textFilter.addGuiToPanel(parent);
     searchFilters.add(textFilter);

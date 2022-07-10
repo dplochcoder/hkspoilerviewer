@@ -28,13 +28,13 @@ public final class TextFilter extends SearchResult.Filter {
   private final JPanel searchPanel = new JPanel();
   private final JPanel modePanel = new JPanel();
 
-  private final SceneNicknames sceneNicknames;
+  private final TransitionData transitionData;
   private final RoomLabels roomLabels;
   private final JTextField textField;
   private Mode mode = Mode.BOTH;
 
-  public TextFilter(SceneNicknames sceneNicknames, RoomLabels roomLabels) {
-    this.sceneNicknames = sceneNicknames;
+  public TextFilter(TransitionData transitionData, RoomLabels roomLabels) {
+    this.transitionData = transitionData;
     this.roomLabels = roomLabels;
 
     searchPanel.add(new JLabel("Search:"));
@@ -83,12 +83,12 @@ public final class TextFilter extends SearchResult.Filter {
     List<String> tokens = new ArrayList<>();
     if (mode != Mode.LOCATION) {
       tokens.add(result.item().term().name().toLowerCase());
-      tokens.add(result.item().displayName(sceneNicknames).toLowerCase());
+      tokens.add(result.item().displayName(transitionData).toLowerCase());
     }
 
     if (mode != Mode.ITEM) {
       tokens.add(result.location().name().toLowerCase());
-      tokens.add(result.location().displayName(sceneNicknames).toLowerCase());
+      tokens.add(result.location().displayName(transitionData).toLowerCase());
       tokens.add(result.location().scene().toLowerCase());
       tokens.add(roomLabels.get(result.location().scene(), RoomLabels.Type.MAP).toLowerCase());
       tokens.add(roomLabels.get(result.location().scene(), RoomLabels.Type.TITLE).toLowerCase());

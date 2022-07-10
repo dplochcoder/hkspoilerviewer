@@ -20,7 +20,7 @@ public final class CheckEditorItemsListModel implements ListModel<String>, ItemC
   private final SynchronizedEntityManager<ListDataListener> listeners =
       new SynchronizedEntityManager<>();
 
-  private final SceneNicknames sceneNicknames;
+  private final TransitionData transitionData;
   private final ItemChecks checks;
 
   private final Multiset<Term> itemCounts = HashMultiset.create();
@@ -28,14 +28,14 @@ public final class CheckEditorItemsListModel implements ListModel<String>, ItemC
   private final List<String> resultStrings = new ArrayList<>();
   private final Comparator<Item> sorter;
 
-  public CheckEditorItemsListModel(SceneNicknames sceneNicknames, ItemChecks checks) {
-    this.sceneNicknames = sceneNicknames;
+  public CheckEditorItemsListModel(TransitionData transitionData, ItemChecks checks) {
+    this.transitionData = transitionData;
     this.checks = checks;
 
     checks.allChecks().forEach(c -> itemCounts.add(c.item().term()));
     checks.addListener(this);
 
-    this.sorter = Comparator.comparing(item -> item.displayName(sceneNicknames).toLowerCase());
+    this.sorter = Comparator.comparing(item -> item.displayName(transitionData).toLowerCase());
   }
 
   private String diffSuffix(Term term) {
@@ -45,7 +45,7 @@ public final class CheckEditorItemsListModel implements ListModel<String>, ItemC
 
   private String render(Item item) {
     return "(" + itemCounts.count(item.term()) + diffSuffix(item.term()) + ") "
-        + item.displayName(sceneNicknames) + " " + item.valueSuffix();
+        + item.displayName(transitionData) + " " + item.valueSuffix();
   }
 
   public void updateResults(StateContext ctx, List<Item> resultItems) {

@@ -19,12 +19,12 @@ public final class CheckEditorItemSearchField {
 
   private final SynchronizedEntityManager<Listener> listeners = new SynchronizedEntityManager<>();
 
-  private final SceneNicknames sceneNicknames;
+  private final TransitionData transitionData;
   private final JPanel searchPanel;
   private final JTextField textField;
 
-  public CheckEditorItemSearchField(SceneNicknames sceneNicknames) {
-    this.sceneNicknames = sceneNicknames;
+  public CheckEditorItemSearchField(TransitionData transitionData) {
+    this.transitionData = transitionData;
 
     searchPanel = new JPanel();
     searchPanel.add(new JLabel("Search: "));
@@ -44,7 +44,7 @@ public final class CheckEditorItemSearchField {
 
     List<String> tokens = new ArrayList<>();
     tokens.add(item.term().name().toLowerCase());
-    tokens.add(item.displayName(sceneNicknames).toLowerCase());
+    tokens.add(item.displayName(transitionData).toLowerCase());
     return Arrays.stream(t.split("\\s"))
         .allMatch(term -> tokens.stream().anyMatch(s -> s.contains(term)));
   }
