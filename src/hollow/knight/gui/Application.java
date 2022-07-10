@@ -298,12 +298,26 @@ public final class Application extends JFrame {
     return true;
   }
 
+  public boolean ensureRandomizedNonTransition(ItemCheck check) {
+    if (!ensureRandomized(check)) {
+      return false;
+    }
+
+    if (check.isTransition()) {
+      JOptionPane.showMessageDialog(this, "Use the Transition Editor to edit Transitions",
+          "Not Allowed", JOptionPane.WARNING_MESSAGE);
+      return false;
+    }
+
+    return true;
+  }
+
   private boolean editCheck(ItemCheck check) {
     if (!ensureCheckEditor().isOpen()) {
       return false;
     }
 
-    if (check == null || !ensureRandomized(check)) {
+    if (check == null || !ensureRandomizedNonTransition(check)) {
       return false;
     }
 
@@ -318,7 +332,7 @@ public final class Application extends JFrame {
 
     Item item = checkEditor.selectedItem();
     if (item == null || check == null || item.term().equals(check.item().term())
-        || !ensureRandomized(check)) {
+        || !ensureRandomizedNonTransition(check)) {
       return;
     }
 
@@ -420,7 +434,8 @@ public final class Application extends JFrame {
     menu.setToolTipText("Open an ICDL ctx.json file to enable ICDL features");
 
     JMenu reset = new JMenu("Reset All");
-    reset.add(icdlReset("All Randomized Checks", c -> true));
+    reset.add(icdlReset("All Randomized Checks", c -> !c.isTransition()));
+    reset.add(icdlReset("All Randomized Transitions", c -> c.isTransition()));
     reset.add(icdlReset("Matching Search Results", searchResultsListModel::isMatchingSearchResult));
     menu.add(reset);
 
