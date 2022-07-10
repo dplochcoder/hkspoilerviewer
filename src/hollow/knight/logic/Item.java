@@ -263,7 +263,19 @@ public final class Item {
     }
   }
 
+  private static final ImmutableSet<String> TRANSITION_TYPES =
+      ImmutableSet.of("RandomizerCore.Logic.LogicTransition", "RandomizerCore");
+
   public static Item parse(JsonObject item) throws ParseException {
+    if (item.has("TransitionDef")) {
+      Term term = Term.create(item.get("Name").getAsString());
+      MutableTermMap terms = new MutableTermMap();
+      terms.add(term, 1);
+
+      return new Item(term, Optional.of("Transitions"), TRANSITION_TYPES,
+          new TermMapItemEffects(Condition.alwaysTrue(), terms, TermMap.empty(), terms));
+    }
+
     Optional<String> pool = Optional.empty();
     if (item.has("ItemDef") && item.get("ItemDef").isJsonObject()) {
       pool = Optional.of(item.get("ItemDef").getAsJsonObject().get("Pool").getAsString());

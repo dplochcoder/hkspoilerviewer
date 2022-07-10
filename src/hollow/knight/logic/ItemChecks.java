@@ -406,6 +406,24 @@ public final class ItemChecks {
     }
   }
 
+  private void parseTransitionUnsafe(JsonElement elem, RoomLabels rooms) throws ParseException {
+    JsonObject target = elem.getAsJsonObject().get("Target").getAsJsonObject();
+    JsonObject source = elem.getAsJsonObject().get("Source").getAsJsonObject();
+
+    Item item = Item.parse(target);
+    Location loc = Location.parse(rooms, source.get("lt").getAsJsonObject(), true);
+
+    placeNew(loc, item, Costs.none(), false);
+  }
+
+  private void parseTransitionSafe(JsonElement elem, RoomLabels rooms) throws ParseException {
+    try {
+      parseTransitionUnsafe(elem, rooms);
+    } catch (Exception ex) {
+      throw new ParseException(ex.getMessage() + ": " + elem, ex);
+    }
+  }
+
   public static ItemChecks parse(JsonObject json, RoomLabels roomLabels) throws ParseException {
     ItemChecks checks = new ItemChecks();
 
@@ -416,7 +434,7 @@ public final class ItemChecks {
     JsonElement transitionPlacements = json.get("transitionPlacements");
     if (!transitionPlacements.isJsonNull()) {
       for (JsonElement elem : transitionPlacements.getAsJsonArray()) {
-        checks.parseCheckSafe(elem, roomLabels, false);
+        checks.parseTransitionSafe(elem, roomLabels);
       }
     }
     for (JsonElement elem : json.get("Vanilla").getAsJsonArray()) {
