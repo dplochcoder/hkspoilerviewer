@@ -2,6 +2,7 @@ package hollow.knight.gui;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -166,7 +167,7 @@ public final class SearchResultsListModel
     c.setForeground(Color.GRAY);
   }
 
-  public void adjustForegroundColor(Component c, State state, SearchEngine engine, int index) {
+  public void adjustComponentStyle(Component c, State state, SearchEngine engine, int index) {
     SearchResult s = getResult(state, index);
     if (s == null) {
       return;
@@ -178,6 +179,11 @@ public final class SearchResultsListModel
       }
     } else if (hiddenResultsSet.contains(s.itemCheck())) {
       brighten(c);
+    }
+
+    if (s.itemCheck().isTransition()) {
+      Font f = c.getFont();
+      c.setFont(new Font(f.getFontName(), Font.ITALIC, f.getSize()));
     }
   }
 

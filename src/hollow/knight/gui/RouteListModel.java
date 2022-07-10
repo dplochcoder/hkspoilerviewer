@@ -2,6 +2,7 @@ package hollow.knight.gui;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -143,9 +144,15 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
     }
   }
 
-  public void adjustForegroundColor(Component c, int index) {
+  public void adjustComponentStyle(Component c, int index) {
     if (index >= insertionPoint) {
       c.setForeground(Color.GRAY);
+    }
+
+    ItemCheck check = getCheck(index);
+    if (check.isTransition()) {
+      Font f = c.getFont();
+      c.setFont(new Font(f.getFontName(), Font.ITALIC, f.getSize()));
     }
   }
 

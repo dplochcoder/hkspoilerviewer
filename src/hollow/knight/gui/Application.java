@@ -824,7 +824,7 @@ public final class Application extends JFrame {
           boolean isSelected, boolean cellHasFocus) {
         Component c =
             super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-        searchResultsListModel.adjustForegroundColor(c, currentState(), searchEngine, index);
+        searchResultsListModel.adjustComponentStyle(c, currentState(), searchEngine, index);
         return c;
       }
     };
@@ -935,7 +935,7 @@ public final class Application extends JFrame {
           boolean isSelected, boolean cellHasFocus) {
         Component c =
             super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-        routeListModel.adjustForegroundColor(c, index);
+        routeListModel.adjustComponentStyle(c, index);
         return c;
       }
     };
