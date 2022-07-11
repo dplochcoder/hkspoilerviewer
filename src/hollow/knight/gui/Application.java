@@ -63,8 +63,12 @@ public final class Application extends JFrame {
   private final SearchResult.FilterChangedListener filterChangedListener;
   private final RouteListModel routeListModel;
   private final SearchResultsListModel searchResultsListModel;
+  private final TransitionVisualizerPlacements transitionVisualizerPlacements;
   private final ImmutableList<SaveInterface> saveInterfaces;
   private final ImmutableList<ItemChecks.Listener> checksListeners;
+
+  private final JMenuItem openVisualizer;
+  private TransitionVisualizer transitionVisualizer = null;
 
   private boolean isICDL = false;
   private final JMenu icdlMenu;
@@ -89,7 +93,9 @@ public final class Application extends JFrame {
     this.routeListModel = new RouteListModel(transitionData, ctx);
     this.searchResultsListModel = new SearchResultsListModel(transitionData,
         c -> this.routeListModel.finalState().isAcquired(c));
-    this.saveInterfaces = ImmutableList.of(searchResultsListModel, routeListModel);
+    this.transitionVisualizerPlacements = new TransitionVisualizerPlacements();
+    this.saveInterfaces =
+        ImmutableList.of(searchResultsListModel, routeListModel, transitionVisualizerPlacements);
     this.checksListeners = ImmutableList.of(searchResultsListModel, routeListModel);
 
     this.checksListeners.forEach(ctx.checks()::addListener);
@@ -97,6 +103,7 @@ public final class Application extends JFrame {
     setTitle("HKSpoilerViewer");
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+    openVisualizer = new JMenuItem("Open Transition Visualizer");
     openEditor = new JMenuItem("Open Editor");
     saveICDLFolder = new JMenuItem("Export As ICDL Pack Folder");
     icdlMenu = createICDLMenu();
@@ -143,6 +150,10 @@ public final class Application extends JFrame {
 
   public TransitionData transitionData() {
     return transitionData;
+  }
+
+  public TransitionVisualizerPlacements transitionVisualizerPlacements() {
+    return transitionVisualizerPlacements;
   }
 
   public StateContext ctx() {
@@ -304,7 +315,7 @@ public final class Application extends JFrame {
     }
 
     if (check.isTransition()) {
-      JOptionPane.showMessageDialog(this, "Use the Transition Editor to edit Transitions",
+      JOptionPane.showMessageDialog(this, "Use the Transition Visualizer to edit Transitions",
           "Not Allowed", JOptionPane.WARNING_MESSAGE);
       return false;
     }
@@ -378,6 +389,12 @@ public final class Application extends JFrame {
 
   public void duplicateCheck(ItemCheck check) {
     if (!ensureICDL() || check == null) {
+      return;
+    }
+
+    if (check.isTransition()) {
+      JOptionPane.showMessageDialog(this, "Cannot duplicate transitions", "Not Allowed",
+          JOptionPane.WARNING_MESSAGE);
       return;
     }
 
@@ -468,6 +485,22 @@ public final class Application extends JFrame {
     return menu;
   }
 
+  private void openTransitionVisualizer() {
+    if (transitionVisualizer == null) {
+      transitionVisualizer = new TransitionVisualizer(this);
+    }
+
+    transitionVisualizer.requestFocus();
+    openVisualizer.setEnabled(false);
+    openVisualizer.setToolTipText("Visualizer is already open");
+  }
+
+  public void transitionVisualizerClosed() {
+    transitionVisualizer = null;
+    openVisualizer.setEnabled(true);
+    openVisualizer.setToolTipText("");
+  }
+
   private void openEditor() {
     checkEditor = new CheckEditor(Application.this);
     openEditor.setEnabled(false);
@@ -492,6 +525,10 @@ public final class Application extends JFrame {
     JMenuItem saveToTxt = new JMenuItem("Save Route as *.txt");
     file.add(saveToTxt);
     bar.add(file);
+
+    JMenu view = new JMenu("View");
+    view.add(openVisualizer);
+    bar.add(view);
 
     JMenu query = new JMenu("Query");
     addBuiltinQueries(query);
@@ -526,6 +563,10 @@ public final class Application extends JFrame {
     save.addActionListener(GuiUtil.newActionListener(this, this::saveFile));
     saveToTxt
         .addActionListener(GuiUtil.newActionListener(this, () -> routeListModel.saveAsTxt(this)));
+
+    openVisualizer
+        .addActionListener(GuiUtil.newActionListener(this, this::openTransitionVisualizer));
+
     qFromFile.addActionListener(GuiUtil.newActionListener(this, this::executeQueryFromFile));
 
     pl.addActionListener(infoListener("Purchase Logic ($)", PL_INFO));
@@ -621,6 +662,10 @@ public final class Application extends JFrame {
       }
     }
 
+    if (transitionVisualizer != null) {
+      transitionVisualizer.dispose();
+      transitionVisualizer = null;
+    }
     if (checkEditor != null) {
       checkEditor.dispose();
       checkEditor = null;

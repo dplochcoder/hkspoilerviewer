@@ -1,5 +1,6 @@
 package hollow.knight.gui;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import com.google.common.collect.ArrayListMultimap;
@@ -29,10 +30,27 @@ public final class TransitionData {
     }
   }
 
-  private static final class SceneData {
+  public static final class SceneData {
     private final String alias;
     private final ListMultimap<String, GateData> gatesByDir;
     private final Map<String, GateData> gatesByName;
+
+    private final double width;
+    private final double height;
+
+    private double calculateDimension(String... dirs) {
+      int count = Arrays.stream(dirs).mapToInt(d -> gatesByDir.get(d).size()).max().getAsInt();
+
+      return 100.0 + Math.min(count, 1) * 40.0;
+    }
+
+    private double calculateWidth() {
+      return calculateDimension("Door", "Top", "Bot");
+    }
+
+    private double calculateHeight() {
+      return calculateDimension("Left", "Right");
+    }
 
     SceneData(JsonObject obj) {
       this.alias = obj.get("Alias").getAsString();
@@ -48,6 +66,18 @@ public final class TransitionData {
           gatesByName.put(gate, data);
         }
       }
+
+      if (obj.has("Width")) {
+        this.width = obj.get("Width").getAsDouble();
+      } else {
+        this.width = calculateWidth();
+      }
+
+      if (obj.has("Height")) {
+        this.height = obj.get("Height").getAsDouble();
+      } else {
+        this.height = calculateHeight();
+      }
     }
 
     public String alias() {
@@ -56,6 +86,14 @@ public final class TransitionData {
 
     public GateData getGate(String name) {
       return gatesByName.get(name);
+    }
+
+    public double width() {
+      return width;
+    }
+
+    public double height() {
+      return height;
     }
   }
 
@@ -79,6 +117,10 @@ public final class TransitionData {
     }
 
     return scene.alias() + "[" + data.alias() + "]";
+  }
+
+  public SceneData sceneData(String scene) {
+    return scenes.get(scene);
   }
 
   public static TransitionData load() throws ParseException {
