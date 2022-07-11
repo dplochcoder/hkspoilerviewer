@@ -3,6 +3,7 @@ package hollow.knight.gui;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ListMultimap;
@@ -15,10 +16,19 @@ public final class TransitionData {
   private static final class GateData {
     private final String name;
     private final String alias;
+    private final Optional<Gate> vanillaTarget;
 
     GateData(String name, JsonObject obj) {
       this.name = name;
       this.alias = obj.get("Alias").getAsString();
+
+      if (obj.has("VanillaTarget")) {
+        JsonObject t = obj.get("VanillaTarget").getAsJsonObject();
+        Gate gate = Gate.create(t.get("Scene").getAsString(), t.get("Gate").getAsString());
+        vanillaTarget = Optional.of(gate);
+      } else {
+        vanillaTarget = Optional.empty();
+      }
     }
 
     public String name() {
@@ -27,6 +37,10 @@ public final class TransitionData {
 
     public String alias() {
       return alias;
+    }
+
+    public Optional<Gate> vanillaTarget() {
+      return vanillaTarget;
     }
   }
 

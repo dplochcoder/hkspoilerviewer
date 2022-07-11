@@ -9,11 +9,15 @@ public abstract class Gate {
 
   public abstract String gateName();
 
+  public static Gate create(String scene, String gate) {
+    return new AutoValue_Gate(scene, gate);
+  }
+
   public static Gate parse(String gate) {
     int l = gate.indexOf('[');
     int r = gate.indexOf(']');
     Verify.verify(l > 0 && l < r && r == gate.length() - 1, gate);
 
-    return new AutoValue_Gate(gate.substring(0, l), gate.substring(l + 1, r));
+    return create(gate.substring(0, l), gate.substring(l + 1, r));
   }
 }
