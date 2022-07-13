@@ -13,10 +13,13 @@ public final class SceneSelectorListModel implements ListModel<String> {
       new SynchronizedEntityManager<>();
 
   private final TransitionData transitionData;
+  private final TransitionVisualizerPlacements placements;
   private final List<String> scenes = new ArrayList<>();
 
-  public SceneSelectorListModel(TransitionData transitionData) {
+  public SceneSelectorListModel(TransitionData transitionData,
+      TransitionVisualizerPlacements placements) {
     this.transitionData = transitionData;
+    this.placements = placements;
   }
 
   public void updateScenes(List<String> newScenes) {
@@ -41,7 +44,9 @@ public final class SceneSelectorListModel implements ListModel<String> {
 
   @Override
   public String getElementAt(int index) {
-    return transitionData.sceneData(scenes.get(index)).alias();
+    String scene = scenes.get(index);
+    return transitionData.sceneData(scene).alias() + " ("
+        + placements.placementsForScene(scene).count() + ")";
   }
 
   @Override

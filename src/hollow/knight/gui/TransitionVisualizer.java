@@ -44,7 +44,8 @@ public final class TransitionVisualizer extends JFrame {
 
     this.canvas = new TransitionVisualizerCanvas(this);
 
-    this.scenesListModel = new SceneSelectorListModel(application.transitionData());
+    this.scenesListModel = new SceneSelectorListModel(application.transitionData(),
+        application.transitionVisualizerPlacements());
     this.scenesFilter = createScenesFilter();
     this.scenesList = createScenesList();
     this.scenesPane = new JScrollPane(scenesList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
@@ -109,6 +110,7 @@ public final class TransitionVisualizer extends JFrame {
           String scene = scenesListModel.getScene(scenesList.getSelectedIndex());
 
           application.transitionVisualizerPlacements().addPlacement(scene, canvas.center());
+          updateScenesList();
           repaint();
           e.consume();
         } else if (UP_DOWN_VALUES.containsKey(e.getKeyCode())) {
