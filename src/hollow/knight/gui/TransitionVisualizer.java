@@ -37,6 +37,7 @@ import hollow.knight.gui.TransitionData.SceneData;
 import hollow.knight.gui.TransitionVisualizerCanvas.CanvasEnum;
 import hollow.knight.gui.TransitionVisualizerCanvas.EditMode;
 import hollow.knight.gui.TransitionVisualizerCanvas.SnapToGrid;
+import hollow.knight.gui.TransitionVisualizerCanvas.VisibleTransitions;
 import hollow.knight.logic.RoomLabels;
 import hollow.knight.logic.StateContext;
 
@@ -254,6 +255,9 @@ public final class TransitionVisualizer extends JFrame {
     view.add(createFontSizeMenu());
     view.add(new JSeparator());
     view.add(createCanvasEnumMenu(SnapToGrid.class, "Snap to Grid", canvas::snap, canvas::setSnap));
+    view.add(new JSeparator());
+    view.add(createCanvasEnumMenu(VisibleTransitions.class, "Transitions",
+        canvas::visibleTransitions, canvas::setVisibleTransitions));
     view.add(new JSeparator());
     view.add(createVanillaPlacementsMenu());
     menu.add(view);

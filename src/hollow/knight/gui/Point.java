@@ -29,6 +29,12 @@ public final class Point {
     return new Point(x + dx, y + dy);
   }
 
+  public static Point interp(Point p1, double f, Point p2) {
+    double dx = f * (p2.x() - p1.x());
+    double dy = f * (p2.y() - p1.y());
+    return p1.translated(dx, dy);
+  }
+
   public JsonObject toJson() {
     JsonObject obj = new JsonObject();
     obj.addProperty("x", x);

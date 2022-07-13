@@ -26,7 +26,9 @@ import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import javax.swing.JPanel;
@@ -35,6 +37,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.MoreCollectors;
+import com.google.common.collect.Sets;
 import hollow.knight.gui.TransitionData.GateData;
 import hollow.knight.gui.TransitionData.SceneData;
 import hollow.knight.logic.ICDLException;
@@ -67,17 +70,13 @@ public final class TransitionVisualizerCanvas extends JPanel {
 
     private final String displayName;
 
-    EditMode(String displayName) {
+    private EditMode(String displayName) {
       this.displayName = displayName;
     }
 
     @Override
     public String displayName() {
       return displayName;
-    }
-
-    public boolean coupled() {
-      return this == COUPLED;
     }
   }
 
@@ -87,16 +86,16 @@ public final class TransitionVisualizerCanvas extends JPanel {
     private final String displayName;
     private final Optional<Integer> gridSize;
 
-    SnapToGrid(String displayName, Optional<Integer> gridSize) {
+    private SnapToGrid(String displayName, Optional<Integer> gridSize) {
       this.displayName = displayName;
       this.gridSize = gridSize;
     }
 
-    SnapToGrid(String displayName) {
+    private SnapToGrid(String displayName) {
       this(displayName, Optional.empty());
     }
 
-    SnapToGrid(String displayName, int gridSize) {
+    private SnapToGrid(String displayName, int gridSize) {
       this(displayName, Optional.of(gridSize));
     }
 
@@ -117,6 +116,21 @@ public final class TransitionVisualizerCanvas extends JPanel {
         return in;
       }
       return new Point(snapDouble(in.x()), snapDouble(in.y()));
+    }
+  }
+
+  public enum VisibleTransitions implements CanvasEnum {
+    ALL("All Transitions"), SELECTED_ONLY("Selected Scenes Only");
+
+    private final String displayName;
+
+    private VisibleTransitions(String displayName) {
+      this.displayName = displayName;
+    }
+
+    @Override
+    public String displayName() {
+      return displayName;
     }
   }
 
@@ -149,6 +163,7 @@ public final class TransitionVisualizerCanvas extends JPanel {
 
   private EditMode editMode = EditMode.COUPLED;
   private SnapToGrid snap = SnapToGrid.NONE;
+  private VisibleTransitions visibleTransitions = VisibleTransitions.ALL;
 
   public TransitionVisualizerCanvas(TransitionVisualizer parent) {
     this.parent = parent;
@@ -226,6 +241,14 @@ public final class TransitionVisualizerCanvas extends JPanel {
     this.snap = snap;
   }
 
+  public VisibleTransitions visibleTransitions() {
+    return visibleTransitions;
+  }
+
+  public void setVisibleTransitions(VisibleTransitions visibleTransitions) {
+    this.visibleTransitions = visibleTransitions;
+  }
+
   public int getFontSize() {
     return font.getSize();
   }
@@ -245,7 +268,7 @@ public final class TransitionVisualizerCanvas extends JPanel {
     Item targetItem = parent.ctx().checks().getItem(Term.create(target.termString()));
     parent.app().copyItemToCheck(targetItem, sourceCheck);
 
-    if (editMode.coupled() && !source.equals(target) && data().isSource(target)
+    if (editMode == EditMode.COUPLED && !source.equals(target) && data().isSource(target)
         && data().isTarget(source)) {
       ItemCheck targetCheck = parent.ctx().checks().getChecksAtLocation(target.termString())
           .collect(MoreCollectors.onlyElement());
@@ -592,11 +615,74 @@ public final class TransitionVisualizerCanvas extends JPanel {
     }
   }
 
+  private static final int MAX_GRADIENTS = 50;
+  private static final int GRADIENT_INTERPS = 10;
+
+  private static int interpBits(int b1, double f, int b2) {
+    return (int) (b1 + (b2 - b1) * f);
+  }
+
+  private static Color interpColor(Color c1, double f, Color c2) {
+    return new Color(interpBits(c1.getRed(), f, c2.getRed()),
+        interpBits(c1.getGreen(), f, c2.getGreen()), interpBits(c1.getBlue(), f, c2.getBlue()));
+  }
+
+  @AutoValue
+  abstract static class TransitionToDraw {
+    public abstract Point source();
+
+    public abstract Color sourceColor();
+
+    public abstract Point target();
+
+    public abstract Color targetColor();
+
+    public boolean isGradient() {
+      return !sourceColor().equals(targetColor());
+    }
+
+    private void drawInternal(Graphics2D g2d, Point p1, Point p2) {
+      g2d.drawLine((int) p1.x(), (int) p1.y(), (int) p2.x(), (int) p2.y());
+    }
+
+    public void draw(Graphics2D g2d, boolean doGradient) {
+      if (!isGradient()) {
+        g2d.setColor(sourceColor());
+        drawInternal(g2d, source(), target());
+        return;
+      }
+
+      if (doGradient) {
+        g2d.setPaint(new GradientPaint((float) source().x(), (float) source().y(), sourceColor(),
+            (float) target().x(), (float) target().y(), targetColor()));
+        drawInternal(g2d, source(), target());
+        return;
+      }
+
+      // Do an interp gradient, which is much cheaper.
+      for (int i = 0; i < GRADIENT_INTERPS; ++i) {
+        Color c = interpColor(sourceColor(), (i + 0.5) / GRADIENT_INTERPS, targetColor());
+        g2d.setColor(c);
+
+        Point p1 = Point.interp(source(), i * 1.0 / GRADIENT_INTERPS, target());
+        Point p2 = Point.interp(source(), (i + 1.0) / GRADIENT_INTERPS, target());
+        drawInternal(g2d, p1, p2);
+      }
+    }
+
+    public static TransitionToDraw create(Point source, Color sourceColor, Point target,
+        Color targetColor) {
+      return new AutoValue_TransitionVisualizerCanvas_TransitionToDraw(source, sourceColor, target,
+          targetColor);
+    }
+  }
+
   private void renderTransitions(Graphics2D g2d) throws ICDLException {
     Set<ItemCheck> transitionsToDraw = new HashSet<>();
     Set<ItemCheck> duplicates = new HashSet<>();
     parent.ctx().checks().allChecks().filter(c -> c.isTransition()).forEach(transitionsToDraw::add);
 
+    List<TransitionToDraw> toDraw = new ArrayList<>();
     for (ItemCheck transition : transitionsToDraw) {
       if (duplicates.contains(transition)) {
         continue;
@@ -614,6 +700,13 @@ public final class TransitionVisualizerCanvas extends JPanel {
         continue;
       }
 
+      if (visibleTransitions == VisibleTransitions.SELECTED_ONLY) {
+        if (Sets.intersection(sourcePlacements, currentSceneSelection).isEmpty()
+            && Sets.intersection(targetPlacements, currentSceneSelection).isEmpty()) {
+          continue;
+        }
+      }
+
       boolean symmetric = false;
       if (data().isTarget(source) && data().isSource(target)) {
         ItemCheck dupe = parent.ctx().checks().getChecksAtLocation(transition.item().term().name())
@@ -625,24 +718,21 @@ public final class TransitionVisualizerCanvas extends JPanel {
         }
       }
 
-      g2d.setStroke(new BasicStroke(5.0f));
       for (ScenePlacement s : sourcePlacements) {
         for (ScenePlacement t : targetPlacements) {
           Rect r1 = s.getTransitionRect(source.gateName(), data());
           Rect r2 = t.getTransitionRect(target.gateName(), data());
 
-          if (symmetric) {
-            g2d.setColor(sourceTransitionColor(transition, source));
-          } else {
-            g2d.setPaint(new GradientPaint((float) r1.center().x(), (float) r1.center().y(),
-                sourceTransitionColor(transition, source), (float) r2.center().x(),
-                (float) r2.center().y(), Color.red.darker()));
-          }
-          g2d.drawLine((int) r1.center().x(), (int) r1.center().y(), (int) r2.center().x(),
-              (int) r2.center().y());
+          toDraw.add(TransitionToDraw.create(r1.center(), sourceTransitionColor(transition, source),
+              r2.center(),
+              symmetric ? sourceTransitionColor(transition, source) : Color.red.darker()));
         }
       }
     }
+
+    g2d.setStroke(new BasicStroke(5.0f));
+    boolean doGradient = toDraw.stream().filter(t -> t.isGradient()).count() <= MAX_GRADIENTS;
+    toDraw.forEach(t -> t.draw(g2d, doGradient));
   }
 
   @Override
