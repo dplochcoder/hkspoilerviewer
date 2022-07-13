@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import javax.swing.BoxLayout;
@@ -198,6 +199,25 @@ public final class TransitionVisualizer extends JFrame {
     return out;
   }
 
+  private JMenuItem createVanillaPlacementsMenu() {
+    JMenuItem out = new JMenuItem("Vanilla Scene Placements");
+    out.addActionListener(GuiUtil.newActionListener(this, () -> {
+      placements().clear();
+      canvas.clear();
+      transitionData().scenes().stream().forEach(scene -> {
+        SceneData sData = transitionData().sceneData(scene);
+        Optional<Point> p = sData.vanillaPlacement();
+        if (p.isPresent()) {
+          placements().addPlacement(scene, p.get());
+        }
+
+        updateScenesList();
+        repaint();
+      });
+    }));
+    return out;
+  }
+
   private JMenuBar createMenu() {
     JMenuBar menu = new JMenuBar();
 
@@ -205,6 +225,8 @@ public final class TransitionVisualizer extends JFrame {
     view.add(createFontSizeMenu());
     view.add(new JSeparator());
     view.add(createCanvasEnumMenu(SnapToGrid.class, "Snap to Grid", canvas::snap, canvas::setSnap));
+    view.add(new JSeparator());
+    view.add(createVanillaPlacementsMenu());
     menu.add(view);
 
     JMenu edit = new JMenu("Edit");

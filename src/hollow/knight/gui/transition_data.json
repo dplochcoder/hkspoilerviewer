@@ -1,6 +1,10 @@
 {
   "Abyss_01": {
     "Alias": "City_Broken_Elevator",
+    "VanillaPlacement": {
+      "x": 3900.0,
+      "y": 6500.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -45,6 +49,10 @@
   },
   "Abyss_02": {
     "Alias": "Basin_Broken_Bridge",
+    "VanillaPlacement": {
+      "x": 3550.0,
+      "y": 7350.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -68,6 +76,10 @@
   },
   "Abyss_03": {
     "Alias": "Basin_Tram",
+    "VanillaPlacement": {
+      "x": 3150.0,
+      "y": 8150.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -98,6 +110,10 @@
   },
   "Abyss_03_b": {
     "Alias": "Deepnest_Tram",
+    "VanillaPlacement": {
+      "x": -1500.0,
+      "y": 7200.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -112,6 +128,10 @@
   },
   "Abyss_03_c": {
     "Alias": "Edge_Tram",
+    "VanillaPlacement": {
+      "x": 6050.0,
+      "y": 7650.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -135,6 +155,10 @@
   },
   "Abyss_04": {
     "Alias": "Basin_Fountain",
+    "VanillaPlacement": {
+      "x": 2950.0,
+      "y": 8750.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -176,6 +200,10 @@
   },
   "Abyss_05": {
     "Alias": "Basin_Palace_Grounds",
+    "VanillaPlacement": {
+      "x": 3400.0,
+      "y": 8750.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -199,6 +227,10 @@
   },
   "Abyss_06_Core": {
     "Alias": "Abyss_Core",
+    "VanillaPlacement": {
+      "x": 2750.0,
+      "y": 9600.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -247,6 +279,10 @@
   },
   "Abyss_08": {
     "Alias": "Abyss_Lifeblood_Core",
+    "VanillaPlacement": {
+      "x": 2200.0,
+      "y": 9550.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -261,6 +297,10 @@
   },
   "Abyss_09": {
     "Alias": "Abyss_Lighthouse_Climb",
+    "VanillaPlacement": {
+      "x": 3550.0,
+      "y": 9600.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -298,6 +338,10 @@
   },
   "Abyss_10": {
     "Alias": "Abyss_Shade_Cloak",
+    "VanillaPlacement": {
+      "x": 4000.0,
+      "y": 9600.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -319,6 +363,10 @@
   },
   "Abyss_12": {
     "Alias": "Abyss_Shriek",
+    "VanillaPlacement": {
+      "x": 2200.0,
+      "y": 9850.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -333,6 +381,10 @@
   },
   "Abyss_15": {
     "Alias": "Abyss_Birthplace",
+    "VanillaPlacement": {
+      "x": 2750.0,
+      "y": 10150.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -347,6 +399,10 @@
   },
   "Abyss_16": {
     "Alias": "Abyss_Corridor_to_Lighthouse",
+    "VanillaPlacement": {
+      "x": 3150.0,
+      "y": 9600.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -370,6 +426,10 @@
   },
   "Abyss_17": {
     "Alias": "Basin_Cloth",
+    "VanillaPlacement": {
+      "x": 2550.0,
+      "y": 8550.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -384,6 +444,10 @@
   },
   "Abyss_18": {
     "Alias": "Basin_Corridor_to_Broken_Vessel",
+    "VanillaPlacement": {
+      "x": 2200.0,
+      "y": 9000.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -407,6 +471,10 @@
   },
   "Abyss_19": {
     "Alias": "Basin_Broken_Vessel_Grub",
+    "VanillaPlacement": {
+      "x": 1600.0,
+      "y": 9000.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -446,6 +514,10 @@
   },
   "Abyss_20": {
     "Alias": "Basin_Simple_Key",
+    "VanillaPlacement": {
+      "x": 1600.0,
+      "y": 9400.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -467,6 +539,10 @@
   },
   "Abyss_21": {
     "Alias": "Basin_Monarch_Wings",
+    "VanillaPlacement": {
+      "x": 1050.0,
+      "y": 9000.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -481,6 +557,10 @@
   },
   "Abyss_22": {
     "Alias": "Basin_Hidden_Station",
+    "VanillaPlacement": {
+      "x": 4000.0,
+      "y": 8750.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -495,6 +575,10 @@
   },
   "Abyss_Lighthouse_room": {
     "Alias": "Abyss_Lighthouse",
+    "VanillaPlacement": {
+      "x": 3550.0,
+      "y": 9200.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -509,6 +593,10 @@
   },
   "Cliffs_01": {
     "Alias": "Cliffs_Main",
+    "VanillaPlacement": {
+      "x": -2750.0,
+      "y": -50.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -544,6 +632,10 @@
   },
   "Cliffs_02": {
     "Alias": "Cliffs_Gorb",
+    "VanillaPlacement": {
+      "x": -2100.0,
+      "y": -450.0
+    },
     "Gates": {
       "Door": {
         "door1": {
@@ -599,6 +691,10 @@
   },
   "Cliffs_03": {
     "Alias": "Cliffs_Stag_Nest",
+    "VanillaPlacement": {
+      "x": -2400.0,
+      "y": -550.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -613,6 +709,10 @@
   },
   "Cliffs_04": {
     "Alias": "Cliffs_Joni's_Dark",
+    "VanillaPlacement": {
+      "x": -2400.0,
+      "y": -100.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -636,6 +736,10 @@
   },
   "Cliffs_05": {
     "Alias": "Cliffs_Joni's_Pickup",
+    "VanillaPlacement": {
+      "x": -1800.0,
+      "y": -100.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -650,6 +754,10 @@
   },
   "Cliffs_06": {
     "Alias": "Cliffs_Grimm_Lantern",
+    "VanillaPlacement": {
+      "x": -2100.0,
+      "y": 50.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -664,6 +772,10 @@
   },
   "Crossroads_01": {
     "Alias": "Crossroads_Well",
+    "VanillaPlacement": {
+      "x": 50.0,
+      "y": 800.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -696,6 +808,10 @@
   },
   "Crossroads_02": {
     "Alias": "Crossroads_Outside_Temple",
+    "VanillaPlacement": {
+      "x": 400.0,
+      "y": 800.0
+    },
     "Gates": {
       "Door": {
         "door1": {
@@ -728,6 +844,10 @@
   },
   "Crossroads_03": {
     "Alias": "Crossroads_Outside_Stag",
+    "VanillaPlacement": {
+      "x": 1200.0,
+      "y": 1850.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -783,6 +903,10 @@
   },
   "Crossroads_04": {
     "Alias": "Crossroads_Gruz_Mother",
+    "VanillaPlacement": {
+      "x": 2000.0,
+      "y": 2750.0
+    },
     "Gates": {
       "Door": {
         "door_Mender_House": {
@@ -838,6 +962,10 @@
   },
   "Crossroads_05": {
     "Alias": "Crossroads_Central_Grub",
+    "VanillaPlacement": {
+      "x": 50.0,
+      "y": 1150.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -861,6 +989,10 @@
   },
   "Crossroads_06": {
     "Alias": "Crossroads_Outside_Mound",
+    "VanillaPlacement": {
+      "x": 50.0,
+      "y": 1750.0
+    },
     "Gates": {
       "Door": {
         "door1": {
@@ -893,6 +1025,10 @@
   },
   "Crossroads_07": {
     "Alias": "Crossroads_Gruzzer",
+    "VanillaPlacement": {
+      "x": -350.0,
+      "y": 900.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -946,6 +1082,10 @@
   },
   "Crossroads_08": {
     "Alias": "Crossroads_Aspid_Arena",
+    "VanillaPlacement": {
+      "x": 0.0,
+      "y": 2350.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -983,6 +1123,10 @@
   },
   "Crossroads_09": {
     "Alias": "Crossroads_Mawlek_Boss",
+    "VanillaPlacement": {
+      "x": -800.0,
+      "y": 1500.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -1006,6 +1150,10 @@
   },
   "Crossroads_10": {
     "Alias": "Crossroads_False_Knight_Arena",
+    "VanillaPlacement": {
+      "x": 400.0,
+      "y": 1750.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -1029,6 +1177,10 @@
   },
   "Crossroads_11_alt": {
     "Alias": "Crossroads_Greenpath_Entrance",
+    "VanillaPlacement": {
+      "x": -800.0,
+      "y": 900.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -1052,6 +1204,10 @@
   },
   "Crossroads_12": {
     "Alias": "Crossroads_Corridor_to_Acid_Grub",
+    "VanillaPlacement": {
+      "x": -800.0,
+      "y": 1900.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -1075,6 +1231,10 @@
   },
   "Crossroads_13": {
     "Alias": "Crossroads_Goam_Mask_Shard",
+    "VanillaPlacement": {
+      "x": 350.0,
+      "y": 2450.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -1098,6 +1258,10 @@
   },
   "Crossroads_14": {
     "Alias": "Crossroads_Outside_Myla",
+    "VanillaPlacement": {
+      "x": 1200.0,
+      "y": 750.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -1135,6 +1299,10 @@
   },
   "Crossroads_15": {
     "Alias": "Crossroads_Corridor_to_Tram",
+    "VanillaPlacement": {
+      "x": 1650.0,
+      "y": 1700.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -1158,6 +1326,10 @@
   },
   "Crossroads_16": {
     "Alias": "Crossroads_Above_Lever",
+    "VanillaPlacement": {
+      "x": 900.0,
+      "y": 1150.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -1190,6 +1362,10 @@
   },
   "Crossroads_18": {
     "Alias": "Crossroads_Fungal_Entrance",
+    "VanillaPlacement": {
+      "x": -550.0,
+      "y": 2500.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -1220,6 +1396,10 @@
   },
   "Crossroads_19": {
     "Alias": "Crossroads_Before_Gruz_Mother",
+    "VanillaPlacement": {
+      "x": 1200.0,
+      "y": 2650.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -1259,6 +1439,10 @@
   },
   "Crossroads_21": {
     "Alias": "Crossroads_Outside_False_Knight",
+    "VanillaPlacement": {
+      "x": 750.0,
+      "y": 1750.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -1291,6 +1475,10 @@
   },
   "Crossroads_22": {
     "Alias": "Crossroads_Glowing_Womb_Arena",
+    "VanillaPlacement": {
+      "x": 750.0,
+      "y": 1450.0
+    },
     "Gates": {
       "Bot": {
         "bot1": {
@@ -1305,6 +1493,10 @@
   },
   "Crossroads_25": {
     "Alias": "Crossroads_Mawlek_Entrance",
+    "VanillaPlacement": {
+      "x": -800.0,
+      "y": 1200.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -1328,6 +1520,10 @@
   },
   "Crossroads_27": {
     "Alias": "Crossroads_Outside_Tram",
+    "VanillaPlacement": {
+      "x": 2000.0,
+      "y": 1850.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -1367,6 +1563,10 @@
   },
   "Crossroads_30": {
     "Alias": "Crossroads_Hot_Spring",
+    "VanillaPlacement": {
+      "x": 350.0,
+      "y": 2100.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -1381,6 +1581,10 @@
   },
   "Crossroads_31": {
     "Alias": "Crossroads_Spike_Grub",
+    "VanillaPlacement": {
+      "x": 1650.0,
+      "y": 2000.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -1395,6 +1599,10 @@
   },
   "Crossroads_33": {
     "Alias": "Crossroads_Cornifer",
+    "VanillaPlacement": {
+      "x": -350.0,
+      "y": 1700.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -1441,6 +1649,10 @@
   },
   "Crossroads_35": {
     "Alias": "Crossroads_Acid_Grub",
+    "VanillaPlacement": {
+      "x": -1100.0,
+      "y": 1900.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -1464,6 +1676,10 @@
   },
   "Crossroads_36": {
     "Alias": "Crossroads_Mawlek_Middle",
+    "VanillaPlacement": {
+      "x": -1100.0,
+      "y": 1350.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -1485,6 +1701,10 @@
   },
   "Crossroads_37": {
     "Alias": "Crossroads_Vessel_Fragment",
+    "VanillaPlacement": {
+      "x": 150.0,
+      "y": 2900.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -1499,6 +1719,10 @@
   },
   "Crossroads_38": {
     "Alias": "Crossroads_Grubfather",
+    "VanillaPlacement": {
+      "x": -800.0,
+      "y": 600.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -1513,6 +1737,10 @@
   },
   "Crossroads_39": {
     "Alias": "Crossroads_Corridor_Right_of_Temple",
+    "VanillaPlacement": {
+      "x": 750.0,
+      "y": 800.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -1536,6 +1764,10 @@
   },
   "Crossroads_40": {
     "Alias": "Crossroads_Corridor_Right_of_Central_Grub",
+    "VanillaPlacement": {
+      "x": 400.0,
+      "y": 1150.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -1559,6 +1791,10 @@
   },
   "Crossroads_42": {
     "Alias": "Crossroads_Right_Of_Mask_Shard",
+    "VanillaPlacement": {
+      "x": 700.0,
+      "y": 2450.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -1582,6 +1818,10 @@
   },
   "Crossroads_43": {
     "Alias": "Crossroads_Corridor_to_Elevator",
+    "VanillaPlacement": {
+      "x": 750.0,
+      "y": 2900.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -1605,6 +1845,10 @@
   },
   "Crossroads_45": {
     "Alias": "Crossroads_Myla",
+    "VanillaPlacement": {
+      "x": 1650.0,
+      "y": 800.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -1628,6 +1872,10 @@
   },
   "Crossroads_46": {
     "Alias": "Crossroads_Tram",
+    "VanillaPlacement": {
+      "x": 2350.0,
+      "y": 1850.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -1642,6 +1890,10 @@
   },
   "Crossroads_46b": {
     "Alias": "Grounds_Tram",
+    "VanillaPlacement": {
+      "x": 3300.0,
+      "y": 1800.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -1656,6 +1908,10 @@
   },
   "Crossroads_47": {
     "Alias": "Crossroads_Stag",
+    "VanillaPlacement": {
+      "x": 750.0,
+      "y": 2050.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -1670,6 +1926,10 @@
   },
   "Crossroads_48": {
     "Alias": "Crossroads_Guarded_Grub",
+    "VanillaPlacement": {
+      "x": 1650.0,
+      "y": 550.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -1684,6 +1944,10 @@
   },
   "Crossroads_49": {
     "Alias": "Crossroads_Elevator",
+    "VanillaPlacement": {
+      "x": 450.0,
+      "y": 2900.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -1707,6 +1971,10 @@
   },
   "Crossroads_49b": {
     "Alias": "City_Left_Elevator",
+    "VanillaPlacement": {
+      "x": 1250.0,
+      "y": 3600.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -1721,6 +1989,10 @@
   },
   "Crossroads_50": {
     "Alias": "Grounds_Blue_Lake",
+    "VanillaPlacement": {
+      "x": 2900.0,
+      "y": 2600.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -1744,6 +2016,10 @@
   },
   "Crossroads_52": {
     "Alias": "Crossroads_Goam_Journal",
+    "VanillaPlacement": {
+      "x": -250.0,
+      "y": 2750.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -1758,6 +2034,10 @@
   },
   "Crossroads_ShamanTemple": {
     "Alias": "Crossroads_Ancestral_Mound",
+    "VanillaPlacement": {
+      "x": 50.0,
+      "y": 1450.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -1772,6 +2052,10 @@
   },
   "Deepnest_01": {
     "Alias": "Fungal_Deepnest_Fall",
+    "VanillaPlacement": {
+      "x": -2250.0,
+      "y": 4850.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -1811,6 +2095,10 @@
   },
   "Deepnest_01b": {
     "Alias": "Deepnest_Upper_Cornifer",
+    "VanillaPlacement": {
+      "x": -2250.0,
+      "y": 5650.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -1853,6 +2141,10 @@
   },
   "Deepnest_02": {
     "Alias": "Deepnest_Outside_Mimics",
+    "VanillaPlacement": {
+      "x": -1950.0,
+      "y": 5650.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -1883,6 +2175,10 @@
   },
   "Deepnest_03": {
     "Alias": "Deepnest_Left_Of_Hot_Spring",
+    "VanillaPlacement": {
+      "x": -2700.0,
+      "y": 7150.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -1922,6 +2218,10 @@
   },
   "Deepnest_09": {
     "Alias": "Deepnest_Distant_Village_Stag",
+    "VanillaPlacement": {
+      "x": -4300.0,
+      "y": 7000.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -1936,6 +2236,10 @@
   },
   "Deepnest_10": {
     "Alias": "Deepnest_Distant_Village",
+    "VanillaPlacement": {
+      "x": -4850.0,
+      "y": 7300.0
+    },
     "Gates": {
       "Door": {
         "door2": {
@@ -1980,6 +2284,10 @@
   },
   "Deepnest_14": {
     "Alias": "Deepnest_Failed_Tramway_Bench",
+    "VanillaPlacement": {
+      "x": -2700.0,
+      "y": 6400.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -2019,6 +2327,10 @@
   },
   "Deepnest_16": {
     "Alias": "Deepnest_After_Lower_Cornifer",
+    "VanillaPlacement": {
+      "x": -1500.0,
+      "y": 5950.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -2042,6 +2354,10 @@
   },
   "Deepnest_17": {
     "Alias": "Deepnest_Garpede_Corridor_Below_Cornifer",
+    "VanillaPlacement": {
+      "x": -2250.0,
+      "y": 6600.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -2083,6 +2399,10 @@
   },
   "Deepnest_26": {
     "Alias": "Deepnest_Failed_Tramway_Lifeblood",
+    "VanillaPlacement": {
+      "x": -3050.0,
+      "y": 6400.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -2122,6 +2442,10 @@
   },
   "Deepnest_26b": {
     "Alias": "Deepnest_Tram_Pass",
+    "VanillaPlacement": {
+      "x": -3350.0,
+      "y": 6400.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -2143,6 +2467,10 @@
   },
   "Deepnest_30": {
     "Alias": "Deepnest_Hot_Spring",
+    "VanillaPlacement": {
+      "x": -2250.0,
+      "y": 7200.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -2175,6 +2503,10 @@
   },
   "Deepnest_31": {
     "Alias": "Deepnest_Nosk_Corridor",
+    "VanillaPlacement": {
+      "x": -3050.0,
+      "y": 7550.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -2196,6 +2528,10 @@
   },
   "Deepnest_32": {
     "Alias": "Deepnest_Nosk_Arena",
+    "VanillaPlacement": {
+      "x": -2700.0,
+      "y": 7600.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -2210,6 +2546,10 @@
   },
   "Deepnest_33": {
     "Alias": "Deepnest_Zote_Arena",
+    "VanillaPlacement": {
+      "x": -2700.0,
+      "y": 6750.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -2240,6 +2580,10 @@
   },
   "Deepnest_34": {
     "Alias": "Deepnest_First_Devout",
+    "VanillaPlacement": {
+      "x": -3050.0,
+      "y": 7200.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -2272,6 +2616,10 @@
   },
   "Deepnest_35": {
     "Alias": "Deepnest_Outside_Galien",
+    "VanillaPlacement": {
+      "x": -3050.0,
+      "y": 6800.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -2304,6 +2652,10 @@
   },
   "Deepnest_36": {
     "Alias": "Deepnest_Mimics",
+    "VanillaPlacement": {
+      "x": -1650.0,
+      "y": 5650.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -2318,6 +2670,10 @@
   },
   "Deepnest_37": {
     "Alias": "Deepnest_Corridor_to_Tram",
+    "VanillaPlacement": {
+      "x": -1850.0,
+      "y": 7200.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -2359,6 +2715,10 @@
   },
   "Deepnest_38": {
     "Alias": "Deepnest_Vessel_Fragment",
+    "VanillaPlacement": {
+      "x": -1850.0,
+      "y": 6850.0
+    },
     "Gates": {
       "Bot": {
         "bot1": {
@@ -2373,6 +2733,10 @@
   },
   "Deepnest_39": {
     "Alias": "Deepnest_Whispering_Root",
+    "VanillaPlacement": {
+      "x": -3800.0,
+      "y": 7300.0
+    },
     "Gates": {
       "Door": {
         "door1": {
@@ -2414,6 +2778,10 @@
   },
   "Deepnest_40": {
     "Alias": "Deepnest_Galien_Arena",
+    "VanillaPlacement": {
+      "x": -3350.0,
+      "y": 6800.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -2428,6 +2796,10 @@
   },
   "Deepnest_41": {
     "Alias": "Deepnest_Midwife",
+    "VanillaPlacement": {
+      "x": -4300.0,
+      "y": 7300.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -2458,6 +2830,10 @@
   },
   "Deepnest_42": {
     "Alias": "Deepnest_Outside_Mask_Maker",
+    "VanillaPlacement": {
+      "x": -4000.0,
+      "y": 6300.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -2490,6 +2866,10 @@
   },
   "Deepnest_43": {
     "Alias": "Gardens_Corridor_To_Deepnest",
+    "VanillaPlacement": {
+      "x": -4050.0,
+      "y": 4900.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -2522,6 +2902,10 @@
   },
   "Deepnest_44": {
     "Alias": "Deepnest_Sharp_Shadow",
+    "VanillaPlacement": {
+      "x": -1850.0,
+      "y": 7550.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -2536,6 +2920,10 @@
   },
   "Deepnest_45_v02": {
     "Alias": "Deepnest_Weaver's_Den",
+    "VanillaPlacement": {
+      "x": -3600.0,
+      "y": 7100.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -2550,6 +2938,10 @@
   },
   "Deepnest_East_01": {
     "Alias": "Edge_Left_Of_Hive",
+    "VanillaPlacement": {
+      "x": 6050.0,
+      "y": 7050.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -2582,6 +2974,10 @@
   },
   "Deepnest_East_02": {
     "Alias": "Edge_Above_Hive",
+    "VanillaPlacement": {
+      "x": 6100.0,
+      "y": 6400.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -2621,6 +3017,10 @@
   },
   "Deepnest_East_03": {
     "Alias": "Edge_Entrance",
+    "VanillaPlacement": {
+      "x": 6750.0,
+      "y": 5750.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -2670,6 +3070,10 @@
   },
   "Deepnest_East_04": {
     "Alias": "Edge_Bardoon",
+    "VanillaPlacement": {
+      "x": 7300.0,
+      "y": 5000.0
+    },
     "Gates": {
       "Left": {
         "left2": {
@@ -2707,6 +3111,10 @@
   },
   "Deepnest_East_06": {
     "Alias": "Edge_Outside_Oro",
+    "VanillaPlacement": {
+      "x": 7700.0,
+      "y": 5850.0
+    },
     "Gates": {
       "Door": {
         "door1": {
@@ -2757,6 +3165,10 @@
   },
   "Deepnest_East_07": {
     "Alias": "Edge_Whispering_Root",
+    "VanillaPlacement": {
+      "x": 6750.0,
+      "y": 4500.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -2803,6 +3215,10 @@
   },
   "Deepnest_East_08": {
     "Alias": "Edge_Great_Hopper_Idol",
+    "VanillaPlacement": {
+      "x": 6250.0,
+      "y": 4000.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -2826,6 +3242,10 @@
   },
   "Deepnest_East_09": {
     "Alias": "Edge_Corridor_Outside_Colosseum",
+    "VanillaPlacement": {
+      "x": 6250.0,
+      "y": 3550.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -2858,6 +3278,10 @@
   },
   "Deepnest_East_10": {
     "Alias": "Edge_Markoth_Arena",
+    "VanillaPlacement": {
+      "x": 7950.0,
+      "y": 5350.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -2872,6 +3296,10 @@
   },
   "Deepnest_East_11": {
     "Alias": "Edge_Below_Camp_Bench",
+    "VanillaPlacement": {
+      "x": 7700.0,
+      "y": 5150.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -2913,6 +3341,10 @@
   },
   "Deepnest_East_12": {
     "Alias": "Edge_Hornet_Sentinel_Corridor",
+    "VanillaPlacement": {
+      "x": 8100.0,
+      "y": 5050.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -2936,6 +3368,10 @@
   },
   "Deepnest_East_13": {
     "Alias": "Edge_Camp_Bench",
+    "VanillaPlacement": {
+      "x": 7800.0,
+      "y": 4800.0
+    },
     "Gates": {
       "Bot": {
         "bot1": {
@@ -2950,6 +3386,10 @@
   },
   "Deepnest_East_14": {
     "Alias": "Edge_Below_Oro",
+    "VanillaPlacement": {
+      "x": 8200.0,
+      "y": 6250.0
+    },
     "Gates": {
       "Door": {
         "door1": {
@@ -2982,6 +3422,10 @@
   },
   "Deepnest_East_14b": {
     "Alias": "Edge_Quick_Slash",
+    "VanillaPlacement": {
+      "x": 7700.0,
+      "y": 6250.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -3005,6 +3449,10 @@
   },
   "Deepnest_East_15": {
     "Alias": "Edge_Lifeblood",
+    "VanillaPlacement": {
+      "x": 7550.0,
+      "y": 4700.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -3019,6 +3467,10 @@
   },
   "Deepnest_East_16": {
     "Alias": "Edge_Oro_Scarecrow",
+    "VanillaPlacement": {
+      "x": 8200.0,
+      "y": 5850.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -3042,6 +3494,10 @@
   },
   "Deepnest_East_17": {
     "Alias": "Edge_420_Geo_Rock",
+    "VanillaPlacement": {
+      "x": 8200.0,
+      "y": 6700.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -3056,6 +3512,10 @@
   },
   "Deepnest_East_18": {
     "Alias": "Edge_Outside_Markoth",
+    "VanillaPlacement": {
+      "x": 7700.0,
+      "y": 5500.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -3088,6 +3548,10 @@
   },
   "Deepnest_East_Hornet": {
     "Alias": "Edge_Hornet_Sentinel_Arena",
+    "VanillaPlacement": {
+      "x": 8700.0,
+      "y": 5100.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -3109,6 +3573,10 @@
   },
   "Deepnest_Spider_Town": {
     "Alias": "Deepnest_Beast's_Den",
+    "VanillaPlacement": {
+      "x": -4650.0,
+      "y": 6750.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -3175,6 +3643,10 @@
   },
   "Fungus1_01": {
     "Alias": "Greenpath_Entrance",
+    "VanillaPlacement": {
+      "x": -1400.0,
+      "y": 1050.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -3198,6 +3670,10 @@
   },
   "Fungus1_01b": {
     "Alias": "Greenpath_Waterfall_Bench",
+    "VanillaPlacement": {
+      "x": -1750.0,
+      "y": 1050.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -3221,6 +3697,10 @@
   },
   "Fungus1_02": {
     "Alias": "Greenpath_First_Hornet_Sighting",
+    "VanillaPlacement": {
+      "x": -2100.0,
+      "y": 1050.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -3251,6 +3731,10 @@
   },
   "Fungus1_03": {
     "Alias": "Greenpath_Storerooms",
+    "VanillaPlacement": {
+      "x": -2750.0,
+      "y": 1200.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -3283,6 +3767,10 @@
   },
   "Fungus1_04": {
     "Alias": "Greenpath_Hornet",
+    "VanillaPlacement": {
+      "x": -3700.0,
+      "y": 950.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -3306,6 +3794,10 @@
   },
   "Fungus1_05": {
     "Alias": "Greenpath_Outside_Thorns",
+    "VanillaPlacement": {
+      "x": -2750.0,
+      "y": 1500.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -3338,6 +3830,10 @@
   },
   "Fungus1_06": {
     "Alias": "Greenpath_Cornifer",
+    "VanillaPlacement": {
+      "x": -1850.0,
+      "y": 1400.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -3361,6 +3857,10 @@
   },
   "Fungus1_07": {
     "Alias": "Greenpath_Outside_Hunter",
+    "VanillaPlacement": {
+      "x": -2100.0,
+      "y": 1750.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -3393,6 +3893,10 @@
   },
   "Fungus1_08": {
     "Alias": "Greenpath_Hunter",
+    "VanillaPlacement": {
+      "x": -1600.0,
+      "y": 1750.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -3407,6 +3911,10 @@
   },
   "Fungus1_09": {
     "Alias": "Greenpath_Sheo_Gauntlet",
+    "VanillaPlacement": {
+      "x": -3750.0,
+      "y": 1800.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -3430,6 +3938,10 @@
   },
   "Fungus1_10": {
     "Alias": "Greenpath_Acid_Bridge",
+    "VanillaPlacement": {
+      "x": -2750.0,
+      "y": 1800.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -3462,6 +3974,10 @@
   },
   "Fungus1_11": {
     "Alias": "Greenpath_Above_Fog_Canyon",
+    "VanillaPlacement": {
+      "x": -2450.0,
+      "y": 2150.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -3510,6 +4026,10 @@
   },
   "Fungus1_12": {
     "Alias": "Greenpath_MMC_Corridor",
+    "VanillaPlacement": {
+      "x": -3100.0,
+      "y": 2150.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -3533,6 +4053,10 @@
   },
   "Fungus1_13": {
     "Alias": "Greenpath_Whispering_Root",
+    "VanillaPlacement": {
+      "x": -3450.0,
+      "y": 2150.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -3556,6 +4080,10 @@
   },
   "Fungus1_14": {
     "Alias": "Greenpath_Thorns_of_Agony",
+    "VanillaPlacement": {
+      "x": -2450.0,
+      "y": 1500.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -3570,6 +4098,10 @@
   },
   "Fungus1_15": {
     "Alias": "Greenpath_Outside_Sheo",
+    "VanillaPlacement": {
+      "x": -4250.0,
+      "y": 1800.0
+    },
     "Gates": {
       "Door": {
         "door1": {
@@ -3593,6 +4125,10 @@
   },
   "Fungus1_16_alt": {
     "Alias": "Greenpath_Stag",
+    "VanillaPlacement": {
+      "x": -3750.0,
+      "y": 1350.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -3607,6 +4143,10 @@
   },
   "Fungus1_17": {
     "Alias": "Greenpath_Charger_Corridor",
+    "VanillaPlacement": {
+      "x": -2450.0,
+      "y": 1200.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -3630,6 +4170,10 @@
   },
   "Fungus1_19": {
     "Alias": "Greenpath_Above_Sanctuary_Bench",
+    "VanillaPlacement": {
+      "x": -2450.0,
+      "y": 1800.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -3662,6 +4206,10 @@
   },
   "Fungus1_20_v02": {
     "Alias": "Greenpath_Vengefly_King",
+    "VanillaPlacement": {
+      "x": -3150.0,
+      "y": 500.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -3692,6 +4240,10 @@
   },
   "Fungus1_21": {
     "Alias": "Greenpath_Outside_Hornet",
+    "VanillaPlacement": {
+      "x": -3400.0,
+      "y": 950.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -3733,6 +4285,10 @@
   },
   "Fungus1_22": {
     "Alias": "Greenpath_Outside_Stag",
+    "VanillaPlacement": {
+      "x": -3400.0,
+      "y": 1350.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -3765,6 +4321,10 @@
   },
   "Fungus1_23": {
     "Alias": "Gardens_First_Loodle_Corridor",
+    "VanillaPlacement": {
+      "x": -4750.0,
+      "y": 3550.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -3788,6 +4348,10 @@
   },
   "Fungus1_24": {
     "Alias": "Gardens_Cornifer",
+    "VanillaPlacement": {
+      "x": -3050.0,
+      "y": 4400.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -3802,6 +4366,10 @@
   },
   "Fungus1_25": {
     "Alias": "Greenpath_Corridor_to_Unn",
+    "VanillaPlacement": {
+      "x": -4000.0,
+      "y": 950.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -3825,6 +4393,10 @@
   },
   "Fungus1_26": {
     "Alias": "Greenpath_Lake_Of_Unn",
+    "VanillaPlacement": {
+      "x": -4300.0,
+      "y": 950.0
+    },
     "Gates": {
       "Door": {
         "door_SlugShrine": {
@@ -3857,6 +4429,10 @@
   },
   "Fungus1_28": {
     "Alias": "Cliffs_Baldur's_Shell",
+    "VanillaPlacement": {
+      "x": -2400.0,
+      "y": 300.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -3878,6 +4454,10 @@
   },
   "Fungus1_29": {
     "Alias": "Greenpath_Massive_Moss_Charger",
+    "VanillaPlacement": {
+      "x": -2800.0,
+      "y": 2150.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -3901,6 +4481,10 @@
   },
   "Fungus1_30": {
     "Alias": "Greenpath_Below_Toll_Bench",
+    "VanillaPlacement": {
+      "x": -3250.0,
+      "y": 1800.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -3940,6 +4524,10 @@
   },
   "Fungus1_31": {
     "Alias": "Greenpath_Toll",
+    "VanillaPlacement": {
+      "x": -3100.0,
+      "y": 1350.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -3972,6 +4560,10 @@
   },
   "Fungus1_32": {
     "Alias": "Greenpath_Moss_Knight_Arena",
+    "VanillaPlacement": {
+      "x": -3100.0,
+      "y": 950.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -4004,6 +4596,10 @@
   },
   "Fungus1_34": {
     "Alias": "Greenpath_Stone_Sanctuary_Entrance",
+    "VanillaPlacement": {
+      "x": -2150.0,
+      "y": 2300.0
+    },
     "Gates": {
       "Door": {
         "door1": {
@@ -4027,6 +4623,10 @@
   },
   "Fungus1_35": {
     "Alias": "Greenpath_Stone_Sanctuary",
+    "VanillaPlacement": {
+      "x": -1850.0,
+      "y": 2300.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -4050,6 +4650,10 @@
   },
   "Fungus1_36": {
     "Alias": "Greenpath_Stone_Sanctuary_Mask_Shard",
+    "VanillaPlacement": {
+      "x": -1550.0,
+      "y": 2300.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -4064,6 +4668,10 @@
   },
   "Fungus1_37": {
     "Alias": "Greenpath_Sanctuary_Bench",
+    "VanillaPlacement": {
+      "x": -2150.0,
+      "y": 2050.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -4078,6 +4686,10 @@
   },
   "Fungus1_Slug": {
     "Alias": "Greenpath_Unn",
+    "VanillaPlacement": {
+      "x": -4600.0,
+      "y": 950.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -4092,6 +4704,10 @@
   },
   "Fungus2_01": {
     "Alias": "Fungal_Queen's_Station",
+    "VanillaPlacement": {
+      "x": -1650.0,
+      "y": 4200.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -4129,6 +4745,10 @@
   },
   "Fungus2_02": {
     "Alias": "Fungal_Queen's_Stag",
+    "VanillaPlacement": {
+      "x": -2000.0,
+      "y": 4450.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -4143,6 +4763,10 @@
   },
   "Fungus2_03": {
     "Alias": "Fungal_Outside_Queen's",
+    "VanillaPlacement": {
+      "x": -1250.0,
+      "y": 3900.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -4175,6 +4799,10 @@
   },
   "Fungus2_04": {
     "Alias": "Fungal_Below_Ogres",
+    "VanillaPlacement": {
+      "x": -800.0,
+      "y": 3750.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -4214,6 +4842,10 @@
   },
   "Fungus2_05": {
     "Alias": "Fungal_Shrumal_Ogres",
+    "VanillaPlacement": {
+      "x": -800.0,
+      "y": 3400.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -4237,6 +4869,10 @@
   },
   "Fungus2_06": {
     "Alias": "Fungal_Outside_Leg_Eater",
+    "VanillaPlacement": {
+      "x": -550.0,
+      "y": 3200.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -4283,6 +4919,10 @@
   },
   "Fungus2_07": {
     "Alias": "Fungal_Shrumal_Warrior_Acid_Bridge",
+    "VanillaPlacement": {
+      "x": 100.0,
+      "y": 3350.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -4306,6 +4946,10 @@
   },
   "Fungus2_08": {
     "Alias": "Fungal_Outside_Elder_Hu",
+    "VanillaPlacement": {
+      "x": 450.0,
+      "y": 3500.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -4336,6 +4980,10 @@
   },
   "Fungus2_09": {
     "Alias": "Fungal_Cloth_Corridor",
+    "VanillaPlacement": {
+      "x": 100.0,
+      "y": 3650.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -4359,6 +5007,10 @@
   },
   "Fungus2_10": {
     "Alias": "Fungal_Left_Of_Pilgrim's_Way",
+    "VanillaPlacement": {
+      "x": -200.0,
+      "y": 3750.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -4389,6 +5041,10 @@
   },
   "Fungus2_11": {
     "Alias": "Fungal_Epogo",
+    "VanillaPlacement": {
+      "x": -200.0,
+      "y": 4200.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -4428,6 +5084,10 @@
   },
   "Fungus2_12": {
     "Alias": "Fungal_Mantis_Corridor",
+    "VanillaPlacement": {
+      "x": 100.0,
+      "y": 4300.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -4451,6 +5111,10 @@
   },
   "Fungus2_13": {
     "Alias": "Fungal_Bretta_Bench",
+    "VanillaPlacement": {
+      "x": 100.0,
+      "y": 5200.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -4481,6 +5145,10 @@
   },
   "Fungus2_14": {
     "Alias": "Fungal_Mantis_Village",
+    "VanillaPlacement": {
+      "x": -550.0,
+      "y": 5150.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -4513,6 +5181,10 @@
   },
   "Fungus2_15": {
     "Alias": "Fungal_Mantis_Lords",
+    "VanillaPlacement": {
+      "x": -600.0,
+      "y": 5800.0
+    },
     "Gates": {
       "Top": {
         "top3": {
@@ -4545,6 +5217,10 @@
   },
   "Fungus2_17": {
     "Alias": "Fungal_Above_Mantis_Village",
+    "VanillaPlacement": {
+      "x": -550.0,
+      "y": 4450.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -4577,6 +5253,10 @@
   },
   "Fungus2_18": {
     "Alias": "Fungal_Cornifer",
+    "VanillaPlacement": {
+      "x": -1300.0,
+      "y": 4250.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -4609,6 +5289,10 @@
   },
   "Fungus2_19": {
     "Alias": "Fungal_Right_Of_Spore_Shroom",
+    "VanillaPlacement": {
+      "x": -1300.0,
+      "y": 4850.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -4632,6 +5316,10 @@
   },
   "Fungus2_20": {
     "Alias": "Fungal_Spore_Shroom",
+    "VanillaPlacement": {
+      "x": -1750.0,
+      "y": 4850.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -4655,6 +5343,10 @@
   },
   "Fungus2_21": {
     "Alias": "Fungal_Pilgrim's_Way",
+    "VanillaPlacement": {
+      "x": 500.0,
+      "y": 4150.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -4678,6 +5370,10 @@
   },
   "Fungus2_23": {
     "Alias": "Fungal_Dashmaster",
+    "VanillaPlacement": {
+      "x": -200.0,
+      "y": 5400.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -4699,6 +5395,10 @@
   },
   "Fungus2_25": {
     "Alias": "Deepnest_Lower_Cornifer",
+    "VanillaPlacement": {
+      "x": -1200.0,
+      "y": 6300.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -4725,6 +5425,10 @@
   },
   "Fungus2_26": {
     "Alias": "Fungal_Leg_Eater",
+    "VanillaPlacement": {
+      "x": -300.0,
+      "y": 3050.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -4739,6 +5443,10 @@
   },
   "Fungus2_28": {
     "Alias": "Fungal_Shrumal_Warrior_Loop",
+    "VanillaPlacement": {
+      "x": -500.0,
+      "y": 3750.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -4760,6 +5468,10 @@
   },
   "Fungus2_29": {
     "Alias": "Fungal_Core_Upper",
+    "VanillaPlacement": {
+      "x": -950.0,
+      "y": 4450.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -4783,6 +5495,10 @@
   },
   "Fungus2_30": {
     "Alias": "Fungal_Core_Lower",
+    "VanillaPlacement": {
+      "x": -950.0,
+      "y": 5400.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -4806,6 +5522,10 @@
   },
   "Fungus2_31": {
     "Alias": "Fungal_Mantis_Rewards",
+    "VanillaPlacement": {
+      "x": -200.0,
+      "y": 5800.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -4820,6 +5540,10 @@
   },
   "Fungus2_32": {
     "Alias": "Fungal_Elder_Hu",
+    "VanillaPlacement": {
+      "x": 800.0,
+      "y": 3500.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -4834,6 +5558,10 @@
   },
   "Fungus2_33": {
     "Alias": "Fungal_Leg_Eater_Root",
+    "VanillaPlacement": {
+      "x": -800.0,
+      "y": 3050.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -4857,6 +5585,10 @@
   },
   "Fungus2_34": {
     "Alias": "Fungal_Willoh",
+    "VanillaPlacement": {
+      "x": -2000.0,
+      "y": 4200.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -4871,6 +5603,10 @@
   },
   "Fungus3_01": {
     "Alias": "Fog_Upper_West_Tall",
+    "VanillaPlacement": {
+      "x": -2550.0,
+      "y": 3000.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -4910,6 +5646,10 @@
   },
   "Fungus3_02": {
     "Alias": "Fog_Lower_West_Tall",
+    "VanillaPlacement": {
+      "x": -2200.0,
+      "y": 3500.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -4954,6 +5694,10 @@
   },
   "Fungus3_03": {
     "Alias": "Fog_Queen's_Gardens_Acid_Entrance",
+    "VanillaPlacement": {
+      "x": -2550.0,
+      "y": 3300.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -4977,6 +5721,10 @@
   },
   "Fungus3_04": {
     "Alias": "Gardens_Before_Petra_Arena",
+    "VanillaPlacement": {
+      "x": -3850.0,
+      "y": 3800.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -5014,6 +5762,10 @@
   },
   "Fungus3_05": {
     "Alias": "Gardens_Petra_Arena",
+    "VanillaPlacement": {
+      "x": -3450.0,
+      "y": 4450.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -5044,6 +5796,10 @@
   },
   "Fungus3_08": {
     "Alias": "Gardens_Lower_Petra_Corridor",
+    "VanillaPlacement": {
+      "x": -3650.0,
+      "y": 4900.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -5076,6 +5832,10 @@
   },
   "Fungus3_10": {
     "Alias": "Gardens_Main_Arena",
+    "VanillaPlacement": {
+      "x": -4300.0,
+      "y": 4350.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -5099,6 +5859,10 @@
   },
   "Fungus3_11": {
     "Alias": "Gardens_Whispering_Root",
+    "VanillaPlacement": {
+      "x": -3050.0,
+      "y": 4850.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -5129,6 +5893,10 @@
   },
   "Fungus3_13": {
     "Alias": "Gardens_Outside_Stag",
+    "VanillaPlacement": {
+      "x": -4300.0,
+      "y": 3900.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -5175,6 +5943,10 @@
   },
   "Fungus3_21": {
     "Alias": "Gardens_Corridor_to_Traitor_Lord",
+    "VanillaPlacement": {
+      "x": -4200.0,
+      "y": 3150.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -5198,6 +5970,10 @@
   },
   "Fungus3_22": {
     "Alias": "Gardens_Upper_Grub",
+    "VanillaPlacement": {
+      "x": -4200.0,
+      "y": 2600.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -5230,6 +6006,10 @@
   },
   "Fungus3_23": {
     "Alias": "Gardens_Traitor_Lord_Arena",
+    "VanillaPlacement": {
+      "x": -4750.0,
+      "y": 3000.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -5253,6 +6033,10 @@
   },
   "Fungus3_24": {
     "Alias": "Fog_Corridor_to_Overgrown_Mound",
+    "VanillaPlacement": {
+      "x": -2850.0,
+      "y": 3000.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -5285,6 +6069,10 @@
   },
   "Fungus3_25": {
     "Alias": "Fog_Cornifer",
+    "VanillaPlacement": {
+      "x": -2050.0,
+      "y": 2950.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -5308,6 +6096,10 @@
   },
   "Fungus3_25b": {
     "Alias": "Fog_Corridor_to_Cornifer",
+    "VanillaPlacement": {
+      "x": -1600.0,
+      "y": 2950.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -5331,6 +6123,10 @@
   },
   "Fungus3_26": {
     "Alias": "Fog_East_Tall",
+    "VanillaPlacement": {
+      "x": -1100.0,
+      "y": 3050.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -5377,6 +6173,10 @@
   },
   "Fungus3_27": {
     "Alias": "Fog_Corridor_to_Archives",
+    "VanillaPlacement": {
+      "x": -1400.0,
+      "y": 3300.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -5400,6 +6200,10 @@
   },
   "Fungus3_28": {
     "Alias": "Fog_Charm_Notch",
+    "VanillaPlacement": {
+      "x": -1350.0,
+      "y": 2700.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -5414,6 +6218,10 @@
   },
   "Fungus3_30": {
     "Alias": "Fog_Lifeblood",
+    "VanillaPlacement": {
+      "x": -2850.0,
+      "y": 2650.0
+    },
     "Gates": {
       "Bot": {
         "bot1": {
@@ -5428,6 +6236,10 @@
   },
   "Fungus3_34": {
     "Alias": "Gardens_Entrance",
+    "VanillaPlacement": {
+      "x": -3200.0,
+      "y": 3600.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -5460,6 +6272,10 @@
   },
   "Fungus3_35": {
     "Alias": "Fog_Millibelle",
+    "VanillaPlacement": {
+      "x": -2550.0,
+      "y": 3550.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -5474,6 +6290,10 @@
   },
   "Fungus3_39": {
     "Alias": "Gardens_Moss_Prophet",
+    "VanillaPlacement": {
+      "x": -2700.0,
+      "y": 4850.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -5497,6 +6317,10 @@
   },
   "Fungus3_40": {
     "Alias": "Gardens_Gardens_Stag",
+    "VanillaPlacement": {
+      "x": -5300.0,
+      "y": 4400.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -5520,6 +6344,10 @@
   },
   "Fungus3_44": {
     "Alias": "Fog_Overgrown_Mound_Entrance",
+    "VanillaPlacement": {
+      "x": -3200.0,
+      "y": 3000.0
+    },
     "Gates": {
       "Door": {
         "door1": {
@@ -5552,6 +6380,10 @@
   },
   "Fungus3_47": {
     "Alias": "Fog_Archives_Entrance",
+    "VanillaPlacement": {
+      "x": -1800.0,
+      "y": 3300.0
+    },
     "Gates": {
       "Door": {
         "door1": {
@@ -5584,6 +6416,10 @@
   },
   "Fungus3_48": {
     "Alias": "Gardens_Outside_White_Lady",
+    "VanillaPlacement": {
+      "x": -5300.0,
+      "y": 3250.0
+    },
     "Gates": {
       "Door": {
         "door1": {
@@ -5623,6 +6459,10 @@
   },
   "Fungus3_49": {
     "Alias": "Gardens_Traitor's_Child's_Grave",
+    "VanillaPlacement": {
+      "x": -4750.0,
+      "y": 3900.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -5637,6 +6477,10 @@
   },
   "Fungus3_50": {
     "Alias": "Gardens_Toll_Bench",
+    "VanillaPlacement": {
+      "x": -4400.0,
+      "y": 4900.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -5651,6 +6495,10 @@
   },
   "Fungus3_archive": {
     "Alias": "Fog_Archives_Bench",
+    "VanillaPlacement": {
+      "x": -1700.0,
+      "y": 3550.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -5674,6 +6522,10 @@
   },
   "Fungus3_archive_02": {
     "Alias": "Fog_Uumuu_Arena",
+    "VanillaPlacement": {
+      "x": -1700.0,
+      "y": 3800.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -5704,6 +6556,10 @@
   },
   "GG_Lurker": {
     "Alias": "Edge_Pale_Lurker",
+    "VanillaPlacement": {
+      "x": 8100.0,
+      "y": 3550.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -5723,6 +6579,10 @@
   },
   "GG_Pipeway": {
     "Alias": "Waterways_Flukemunga_Corridor",
+    "VanillaPlacement": {
+      "x": 1900.0,
+      "y": 6700.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -5750,6 +6610,10 @@
   },
   "GG_Waterways": {
     "Alias": "Waterways_Junk_Pit",
+    "VanillaPlacement": {
+      "x": 1000.0,
+      "y": 6850.0
+    },
     "Gates": {
       "Door": {
         "door1": {
@@ -5777,6 +6641,10 @@
   },
   "Grimm_Divine": {
     "Alias": "Grimm_Divine",
+    "VanillaPlacement": {
+      "x": -889.2068402282989,
+      "y": -456.39995818506964
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -5791,6 +6659,10 @@
   },
   "Grimm_Main_Tent": {
     "Alias": "Grimm_Tent",
+    "VanillaPlacement": {
+      "x": -550.0,
+      "y": -450.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -5809,6 +6681,10 @@
   },
   "Hive_01": {
     "Alias": "Hive_Entrance_And_Bench",
+    "VanillaPlacement": {
+      "x": 6700.0,
+      "y": 7650.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -5839,6 +6715,10 @@
   },
   "Hive_02": {
     "Alias": "Hive_Whispering_Root",
+    "VanillaPlacement": {
+      "x": 7150.0,
+      "y": 7600.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -5867,6 +6747,10 @@
   },
   "Hive_03": {
     "Alias": "Hive_Outside_Grub",
+    "VanillaPlacement": {
+      "x": 6700.0,
+      "y": 6650.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -5899,6 +6783,10 @@
   },
   "Hive_03_c": {
     "Alias": "Hive_Outside_Shortcut",
+    "VanillaPlacement": {
+      "x": 6700.0,
+      "y": 7150.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -5938,6 +6826,10 @@
   },
   "Hive_04": {
     "Alias": "Hive_Mask_Shard",
+    "VanillaPlacement": {
+      "x": 7150.0,
+      "y": 7150.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -5968,6 +6860,10 @@
   },
   "Hive_05": {
     "Alias": "Hive_Knight_Arena",
+    "VanillaPlacement": {
+      "x": 7650.0,
+      "y": 7150.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -5982,6 +6878,10 @@
   },
   "Mines_01": {
     "Alias": "Crystal_Dive_Entrance",
+    "VanillaPlacement": {
+      "x": 2100.0,
+      "y": 250.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -6005,6 +6905,10 @@
   },
   "Mines_02": {
     "Alias": "Crystal_Main_Entrance",
+    "VanillaPlacement": {
+      "x": 2300.0,
+      "y": 650.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -6044,6 +6948,10 @@
   },
   "Mines_03": {
     "Alias": "Crystal_Spike_Grub",
+    "VanillaPlacement": {
+      "x": 2500.0,
+      "y": 250.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -6076,6 +6984,10 @@
   },
   "Mines_04": {
     "Alias": "Crystal_Entrance_Conveyors",
+    "VanillaPlacement": {
+      "x": 3400.0,
+      "y": 450.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -6122,6 +7034,10 @@
   },
   "Mines_05": {
     "Alias": "Crystal_Above_Spike_Grub",
+    "VanillaPlacement": {
+      "x": 2650.0,
+      "y": -300.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -6170,6 +7086,10 @@
   },
   "Mines_06": {
     "Alias": "Crystal_Deep_Focus_Gauntlet",
+    "VanillaPlacement": {
+      "x": 2300.0,
+      "y": -150.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -6193,6 +7113,10 @@
   },
   "Mines_07": {
     "Alias": "Crystal_Dark_Room",
+    "VanillaPlacement": {
+      "x": 3750.0,
+      "y": 450.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -6216,6 +7140,10 @@
   },
   "Mines_10": {
     "Alias": "Crystal_Elevator_Entrance",
+    "VanillaPlacement": {
+      "x": 1450.0,
+      "y": -450.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -6248,6 +7176,10 @@
   },
   "Mines_11": {
     "Alias": "Crystal_Left_Of_Guardian",
+    "VanillaPlacement": {
+      "x": 2650.0,
+      "y": -750.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -6280,6 +7212,10 @@
   },
   "Mines_13": {
     "Alias": "Crystal_Top_Corridor",
+    "VanillaPlacement": {
+      "x": 2800.0,
+      "y": -1250.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -6308,6 +7244,10 @@
   },
   "Mines_16": {
     "Alias": "Crystal_Mimic",
+    "VanillaPlacement": {
+      "x": 1450.0,
+      "y": -150.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -6322,6 +7262,10 @@
   },
   "Mines_17": {
     "Alias": "Crystal_Corridor_to_Spike_Grub",
+    "VanillaPlacement": {
+      "x": 2900.0,
+      "y": 250.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -6345,6 +7289,10 @@
   },
   "Mines_18": {
     "Alias": "Crystal_Guardian_Bench",
+    "VanillaPlacement": {
+      "x": 3000.0,
+      "y": -600.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -6377,6 +7325,10 @@
   },
   "Mines_19": {
     "Alias": "Crystal_Grub_Crushers",
+    "VanillaPlacement": {
+      "x": 3000.0,
+      "y": -300.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -6400,6 +7352,10 @@
   },
   "Mines_20": {
     "Alias": "Crystal_East_Tall",
+    "VanillaPlacement": {
+      "x": 3400.0,
+      "y": -800.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -6453,6 +7409,10 @@
   },
   "Mines_23": {
     "Alias": "Crystal_Crown_Whispering_Root",
+    "VanillaPlacement": {
+      "x": 3800.0,
+      "y": -1250.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -6488,6 +7448,10 @@
   },
   "Mines_24": {
     "Alias": "Crystal_Crown_Grub",
+    "VanillaPlacement": {
+      "x": 4150.0,
+      "y": -1100.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -6502,6 +7466,10 @@
   },
   "Mines_25": {
     "Alias": "Crystal_Crown_Climb",
+    "VanillaPlacement": {
+      "x": 4100.0,
+      "y": -1500.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -6525,6 +7493,10 @@
   },
   "Mines_28": {
     "Alias": "Crystal_Outside_Mound",
+    "VanillaPlacement": {
+      "x": 4100.0,
+      "y": 450.0
+    },
     "Gates": {
       "Door": {
         "door1": {
@@ -6557,6 +7529,10 @@
   },
   "Mines_29": {
     "Alias": "Crystal_Dark_Bench",
+    "VanillaPlacement": {
+      "x": 2900.0,
+      "y": 650.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -6587,6 +7563,10 @@
   },
   "Mines_30": {
     "Alias": "Crystal_Cornifer",
+    "VanillaPlacement": {
+      "x": 1950.0,
+      "y": -450.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -6610,6 +7590,10 @@
   },
   "Mines_31": {
     "Alias": "Crystal_Crystal_Heart_Gauntlet",
+    "VanillaPlacement": {
+      "x": 3800.0,
+      "y": -650.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -6624,6 +7608,10 @@
   },
   "Mines_32": {
     "Alias": "Crystal_Enraged_Guardian_Arena",
+    "VanillaPlacement": {
+      "x": 3000.0,
+      "y": -900.0
+    },
     "Gates": {
       "Bot": {
         "bot1": {
@@ -6638,6 +7626,10 @@
   },
   "Mines_33": {
     "Alias": "Crossroads_Peak_Dark_Toll",
+    "VanillaPlacement": {
+      "x": 1650.0,
+      "y": 1400.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -6661,6 +7653,10 @@
   },
   "Mines_34": {
     "Alias": "Crystal_Crown_Peak",
+    "VanillaPlacement": {
+      "x": 3950.0,
+      "y": -1900.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -6691,6 +7687,10 @@
   },
   "Mines_35": {
     "Alias": "Crystal_Mound",
+    "VanillaPlacement": {
+      "x": 4450.0,
+      "y": 450.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -6705,6 +7705,10 @@
   },
   "Mines_36": {
     "Alias": "Crystal_Deep_Focus",
+    "VanillaPlacement": {
+      "x": 1950.0,
+      "y": -150.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -6719,6 +7723,10 @@
   },
   "Mines_37": {
     "Alias": "Crystal_Chest_Crushers",
+    "VanillaPlacement": {
+      "x": 3400.0,
+      "y": -300.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -6742,6 +7750,10 @@
   },
   "RestingGrounds_02": {
     "Alias": "Grounds_Xero",
+    "VanillaPlacement": {
+      "x": 3800.0,
+      "y": 1800.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -6779,6 +7791,10 @@
   },
   "RestingGrounds_04": {
     "Alias": "Grounds_Dream_Nail_Entrance",
+    "VanillaPlacement": {
+      "x": 4400.0,
+      "y": 1850.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -6802,6 +7818,10 @@
   },
   "RestingGrounds_05": {
     "Alias": "Grounds_Whispering_Root",
+    "VanillaPlacement": {
+      "x": 4750.0,
+      "y": 1550.0
+    },
     "Gates": {
       "Left": {
         "left2": {
@@ -6855,6 +7875,10 @@
   },
   "RestingGrounds_06": {
     "Alias": "Grounds_Corridor_Below_Xero",
+    "VanillaPlacement": {
+      "x": 3750.0,
+      "y": 2550.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -6887,6 +7911,10 @@
   },
   "RestingGrounds_07": {
     "Alias": "Grounds_Seer",
+    "VanillaPlacement": {
+      "x": 4400.0,
+      "y": 1250.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -6901,6 +7929,10 @@
   },
   "RestingGrounds_08": {
     "Alias": "Grounds_Spirit's_Glade",
+    "VanillaPlacement": {
+      "x": 5150.0,
+      "y": 1400.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -6915,6 +7947,10 @@
   },
   "RestingGrounds_09": {
     "Alias": "Grounds_Stag",
+    "VanillaPlacement": {
+      "x": 5150.0,
+      "y": 1650.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -6929,6 +7965,10 @@
   },
   "RestingGrounds_10": {
     "Alias": "Grounds_Crypts",
+    "VanillaPlacement": {
+      "x": 5000.0,
+      "y": 2300.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -6959,6 +7999,10 @@
   },
   "RestingGrounds_12": {
     "Alias": "Grounds_Outside_Grey_Mourner",
+    "VanillaPlacement": {
+      "x": 5450.0,
+      "y": 1950.0
+    },
     "Gates": {
       "Door": {
         "door_Mansion": {
@@ -6982,6 +8026,10 @@
   },
   "RestingGrounds_17": {
     "Alias": "Grounds_Dreamshield",
+    "VanillaPlacement": {
+      "x": 4400.0,
+      "y": 1550.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -6996,6 +8044,10 @@
   },
   "Room_Bretta": {
     "Alias": "Bretta",
+    "VanillaPlacement": {
+      "x": 650.0,
+      "y": -450.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -7014,6 +8066,10 @@
   },
   "Room_Charm_Shop": {
     "Alias": "Salubra",
+    "VanillaPlacement": {
+      "x": 2250.0,
+      "y": 2400.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -7028,6 +8084,10 @@
   },
   "Room_Colosseum_01": {
     "Alias": "Edge_Colo_Entrance",
+    "VanillaPlacement": {
+      "x": 7400.0,
+      "y": 3550.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -7051,6 +8111,10 @@
   },
   "Room_Colosseum_02": {
     "Alias": "Edge_Colo_Bench",
+    "VanillaPlacement": {
+      "x": 7550.0,
+      "y": 3950.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -7084,6 +8148,10 @@
   },
   "Room_Colosseum_Spectate": {
     "Alias": "Edge_Colo_Spectate",
+    "VanillaPlacement": {
+      "x": 7650.0,
+      "y": 3550.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -7115,6 +8183,10 @@
   },
   "Room_Fungus_Shaman": {
     "Alias": "Fog_Overgrown_Mound",
+    "VanillaPlacement": {
+      "x": -3350.0,
+      "y": 2650.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -7129,6 +8201,10 @@
   },
   "Room_GG_Shortcut": {
     "Alias": "Waterways_Fluke_Hermit",
+    "VanillaPlacement": {
+      "x": 1050.0,
+      "y": 5900.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -7156,6 +8232,10 @@
   },
   "Room_Mansion": {
     "Alias": "Grounds_Grey_Mourner",
+    "VanillaPlacement": {
+      "x": 5750.0,
+      "y": 1950.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -7170,6 +8250,10 @@
   },
   "Room_Mask_Maker": {
     "Alias": "Deepnest_Mask_Maker",
+    "VanillaPlacement": {
+      "x": -4450.0,
+      "y": 6300.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -7184,6 +8268,10 @@
   },
   "Room_Mender_House": {
     "Alias": "Crossroads_Menderbug",
+    "VanillaPlacement": {
+      "x": 1750.0,
+      "y": 2400.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -7198,6 +8286,10 @@
   },
   "Room_Ouiji": {
     "Alias": "Jiji",
+    "VanillaPlacement": {
+      "x": 950.0,
+      "y": -450.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -7212,6 +8304,10 @@
   },
   "Room_Queen": {
     "Alias": "Gardens_White_Lady",
+    "VanillaPlacement": {
+      "x": -5800.0,
+      "y": 3250.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -7226,6 +8322,10 @@
   },
   "Room_Slug_Shrine": {
     "Alias": "Greenpath_Unn_Bench",
+    "VanillaPlacement": {
+      "x": -4300.0,
+      "y": 650.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -7244,6 +8344,10 @@
   },
   "Room_Town_Stag_Station": {
     "Alias": "Dirtmouth_Stag",
+    "VanillaPlacement": {
+      "x": 50.0,
+      "y": -450.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -7266,6 +8370,10 @@
   },
   "Room_Wyrm": {
     "Alias": "Edge_Cast-Off_Shell",
+    "VanillaPlacement": {
+      "x": 8400.0,
+      "y": 5350.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -7280,6 +8388,10 @@
   },
   "Room_mapper": {
     "Alias": "Iselda",
+    "VanillaPlacement": {
+      "x": 350.0,
+      "y": -450.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -7294,6 +8406,10 @@
   },
   "Room_nailmaster": {
     "Alias": "Cliffs_Mato",
+    "VanillaPlacement": {
+      "x": -1800.0,
+      "y": -400.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -7308,6 +8424,10 @@
   },
   "Room_nailmaster_02": {
     "Alias": "Greenpath_Sheo",
+    "VanillaPlacement": {
+      "x": -4250.0,
+      "y": 1450.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -7322,6 +8442,10 @@
   },
   "Room_nailmaster_03": {
     "Alias": "Edge_Oro",
+    "VanillaPlacement": {
+      "x": 7950.0,
+      "y": 5650.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -7336,6 +8460,10 @@
   },
   "Room_nailsmith": {
     "Alias": "City_Nailsmith",
+    "VanillaPlacement": {
+      "x": 1000.0,
+      "y": 5050.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -7350,6 +8478,10 @@
   },
   "Room_ruinhouse": {
     "Alias": "Crossroads_Rescue_Sly",
+    "VanillaPlacement": {
+      "x": 2000.0,
+      "y": 2400.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -7364,6 +8496,10 @@
   },
   "Room_shop": {
     "Alias": "Sly",
+    "VanillaPlacement": {
+      "x": -250.0,
+      "y": -450.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -7378,6 +8514,10 @@
   },
   "Room_spider_small": {
     "Alias": "Deepnest_Brumm",
+    "VanillaPlacement": {
+      "x": -4950.0,
+      "y": 6750.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -7392,6 +8532,10 @@
   },
   "Room_temple": {
     "Alias": "Black_Egg_Temple",
+    "VanillaPlacement": {
+      "x": 450.0,
+      "y": 500.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -7406,6 +8550,10 @@
   },
   "Ruins1_01": {
     "Alias": "City_Pilgrim's_Entrance",
+    "VanillaPlacement": {
+      "x": 1700.0,
+      "y": 4500.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -7438,6 +8586,10 @@
   },
   "Ruins1_02": {
     "Alias": "City_Quirrel_Bench",
+    "VanillaPlacement": {
+      "x": 1700.0,
+      "y": 4950.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -7461,6 +8613,10 @@
   },
   "Ruins1_03": {
     "Alias": "City_Rafters",
+    "VanillaPlacement": {
+      "x": 1700.0,
+      "y": 5450.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -7500,6 +8656,10 @@
   },
   "Ruins1_04": {
     "Alias": "City_Outside_Nailsmith",
+    "VanillaPlacement": {
+      "x": 1000.0,
+      "y": 5450.0
+    },
     "Gates": {
       "Door": {
         "door1": {
@@ -7532,6 +8692,10 @@
   },
   "Ruins1_05": {
     "Alias": "City_Grub_Above_Lemm",
+    "VanillaPlacement": {
+      "x": 2600.0,
+      "y": 4500.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -7585,6 +8749,10 @@
   },
   "Ruins1_05b": {
     "Alias": "City_Lemm",
+    "VanillaPlacement": {
+      "x": 2600.0,
+      "y": 5450.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -7626,6 +8794,10 @@
   },
   "Ruins1_05c": {
     "Alias": "City_Egg_Above_Lemm",
+    "VanillaPlacement": {
+      "x": 2600.0,
+      "y": 5000.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -7672,6 +8844,10 @@
   },
   "Ruins1_06": {
     "Alias": "City_Corridor_to_Storerooms",
+    "VanillaPlacement": {
+      "x": 2050.0,
+      "y": 4100.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -7695,6 +8871,10 @@
   },
   "Ruins1_09": {
     "Alias": "City_Soul_Twister_Arena",
+    "VanillaPlacement": {
+      "x": 3150.0,
+      "y": 4200.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -7718,6 +8898,10 @@
   },
   "Ruins1_17": {
     "Alias": "City_Whispering_Root",
+    "VanillaPlacement": {
+      "x": 1700.0,
+      "y": 4100.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -7750,6 +8934,10 @@
   },
   "Ruins1_18": {
     "Alias": "City_Corridor_to_Spire",
+    "VanillaPlacement": {
+      "x": 3150.0,
+      "y": 4700.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -7780,6 +8968,10 @@
   },
   "Ruins1_23": {
     "Alias": "City_Sanctum_Entrance",
+    "VanillaPlacement": {
+      "x": 3150.0,
+      "y": 3750.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -7828,6 +9020,10 @@
   },
   "Ruins1_24": {
     "Alias": "City_Soul_Master_Arena",
+    "VanillaPlacement": {
+      "x": 2750.0,
+      "y": 3200.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -7865,6 +9061,10 @@
   },
   "Ruins1_25": {
     "Alias": "City_Sanctum_East_Elevators",
+    "VanillaPlacement": {
+      "x": 3450.0,
+      "y": 3500.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -7893,6 +9093,10 @@
   },
   "Ruins1_27": {
     "Alias": "City_Hollow_Knight_Fountain",
+    "VanillaPlacement": {
+      "x": 3100.0,
+      "y": 5450.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -7916,6 +9120,10 @@
   },
   "Ruins1_28": {
     "Alias": "City_Storerooms",
+    "VanillaPlacement": {
+      "x": 1700.0,
+      "y": 3600.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -7948,6 +9156,10 @@
   },
   "Ruins1_29": {
     "Alias": "City_Storerooms_Stag",
+    "VanillaPlacement": {
+      "x": 2050.0,
+      "y": 3600.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -7962,6 +9174,10 @@
   },
   "Ruins1_30": {
     "Alias": "City_Sanctum_Spell_Twister",
+    "VanillaPlacement": {
+      "x": 3150.0,
+      "y": 3200.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -8001,6 +9217,10 @@
   },
   "Ruins1_31": {
     "Alias": "City_Toll_Bench",
+    "VanillaPlacement": {
+      "x": 2650.0,
+      "y": 3950.0
+    },
     "Gates": {
       "Left": {
         "left2": {
@@ -8047,6 +9267,10 @@
   },
   "Ruins1_31b": {
     "Alias": "City_Shade_Soul_Arena",
+    "VanillaPlacement": {
+      "x": 2350.0,
+      "y": 3750.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -8068,6 +9292,10 @@
   },
   "Ruins1_32": {
     "Alias": "City_Soul_Master_Rewards",
+    "VanillaPlacement": {
+      "x": 2350.0,
+      "y": 3200.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -8089,6 +9317,10 @@
   },
   "Ruins2_01": {
     "Alias": "City_Spire_Great_Husk",
+    "VanillaPlacement": {
+      "x": 3700.0,
+      "y": 4950.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -8121,6 +9353,10 @@
   },
   "Ruins2_01_b": {
     "Alias": "City_Spire_Base",
+    "VanillaPlacement": {
+      "x": 3700.0,
+      "y": 5450.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -8153,6 +9389,10 @@
   },
   "Ruins2_03": {
     "Alias": "City_Spire_Watchers",
+    "VanillaPlacement": {
+      "x": 3750.0,
+      "y": 3800.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -8183,6 +9423,10 @@
   },
   "Ruins2_03b": {
     "Alias": "City_Spire_Below_Watchers",
+    "VanillaPlacement": {
+      "x": 3750.0,
+      "y": 4450.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -8222,6 +9466,10 @@
   },
   "Ruins2_04": {
     "Alias": "City_Right_Hub",
+    "VanillaPlacement": {
+      "x": 4500.0,
+      "y": 5550.0
+    },
     "Gates": {
       "Door": {
         "door_Ruin_Elevator": {
@@ -8289,6 +9537,10 @@
   },
   "Ruins2_05": {
     "Alias": "City_Above_King's",
+    "VanillaPlacement": {
+      "x": 5000.0,
+      "y": 4300.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -8321,6 +9573,10 @@
   },
   "Ruins2_06": {
     "Alias": "City_King's_Station",
+    "VanillaPlacement": {
+      "x": 5000.0,
+      "y": 5550.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -8367,6 +9623,10 @@
   },
   "Ruins2_07": {
     "Alias": "City_Grub_Below_King's",
+    "VanillaPlacement": {
+      "x": 5750.0,
+      "y": 5600.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -8399,6 +9659,10 @@
   },
   "Ruins2_08": {
     "Alias": "City_King's_Stag",
+    "VanillaPlacement": {
+      "x": 5400.0,
+      "y": 5150.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -8413,6 +9677,10 @@
   },
   "Ruins2_09": {
     "Alias": "City_King's_Vessel_Fragment",
+    "VanillaPlacement": {
+      "x": 5000.0,
+      "y": 3900.0
+    },
     "Gates": {
       "Bot": {
         "bot1": {
@@ -8427,6 +9695,10 @@
   },
   "Ruins2_10": {
     "Alias": "Grounds_Elevator",
+    "VanillaPlacement": {
+      "x": 4400.0,
+      "y": 2300.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -8450,6 +9722,10 @@
   },
   "Ruins2_10b": {
     "Alias": "City_Right_Elevator",
+    "VanillaPlacement": {
+      "x": 4600.0,
+      "y": 3600.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -8480,6 +9756,10 @@
   },
   "Ruins2_11": {
     "Alias": "City_Collector_Arena",
+    "VanillaPlacement": {
+      "x": 5400.0,
+      "y": 4300.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -8494,6 +9774,10 @@
   },
   "Ruins2_11_b": {
     "Alias": "City_Tower_of_Love",
+    "VanillaPlacement": {
+      "x": 5750.0,
+      "y": 4650.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -8526,6 +9810,10 @@
   },
   "Ruins2_Watcher_Room": {
     "Alias": "City_Lurien_Elevator",
+    "VanillaPlacement": {
+      "x": 3750.0,
+      "y": 3200.0
+    },
     "Gates": {
       "Bot": {
         "bot1": {
@@ -8540,6 +9828,10 @@
   },
   "Ruins_Bathhouse": {
     "Alias": "City_Pleasure_House_Bench",
+    "VanillaPlacement": {
+      "x": 4300.0,
+      "y": 4300.0
+    },
     "Gates": {
       "Door": {
         "door1": {
@@ -8563,6 +9855,10 @@
   },
   "Ruins_Elevator": {
     "Alias": "City_Pleasure_House_Elevator",
+    "VanillaPlacement": {
+      "x": 4600.0,
+      "y": 4800.0
+    },
     "Gates": {
       "Left": {
         "left2": {
@@ -8584,6 +9880,10 @@
   },
   "Ruins_House_01": {
     "Alias": "City_Guarded_Grub",
+    "VanillaPlacement": {
+      "x": 4650.0,
+      "y": 5150.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -8598,6 +9898,10 @@
   },
   "Ruins_House_02": {
     "Alias": "City_Gorgeous_Husk",
+    "VanillaPlacement": {
+      "x": 4300.0,
+      "y": 5150.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -8612,6 +9916,10 @@
   },
   "Ruins_House_03": {
     "Alias": "City_Emilitia",
+    "VanillaPlacement": {
+      "x": 4650.0,
+      "y": 5950.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -8633,6 +9941,10 @@
   },
   "Town": {
     "Alias": "Dirtmouth",
+    "VanillaPlacement": {
+      "x": 50.0,
+      "y": 0.0
+    },
     "Gates": {
       "Door": {
         "room_divine": {
@@ -8721,6 +10033,10 @@
   },
   "Tutorial_01": {
     "Alias": "King's_Pass",
+    "VanillaPlacement": {
+      "x": -1250.0,
+      "y": 0.0
+    },
     "Gates": {
       "Top": {
         "top2": {
@@ -8747,6 +10063,10 @@
   },
   "Waterways_01": {
     "Alias": "Waterways_Entrance",
+    "VanillaPlacement": {
+      "x": 2650.0,
+      "y": 5950.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -8788,6 +10108,10 @@
   },
   "Waterways_02": {
     "Alias": "Waterways_Main_Bench",
+    "VanillaPlacement": {
+      "x": 2650.0,
+      "y": 6500.0
+    },
     "Gates": {
       "Top": {
         "top3": {
@@ -8832,6 +10156,10 @@
   },
   "Waterways_03": {
     "Alias": "Waterways_Tuk",
+    "VanillaPlacement": {
+      "x": 3050.0,
+      "y": 5950.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -8846,6 +10174,10 @@
   },
   "Waterways_04": {
     "Alias": "Waterways_Hidden_Grub",
+    "VanillaPlacement": {
+      "x": 2000.0,
+      "y": 6150.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -8885,6 +10217,10 @@
   },
   "Waterways_04b": {
     "Alias": "Waterways_Mask_Shard",
+    "VanillaPlacement": {
+      "x": 1350.0,
+      "y": 6250.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -8915,6 +10251,10 @@
   },
   "Waterways_05": {
     "Alias": "Waterways_Dung_Defender_Arena",
+    "VanillaPlacement": {
+      "x": 3200.0,
+      "y": 6250.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -8945,6 +10285,10 @@
   },
   "Waterways_06": {
     "Alias": "Waterways_Corridor_to_Broken_Elevator",
+    "VanillaPlacement": {
+      "x": 3150.0,
+      "y": 6900.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -8968,6 +10312,10 @@
   },
   "Waterways_07": {
     "Alias": "Waterways_Left_Of_Isma's_Grove",
+    "VanillaPlacement": {
+      "x": 4750.0,
+      "y": 6650.0
+    },
     "Gates": {
       "Door": {
         "door1": {
@@ -9016,6 +10364,10 @@
   },
   "Waterways_08": {
     "Alias": "Waterways_Outside_Flukemarm",
+    "VanillaPlacement": {
+      "x": 2600.0,
+      "y": 7050.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -9046,6 +10398,10 @@
   },
   "Waterways_09": {
     "Alias": "Waterways_Cornifer",
+    "VanillaPlacement": {
+      "x": 550.0,
+      "y": 6200.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -9069,6 +10425,10 @@
   },
   "Waterways_12": {
     "Alias": "Waterways_Flukemarm_Arena",
+    "VanillaPlacement": {
+      "x": 1900.0,
+      "y": 7250.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -9083,6 +10443,10 @@
   },
   "Waterways_13": {
     "Alias": "Waterways_Isma's_Grove",
+    "VanillaPlacement": {
+      "x": 5250.0,
+      "y": 6650.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -9104,6 +10468,10 @@
   },
   "Waterways_14": {
     "Alias": "Waterways_Edge_Acid_Corridor",
+    "VanillaPlacement": {
+      "x": 5400.0,
+      "y": 6050.0
+    },
     "Gates": {
       "Bot": {
         "bot1": {
@@ -9125,6 +10493,10 @@
   },
   "Waterways_15": {
     "Alias": "Waterways_Dung_Defender's_Cave",
+    "VanillaPlacement": {
+      "x": 3250.0,
+      "y": 6550.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -9139,6 +10511,10 @@
   },
   "White_Palace_01": {
     "Alias": "Palace_Entrance",
+    "VanillaPlacement": {
+      "x": 5200.0,
+      "y": 10000.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -9171,6 +10547,10 @@
   },
   "White_Palace_02": {
     "Alias": "Palace_First_Mold",
+    "VanillaPlacement": {
+      "x": 5600.0,
+      "y": 10000.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -9185,6 +10565,10 @@
   },
   "White_Palace_03_hub": {
     "Alias": "Palace_Hub",
+    "VanillaPlacement": {
+      "x": 5200.0,
+      "y": 9550.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -9233,6 +10617,10 @@
   },
   "White_Palace_04": {
     "Alias": "Palace_Left_Of_Hub",
+    "VanillaPlacement": {
+      "x": 4750.0,
+      "y": 9800.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -9256,6 +10644,10 @@
   },
   "White_Palace_05": {
     "Alias": "Palace_Saw_Room",
+    "VanillaPlacement": {
+      "x": 5950.0,
+      "y": 9550.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -9293,6 +10685,10 @@
   },
   "White_Palace_06": {
     "Alias": "Palace_Balcony",
+    "VanillaPlacement": {
+      "x": 5200.0,
+      "y": 9150.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -9325,6 +10721,10 @@
   },
   "White_Palace_07": {
     "Alias": "Palace_Lamp_Pogo",
+    "VanillaPlacement": {
+      "x": 5200.0,
+      "y": 8800.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -9348,6 +10748,10 @@
   },
   "White_Palace_08": {
     "Alias": "Palace_Workshop",
+    "VanillaPlacement": {
+      "x": 5850.0,
+      "y": 8750.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -9371,6 +10775,10 @@
   },
   "White_Palace_09": {
     "Alias": "Palace_Throne",
+    "VanillaPlacement": {
+      "x": 5200.0,
+      "y": 8100.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -9385,6 +10793,10 @@
   },
   "White_Palace_11": {
     "Alias": "Palace_Outside",
+    "VanillaPlacement": {
+      "x": 5200.0,
+      "y": 10400.0
+    },
     "Gates": {
       "Door": {
         "door2": {
@@ -9399,6 +10811,10 @@
   },
   "White_Palace_12": {
     "Alias": "Palace_Spike_Drop",
+    "VanillaPlacement": {
+      "x": 5200.0,
+      "y": 8450.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -9422,6 +10838,10 @@
   },
   "White_Palace_13": {
     "Alias": "Palace_Thorn_Jump",
+    "VanillaPlacement": {
+      "x": 5550.0,
+      "y": 8400.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -9459,6 +10879,10 @@
   },
   "White_Palace_14": {
     "Alias": "Palace_Hell_Corridor",
+    "VanillaPlacement": {
+      "x": 4750.0,
+      "y": 9450.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -9482,6 +10906,10 @@
   },
   "White_Palace_15": {
     "Alias": "Palace_Caged_Lever",
+    "VanillaPlacement": {
+      "x": 5600.0,
+      "y": 9550.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -9512,6 +10940,10 @@
   },
   "White_Palace_16": {
     "Alias": "Palace_Saw_Climb",
+    "VanillaPlacement": {
+      "x": 6350.0,
+      "y": 9550.0
+    },
     "Gates": {
       "Left": {
         "left1": {
@@ -9533,6 +10965,10 @@
   },
   "White_Palace_17": {
     "Alias": "POP_Lever",
+    "VanillaPlacement": {
+      "x": 4400.0,
+      "y": 9100.0
+    },
     "Gates": {
       "Right": {
         "right1": {
@@ -9556,6 +10992,10 @@
   },
   "White_Palace_18": {
     "Alias": "POP_Entrance",
+    "VanillaPlacement": {
+      "x": 4750.0,
+      "y": 9100.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -9579,6 +11019,10 @@
   },
   "White_Palace_19": {
     "Alias": "POP_Vertical",
+    "VanillaPlacement": {
+      "x": 4400.0,
+      "y": 8750.0
+    },
     "Gates": {
       "Top": {
         "top1": {
@@ -9602,6 +11046,10 @@
   },
   "White_Palace_20": {
     "Alias": "POP_Final",
+    "VanillaPlacement": {
+      "x": 4750.0,
+      "y": 8750.0
+    },
     "Gates": {
       "Bot": {
         "bot1": {

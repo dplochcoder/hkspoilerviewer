@@ -136,6 +136,20 @@ public final class TransitionVisualizerCanvas extends JPanel {
         .addKeyEventDispatcher(newKeyEventDispatcher());
   }
 
+  public void clear() {
+    selectionAnchor = null;
+    selectionDrag = null;
+    currentSelection.clear();
+    highlightedSelection.clear();
+    dragTransform = null;
+    dragAnchor = null;
+    lastDrag = null;
+    dragSelection = false;
+    center = new Point(0, 0);
+    zoom = 1.0;
+    zoomPower = 0;
+  }
+
   public Point center() {
     return center;
   }

@@ -98,6 +98,7 @@ public final class TransitionData {
 
   public static final class SceneData {
     private final String alias;
+    private final Optional<Point> vanillaPlacement;
     private final ListMultimap<String, GateData> gatesByDir;
     private final Map<String, GateData> gatesByName;
 
@@ -173,6 +174,14 @@ public final class TransitionData {
 
     SceneData(RoomLabels roomLabels, String scene, JsonObject obj) throws ParseException {
       this.alias = obj.get("Alias").getAsString();
+
+      if (obj.has("VanillaPlacement")) {
+        this.vanillaPlacement =
+            Optional.of(Point.fromJson(obj.get("VanillaPlacement").getAsJsonObject()));
+      } else {
+        this.vanillaPlacement = Optional.empty();
+      }
+
       this.gatesByDir = ArrayListMultimap.create();
       this.gatesByName = new HashMap<>();
 
@@ -212,6 +221,10 @@ public final class TransitionData {
 
     public String alias() {
       return alias;
+    }
+
+    public Optional<Point> vanillaPlacement() {
+      return vanillaPlacement;
     }
 
     public Stream<GateData> allGates() {

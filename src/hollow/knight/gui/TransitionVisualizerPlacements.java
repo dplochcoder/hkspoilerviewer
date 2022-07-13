@@ -54,6 +54,11 @@ public final class TransitionVisualizerPlacements implements SaveInterface {
     removePlacementInternal(p);
   }
 
+  public void clear() {
+    scenePlacements.clear();
+    scenePlacementsByName.clear();
+  }
+
   @Override
   public String saveName() {
     return "TransitionVisualizerPlacements";
@@ -72,8 +77,7 @@ public final class TransitionVisualizerPlacements implements SaveInterface {
 
   @Override
   public void open(Version version, StateContext ctx, JsonElement json) {
-    scenePlacements.clear();
-    scenePlacementsByName.clear();
+    clear();
     if (json == null) {
       return;
     }
