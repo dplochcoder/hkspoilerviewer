@@ -371,15 +371,6 @@ public final class TransitionVisualizerCanvas extends JPanel {
   private MouseListener newMouseListener() {
     return new MouseAdapter() {
       @Override
-      public void mouseMoved(MouseEvent e) {
-        mouseMoved = invertMouse(e.getPoint());
-
-        if (currentGate != null) {
-          repaint();
-        }
-      }
-
-      @Override
       public void mouseReleased(MouseEvent e) {
         mouseMoved = invertMouse(e.getPoint());
 
@@ -462,6 +453,15 @@ public final class TransitionVisualizerCanvas extends JPanel {
 
   private MouseMotionListener newMouseMotionListener() {
     return new MouseMotionAdapter() {
+      @Override
+      public void mouseMoved(MouseEvent e) {
+        mouseMoved = invertMouse(e.getPoint());
+
+        if (currentGate != null) {
+          repaint();
+        }
+      }
+
       @Override
       public void mouseDragged(MouseEvent e) {
         Point p = invertMouse(e.getPoint());
