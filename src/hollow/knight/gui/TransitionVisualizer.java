@@ -155,6 +155,24 @@ public final class TransitionVisualizer extends JFrame {
 
   }
 
+  private JMenuItem createViewResetMenu() {
+    JMenuItem out = new JMenuItem("Reset to Origin");
+    out.addActionListener(GuiUtil.newActionListener(this, () -> {
+      canvas.clear();
+      repaint();
+    }));
+    return out;
+  }
+
+  private JMenuItem createViewFitMenu() {
+    JMenuItem out = new JMenuItem("Fit");
+    out.addActionListener(GuiUtil.newActionListener(this, () -> {
+      canvas.fit();
+      repaint();
+    }));
+    return out;
+  }
+
   private JMenuItem createFontSizeMenu() {
     JMenuItem fSize = new JMenuItem("Font Size");
     fSize.addActionListener(GuiUtil.newActionListener(this, () -> {
@@ -222,6 +240,9 @@ public final class TransitionVisualizer extends JFrame {
     JMenuBar menu = new JMenuBar();
 
     JMenu view = new JMenu("View");
+    view.add(createViewResetMenu());
+    view.add(createViewFitMenu());
+    view.add(new JSeparator());
     view.add(createFontSizeMenu());
     view.add(new JSeparator());
     view.add(createCanvasEnumMenu(SnapToGrid.class, "Snap to Grid", canvas::snap, canvas::setSnap));

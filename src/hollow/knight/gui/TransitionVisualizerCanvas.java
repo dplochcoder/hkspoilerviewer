@@ -30,6 +30,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import javax.swing.JPanel;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.MoreCollectors;
@@ -148,6 +149,30 @@ public final class TransitionVisualizerCanvas extends JPanel {
     center = new Point(0, 0);
     zoom = 1.0;
     zoomPower = 0;
+  }
+
+  private boolean canSpan(Rect r) {
+    return (getWidth() / zoom) >= r.width() && (getHeight() / zoom) >= r.height();
+  }
+
+  public void fit() {
+    clear();
+
+    // Find the bounding rect.
+    if (parent.placements().isEmpty()) {
+      return;
+    }
+
+    Rect r = Rect.union(parent.placements().allScenePlacements().map(s -> s.getRect(data()))
+        .collect(ImmutableList.toImmutableList()));
+
+    center = r.center();
+
+    // Zoom out until we can see everything.
+    while (!canSpan(r)) {
+      --zoomPower;
+      zoom = Math.pow(ZOOM_SCALE, zoomPower);
+    }
   }
 
   public Point center() {
@@ -454,6 +479,24 @@ public final class TransitionVisualizerCanvas extends JPanel {
     sData.allGates().forEach(g -> renderGatePlacement(g2d, p, g));
   }
 
+  private Color sourceTransitionColor(ItemCheck transition, Gate gate) {
+    if (transition.vanilla()) {
+      return Color.BLUE.brighter();
+    } else {
+      return Color.GRAY.brighter();
+    }
+  }
+
+  private Color targetTransitionColor(ItemCheck transition, Gate gate) {
+    if (!data().isSource(gate)) {
+      return Color.RED.darker();
+    } else if (transition.vanilla()) {
+      return Color.BLUE.brighter();
+    } else {
+      return Color.GRAY.brighter();
+    }
+  }
+
   private void renderTransitions(Graphics2D g2d) throws ICDLException {
     Set<ItemCheck> transitionsToDraw = new HashSet<>();
     Set<ItemCheck> duplicates = new HashSet<>();
@@ -487,17 +530,18 @@ public final class TransitionVisualizerCanvas extends JPanel {
         }
       }
 
-      g2d.setColor(Color.GRAY);
       g2d.setStroke(new BasicStroke(5.0f));
       for (ScenePlacement s : sourcePlacements) {
         for (ScenePlacement t : targetPlacements) {
           Rect r1 = s.getTransitionRect(source.gateName(), data());
           Rect r2 = t.getTransitionRect(target.gateName(), data());
 
-          if (!symmetric) {
+          if (symmetric) {
+            g2d.setColor(sourceTransitionColor(transition, source));
+          } else {
             g2d.setPaint(new GradientPaint((float) r1.center().x(), (float) r1.center().y(),
-                Color.GRAY.brighter(), (float) r2.center().x(), (float) r2.center().y(),
-                Color.RED.darker()));
+                sourceTransitionColor(transition, source), (float) r2.center().x(),
+                (float) r2.center().y(), targetTransitionColor(transition, target)));
           }
           g2d.drawLine((int) r1.center().x(), (int) r1.center().y(), (int) r2.center().x(),
               (int) r2.center().y());

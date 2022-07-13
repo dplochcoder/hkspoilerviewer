@@ -20,6 +20,10 @@ public final class TransitionVisualizerPlacements implements SaveInterface {
 
   public TransitionVisualizerPlacements() {}
 
+  public boolean isEmpty() {
+    return scenePlacements.isEmpty();
+  }
+
   public ScenePlacement addPlacement(String scene, Point point) {
     ScenePlacement p = new ScenePlacement(scene, point);
     addPlacementInternal(p);
