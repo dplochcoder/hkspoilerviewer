@@ -88,7 +88,7 @@ public final class Application extends JFrame {
 
   public Application(StateContext ctx, Config cfg) throws ParseException {
     this.cfg = cfg;
-    this.transitionData = TransitionData.load();
+    this.transitionData = TransitionData.load(ctx.roomLabels());
     this.filterChangedListener = () -> repopulateSearchResults();
     this.routeListModel = new RouteListModel(transitionData, ctx);
     this.searchResultsListModel = new SearchResultsListModel(transitionData,
