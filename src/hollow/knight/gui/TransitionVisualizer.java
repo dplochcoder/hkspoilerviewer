@@ -11,7 +11,10 @@ import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
@@ -23,13 +26,16 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.primitives.Ints;
 import hollow.knight.gui.TransitionData.SceneData;
+import hollow.knight.gui.TransitionVisualizerCanvas.CanvasEnum;
 import hollow.knight.gui.TransitionVisualizerCanvas.EditMode;
+import hollow.knight.gui.TransitionVisualizerCanvas.SnapToGrid;
 import hollow.knight.logic.RoomLabels;
 import hollow.knight.logic.StateContext;
 
@@ -171,20 +177,22 @@ public final class TransitionVisualizer extends JFrame {
     return fSize;
   }
 
-  private JMenu createTransitionModeMenu() {
-    JMenu out = new JMenu("Transition Mode");
+
+  private <E extends Enum<E> & CanvasEnum> JMenu createCanvasEnumMenu(Class<E> clazz, String name,
+      Supplier<E> getter, Consumer<E> setter) {
+    JMenu out = new JMenu(name);
 
     ButtonGroup g = new ButtonGroup();
-    for (EditMode m : EditMode.values()) {
-      JRadioButton b = new JRadioButton(m.displayName());
-      b.setSelected(m == canvas.editMode());
+    for (E value : EnumSet.allOf(clazz)) {
+      JRadioButton b = new JRadioButton(value.displayName());
+      b.setSelected(value == getter.get());
       b.addActionListener(GuiUtil.newActionListener(this, () -> {
-        canvas.setEditMode(m);
+        setter.accept(value);
         repaint();
       }));
 
-      out.add(b);
       g.add(b);
+      out.add(b);
     }
 
     return out;
@@ -195,11 +203,14 @@ public final class TransitionVisualizer extends JFrame {
 
     JMenu view = new JMenu("View");
     view.add(createFontSizeMenu());
+    view.add(new JSeparator());
+    view.add(createCanvasEnumMenu(SnapToGrid.class, "Snap to Grid", canvas::snap, canvas::setSnap));
     menu.add(view);
 
     JMenu edit = new JMenu("Edit");
     if (application.isICDL()) {
-      edit.add(createTransitionModeMenu());
+      edit.add(createCanvasEnumMenu(EditMode.class, "Transition Mode", canvas::editMode,
+          canvas::setEditMode));
     } else {
       edit.setEnabled(false);
       edit.setToolTipText("Must open an ICDL ctx.json for editing");

@@ -35,6 +35,10 @@ public final class ScenePlacement {
     point = point.translated(dx, dy);
   }
 
+  public void update(Point p) {
+    point = p;
+  }
+
   public Rect getRect(TransitionData data) {
     SceneData sceneData = data.sceneData(scene);
     return new Rect(point, sceneData.width(), sceneData.height());

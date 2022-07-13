@@ -27,6 +27,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import javax.swing.JPanel;
 import com.google.common.collect.ImmutableMap;
@@ -38,7 +39,11 @@ import hollow.knight.logic.ICDLException;
 import hollow.knight.logic.ItemCheck;
 
 public final class TransitionVisualizerCanvas extends JPanel {
-  public enum EditMode {
+  public interface CanvasEnum {
+    String displayName();
+  }
+
+  public enum EditMode implements CanvasEnum {
     SOURCE_TO_TARGET("Source -> Target"), TARGET_TO_SOURCE("Target -> Source"), COUPLED("Coupled");
 
     private final String displayName;
@@ -47,8 +52,48 @@ public final class TransitionVisualizerCanvas extends JPanel {
       this.displayName = displayName;
     }
 
+    @Override
     public String displayName() {
       return displayName;
+    }
+  }
+
+  public enum SnapToGrid implements CanvasEnum {
+    NONE("No Snapping"), SMALL("Small", 10), MEDIUM("Medium", 25), LARGE("Large", 50);
+
+    private final String displayName;
+    private final Optional<Integer> gridSize;
+
+    SnapToGrid(String displayName, Optional<Integer> gridSize) {
+      this.displayName = displayName;
+      this.gridSize = gridSize;
+    }
+
+    SnapToGrid(String displayName) {
+      this(displayName, Optional.empty());
+    }
+
+    SnapToGrid(String displayName, int gridSize) {
+      this(displayName, Optional.of(gridSize));
+    }
+
+    @Override
+    public String displayName() {
+      return displayName;
+    }
+
+    private double snapDouble(double in) {
+      if (Math.abs(in) < gridSize.get() / 2.0) {
+        return 0.0;
+      }
+      return Math.round(in / gridSize.get()) * gridSize.get();
+    }
+
+    public Point snap(Point in) {
+      if (!gridSize.isPresent()) {
+        return in;
+      }
+      return new Point(snapDouble(in.x()), snapDouble(in.y()));
     }
   }
 
@@ -77,6 +122,7 @@ public final class TransitionVisualizerCanvas extends JPanel {
   private Font font = new Font("Arial", Font.BOLD, 14);
 
   private EditMode editMode = EditMode.COUPLED;
+  private SnapToGrid snap = SnapToGrid.NONE;
 
   public TransitionVisualizerCanvas(TransitionVisualizer parent) {
     this.parent = parent;
@@ -104,6 +150,14 @@ public final class TransitionVisualizerCanvas extends JPanel {
 
   public void setEditMode(EditMode editMode) {
     this.editMode = editMode;
+  }
+
+  public SnapToGrid snap() {
+    return snap;
+  }
+
+  public void setSnap(SnapToGrid snap) {
+    this.snap = snap;
   }
 
   public int getFontSize() {
@@ -200,11 +254,13 @@ public final class TransitionVisualizerCanvas extends JPanel {
           repaint();
         } else if (dragAnchor != null) {
           updateDragAnchor(p);
+          currentSelection.forEach(s -> s.update(snap.snap(s.point())));
 
           dragTransform = null;
           dragAnchor = null;
           lastDrag = null;
           dragSelection = false;
+          repaint();
         }
       }
 
