@@ -20,13 +20,15 @@ import hollow.knight.logic.RoomLabels;
 public final class TransitionData {
 
   public static final class GateData {
+    private final String scene;
     private final String name;
     private final String alias;
     private final double xProp;
     private final double yProp;
     private final Optional<Gate> vanillaTarget;
 
-    GateData(String name, JsonObject obj, double xProp, double yProp) {
+    GateData(String scene, String name, JsonObject obj, double xProp, double yProp) {
+      this.scene = scene;
       this.name = name;
       this.alias = obj.get("Alias").getAsString();
 
@@ -49,6 +51,10 @@ public final class TransitionData {
       } else {
         vanillaTarget = Optional.empty();
       }
+    }
+
+    public String scene() {
+      return scene;
     }
 
     public String name() {
@@ -175,7 +181,7 @@ public final class TransitionData {
         JsonObject dg = g.get(dir).getAsJsonObject();
         int index = 0;
         for (String gate : dg.keySet()) {
-          GateData data = new GateData(gate, dg.get(gate).getAsJsonObject(),
+          GateData data = new GateData(scene, gate, dg.get(gate).getAsJsonObject(),
               defaultXProp(dir, index, dg.keySet().size()),
               defaultYProp(dir, index, dg.keySet().size()));
           gatesByDir.put(dir, data);
@@ -234,14 +240,37 @@ public final class TransitionData {
     }
   }
 
-  private final ImmutableMap<String, SceneData> scenes;
+  private ImmutableMap<String, SceneData> scenes;
+  private ImmutableSet<Gate> sources;
+  private ImmutableSet<Gate> targets;
 
   private TransitionData(Map<String, SceneData> scenes) {
     this.scenes = ImmutableMap.copyOf(scenes);
+    this.sources = scenes.values().stream().flatMap(s -> s.allGates())
+        .filter(g -> g.vanillaTarget().isPresent()).map(g -> Gate.create(g.scene(), g.name()))
+        .collect(ImmutableSet.toImmutableSet());
+    this.targets = scenes.values().stream().flatMap(s -> s.allGates())
+        .filter(g -> g.vanillaTarget().isPresent()).map(g -> g.vanillaTarget().get())
+        .collect(ImmutableSet.toImmutableSet());
+  }
+
+  public void refresh(RoomLabels roomLabels) throws ParseException {
+    TransitionData next = load(roomLabels);
+    this.scenes = next.scenes;
+    this.sources = next.sources;
+    this.targets = next.targets;
   }
 
   public ImmutableSet<String> scenes() {
     return scenes.keySet();
+  }
+
+  public boolean isSource(Gate gate) {
+    return sources.contains(gate);
+  }
+
+  public boolean isTarget(Gate gate) {
+    return targets.contains(gate);
   }
 
   public String alias(String transitionName) {

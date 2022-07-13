@@ -272,17 +272,17 @@
         }
       },
       "Right": {
-        "right1": {
-          "Alias": "Right-Exit_Void_Tendrils",
-          "VanillaTarget": {
-            "Scene": "Abyss_10",
-            "Gate": "left1"
-          }
-        },
         "right2": {
           "Alias": "Right-Lighthouse",
           "VanillaTarget": {
             "Scene": "Abyss_Lighthouse_room",
+            "Gate": "left1"
+          }
+        },
+        "right1": {
+          "Alias": "Right-Exit_Void_Tendrils",
+          "VanillaTarget": {
+            "Scene": "Abyss_10",
             "Gate": "left1"
           }
         },
@@ -525,17 +525,17 @@
             "Gate": "left1"
           }
         },
-        "right3": {
-          "Alias": "Right-Baldur's_Shell",
-          "VanillaTarget": {
-            "Scene": "Fungus1_28",
-            "Gate": "left1"
-          }
-        },
         "right4": {
           "Alias": "Right-Grimm_Lantern",
           "VanillaTarget": {
             "Scene": "Cliffs_06",
+            "Gate": "left1"
+          }
+        },
+        "right3": {
+          "Alias": "Right-Baldur's_Shell",
+          "VanillaTarget": {
+            "Scene": "Fungus1_28",
             "Gate": "left1"
           }
         }
@@ -785,17 +785,17 @@
     "Alias": "Crossroads_Gruz_Mother",
     "Gates": {
       "Door": {
-        "door1": {
-          "Alias": "Door-Sly_Rescue",
-          "VanillaTarget": {
-            "Scene": "Room_ruinhouse",
-            "Gate": "left1"
-          }
-        },
         "door_Mender_House": {
           "Alias": "Door-Mender_Bug",
           "VanillaTarget": {
             "Scene": "Room_Mender_House",
+            "Gate": "left1"
+          }
+        },
+        "door1": {
+          "Alias": "Door-Sly_Rescue",
+          "VanillaTarget": {
+            "Scene": "Room_ruinhouse",
             "Gate": "left1"
           }
         },
@@ -1938,17 +1938,17 @@
     "Alias": "Deepnest_Distant_Village",
     "Gates": {
       "Door": {
-        "door1": {
-          "Alias": "Door-Beast's_Den",
-          "VanillaTarget": {
-            "Scene": "Deepnest_Spider_Town",
-            "Gate": "left1"
-          }
-        },
         "door2": {
           "Alias": "Door-Brumm",
           "VanillaTarget": {
             "Scene": "Room_spider_small",
+            "Gate": "left1"
+          }
+        },
+        "door1": {
+          "Alias": "Door-Beast's_Den",
+          "VanillaTarget": {
+            "Scene": "Deepnest_Spider_Town",
             "Gate": "left1"
           }
         }
@@ -2672,33 +2672,33 @@
     "Alias": "Edge_Bardoon",
     "Gates": {
       "Left": {
-        "left1": {
+        "left2": {
           "Alias": "Left-Upper_Edge",
           "VanillaTarget": {
-            "Scene": "Deepnest_East_03",
+            "Scene": "Deepnest_East_07",
             "Gate": "right1"
           }
         },
-        "left2": {
+        "left1": {
           "Alias": "Left-Acid_Skip",
           "VanillaTarget": {
-            "Scene": "Deepnest_East_07",
+            "Scene": "Deepnest_East_03",
             "Gate": "right1"
           }
         }
       },
       "Right": {
-        "right1": {
+        "right2": {
           "Alias": "Right-Lifeblood",
           "VanillaTarget": {
-            "Scene": "Deepnest_East_11",
+            "Scene": "Deepnest_East_15",
             "Gate": "left1"
           }
         },
-        "right2": {
+        "right1": {
           "Alias": "Right-Edge_Camp",
           "VanillaTarget": {
-            "Scene": "Deepnest_East_15",
+            "Scene": "Deepnest_East_11",
             "Gate": "left1"
           }
         }
@@ -3482,17 +3482,17 @@
         }
       },
       "Right": {
-        "right1": {
+        "right2": {
           "Alias": "Right-Bench",
           "VanillaTarget": {
-            "Scene": "Fungus1_34",
+            "Scene": "Fungus1_37",
             "Gate": "left1"
           }
         },
-        "right2": {
+        "right1": {
           "Alias": "Right-Stone_Sanctuary",
           "VanillaTarget": {
-            "Scene": "Fungus1_37",
+            "Scene": "Fungus1_34",
             "Gate": "left1"
           }
         }
@@ -4101,17 +4101,17 @@
             "Gate": "right2"
           }
         },
-        "left2": {
-          "Alias": "Left-Stag",
-          "VanillaTarget": {
-            "Scene": "Fungus2_02",
-            "Gate": "right1"
-          }
-        },
         "left3": {
           "Alias": "Left-Willoh",
           "VanillaTarget": {
             "Scene": "Fungus2_34",
+            "Gate": "right1"
+          }
+        },
+        "left2": {
+          "Alias": "Left-Stag",
+          "VanillaTarget": {
+            "Scene": "Fungus2_02",
             "Gate": "right1"
           }
         }
@@ -4248,17 +4248,17 @@
         }
       },
       "Left": {
-        "left1": {
-          "Alias": "Left-Shrumal_Ogres",
-          "VanillaTarget": {
-            "Scene": "Fungus2_05",
-            "Gate": "right1"
-          }
-        },
         "left2": {
           "Alias": "Left-Whispering_Root",
           "VanillaTarget": {
             "Scene": "Fungus2_33",
+            "Gate": "right1"
+          }
+        },
+        "left1": {
+          "Alias": "Left-Shrumal_Ogres",
+          "VanillaTarget": {
+            "Scene": "Fungus2_05",
             "Gate": "right1"
           }
         }
@@ -5138,17 +5138,17 @@
             "Gate": "right1"
           }
         },
-        "left2": {
-          "Alias": "Left-Stag",
-          "VanillaTarget": {
-            "Scene": "Fungus3_40",
-            "Gate": "right1"
-          }
-        },
         "left3": {
           "Alias": "Left-Traitor's_Grave",
           "VanillaTarget": {
             "Scene": "Fungus3_49",
+            "Gate": "right1"
+          }
+        },
+        "left2": {
+          "Alias": "Left-Stag",
+          "VanillaTarget": {
+            "Scene": "Fungus3_40",
             "Gate": "right1"
           }
         }
@@ -6672,17 +6672,17 @@
         }
       },
       "Bot": {
-        "bot1": {
-          "Alias": "Bot-To_Ascent",
-          "VanillaTarget": {
-            "Scene": "Mines_25",
-            "Gate": "top1"
-          }
-        },
         "bot2": {
           "Alias": "Bot-Pit_Fall",
           "VanillaTarget": {
             "Scene": "Mines_23",
+            "Gate": "top1"
+          }
+        },
+        "bot1": {
+          "Alias": "Bot-To_Ascent",
+          "VanillaTarget": {
+            "Scene": "Mines_25",
             "Gate": "top1"
           }
         }
@@ -6804,13 +6804,6 @@
     "Alias": "Grounds_Whispering_Root",
     "Gates": {
       "Left": {
-        "left1": {
-          "Alias": "Left-Dream_Nail",
-          "VanillaTarget": {
-            "Scene": "RestingGrounds_04",
-            "Gate": "right1"
-          }
-        },
         "left2": {
           "Alias": "Left-Seer",
           "VanillaTarget": {
@@ -6822,6 +6815,13 @@
           "Alias": "Left-Dreamshield",
           "VanillaTarget": {
             "Scene": "RestingGrounds_17",
+            "Gate": "right1"
+          }
+        },
+        "left1": {
+          "Alias": "Left-Dream_Nail",
+          "VanillaTarget": {
+            "Scene": "RestingGrounds_04",
             "Gate": "right1"
           }
         }
@@ -8003,13 +8003,6 @@
     "Alias": "City_Toll_Bench",
     "Gates": {
       "Left": {
-        "left1": {
-          "Alias": "Left-Storerooms",
-          "VanillaTarget": {
-            "Scene": "Ruins1_06",
-            "Gate": "right1"
-          }
-        },
         "left2": {
           "Alias": "Left-Shade_Soul_Exit",
           "VanillaTarget": {
@@ -8022,6 +8015,13 @@
           "VanillaTarget": {
             "Scene": "Ruins1_31b",
             "Gate": "right2"
+          }
+        },
+        "left1": {
+          "Alias": "Left-Storerooms",
+          "VanillaTarget": {
+            "Scene": "Ruins1_06",
+            "Gate": "right1"
           }
         }
       },
@@ -8231,10 +8231,10 @@
             "Gate": "left1"
           }
         },
-        "door_Ruin_House_01": {
-          "Alias": "Door-Guarded_Grub",
+        "door_Ruin_House_03": {
+          "Alias": "Door-Emilitia",
           "VanillaTarget": {
-            "Scene": "Ruins_House_01",
+            "Scene": "Ruins_House_03",
             "Gate": "left1"
           }
         },
@@ -8245,10 +8245,10 @@
             "Gate": "left1"
           }
         },
-        "door_Ruin_House_03": {
-          "Alias": "Door-Emilitia",
+        "door_Ruin_House_01": {
+          "Alias": "Door-Guarded_Grub",
           "VanillaTarget": {
-            "Scene": "Ruins_House_03",
+            "Scene": "Ruins_House_01",
             "Gate": "left1"
           }
         }
@@ -8565,18 +8565,18 @@
     "Alias": "City_Pleasure_House_Elevator",
     "Gates": {
       "Left": {
-        "left1": {
-          "Alias": "Left-Bottom",
-          "VanillaTarget": {
-            "Scene": "Ruins2_04",
-            "Gate": "door_Ruin_Elevator"
-          }
-        },
         "left2": {
           "Alias": "Left-Top",
           "VanillaTarget": {
             "Scene": "Ruins_Bathhouse",
             "Gate": "door1"
+          }
+        },
+        "left1": {
+          "Alias": "Left-Bottom",
+          "VanillaTarget": {
+            "Scene": "Ruins2_04",
+            "Gate": "door_Ruin_Elevator"
           }
         }
       }
@@ -8635,24 +8635,17 @@
     "Alias": "Dirtmouth",
     "Gates": {
       "Door": {
-        "door_bretta": {
-          "Alias": "Door-Bretta",
+        "room_divine": {
+          "Alias": "Door-Divine",
           "VanillaTarget": {
-            "Scene": "Room_Bretta",
-            "Gate": "right1"
-          }
-        },
-        "door_jiji": {
-          "Alias": "Door-Jiji",
-          "VanillaTarget": {
-            "Scene": "Room_Ouiji",
+            "Scene": "Grimm_Divine",
             "Gate": "left1"
           }
         },
-        "door_mapper": {
-          "Alias": "Door-Iselda",
+        "room_grimm": {
+          "Alias": "Door-Grimm",
           "VanillaTarget": {
-            "Scene": "Room_mapper",
+            "Scene": "Grimm_Main_Tent",
             "Gate": "left1"
           }
         },
@@ -8670,17 +8663,24 @@
             "Gate": "left1"
           }
         },
-        "room_divine": {
-          "Alias": "Door-Divine",
+        "door_mapper": {
+          "Alias": "Door-Iselda",
           "VanillaTarget": {
-            "Scene": "Grimm_Divine",
+            "Scene": "Room_mapper",
             "Gate": "left1"
           }
         },
-        "room_grimm": {
-          "Alias": "Door-Grimm",
+        "door_bretta": {
+          "Alias": "Door-Bretta",
           "VanillaTarget": {
-            "Scene": "Grimm_Main_Tent",
+            "Scene": "Room_Bretta",
+            "Gate": "right1"
+          }
+        },
+        "door_jiji": {
+          "Alias": "Door-Jiji",
+          "VanillaTarget": {
+            "Scene": "Room_Ouiji",
             "Gate": "left1"
           }
         }
@@ -8723,15 +8723,15 @@
     "Alias": "King's_Pass",
     "Gates": {
       "Top": {
-        "top1": {
-          "Alias": "Top-Game_Start"
-        },
         "top2": {
           "Alias": "Top-Cliffs",
           "VanillaTarget": {
             "Scene": "Cliffs_02",
             "Gate": "bot1"
           }
+        },
+        "top1": {
+          "Alias": "Top-Game_Start"
         }
       },
       "Right": {
@@ -8790,6 +8790,13 @@
     "Alias": "Waterways_Main_Bench",
     "Gates": {
       "Top": {
+        "top3": {
+          "Alias": "Top-East_Grub",
+          "VanillaTarget": {
+            "Scene": "Waterways_04",
+            "Gate": "bot1"
+          }
+        },
         "top1": {
           "Alias": "Top-Middle",
           "VanillaTarget": {
@@ -8801,13 +8808,6 @@
           "Alias": "Top-Dung_Defender",
           "VanillaTarget": {
             "Scene": "Waterways_05",
-            "Gate": "bot1"
-          }
-        },
-        "top3": {
-          "Alias": "Top-East_Grub",
-          "VanillaTarget": {
-            "Scene": "Waterways_04",
             "Gate": "bot1"
           }
         }
@@ -9027,17 +9027,17 @@
         }
       },
       "Left": {
-        "left1": {
-          "Alias": "Left-Flukemarm",
-          "VanillaTarget": {
-            "Scene": "Waterways_12",
-            "Gate": "right1"
-          }
-        },
         "left2": {
           "Alias": "Left-Junk_Pit",
           "VanillaTarget": {
             "Scene": "GG_Pipeway",
+            "Gate": "right1"
+          }
+        },
+        "left1": {
+          "Alias": "Left-Flukemarm",
+          "VanillaTarget": {
+            "Scene": "Waterways_12",
             "Gate": "right1"
           }
         }

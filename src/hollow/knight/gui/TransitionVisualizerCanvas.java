@@ -9,6 +9,8 @@ import java.awt.FontMetrics;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.KeyAdapter;
@@ -79,6 +81,9 @@ public final class TransitionVisualizerCanvas extends JPanel {
     addMouseMotionListener(newMouseMotionListener());
     addMouseWheelListener(newMouseWheelListener());
     addKeyListener(newKeyListener());
+
+    KeyboardFocusManager.getCurrentKeyboardFocusManager()
+        .addKeyEventDispatcher(newKeyEventDispatcher());
   }
 
   public Point center() {
@@ -152,9 +157,23 @@ public final class TransitionVisualizerCanvas extends JPanel {
         if (selectionAnchor != null) {
           updateHighlightSelectionDrag(p);
 
-          // TODO: Support ctrl+add
-          currentSelection.clear();
-          currentSelection.addAll(highlightedSelection);
+          if (isControlDown && isAltDown) {
+            highlightedSelection.forEach(h -> {
+              if (currentSelection.contains(h)) {
+                currentSelection.remove(h);
+              } else {
+                currentSelection.add(h);
+              }
+            });
+          } else if (isControlDown) {
+            currentSelection.addAll(highlightedSelection);
+          } else if (isAltDown) {
+            currentSelection.removeAll(highlightedSelection);
+          } else {
+            currentSelection.clear();
+            currentSelection.addAll(highlightedSelection);
+          }
+
           highlightedSelection.clear();
           selectionAnchor = null;
           selectionDrag = null;
@@ -230,10 +249,10 @@ public final class TransitionVisualizerCanvas extends JPanel {
     };
   }
 
-  private final ImmutableMap<Integer, Integer> X_DIST = ImmutableMap.of(KeyEvent.VK_LEFT, -1,
-      KeyEvent.VK_A, -1, KeyEvent.VK_RIGHT, 1, KeyEvent.VK_D, 1);
+  private final ImmutableMap<Integer, Integer> X_DIST =
+      ImmutableMap.of(KeyEvent.VK_LEFT, -1, KeyEvent.VK_RIGHT, 1);
   private final ImmutableMap<Integer, Integer> Y_DIST =
-      ImmutableMap.of(KeyEvent.VK_UP, -1, KeyEvent.VK_W, -1, KeyEvent.VK_DOWN, 1, KeyEvent.VK_S, 1);
+      ImmutableMap.of(KeyEvent.VK_UP, -1, KeyEvent.VK_DOWN, 1);
 
   private static final double SCROLL_INCREMENT = 40.0;
 
@@ -247,12 +266,37 @@ public final class TransitionVisualizerCanvas extends JPanel {
 
           parent.updateScenesList();
           parent.repaint();
+        } else if (e.getKeyCode() == KeyEvent.VK_D) {
+          Set<ScenePlacement> newPlacements = new HashSet<>();
+          currentSelection.stream()
+              .map(p -> parent.placements().addPlacement(p.scene(), p.point().translated(30, 30)))
+              .forEach(newPlacements::add);
+          currentSelection.clear();
+          currentSelection.addAll(newPlacements);
+          repaint();
+
+          parent.updateScenesList();
+          parent.repaint();
         } else if (X_DIST.containsKey(e.getKeyCode()) || Y_DIST.containsKey(e.getKeyCode())) {
           double dx = SCROLL_INCREMENT * zoom * X_DIST.getOrDefault(e.getKeyCode(), 0);
           double dy = SCROLL_INCREMENT * zoom * Y_DIST.getOrDefault(e.getKeyCode(), 0);
           center = new Point(center.x() + dx, center.y() + dy);
           repaint();
         }
+      }
+    };
+  }
+
+  private boolean isControlDown = false;
+  private boolean isAltDown = false;
+
+  private KeyEventDispatcher newKeyEventDispatcher() {
+    return new KeyEventDispatcher() {
+      @Override
+      public boolean dispatchKeyEvent(KeyEvent e) {
+        isControlDown = e.isControlDown();
+        isAltDown = e.isAltDown();
+        return false;
       }
     };
   }
@@ -343,12 +387,14 @@ public final class TransitionVisualizerCanvas extends JPanel {
       }
 
       boolean symmetric = false;
-      ItemCheck dupe = parent.ctx().checks().getChecksAtLocation(transition.item().term().name())
-          .collect(MoreCollectors.onlyElement());
-      if (dupe.item().term().name().equals(transition.location().name())) {
-        // This is a symmetric transition
-        duplicates.add(dupe);
-        symmetric = true;
+      if (data().isTarget(source) && data().isSource(target)) {
+        ItemCheck dupe = parent.ctx().checks().getChecksAtLocation(transition.item().term().name())
+            .collect(MoreCollectors.onlyElement());
+        if (dupe.item().term().name().equals(transition.location().name())) {
+          // This is a symmetric transition
+          duplicates.add(dupe);
+          symmetric = true;
+        }
       }
 
       g2d.setColor(Color.GRAY);
@@ -361,7 +407,7 @@ public final class TransitionVisualizerCanvas extends JPanel {
           if (!symmetric) {
             g2d.setPaint(new GradientPaint((float) r1.center().x(), (float) r1.center().y(),
                 Color.GRAY.brighter(), (float) r2.center().x(), (float) r2.center().y(),
-                Color.GRAY.darker()));
+                Color.RED.darker()));
           }
           g2d.drawLine((int) r1.center().x(), (int) r1.center().y(), (int) r2.center().x(),
               (int) r2.center().y());

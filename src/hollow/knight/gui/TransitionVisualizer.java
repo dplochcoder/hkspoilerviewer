@@ -10,6 +10,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
@@ -110,6 +111,13 @@ public final class TransitionVisualizer extends JFrame {
           String scene = scenesListModel.getScene(scenesList.getSelectedIndex());
 
           application.transitionVisualizerPlacements().addPlacement(scene, canvas.center());
+
+          try {
+            application.transitionData().refresh(application.ctx().roomLabels());
+          } catch (Exception ex) {
+            System.err.println("Whoops: " + ex);
+          }
+
           updateScenesList();
           repaint();
           e.consume();
@@ -155,7 +163,8 @@ public final class TransitionVisualizer extends JFrame {
             .filter(s -> !s.isEmpty()).collect(ImmutableList.toImmutableList());
 
     List<String> newScenes = transitionData().scenes().stream().filter(s -> matches(tokens, s))
-        .sorted().collect(ImmutableList.toImmutableList());
+        .sorted(Comparator.comparing(s -> transitionData().sceneData(s).alias()))
+        .collect(ImmutableList.toImmutableList());
     scenesListModel.updateScenes(newScenes);
   }
 
