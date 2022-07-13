@@ -85,8 +85,16 @@ public final class TransitionVisualizer extends JFrame {
     setVisible(true);
   }
 
+  public Application app() {
+    return application;
+  }
+
   public StateContext ctx() {
     return application.ctx();
+  }
+
+  public boolean isICDL() {
+    return application.isICDL();
   }
 
   public TransitionData transitionData() {

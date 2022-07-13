@@ -5,9 +5,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Stream;
 import com.google.common.base.Verify;
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ImmutableCollection;
+import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ListMultimap;
@@ -99,8 +100,8 @@ public final class TransitionData {
   public static final class SceneData {
     private final String alias;
     private final Optional<Point> vanillaPlacement;
-    private final ListMultimap<String, GateData> gatesByDir;
-    private final Map<String, GateData> gatesByName;
+    private final ImmutableListMultimap<String, GateData> gatesByDir;
+    private final ImmutableMap<String, GateData> gatesByName;
 
     private final double width;
     private final double height;
@@ -182,8 +183,8 @@ public final class TransitionData {
         this.vanillaPlacement = Optional.empty();
       }
 
-      this.gatesByDir = ArrayListMultimap.create();
-      this.gatesByName = new HashMap<>();
+      ListMultimap<String, GateData> gatesByDir = ArrayListMultimap.create();
+      Map<String, GateData> gatesByName = new HashMap<>();
 
       JsonObject g = obj.get("Gates").getAsJsonObject();
       for (String dir : g.keySet()) {
@@ -198,6 +199,9 @@ public final class TransitionData {
           ++index;
         }
       }
+
+      this.gatesByDir = ImmutableListMultimap.copyOf(gatesByDir);
+      this.gatesByName = ImmutableMap.copyOf(gatesByName);
 
       if (obj.has("Width")) {
         this.width = obj.get("Width").getAsDouble();
@@ -227,8 +231,8 @@ public final class TransitionData {
       return vanillaPlacement;
     }
 
-    public Stream<GateData> allGates() {
-      return gatesByName.values().stream();
+    public ImmutableCollection<GateData> allGates() {
+      return gatesByName.values();
     }
 
     public GateData getGate(String name) {
@@ -259,10 +263,10 @@ public final class TransitionData {
 
   private TransitionData(Map<String, SceneData> scenes) {
     this.scenes = ImmutableMap.copyOf(scenes);
-    this.sources = scenes.values().stream().flatMap(s -> s.allGates())
+    this.sources = scenes.values().stream().flatMap(s -> s.allGates().stream())
         .filter(g -> g.vanillaTarget().isPresent()).map(g -> Gate.create(g.scene(), g.name()))
         .collect(ImmutableSet.toImmutableSet());
-    this.targets = scenes.values().stream().flatMap(s -> s.allGates())
+    this.targets = scenes.values().stream().flatMap(s -> s.allGates().stream())
         .filter(g -> g.vanillaTarget().isPresent()).map(g -> g.vanillaTarget().get())
         .collect(ImmutableSet.toImmutableSet());
   }

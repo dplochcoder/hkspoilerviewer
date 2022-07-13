@@ -9,6 +9,10 @@ public abstract class Gate {
 
   public abstract String gateName();
 
+  public String termString() {
+    return sceneName() + "[" + gateName() + "]";
+  }
+
   public static Gate create(String scene, String gate) {
     return new AutoValue_Gate(scene, gate);
   }

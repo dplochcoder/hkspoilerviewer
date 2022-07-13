@@ -340,14 +340,8 @@ public final class Application extends JFrame {
     return true;
   }
 
-  public void copyCheckEditorItem(ItemCheck check) {
-    if (!ensureCheckEditor().wasOpen()) {
-      return;
-    }
-
-    Item item = checkEditor.selectedItem();
-    if (item == null || check == null || item.term().equals(check.item().term())
-        || !ensureRandomizedNonTransition(check)) {
+  public void copyItemToCheck(Item item, ItemCheck check) {
+    if (item.term().equals(check.item().term())) {
       return;
     }
 
@@ -365,6 +359,19 @@ public final class Application extends JFrame {
     if (routeCheck == check) {
       routeList.setSelectedIndex(routeListModel.indexOfRouteCheck(ctx().checks().get(newId)));
     }
+  }
+
+  public void copyCheckEditorItem(ItemCheck check) {
+    if (!ensureCheckEditor().wasOpen()) {
+      return;
+    }
+
+    Item item = checkEditor.selectedItem();
+    if (item == null || check == null || !ensureRandomizedNonTransition(check)) {
+      return;
+    }
+
+    copyItemToCheck(item, check);
   }
 
   private void deleteCheck(ItemCheck check) {

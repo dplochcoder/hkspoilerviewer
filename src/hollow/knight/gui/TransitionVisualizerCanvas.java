@@ -30,6 +30,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import javax.swing.JPanel;
+import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -37,15 +38,32 @@ import com.google.common.collect.MoreCollectors;
 import hollow.knight.gui.TransitionData.GateData;
 import hollow.knight.gui.TransitionData.SceneData;
 import hollow.knight.logic.ICDLException;
+import hollow.knight.logic.Item;
 import hollow.knight.logic.ItemCheck;
+import hollow.knight.logic.Term;
 
 public final class TransitionVisualizerCanvas extends JPanel {
+  @AutoValue
+  abstract static class GatePlacement {
+    public abstract ScenePlacement scene();
+
+    public abstract String gateName();
+
+    public final Gate asGate() {
+      return Gate.create(scene().scene(), gateName());
+    }
+
+    public static GatePlacement create(ScenePlacement scene, String gateName) {
+      return new AutoValue_TransitionVisualizerCanvas_GatePlacement(scene, gateName);
+    }
+  }
+
   public interface CanvasEnum {
     String displayName();
   }
 
   public enum EditMode implements CanvasEnum {
-    SOURCE_TO_TARGET("Source -> Target"), TARGET_TO_SOURCE("Target -> Source"), COUPLED("Coupled");
+    SOURCE_TO_TARGET("Source -> Target"), COUPLED("Coupled");
 
     private final String displayName;
 
@@ -56,6 +74,10 @@ public final class TransitionVisualizerCanvas extends JPanel {
     @Override
     public String displayName() {
       return displayName;
+    }
+
+    public boolean coupled() {
+      return this == COUPLED;
     }
   }
 
@@ -107,9 +129,12 @@ public final class TransitionVisualizerCanvas extends JPanel {
   // For highlighting and selecting scenes.
   private Point selectionAnchor = null; // Initial click point
   private Point selectionDrag = null; // Last drag point
-  private Set<ScenePlacement> currentSelection = new HashSet<>(); // Scenes currently selected
-  private Set<ScenePlacement> highlightedSelection = new HashSet<>(); // Scenes highlighted for
-                                                                      // selection
+  private Point mouseMoved = null; // Last move point
+  GatePlacement currentGate = null; // Gate currently selected
+  private Set<ScenePlacement> currentSceneSelection = new HashSet<>(); // Scenes currently selected
+  GatePlacement highlightGate = null; // Gate highlighted
+  private Set<ScenePlacement> highlightedSceneSelection = new HashSet<>(); // Scenes highlighted for
+                                                                           // selection
   // on release
   // For dragging the screen or selections
   private AffineTransform dragTransform = null; // Override transform, changed by shifting center
@@ -140,8 +165,10 @@ public final class TransitionVisualizerCanvas extends JPanel {
   public void clear() {
     selectionAnchor = null;
     selectionDrag = null;
-    currentSelection.clear();
-    highlightedSelection.clear();
+    currentGate = null;
+    currentSceneSelection.clear();
+    highlightGate = null;
+    highlightedSceneSelection.clear();
     dragTransform = null;
     dragAnchor = null;
     lastDrag = null;
@@ -207,18 +234,75 @@ public final class TransitionVisualizerCanvas extends JPanel {
     font = new Font("Arial", Font.BOLD, size);
   }
 
+  private void updateSelectedTransitionUnsafe() throws ICDLException {
+    Gate source = currentGate.asGate();
+    Gate target = highlightGate.asGate();
+    currentGate = null;
+    highlightGate = null;
+
+    ItemCheck sourceCheck = parent.ctx().checks().getChecksAtLocation(source.termString())
+        .collect(MoreCollectors.onlyElement());
+    Item targetItem = parent.ctx().checks().getItem(Term.create(target.termString()));
+    parent.app().copyItemToCheck(targetItem, sourceCheck);
+
+    if (editMode.coupled() && !source.equals(target) && data().isSource(target)
+        && data().isTarget(source)) {
+      ItemCheck targetCheck = parent.ctx().checks().getChecksAtLocation(target.termString())
+          .collect(MoreCollectors.onlyElement());
+      Item sourceItem = parent.ctx().checks().getItem(Term.create(source.termString()));
+      parent.app().copyItemToCheck(sourceItem, targetCheck);
+    }
+  }
+
+  private void updateSelectedTransitionSafe() {
+    try {
+      updateSelectedTransitionUnsafe();
+    } catch (ICDLException ex) {
+      GuiUtil.showStackTrace(this, "Error editing transition", ex);
+    }
+  }
+
   private void updateHighlightSelectionDrag(Point dragPoint) {
+    highlightedSceneSelection.clear();
+    highlightGate = null;
+
     selectionDrag = dragPoint;
     Rect r = Rect.containing(selectionAnchor, selectionDrag);
 
+    if (parent.isICDL()) {
+      // Check for an editable transition first.
+      for (ScenePlacement p : parent.placements().allScenePlacementsReversed()) {
+        SceneData sData = data().sceneData(p.scene());
+
+        for (GateData gate : sData.allGates()) {
+          Gate g = Gate.create(p.scene(), gate.name());
+          if ((currentGate != null && !data().isTarget(g))
+              || (currentGate == null && !data().isSource(g))) {
+            continue;
+          }
+
+          Rect gr = p.getTransitionRect(gate.name(), data());
+          if (gr.contains(r)) {
+            // Select the transition.
+            highlightGate = GatePlacement.create(p, gate.name());
+            return;
+          }
+        }
+      }
+    }
+
+    if (currentGate != null) {
+      // Can't select scenes.
+      return;
+    }
+
     // If our first match contains the highlight, select only the top rect.
     // Otherwise, select all intersecting.
-    highlightedSelection.clear();
     boolean first = true;
     for (ScenePlacement p : parent.placements().allScenePlacementsReversed()) {
       Rect pr = p.getRect(data());
       if (pr.intersects(r)) {
-        highlightedSelection.add(p);
+        highlightedSceneSelection.add(p);
 
         if (first && pr.contains(r)) {
           break;
@@ -234,7 +318,7 @@ public final class TransitionVisualizerCanvas extends JPanel {
     lastDrag = dragPoint;
 
     if (dragSelection) {
-      currentSelection.forEach(pl -> pl.translate(dx, dy));
+      currentSceneSelection.forEach(pl -> pl.translate(dx, dy));
     } else {
       center = center.translated(-dx, -dy);
     }
@@ -262,38 +346,57 @@ public final class TransitionVisualizerCanvas extends JPanel {
 
   private MouseListener newMouseListener() {
     return new MouseAdapter() {
+      @Override
+      public void mouseMoved(MouseEvent e) {
+        mouseMoved = invertMouse(e.getPoint());
+
+        if (currentGate != null) {
+          repaint();
+        }
+      }
 
       @Override
       public void mouseReleased(MouseEvent e) {
-        Point p = invertMouse(e.getPoint());
+        mouseMoved = invertMouse(e.getPoint());
 
         if (selectionAnchor != null) {
-          updateHighlightSelectionDrag(p);
+          updateHighlightSelectionDrag(mouseMoved);
 
-          if (isControlDown && isAltDown) {
-            highlightedSelection.forEach(h -> {
-              if (currentSelection.contains(h)) {
-                currentSelection.remove(h);
+          if (highlightGate != null) {
+            if (currentGate == null) {
+              currentGate = highlightGate;
+              highlightGate = null;
+            } else {
+              // Set transition.
+              updateSelectedTransitionSafe();
+            }
+          } else if (currentGate != null) {
+            currentGate = null;
+            highlightGate = null;
+          } else if (isControlDown && isAltDown) {
+            highlightedSceneSelection.forEach(h -> {
+              if (currentSceneSelection.contains(h)) {
+                currentSceneSelection.remove(h);
               } else {
-                currentSelection.add(h);
+                currentSceneSelection.add(h);
               }
             });
           } else if (isControlDown) {
-            currentSelection.addAll(highlightedSelection);
+            currentSceneSelection.addAll(highlightedSceneSelection);
           } else if (isAltDown) {
-            currentSelection.removeAll(highlightedSelection);
+            currentSceneSelection.removeAll(highlightedSceneSelection);
           } else {
-            currentSelection.clear();
-            currentSelection.addAll(highlightedSelection);
+            currentSceneSelection.clear();
+            currentSceneSelection.addAll(highlightedSceneSelection);
           }
 
-          highlightedSelection.clear();
+          highlightedSceneSelection.clear();
           selectionAnchor = null;
           selectionDrag = null;
           repaint();
         } else if (dragAnchor != null) {
-          updateDragAnchor(p);
-          currentSelection.forEach(s -> s.update(snap.snap(s.point())));
+          updateDragAnchor(mouseMoved);
+          currentSceneSelection.forEach(s -> s.update(snap.snap(s.point())));
 
           dragTransform = null;
           dragAnchor = null;
@@ -305,27 +408,27 @@ public final class TransitionVisualizerCanvas extends JPanel {
 
       @Override
       public void mousePressed(MouseEvent e) {
+        mouseMoved = invertMouse(e.getPoint());
         TransitionVisualizerCanvas.this.requestFocus();
 
-        Point p = invertMouse(e.getPoint());
         if (e.getButton() == MouseEvent.BUTTON1) {
           // Are we clicking on any selected scenes?
-          boolean onSelected =
-              currentSelection.stream().anyMatch(pl -> pl.getRect(data()).contains(p));
+          boolean onSelected = currentSceneSelection.stream()
+              .anyMatch(pl -> pl.getRect(data()).contains(mouseMoved));
 
           if (onSelected) {
-            dragAnchor = p;
-            lastDrag = p;
+            dragAnchor = mouseMoved;
+            lastDrag = mouseMoved;
             dragSelection = true;
           } else {
-            selectionAnchor = p;
-            updateHighlightSelectionDrag(p);
+            selectionAnchor = mouseMoved;
+            updateHighlightSelectionDrag(mouseMoved);
           }
           repaint();
         } else if (e.getButton() == MouseEvent.BUTTON3) {
           dragTransform = transform();
-          dragAnchor = p;
-          lastDrag = p;
+          dragAnchor = mouseMoved;
+          lastDrag = mouseMoved;
           dragSelection = false;
           repaint();
         }
@@ -376,18 +479,18 @@ public final class TransitionVisualizerCanvas extends JPanel {
       @Override
       public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_X) {
-          currentSelection.forEach(parent.placements()::removePlacement);
+          currentSceneSelection.forEach(parent.placements()::removePlacement);
           repaint();
 
           parent.updateScenesList();
           parent.repaint();
         } else if (e.getKeyCode() == KeyEvent.VK_D) {
           Set<ScenePlacement> newPlacements = new HashSet<>();
-          currentSelection.stream()
+          currentSceneSelection.stream()
               .map(p -> parent.placements().addPlacement(p.scene(), p.point().translated(30, 30)))
               .forEach(newPlacements::add);
-          currentSelection.clear();
-          currentSelection.addAll(newPlacements);
+          currentSceneSelection.clear();
+          currentSceneSelection.addAll(newPlacements);
           repaint();
 
           parent.updateScenesList();
@@ -423,7 +526,8 @@ public final class TransitionVisualizerCanvas extends JPanel {
   }
 
   private Color adjustSceneColor(ScenePlacement p, Color c) {
-    double pct = highlightedSelection.contains(p) ? 0.4 : (currentSelection.contains(p) ? 0.2 : 0);
+    double pct =
+        highlightedSceneSelection.contains(p) ? 0.4 : (currentSceneSelection.contains(p) ? 0.2 : 0);
     return new Color(adjustBits(c.getRed(), pct), adjustBits(c.getGreen(), pct),
         adjustBits(c.getBlue(), pct));
   }
@@ -434,7 +538,8 @@ public final class TransitionVisualizerCanvas extends JPanel {
   }
 
   private float strokeWidth(ScenePlacement p) {
-    return highlightedSelection.contains(p) ? 3.0f : (currentSelection.contains(p) ? 2.0f : 1.0f);
+    return highlightedSceneSelection.contains(p) ? 3.0f
+        : (currentSceneSelection.contains(p) ? 2.0f : 1.0f);
   }
 
   private void renderGatePlacement(Graphics2D g2d, ScenePlacement s, GateData g) {
@@ -487,16 +592,6 @@ public final class TransitionVisualizerCanvas extends JPanel {
     }
   }
 
-  private Color targetTransitionColor(ItemCheck transition, Gate gate) {
-    if (!data().isSource(gate)) {
-      return Color.RED.darker();
-    } else if (transition.vanilla()) {
-      return Color.BLUE.brighter();
-    } else {
-      return Color.GRAY.brighter();
-    }
-  }
-
   private void renderTransitions(Graphics2D g2d) throws ICDLException {
     Set<ItemCheck> transitionsToDraw = new HashSet<>();
     Set<ItemCheck> duplicates = new HashSet<>();
@@ -541,7 +636,7 @@ public final class TransitionVisualizerCanvas extends JPanel {
           } else {
             g2d.setPaint(new GradientPaint((float) r1.center().x(), (float) r1.center().y(),
                 sourceTransitionColor(transition, source), (float) r2.center().x(),
-                (float) r2.center().y(), targetTransitionColor(transition, target)));
+                (float) r2.center().y(), Color.red.darker()));
           }
           g2d.drawLine((int) r1.center().x(), (int) r1.center().y(), (int) r2.center().x(),
               (int) r2.center().y());
@@ -584,6 +679,16 @@ public final class TransitionVisualizerCanvas extends JPanel {
         g2d.setStroke(new BasicStroke(0.7f));
         g2d.setComposite(AlphaComposite.Src);
         r.draw(g2d);
+      }
+      if (currentGate != null) {
+        Point start =
+            currentGate.scene().getTransitionRect(currentGate.gateName(), data()).center();
+        Point end = mouseMoved;
+
+        // TODO: Adjust color based on target eligibility
+        g2d.setStroke(new BasicStroke(7.5f));
+        g2d.setColor(Color.GREEN.brighter());
+        g2d.drawLine((int) start.x(), (int) start.y(), (int) end.x(), (int) end.y());
       }
     } catch (ICDLException ex) {
       throw new AssertionError(ex);
