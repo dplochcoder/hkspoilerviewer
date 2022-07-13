@@ -13,15 +13,23 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.primitives.Ints;
 import hollow.knight.gui.TransitionData.SceneData;
+import hollow.knight.gui.TransitionVisualizerCanvas.EditMode;
 import hollow.knight.logic.RoomLabels;
 import hollow.knight.logic.StateContext;
 
@@ -52,6 +60,8 @@ public final class TransitionVisualizer extends JFrame {
     this.scenesPane = new JScrollPane(scenesList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
         JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
     scenesPane.setMinimumSize(new Dimension(300, 600));
+
+    setJMenuBar(createMenu());
 
     JPanel rightPane = new JPanel();
     rightPane.setLayout(new BoxLayout(rightPane, BoxLayout.PAGE_AXIS));
@@ -136,6 +146,67 @@ public final class TransitionVisualizer extends JFrame {
       }
     };
 
+  }
+
+  private JMenuItem createFontSizeMenu() {
+    JMenuItem fSize = new JMenuItem("Font Size");
+    fSize.addActionListener(GuiUtil.newActionListener(this, () -> {
+      String out = JOptionPane.showInputDialog(this, "Enter new font size",
+          String.valueOf(canvas.getFontSize()));
+      if (out == null || out.trim().isEmpty()) {
+        return;
+      }
+
+      Integer s = Ints.tryParse(out.trim());
+      if (s == null || s < 1) {
+        JOptionPane.showMessageDialog(this, "Must input a positive integer", "Bad Font Size",
+            JOptionPane.WARNING_MESSAGE);
+        return;
+      }
+
+      canvas.setFontSize(s);
+      repaint();
+    }));
+
+    return fSize;
+  }
+
+  private JMenu createTransitionModeMenu() {
+    JMenu out = new JMenu("Transition Mode");
+
+    ButtonGroup g = new ButtonGroup();
+    for (EditMode m : EditMode.values()) {
+      JRadioButton b = new JRadioButton(m.displayName());
+      b.setSelected(m == canvas.editMode());
+      b.addActionListener(GuiUtil.newActionListener(this, () -> {
+        canvas.setEditMode(m);
+        repaint();
+      }));
+
+      out.add(b);
+      g.add(b);
+    }
+
+    return out;
+  }
+
+  private JMenuBar createMenu() {
+    JMenuBar menu = new JMenuBar();
+
+    JMenu view = new JMenu("View");
+    view.add(createFontSizeMenu());
+    menu.add(view);
+
+    JMenu edit = new JMenu("Edit");
+    if (application.isICDL()) {
+      edit.add(createTransitionModeMenu());
+    } else {
+      edit.setEnabled(false);
+      edit.setToolTipText("Must open an ICDL ctx.json for editing");
+    }
+    menu.add(edit);
+
+    return menu;
   }
 
   private boolean matches(ImmutableList<String> searchTokens, String scene) {

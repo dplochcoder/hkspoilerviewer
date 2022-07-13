@@ -29,7 +29,6 @@ import java.awt.geom.Point2D;
 import java.util.HashSet;
 import java.util.Set;
 import javax.swing.JPanel;
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.MoreCollectors;
@@ -39,14 +38,17 @@ import hollow.knight.logic.ICDLException;
 import hollow.knight.logic.ItemCheck;
 
 public final class TransitionVisualizerCanvas extends JPanel {
-  @AutoValue
-  abstract static class TransitionIdentifier {
-    public abstract ScenePlacement scenePlacement();
+  public enum EditMode {
+    SOURCE_TO_TARGET("Source -> Target"), TARGET_TO_SOURCE("Target -> Source"), COUPLED("Coupled");
 
-    public abstract String gate();
+    private final String displayName;
 
-    public static TransitionIdentifier create(ScenePlacement placement, String gate) {
-      return new AutoValue_TransitionVisualizerCanvas_TransitionIdentifier(placement, gate);
+    EditMode(String displayName) {
+      this.displayName = displayName;
+    }
+
+    public String displayName() {
+      return displayName;
     }
   }
 
@@ -74,6 +76,8 @@ public final class TransitionVisualizerCanvas extends JPanel {
   private int zoomPower = 0;
   private Font font = new Font("Arial", Font.BOLD, 14);
 
+  private EditMode editMode = EditMode.COUPLED;
+
   public TransitionVisualizerCanvas(TransitionVisualizer parent) {
     this.parent = parent;
 
@@ -92,6 +96,22 @@ public final class TransitionVisualizerCanvas extends JPanel {
 
   private TransitionData data() {
     return parent.transitionData();
+  }
+
+  public EditMode editMode() {
+    return editMode;
+  }
+
+  public void setEditMode(EditMode editMode) {
+    this.editMode = editMode;
+  }
+
+  public int getFontSize() {
+    return font.getSize();
+  }
+
+  public void setFontSize(int size) {
+    font = new Font("Arial", Font.BOLD, size);
   }
 
   private void updateHighlightSelectionDrag(Point dragPoint) {

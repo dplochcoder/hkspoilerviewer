@@ -290,6 +290,10 @@ public final class Application extends JFrame {
     }
   }
 
+  public boolean isICDL() {
+    return isICDL;
+  }
+
   private boolean ensureICDL() {
     if (isICDL) {
       return true;
