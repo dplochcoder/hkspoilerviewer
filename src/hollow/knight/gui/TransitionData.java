@@ -9,6 +9,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ListMultimap;
+import com.google.common.primitives.Ints;
 import com.google.gson.JsonObject;
 import hollow.knight.io.JsonUtil;
 import hollow.knight.logic.ParseException;
@@ -92,7 +93,30 @@ public final class TransitionData {
       return calculateDimension("Left", "Right");
     }
 
-    SceneData(RoomLabels roomLabels, String scene, JsonObject obj) {
+    private static Color parseColor(String hex) throws ParseException {
+      if (!hex.startsWith("#") || (hex.length() != 4 && hex.length() != 7)) {
+        throw new ParseException("Invalid color: " + hex);
+      }
+
+      Integer rgb = Ints.tryParse(hex.substring(1), 16);
+      if (rgb == null) {
+        throw new ParseException("Invalid color: " + hex);
+      }
+
+      int r, g, b;
+      if (hex.length() == 4) {
+        b = (rgb & 0xf) * 17;
+        g = ((rgb >> 4) & 0xf) * 17;
+        r = ((rgb >> 8) & 0xf) * 17;
+      } else {
+        b = rgb & 0xff;
+        g = (rgb >> 8) & 0xff;
+        r = (rgb >> 16) & 0xff;
+      }
+      return new Color(r, g, b);
+    }
+
+    SceneData(RoomLabels roomLabels, String scene, JsonObject obj) throws ParseException {
       this.alias = obj.get("Alias").getAsString();
       this.gatesByDir = ArrayListMultimap.create();
       this.gatesByName = new HashMap<>();
@@ -120,8 +144,7 @@ public final class TransitionData {
       }
 
       if (obj.has("Color")) {
-        // FIXME: Parse hex code
-        this.color = Color.white;
+        this.color = parseColor(obj.get("Color").getAsString());
       } else {
         this.color = TITLE_AREA_COLORS.getOrDefault(roomLabels.get(scene, RoomLabels.Type.TITLE),
             MAP_AREA_COLORS.getOrDefault(roomLabels.get(scene, RoomLabels.Type.MAP), Color.GRAY));
