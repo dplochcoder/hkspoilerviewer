@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -19,10 +18,8 @@ import java.util.List;
 import java.util.function.Predicate;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListCellRenderer;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -215,27 +212,9 @@ public final class Application extends JFrame {
       .add("C - (ICDL) copy current item onto selected check")
       .add("D - (ICDL) duplicate the selected check (mostly for shops)").build();
 
-  private ActionListener infoListener(String title, Iterable<String> content) {
-    return GuiUtil.newActionListener(this, () -> showInfo(title, content));
-  }
-
-  private void showInfo(String title, Iterable<String> content) {
-    JPanel panel = new JPanel();
-    panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
-
-    for (String info : content) {
-      if (info.contentEquals("-")) {
-        panel.add(new JSeparator());
-      } else {
-        panel.add(new JLabel(info));
-      }
-    }
-
-    JDialog dialog = new JDialog(Application.this, title);
-    dialog.setContentPane(panel);
-    dialog.pack();
-    dialog.setVisible(true);
-  }
+  private static final ImmutableList<String> VERSION_INFO =
+      ImmutableList.of("HKSpoilerViewer Version " + Main.version(), "-",
+          "https://github.com/dplochcoder/hkspoilerviewer");
 
   private void addBuiltinQueries(JMenu menu) throws ParseException {
     JsonArray queries = JsonUtil.loadResource(Application.class, "queries.json").getAsJsonArray();
@@ -554,23 +533,17 @@ public final class Application extends JFrame {
     bar.add(icdlMenu);
 
     JMenu about = new JMenu("About");
-    JMenuItem pl = new JMenuItem("Purchase Logic ($)");
-    about.add(pl);
+    about.add(GuiUtil.newInfoMenuItem(this, "Purchase Logic ($)", PL_INFO));
     about.add(new JSeparator());
-    JMenuItem insert = new JMenuItem("Insertions / Rewind");
-    about.add(insert);
+    about.add(GuiUtil.newInfoMenuItem(this, "Insertions / Rewind", INSERT_INFO));
     about.add(new JSeparator());
-    JMenuItem icdl = new JMenuItem("ICDL");
-    about.add(icdl);
+    about.add(GuiUtil.newInfoMenuItem(this, "ICDL", ICDL_INFO));
     about.add(new JSeparator());
-    JMenuItem aboutQueries = new JMenuItem("Queries");
-    about.add(aboutQueries);
+    about.add(GuiUtil.newInfoMenuItem(this, "Queries", QUERIES_INFO));
     about.add(new JSeparator());
-    JMenuItem ks = new JMenuItem("Keyboard Shortcuts");
-    about.add(ks);
+    about.add(GuiUtil.newInfoMenuItem(this, "Keyboard Shortcuts", KS_INFO));
     about.add(new JSeparator());
-    JMenuItem v = new JMenuItem("Version");
-    about.add(v);
+    about.add(GuiUtil.newInfoMenuItem(this, "Version", VERSION_INFO));
     bar.add(about);
 
     open.addActionListener(GuiUtil.newActionListener(this, this::openFile));
@@ -582,15 +555,6 @@ public final class Application extends JFrame {
         .addActionListener(GuiUtil.newActionListener(this, this::openTransitionVisualizer));
 
     qFromFile.addActionListener(GuiUtil.newActionListener(this, this::executeQueryFromFile));
-
-    pl.addActionListener(infoListener("Purchase Logic ($)", PL_INFO));
-    insert.addActionListener(infoListener("Insert / Rewind", INSERT_INFO));
-    icdl.addActionListener(infoListener("Queries", ICDL_INFO));
-    aboutQueries.addActionListener(infoListener("Queries", QUERIES_INFO));
-    ks.addActionListener(infoListener("Keyboard Shortcuts", KS_INFO));
-    v.addActionListener(
-        infoListener("Version", ImmutableList.of("HKSpoilerViewer Version " + Main.version(), "-",
-            "https://github.com/dplochcoder/hkspoilerviewer")));
 
     return bar;
   }

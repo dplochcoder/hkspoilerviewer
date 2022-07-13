@@ -6,7 +6,14 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import javax.swing.BoxLayout;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -56,6 +63,30 @@ public final class GuiUtil {
         onChange.run();
       }
     };
+  }
+
+  public static JMenuItem newInfoMenuItem(JFrame frame, String title, Iterable<String> content) {
+    JMenuItem out = new JMenuItem(title);
+    out.addActionListener(newActionListener(frame, () -> showInfo(frame, title, content)));
+    return out;
+  }
+
+  private static void showInfo(JFrame frame, String title, Iterable<String> content) {
+    JPanel panel = new JPanel();
+    panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+
+    for (String info : content) {
+      if (info.contentEquals("-")) {
+        panel.add(new JSeparator());
+      } else {
+        panel.add(new JLabel(info));
+      }
+    }
+
+    JDialog dialog = new JDialog(frame, title);
+    dialog.setContentPane(panel);
+    dialog.pack();
+    dialog.setVisible(true);
   }
 
   private GuiUtil() {}
