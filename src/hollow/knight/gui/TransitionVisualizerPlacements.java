@@ -29,6 +29,11 @@ public final class TransitionVisualizerPlacements implements SaveInterface {
     scenePlacementsByName.put(p.scene(), p);
   }
 
+  private void removePlacementInternal(ScenePlacement p) {
+    scenePlacements.remove(p);
+    scenePlacementsByName.remove(p.scene(), p);
+  }
+
   public Stream<ScenePlacement> allScenePlacements() {
     return scenePlacements.stream();
   }
@@ -41,6 +46,10 @@ public final class TransitionVisualizerPlacements implements SaveInterface {
 
   public Stream<ScenePlacement> placementsForScene(String scene) {
     return scenePlacementsByName.get(scene).stream();
+  }
+
+  public void removePlacement(ScenePlacement p) {
+    removePlacementInternal(p);
   }
 
   @Override

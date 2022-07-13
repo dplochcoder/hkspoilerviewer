@@ -241,7 +241,13 @@ public final class TransitionVisualizerCanvas extends JPanel {
     return new KeyAdapter() {
       @Override
       public void keyPressed(KeyEvent e) {
-        if (X_DIST.containsKey(e.getKeyCode()) || Y_DIST.containsKey(e.getKeyCode())) {
+        if (e.getKeyCode() == KeyEvent.VK_X) {
+          currentSelection.forEach(parent.placements()::removePlacement);
+          repaint();
+
+          parent.updateScenesList();
+          parent.repaint();
+        } else if (X_DIST.containsKey(e.getKeyCode()) || Y_DIST.containsKey(e.getKeyCode())) {
           double dx = SCROLL_INCREMENT * zoom * X_DIST.getOrDefault(e.getKeyCode(), 0);
           double dy = SCROLL_INCREMENT * zoom * Y_DIST.getOrDefault(e.getKeyCode(), 0);
           center = new Point(center.x() + dx, center.y() + dy);
