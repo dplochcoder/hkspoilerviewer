@@ -39,6 +39,10 @@ public final class TransitionVisualizerPlacements implements SaveInterface {
     return reversed;
   }
 
+  public Stream<ScenePlacement> placementsForScene(String scene) {
+    return scenePlacementsByName.get(scene).stream();
+  }
+
   @Override
   public String saveName() {
     return "TransitionVisualizerPlacements";

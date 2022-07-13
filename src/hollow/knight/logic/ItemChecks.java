@@ -199,6 +199,15 @@ public final class ItemChecks {
     return loc;
   }
 
+  public Stream<ItemCheck> getChecksAtLocation(String loc) throws ICDLException {
+    Set<CheckId> ids = idsByLocation.getValue(loc);
+    if (ids.isEmpty()) {
+      throw new ICDLException("Unknown location: " + loc);
+    }
+
+    return ids.stream().map(checksById::get);
+  }
+
   public boolean hasItem(Term term) {
     return itemsByName.containsKey(term);
   }

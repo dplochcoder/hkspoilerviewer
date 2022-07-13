@@ -22,6 +22,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import hollow.knight.gui.TransitionData.SceneData;
 import hollow.knight.logic.RoomLabels;
+import hollow.knight.logic.StateContext;
 
 public final class TransitionVisualizer extends JFrame {
   private static final long serialVersionUID = 1L;
@@ -63,6 +64,10 @@ public final class TransitionVisualizer extends JFrame {
     updateScenesList();
     pack();
     setVisible(true);
+  }
+
+  public StateContext ctx() {
+    return application.ctx();
   }
 
   public TransitionData transitionData() {

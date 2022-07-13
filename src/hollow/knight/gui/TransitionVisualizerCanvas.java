@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
+import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -28,7 +29,12 @@ import java.util.Set;
 import javax.swing.JPanel;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.MoreCollectors;
+import hollow.knight.gui.TransitionData.GateData;
 import hollow.knight.gui.TransitionData.SceneData;
+import hollow.knight.logic.ICDLException;
+import hollow.knight.logic.ItemCheck;
 
 public final class TransitionVisualizerCanvas extends JPanel {
   @AutoValue
@@ -251,15 +257,33 @@ public final class TransitionVisualizerCanvas extends JPanel {
     return b + (int) ((255 - b) * pct);
   }
 
-  private Color adjustColor(ScenePlacement p, Color c) {
+  private Color adjustSceneColor(ScenePlacement p, Color c) {
     double pct = highlightedSelection.contains(p) ? 0.4 : (currentSelection.contains(p) ? 0.2 : 0);
     return new Color(adjustBits(c.getRed(), pct), adjustBits(c.getGreen(), pct),
         adjustBits(c.getBlue(), pct));
   }
 
+  private Color adjustGateColor(String scene, GateData gateData, Color c) {
+    // TODO
+    return c;
+  }
+
   private float strokeWidth(ScenePlacement p) {
     return highlightedSelection.contains(p) ? 3.0f : (currentSelection.contains(p) ? 2.0f : 1.0f);
   }
+
+  private void renderGatePlacement(Graphics2D g2d, ScenePlacement s, GateData g) {
+    Rect r = s.getTransitionRect(g.name(), data());
+    SceneData sData = data().sceneData(s.scene());
+
+    g2d.setColor(adjustGateColor(s.scene(), g, sData.color()));
+    g2d.fillRect((int) r.x1(), (int) r.y1(), (int) r.width(), (int) r.height());
+    g2d.setColor(adjustGateColor(s.scene(), g, sData.edgeColor()));
+    g2d.setStroke(new BasicStroke(5.0f));
+    g2d.drawRect((int) r.x1(), (int) r.y1(), (int) r.width(), (int) r.height());
+  }
+
+  private static final int TEXT_BUFFER = 20;
 
   private void renderScenePlacement(Graphics2D g2d, ScenePlacement p) {
     SceneData sData = data().sceneData(p.scene());
@@ -274,17 +298,70 @@ public final class TransitionVisualizerCanvas extends JPanel {
     g2d.setFont(font);
     g2d.setColor(Color.black);
     g2d.fillRect((int) r.center().x() - fw / 2 - FONT_PADDING - 1,
-        (int) r.y1() - fh - FONT_PADDING * 2 - 1, fw + 2 * FONT_PADDING + 1,
+        (int) r.y1() - TEXT_BUFFER - fh - FONT_PADDING * 2 - 1, fw + 2 * FONT_PADDING + 1,
         fh + 2 * FONT_PADDING + 1);
     g2d.setColor(Color.white);
     g2d.drawString(txt, (float) (r.center().x() - fw / 2),
-        (float) (r.y1() - FONT_PADDING - fm.getDescent()));
+        (float) (r.y1() - TEXT_BUFFER - FONT_PADDING - fm.getDescent()));
 
-    g2d.setColor(adjustColor(p, sData.color()));
+    g2d.setColor(adjustSceneColor(p, sData.color()));
     g2d.fillRect((int) r.x1(), (int) r.y1(), (int) r.width(), (int) r.height());
-    g2d.setColor(adjustColor(p, sData.edgeColor()));
+    g2d.setColor(adjustSceneColor(p, sData.edgeColor()));
     g2d.setStroke(new BasicStroke(strokeWidth(p)));
     g2d.drawRect((int) r.x1(), (int) r.y1(), (int) r.width(), (int) r.height());
+
+    // Render transitions on top.
+    sData.allGates().forEach(g -> renderGatePlacement(g2d, p, g));
+  }
+
+  private void renderTransitions(Graphics2D g2d) throws ICDLException {
+    Set<ItemCheck> transitionsToDraw = new HashSet<>();
+    Set<ItemCheck> duplicates = new HashSet<>();
+    parent.ctx().checks().allChecks().filter(c -> c.isTransition()).forEach(transitionsToDraw::add);
+
+    for (ItemCheck transition : transitionsToDraw) {
+      if (duplicates.contains(transition)) {
+        continue;
+      }
+
+      Gate source = Gate.parse(transition.location().name());
+      Gate target = Gate.parse(transition.item().term().name());
+
+      // Check both are visible.
+      ImmutableSet<ScenePlacement> sourcePlacements = parent.placements()
+          .placementsForScene(source.sceneName()).collect(ImmutableSet.toImmutableSet());
+      ImmutableSet<ScenePlacement> targetPlacements = parent.placements()
+          .placementsForScene(target.sceneName()).collect(ImmutableSet.toImmutableSet());
+      if (sourcePlacements.isEmpty() || targetPlacements.isEmpty()) {
+        continue;
+      }
+
+      boolean symmetric = false;
+      ItemCheck dupe = parent.ctx().checks().getChecksAtLocation(transition.item().term().name())
+          .collect(MoreCollectors.onlyElement());
+      if (dupe.item().term().name().equals(transition.location().name())) {
+        // This is a symmetric transition
+        duplicates.add(dupe);
+        symmetric = true;
+      }
+
+      g2d.setColor(Color.GRAY);
+      g2d.setStroke(new BasicStroke(5.0f));
+      for (ScenePlacement s : sourcePlacements) {
+        for (ScenePlacement t : targetPlacements) {
+          Rect r1 = s.getTransitionRect(source.gateName(), data());
+          Rect r2 = t.getTransitionRect(target.gateName(), data());
+
+          if (!symmetric) {
+            g2d.setPaint(new GradientPaint((float) r1.center().x(), (float) r1.center().y(),
+                Color.GRAY.brighter(), (float) r2.center().x(), (float) r2.center().y(),
+                Color.GRAY.darker()));
+          }
+          g2d.drawLine((int) r1.center().x(), (int) r1.center().y(), (int) r2.center().x(),
+              (int) r2.center().y());
+        }
+      }
+    }
   }
 
   @Override
@@ -308,6 +385,9 @@ public final class TransitionVisualizerCanvas extends JPanel {
       // Draw components in order.
       parent.placements().allScenePlacements().forEach(p -> renderScenePlacement(g2d, p));
 
+      // Draw visible transitions.
+      renderTransitions(g2d);
+
       // Draw selection rect.
       if (selectionAnchor != null) {
         Rect r = Rect.containing(selectionAnchor, selectionDrag);
@@ -318,6 +398,8 @@ public final class TransitionVisualizerCanvas extends JPanel {
         g2d.setComposite(AlphaComposite.Src);
         g2d.drawRect((int) r.x1(), (int) r.y1(), (int) r.width(), (int) r.height());
       }
+    } catch (ICDLException ex) {
+      throw new AssertionError(ex);
     } finally {
       g2d.setTransform(prev);
     }

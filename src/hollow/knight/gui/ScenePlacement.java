@@ -1,9 +1,12 @@
 package hollow.knight.gui;
 
 import com.google.gson.JsonObject;
+import hollow.knight.gui.TransitionData.GateData;
 import hollow.knight.gui.TransitionData.SceneData;
 
 public final class ScenePlacement {
+  private static final double TRANSITION_SIZE = 30;
+
   private final String scene;
   private Point point;
 
@@ -35,6 +38,15 @@ public final class ScenePlacement {
   public Rect getRect(TransitionData data) {
     SceneData sceneData = data.sceneData(scene);
     return new Rect(point, sceneData.width(), sceneData.height());
+  }
+
+  public Rect getTransitionRect(String gate, TransitionData data) {
+    SceneData sceneData = data.sceneData(scene);
+    GateData gateData = sceneData.getGate(gate);
+
+    double tx = x() + gateData.xProp() * sceneData.width();
+    double ty = y() + gateData.yProp() * sceneData.height();
+    return new Rect(new Point(tx, ty), TRANSITION_SIZE, TRANSITION_SIZE);
   }
 
   public JsonObject toJson() {

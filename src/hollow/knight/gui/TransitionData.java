@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
+import com.google.common.base.Verify;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -17,14 +19,28 @@ import hollow.knight.logic.RoomLabels;
 
 public final class TransitionData {
 
-  private static final class GateData {
+  public static final class GateData {
     private final String name;
     private final String alias;
+    private final double xProp;
+    private final double yProp;
     private final Optional<Gate> vanillaTarget;
 
-    GateData(String name, JsonObject obj) {
+    GateData(String name, JsonObject obj, double xProp, double yProp) {
       this.name = name;
       this.alias = obj.get("Alias").getAsString();
+
+      if (obj.has("X-Prop")) {
+        this.xProp = obj.get("X-Prop").getAsDouble();
+      } else {
+        this.xProp = xProp;
+      }
+
+      if (obj.has("Y-Prop")) {
+        this.yProp = obj.get("Y-Prop").getAsDouble();
+      } else {
+        this.yProp = yProp;
+      }
 
       if (obj.has("VanillaTarget")) {
         JsonObject t = obj.get("VanillaTarget").getAsJsonObject();
@@ -45,6 +61,14 @@ public final class TransitionData {
 
     public Optional<Gate> vanillaTarget() {
       return vanillaTarget;
+    }
+
+    public double xProp() {
+      return xProp;
+    }
+
+    public double yProp() {
+      return yProp;
     }
   }
 
@@ -77,12 +101,12 @@ public final class TransitionData {
     private final Color color;
 
     private static final double BASE_DIMENSION = 150.0;
-    private static final double BONUS_DIMENSION = 50.0;
+    private static final double TRANSITION_SCALING = 50.0;
 
     private double calculateDimension(String... dirs) {
       int count = Arrays.stream(dirs).mapToInt(d -> gatesByDir.get(d).size()).max().getAsInt();
 
-      return BASE_DIMENSION + Math.min(count, 1) * BONUS_DIMENSION;
+      return BASE_DIMENSION + Math.max(count, 1) * TRANSITION_SCALING;
     }
 
     private double calculateWidth() {
@@ -116,6 +140,31 @@ public final class TransitionData {
       return new Color(r, g, b);
     }
 
+    private static double defaultXProp(String dir, int index, int n) {
+      if (dir.equals("Top") || dir.equals("Bot") || dir.equals("Door")) {
+        double reduce = dir.equals("Door") ? 0.8 : 1.0;
+        return reduce * (-0.5 + (index + 1.0) / (n + 1.0));
+      } else if (dir.equals("Left")) {
+        return -0.5;
+      } else {
+        Verify.verify(dir.equals("Right"));
+        return 0.5;
+      }
+    }
+
+    private static double defaultYProp(String dir, int index, int n) {
+      if (dir.equals("Left") || dir.equals("Right")) {
+        return -0.5 + (index + 1.0) / (n + 1.0);
+      } else if (dir.equals("Top")) {
+        return -0.5;
+      } else if (dir.equals("Door")) {
+        return 0.0;
+      } else {
+        Verify.verify(dir.equals("Bot"));
+        return 0.5;
+      }
+    }
+
     SceneData(RoomLabels roomLabels, String scene, JsonObject obj) throws ParseException {
       this.alias = obj.get("Alias").getAsString();
       this.gatesByDir = ArrayListMultimap.create();
@@ -124,10 +173,14 @@ public final class TransitionData {
       JsonObject g = obj.get("Gates").getAsJsonObject();
       for (String dir : g.keySet()) {
         JsonObject dg = g.get(dir).getAsJsonObject();
+        int index = 0;
         for (String gate : dg.keySet()) {
-          GateData data = new GateData(gate, dg.get(gate).getAsJsonObject());
+          GateData data = new GateData(gate, dg.get(gate).getAsJsonObject(),
+              defaultXProp(dir, index, dg.keySet().size()),
+              defaultYProp(dir, index, dg.keySet().size()));
           gatesByDir.put(dir, data);
           gatesByName.put(gate, data);
+          ++index;
         }
       }
 
@@ -153,6 +206,10 @@ public final class TransitionData {
 
     public String alias() {
       return alias;
+    }
+
+    public Stream<GateData> allGates() {
+      return gatesByName.values().stream();
     }
 
     public GateData getGate(String name) {
