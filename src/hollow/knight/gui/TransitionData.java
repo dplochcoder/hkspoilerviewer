@@ -257,9 +257,9 @@ public final class TransitionData {
     }
   }
 
-  private ImmutableMap<String, SceneData> scenes;
-  private ImmutableSet<Gate> sources;
-  private ImmutableSet<Gate> targets;
+  private final ImmutableMap<String, SceneData> scenes;
+  private final ImmutableSet<Gate> sources;
+  private final ImmutableSet<Gate> targets;
 
   private TransitionData(Map<String, SceneData> scenes) {
     this.scenes = ImmutableMap.copyOf(scenes);
@@ -269,13 +269,6 @@ public final class TransitionData {
     this.targets = scenes.values().stream().flatMap(s -> s.allGates().stream())
         .filter(g -> g.vanillaTarget().isPresent()).map(g -> g.vanillaTarget().get())
         .collect(ImmutableSet.toImmutableSet());
-  }
-
-  public void refresh(RoomLabels roomLabels) throws ParseException {
-    TransitionData next = load(roomLabels);
-    this.scenes = next.scenes;
-    this.sources = next.sources;
-    this.targets = next.targets;
   }
 
   public ImmutableSet<String> scenes() {

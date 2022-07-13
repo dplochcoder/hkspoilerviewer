@@ -14,6 +14,7 @@ import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import javax.swing.BoxLayout;
@@ -32,6 +33,7 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.primitives.Ints;
 import hollow.knight.gui.TransitionData.SceneData;
 import hollow.knight.gui.TransitionVisualizerCanvas.CanvasEnum;
@@ -131,24 +133,24 @@ public final class TransitionVisualizer extends JFrame {
         if (scenesList.getSelectedIndex() == -1) {
           return;
         }
+        String scene = scenesListModel.getScene(scenesList.getSelectedIndex());
 
         if (e.getKeyCode() == KeyEvent.VK_E) {
-          String scene = scenesListModel.getScene(scenesList.getSelectedIndex());
+          // Select scene placements.
           canvas.selectSceneForEdit(scene);
-
           repaint();
           e.consume();
+        } else if (e.getKeyCode() == KeyEvent.VK_X) {
+          // Remove scene placements.
+          Set<ScenePlacement> sps = application.transitionVisualizerPlacements()
+              .placementsForScene(scene).collect(ImmutableSet.toImmutableSet());
+          sps.forEach(canvas::removeScenePlacement);
+
+          updateScenesList();
+          repaint();
         } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
           // Spawn selected scene.
-          String scene = scenesListModel.getScene(scenesList.getSelectedIndex());
-
           application.transitionVisualizerPlacements().addPlacement(scene, canvas.center());
-
-          try {
-            application.transitionData().refresh(application.ctx().roomLabels());
-          } catch (Exception ex) {
-            System.err.println("Whoops: " + ex);
-          }
 
           updateScenesList();
           repaint();

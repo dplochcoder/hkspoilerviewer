@@ -194,6 +194,18 @@ public final class TransitionVisualizerCanvas extends JPanel {
     zoomPower = 0;
   }
 
+  public void removeScenePlacement(ScenePlacement placement) {
+    currentSceneSelection.remove(placement);
+    highlightedSceneSelection.remove(placement);
+
+    if ((currentGate != null && currentGate.scene() == placement)
+        || (highlightGate != null && highlightGate.scene() == placement)) {
+      currentGate = null;
+      highlightGate = null;
+    }
+    parent.placements().removePlacement(placement);
+  }
+
   public void selectSceneForEdit(String scene) {
     clear();
 
@@ -518,6 +530,7 @@ public final class TransitionVisualizerCanvas extends JPanel {
       public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_X) {
           currentSceneSelection.forEach(parent.placements()::removePlacement);
+          currentSceneSelection.clear();
           repaint();
 
           parent.updateScenesList();
