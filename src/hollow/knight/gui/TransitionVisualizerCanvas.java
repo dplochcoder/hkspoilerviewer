@@ -29,17 +29,16 @@ import javax.swing.JPanel;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableMap;
 import hollow.knight.gui.TransitionData.SceneData;
-import hollow.knight.gui.TransitionVisualizerPlacements.Placement;
 
 public final class TransitionVisualizerCanvas extends JPanel {
   @AutoValue
-  abstract static class TransitionPlacement {
-    public abstract Placement scenePlacement();
+  abstract static class TransitionIdentifier {
+    public abstract ScenePlacement scenePlacement();
 
     public abstract String gate();
 
-    public static TransitionPlacement create(Placement placement, String gate) {
-      return new AutoValue_TransitionVisualizerCanvas_TransitionPlacement(placement, gate);
+    public static TransitionIdentifier create(ScenePlacement placement, String gate) {
+      return new AutoValue_TransitionVisualizerCanvas_TransitionIdentifier(placement, gate);
     }
   }
 
@@ -52,9 +51,10 @@ public final class TransitionVisualizerCanvas extends JPanel {
   // For highlighting and selecting scenes.
   private Point selectionAnchor = null; // Initial click point
   private Point selectionDrag = null; // Last drag point
-  private Set<Placement> currentSelection = new HashSet<>(); // Scenes currently selected
-  private Set<Placement> highlightedSelection = new HashSet<>(); // Scenes highlighted for selection
-                                                                 // on release
+  private Set<ScenePlacement> currentSelection = new HashSet<>(); // Scenes currently selected
+  private Set<ScenePlacement> highlightedSelection = new HashSet<>(); // Scenes highlighted for
+                                                                      // selection
+  // on release
   // For dragging the screen or selections
   private AffineTransform dragTransform = null; // Override transform, changed by shifting center
   private Point dragAnchor = null; // Initial click point
@@ -64,7 +64,7 @@ public final class TransitionVisualizerCanvas extends JPanel {
   private Point center = new Point(0, 0);
   private double zoom = 1.0;
   private int zoomPower = 0;
-  private Font font = new Font("Arail", Font.BOLD, 14);
+  private Font font = new Font("Arial", Font.BOLD, 14);
 
   public TransitionVisualizerCanvas(TransitionVisualizer parent) {
     this.parent = parent;
@@ -91,7 +91,7 @@ public final class TransitionVisualizerCanvas extends JPanel {
     // Otherwise, select all intersecting.
     highlightedSelection.clear();
     boolean first = true;
-    for (Placement p : parent.placements().allPlacementsReversed()) {
+    for (ScenePlacement p : parent.placements().allScenePlacementsReversed()) {
       Rect pr = p.getRect(data());
       if (pr.intersects(r)) {
         highlightedSelection.add(p);
@@ -251,17 +251,17 @@ public final class TransitionVisualizerCanvas extends JPanel {
     return b + (int) ((255 - b) * pct);
   }
 
-  private Color adjustColor(Placement p, Color c) {
+  private Color adjustColor(ScenePlacement p, Color c) {
     double pct = highlightedSelection.contains(p) ? 0.4 : (currentSelection.contains(p) ? 0.2 : 0);
     return new Color(adjustBits(c.getRed(), pct), adjustBits(c.getGreen(), pct),
         adjustBits(c.getBlue(), pct));
   }
 
-  private float strokeWidth(Placement p) {
+  private float strokeWidth(ScenePlacement p) {
     return highlightedSelection.contains(p) ? 3.0f : (currentSelection.contains(p) ? 2.0f : 1.0f);
   }
 
-  private void renderPlacement(Graphics2D g2d, TransitionVisualizerPlacements.Placement p) {
+  private void renderScenePlacement(Graphics2D g2d, ScenePlacement p) {
     SceneData sData = data().sceneData(p.scene());
     Rect r = p.getRect(data());
 
@@ -306,7 +306,7 @@ public final class TransitionVisualizerCanvas extends JPanel {
     g2d.transform(transform());
     try {
       // Draw components in order.
-      parent.placements().allPlacements().forEach(p -> renderPlacement(g2d, p));
+      parent.placements().allScenePlacements().forEach(p -> renderScenePlacement(g2d, p));
 
       // Draw selection rect.
       if (selectionAnchor != null) {
