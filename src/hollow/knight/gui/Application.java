@@ -356,7 +356,7 @@ public final class Application extends JFrame {
     copyItemToCheck(item, check);
   }
 
-  private void deleteCheck(ItemCheck check) {
+  public void deleteCheck(ItemCheck check) {
     if (!ensureICDL() || check == null || !ensureRandomized(check)) {
       return;
     }

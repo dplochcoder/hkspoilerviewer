@@ -240,6 +240,16 @@ public final class TransitionVisualizer extends JFrame implements ItemChecks.Lis
           } else {
             application.editCheck(result.itemCheck());
           }
+          e.consume();
+        } else if (e.getKeyCode() == KeyEvent.VK_C) {
+          if (application.editCheck(result.itemCheck())) {
+            application.copyCheckEditorItem(result.itemCheck());
+            application.refreshLogic();
+          }
+          e.consume();
+        } else if (e.getKeyCode() == KeyEvent.VK_Z) {
+          application.deleteCheck(result.itemCheck());
+          e.consume();
         } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
           application.addToRoute(result.itemCheck());
           updateChecksList();
@@ -341,6 +351,37 @@ public final class TransitionVisualizer extends JFrame implements ItemChecks.Lis
     return out;
   }
 
+  private static final ImmutableList<String> TVR_INFO = ImmutableList.of(
+      "TransitionVisualizer lets you explore the seed visually by manipulating scene objects. Placing ",
+      "scenes is for visual aide only and has no material impact on the HK save, but it is persisted in ",
+      "the *.hks when you save here.", "-",
+      "In ICDL edit mode, you can use this editor to modify randomized transitions, to do room-rando-plando.");
+
+  private static final ImmutableList<String> CANVAS_INFO = ImmutableList.of(
+      "Use right mouse, or arrow keys, to pan the view port.",
+      "Use scroll wheel to zoom in or out. Use View > Reset or View > Fit to get back to a standard viewport.",
+      "-",
+      "Left-click to select scenes for moving, duplicating, or deleting. Drag to select multiple scenes.",
+      "Hold CTRL to add to the current selection, ALT to subtract from it.", "-",
+      "Press D to duplicate the current selection, X to delete.",
+      "Deleting a scene from the canvas only hides it from view, it does not lose rando data.");
+
+  private static final ImmutableList<String> TR_INFO = ImmutableList.of(
+      "Left-click a transition box to edit it. Release, then left-click the destination to define the new transition.",
+      "In Coupled mode (see Edit menu), transitions are always mirrored. Use 'Source -> Target' mode for uncoupled editing.",
+      "-",
+      "Vanilla transitions are uneditable, and always shown in blue. One-way transitions fade from gray at the source, to red at the destination.",
+      "Symmetric transitions are gray the whole way through.", "-",
+      "A self-transition will appear as a small dot in the center of the box.");
+
+  private static final ImmutableList<String> SR_INFO = ImmutableList.of(
+      "The upper search results box shows all scenes by their aliases, along with counts of how many instances of each scene are on the canvas.",
+      "Press SPACE to spawn a new scene instance in at camera center. Press E to highlight all instance of a scene. Press X to delete them.",
+      "-",
+      "The lower search results box shows all checks and transitions within the currently selected scenes.",
+      "As in the main window, you can route these with SPACE, edit with E, copy item with C and delete with Z.",
+      "Editing a transition selects that transition in the canvas, allowing you to click its new target.");
+
   private JMenuBar createMenu() {
     JMenuBar menu = new JMenuBar();
 
@@ -367,6 +408,16 @@ public final class TransitionVisualizer extends JFrame implements ItemChecks.Lis
       edit.setToolTipText("Must open an ICDL ctx.json for editing");
     }
     menu.add(edit);
+
+    JMenu about = new JMenu("About");
+    about.add(GuiUtil.newInfoMenuItem(this, "Transition Visualizer", TVR_INFO));
+    about.add(new JSeparator());
+    about.add(GuiUtil.newInfoMenuItem(this, "Scenes", CANVAS_INFO));
+    about.add(new JSeparator());
+    about.add(GuiUtil.newInfoMenuItem(this, "Transitions", TR_INFO));
+    about.add(new JSeparator());
+    about.add(GuiUtil.newInfoMenuItem(this, "Search Results", SR_INFO));
+    menu.add(about);
 
     return menu;
   }
@@ -423,21 +474,34 @@ public final class TransitionVisualizer extends JFrame implements ItemChecks.Lis
 
   @Override
   public void checkRemoved(ItemCheck check) {
-    updateChecksList();
+    multipleChecksRemoved(ImmutableSet.of(check));
   }
 
   @Override
   public void multipleChecksRemoved(ImmutableSet<ItemCheck> checks) {
+    if (checksList.getSelectedIndex() != -1
+        && checks.contains(checksListModel.getResult(checksList.getSelectedIndex()).itemCheck())) {
+      checksList.setSelectedIndex(-1);
+    }
     updateChecksList();
   }
 
   @Override
   public void checkReplaced(ItemCheck before, ItemCheck after) {
-    updateChecksList();
+    multipleChecksReplaced(ImmutableMap.of(before, after));
   }
 
   @Override
   public void multipleChecksReplaced(ImmutableMap<ItemCheck, ItemCheck> replacements) {
+    ItemCheck repl = null;
+    if (checksList.getSelectedIndex() != -1) {
+      repl = replacements.get(checksListModel.getResult(checksList.getSelectedIndex()).itemCheck());
+    }
+
     updateChecksList();
+
+    if (repl != null) {
+      checksList.setSelectedIndex(checksListModel.indexOf(repl));
+    }
   }
 }

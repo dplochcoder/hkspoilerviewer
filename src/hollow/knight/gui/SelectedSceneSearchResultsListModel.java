@@ -32,6 +32,15 @@ public final class SelectedSceneSearchResultsListModel implements ListModel<Stri
     return results.get(index);
   }
 
+  public int indexOf(ItemCheck itemCheck) {
+    for (int i = 0; i < results.size(); i++) {
+      if (results.get(i).equals(itemCheck)) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
   private String render(SearchResult result) {
     return (isRouted.test(result.itemCheck()) ? "(R) " : "") + result.render(transitionData);
   }
