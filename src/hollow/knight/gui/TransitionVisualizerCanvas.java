@@ -120,7 +120,8 @@ public final class TransitionVisualizerCanvas extends JPanel {
   }
 
   public enum VisibleTransitions implements CanvasEnum {
-    ALL("All Transitions"), SELECTED_ONLY("Selected Scenes Only");
+    ALL("All Transitions"), TOUCH_SELECTED("Touching Selected Scenes Only"), CONTAIN_SELECTED(
+        "Contained in Selected Scenes Only");
 
     private final String displayName;
 
@@ -700,9 +701,13 @@ public final class TransitionVisualizerCanvas extends JPanel {
         continue;
       }
 
-      if (visibleTransitions == VisibleTransitions.SELECTED_ONLY) {
-        if (Sets.intersection(sourcePlacements, currentSceneSelection).isEmpty()
-            && Sets.intersection(targetPlacements, currentSceneSelection).isEmpty()) {
+      if (visibleTransitions != VisibleTransitions.ALL) {
+        int empty = (Sets.intersection(sourcePlacements, currentSceneSelection).isEmpty() ? 1 : 0)
+            + (Sets.intersection(targetPlacements, currentSceneSelection).isEmpty() ? 1 : 0);
+
+        if (visibleTransitions == VisibleTransitions.CONTAIN_SELECTED && empty > 0) {
+          continue;
+        } else if (empty > 1) {
           continue;
         }
       }
