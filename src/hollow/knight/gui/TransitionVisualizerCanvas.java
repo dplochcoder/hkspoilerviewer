@@ -215,6 +215,7 @@ public final class TransitionVisualizerCanvas extends JPanel {
     } else {
       fitInternal(currentSceneSelection);
     }
+    parent.updateChecksList();
   }
 
   private boolean canSpan(Rect r) {
@@ -276,6 +277,11 @@ public final class TransitionVisualizerCanvas extends JPanel {
     this.visibleTransitions = visibleTransitions;
   }
 
+  public ImmutableSet<String> getSelectedScenes() {
+    return currentSceneSelection.stream().map(sp -> sp.scene())
+        .collect(ImmutableSet.toImmutableSet());
+  }
+
   public int getFontSize() {
     return font.getSize();
   }
@@ -335,6 +341,8 @@ public final class TransitionVisualizerCanvas extends JPanel {
           if (gr.contains(r)) {
             // Select the transition.
             highlightGate = GatePlacement.create(p, gate.name());
+            currentSceneSelection.clear();
+            parent.updateChecksList();
             return;
           }
         }
@@ -434,6 +442,8 @@ public final class TransitionVisualizerCanvas extends JPanel {
           highlightedSceneSelection.clear();
           selectionAnchor = null;
           selectionDrag = null;
+
+          parent.updateChecksList();
           repaint();
         } else if (dragAnchor != null) {
           updateDragAnchor(mouseMoved);
@@ -534,6 +544,7 @@ public final class TransitionVisualizerCanvas extends JPanel {
           repaint();
 
           parent.updateScenesList();
+          parent.updateChecksList();
           parent.repaint();
         } else if (e.getKeyCode() == KeyEvent.VK_D) {
           Set<ScenePlacement> newPlacements = new HashSet<>();
@@ -545,6 +556,7 @@ public final class TransitionVisualizerCanvas extends JPanel {
           repaint();
 
           parent.updateScenesList();
+          parent.updateChecksList();
           parent.repaint();
         } else if (X_DIST.containsKey(e.getKeyCode()) || Y_DIST.containsKey(e.getKeyCode())) {
           double dx = SCROLL_INCREMENT * zoom * X_DIST.getOrDefault(e.getKeyCode(), 0);

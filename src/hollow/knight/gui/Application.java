@@ -91,8 +91,7 @@ public final class Application extends JFrame {
     this.transitionData = TransitionData.load(ctx.roomLabels());
     this.filterChangedListener = () -> repopulateSearchResults();
     this.routeListModel = new RouteListModel(transitionData, ctx);
-    this.searchResultsListModel = new SearchResultsListModel(transitionData,
-        c -> this.routeListModel.finalState().isAcquired(c));
+    this.searchResultsListModel = new SearchResultsListModel(transitionData, this::isRouted);
     this.transitionVisualizerPlacements = new TransitionVisualizerPlacements();
     this.saveInterfaces =
         ImmutableList.of(searchResultsListModel, routeListModel, transitionVisualizerPlacements);
@@ -160,8 +159,12 @@ public final class Application extends JFrame {
     return routeListModel.ctx();
   }
 
-  private State currentState() {
+  public State currentState() {
     return routeListModel.currentState();
+  }
+
+  public boolean isRouted(ItemCheck c) {
+    return routeListModel.finalState().isAcquired(c);
   }
 
   private static final ImmutableList<String> PL_INFO = ImmutableList.<String>builder().add(

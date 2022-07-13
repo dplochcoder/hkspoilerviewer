@@ -31,6 +31,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -40,10 +41,12 @@ import hollow.knight.gui.TransitionVisualizerCanvas.CanvasEnum;
 import hollow.knight.gui.TransitionVisualizerCanvas.EditMode;
 import hollow.knight.gui.TransitionVisualizerCanvas.SnapToGrid;
 import hollow.knight.gui.TransitionVisualizerCanvas.VisibleTransitions;
+import hollow.knight.logic.ItemCheck;
+import hollow.knight.logic.ItemChecks;
 import hollow.knight.logic.RoomLabels;
 import hollow.knight.logic.StateContext;
 
-public final class TransitionVisualizer extends JFrame {
+public final class TransitionVisualizer extends JFrame implements ItemChecks.Listener {
   private static final long serialVersionUID = 1L;
 
 
@@ -56,10 +59,15 @@ public final class TransitionVisualizer extends JFrame {
   private final JList<String> scenesList;
   private final JScrollPane scenesPane;
 
+  private final SelectedSceneSearchResultsListModel checksListModel;
+  private final JList<String> checksList;
+  private final JScrollPane checksPane;
+
   public TransitionVisualizer(Application application) {
     super("Transition Visualizer");
 
     this.application = application;
+    application.ctx().checks().addListener(this);
 
     this.canvas = new TransitionVisualizerCanvas(this);
 
@@ -71,12 +79,21 @@ public final class TransitionVisualizer extends JFrame {
         JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
     scenesPane.setMinimumSize(new Dimension(300, 600));
 
+    this.checksListModel = new SelectedSceneSearchResultsListModel(application.transitionData(),
+        application::isRouted);
+    this.checksList = createChecksList();
+    this.checksPane = new JScrollPane(checksList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+        JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+    checksPane.setMinimumSize(new Dimension(400, 400));
+
     setJMenuBar(createMenu());
 
     JPanel rightPane = new JPanel();
     rightPane.setLayout(new BoxLayout(rightPane, BoxLayout.PAGE_AXIS));
     rightPane.add(scenesFilter);
     rightPane.add(scenesPane);
+    rightPane.add(new JSeparator());
+    rightPane.add(checksPane);
 
     this.addWindowListener(newWindowListener());
 
@@ -169,7 +186,70 @@ public final class TransitionVisualizer extends JFrame {
         }
       }
     };
+  }
 
+  private JList<String> createChecksList() {
+    JList<String> checksList = new JList<String>(checksListModel);
+    checksList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    Arrays.stream(checksList.getKeyListeners()).forEach(checksList::removeKeyListener);
+    checksList.addKeyListener(checksListKeyListener());
+    return checksList;
+  }
+
+  private int compareSearchResults(ItemCheck c1, ItemCheck c2) {
+    return ComparisonChain.start().compareTrueFirst(c1.isTransition(), c2.isTransition())
+        .compareFalseFirst(c1.vanilla(), c2.vanilla())
+        .compare(c1.location().displayName(transitionData()),
+            c2.location().displayName(transitionData()))
+        .compare(c1.item().displayName(transitionData()), c2.item().displayName(transitionData()))
+        .result();
+  }
+
+  public void updateChecksList() {
+    ImmutableSet<String> scenes = canvas.getSelectedScenes();
+
+    List<SearchResult> newResults = application.ctx().checks().allChecks()
+        .filter(c -> scenes.contains(c.location().scene())).sorted(this::compareSearchResults)
+        .map(c -> SearchResult.create(c, application.currentState()))
+        .collect(ImmutableList.toImmutableList());
+    checksListModel.updateResults(newResults);
+
+    if (checksPane.getWidth() < checksPane.getPreferredSize().getWidth()) {
+      Dimension d = this.getSize();
+      pack();
+      if (checksPane.getWidth() >= checksPane.getPreferredSize().getWidth()) {
+        setSize(d);
+      }
+    }
+  }
+
+  private KeyListener checksListKeyListener() {
+    return new KeyAdapter() {
+      @Override
+      public void keyPressed(KeyEvent e) {
+        if (checksList.getSelectedIndex() == -1) {
+          return;
+        }
+        SearchResult result = checksListModel.getResult(checksList.getSelectedIndex());
+
+        if (e.getKeyCode() == KeyEvent.VK_E) {
+          // TODO: Support editing.
+        } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+          // TODO: Support routing.
+        } else if (UP_DOWN_VALUES.containsKey(e.getKeyCode())) {
+          int delta = UP_DOWN_VALUES.get(e.getKeyCode());
+          int newIndex = checksList.getSelectedIndex() + delta;
+          if (newIndex < 0) {
+            newIndex = 0;
+          }
+          if (newIndex > checksListModel.getSize() - 1) {
+            newIndex = checksListModel.getSize() - 1;
+          }
+          checksList.setSelectedIndex(newIndex);
+          e.consume();
+        }
+      }
+    };
   }
 
   private JMenuItem createViewResetMenu() {
@@ -318,8 +398,38 @@ public final class TransitionVisualizer extends JFrame {
       @Override
       public void windowClosing(WindowEvent e) {
         application.transitionVisualizerClosed();
+        application.ctx().checks().removeListener(TransitionVisualizer.this);
       }
     };
   }
 
+  @Override
+  public void checkAdded(ItemCheck check) {
+    updateChecksList();
+  }
+
+  @Override
+  public void multipleChecksAdded(ImmutableSet<ItemCheck> checks) {
+    updateChecksList();
+  }
+
+  @Override
+  public void checkRemoved(ItemCheck check) {
+    updateChecksList();
+  }
+
+  @Override
+  public void multipleChecksRemoved(ImmutableSet<ItemCheck> checks) {
+    updateChecksList();
+  }
+
+  @Override
+  public void checkReplaced(ItemCheck before, ItemCheck after) {
+    updateChecksList();
+  }
+
+  @Override
+  public void multipleChecksReplaced(ImmutableMap<ItemCheck, ItemCheck> replacements) {
+    updateChecksList();
+  }
 }
