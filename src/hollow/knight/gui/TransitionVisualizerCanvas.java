@@ -442,10 +442,10 @@ public final class TransitionVisualizerCanvas extends JPanel {
     SceneData sData = data().sceneData(s.scene());
 
     g2d.setColor(adjustGateColor(s.scene(), g, sData.color()));
-    g2d.fillRect((int) r.x1(), (int) r.y1(), (int) r.width(), (int) r.height());
+    r.fill(g2d);
     g2d.setColor(adjustGateColor(s.scene(), g, sData.edgeColor()));
     g2d.setStroke(new BasicStroke(5.0f));
-    g2d.drawRect((int) r.x1(), (int) r.y1(), (int) r.width(), (int) r.height());
+    r.draw(g2d);
   }
 
   private static final int TEXT_BUFFER = 20;
@@ -470,10 +470,10 @@ public final class TransitionVisualizerCanvas extends JPanel {
         (float) (r.y1() - TEXT_BUFFER - FONT_PADDING - fm.getDescent()));
 
     g2d.setColor(adjustSceneColor(p, sData.color()));
-    g2d.fillRect((int) r.x1(), (int) r.y1(), (int) r.width(), (int) r.height());
+    r.fill(g2d);
     g2d.setColor(adjustSceneColor(p, sData.edgeColor()));
     g2d.setStroke(new BasicStroke(strokeWidth(p)));
-    g2d.drawRect((int) r.x1(), (int) r.y1(), (int) r.width(), (int) r.height());
+    r.draw(g2d);
 
     // Render transitions on top.
     sData.allGates().forEach(g -> renderGatePlacement(g2d, p, g));
@@ -579,10 +579,11 @@ public final class TransitionVisualizerCanvas extends JPanel {
         Rect r = Rect.containing(selectionAnchor, selectionDrag);
         g2d.setColor(Color.white);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
+        r.fill(g2d);
         g2d.fillRect((int) r.x1(), (int) r.y1(), (int) r.width(), (int) r.height());
         g2d.setStroke(new BasicStroke(0.7f));
         g2d.setComposite(AlphaComposite.Src);
-        g2d.drawRect((int) r.x1(), (int) r.y1(), (int) r.width(), (int) r.height());
+        r.draw(g2d);
       }
     } catch (ICDLException ex) {
       throw new AssertionError(ex);

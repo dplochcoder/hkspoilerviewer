@@ -1,5 +1,7 @@
 package hollow.knight.gui;
 
+import java.awt.Graphics2D;
+
 public final class Rect {
   private final Point center;
   private final double width;
@@ -49,6 +51,14 @@ public final class Rect {
 
   public boolean contains(Rect r) {
     return x1() <= r.x1() && x2() >= r.x2() && y1() <= r.y1() && y2() >= r.y2();
+  }
+
+  public void draw(Graphics2D g2d) {
+    g2d.drawRect((int) x1(), (int) y1(), (int) width(), (int) height());
+  }
+
+  public void fill(Graphics2D g2d) {
+    g2d.fillRect((int) x1(), (int) y1(), (int) width(), (int) height());
   }
 
   private static Rect fromBounds(double x1, double x2, double y1, double y2) {
