@@ -132,7 +132,12 @@ public final class TransitionVisualizer extends JFrame {
           return;
         }
 
-        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+        if (e.getKeyCode() == KeyEvent.VK_E) {
+          String scene = scenesListModel.getScene(scenesList.getSelectedIndex());
+          canvas.selectSceneForEdit(scene);
+
+          repaint();
+        } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
           // Spawn selected scene.
           String scene = scenesListModel.getScene(scenesList.getSelectedIndex());
 

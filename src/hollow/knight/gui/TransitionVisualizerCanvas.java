@@ -194,20 +194,35 @@ public final class TransitionVisualizerCanvas extends JPanel {
     zoomPower = 0;
   }
 
+  public void selectSceneForEdit(String scene) {
+    clear();
+
+    parent.placements().placementsForScene(scene).forEach(currentSceneSelection::add);
+    if (currentSceneSelection.isEmpty()) {
+      fit();
+    } else {
+      fit(currentSceneSelection);
+    }
+  }
+
   private boolean canSpan(Rect r) {
     return (getWidth() / zoom) >= r.width() && (getHeight() / zoom) >= r.height();
   }
 
   public void fit() {
+    fit(parent.placements().allScenePlacements().collect(ImmutableSet.toImmutableSet()));
+  }
+
+  public void fit(Set<ScenePlacement> placements) {
     clear();
 
     // Find the bounding rect.
-    if (parent.placements().isEmpty()) {
+    if (placements.isEmpty()) {
       return;
     }
 
-    Rect r = Rect.union(parent.placements().allScenePlacements().map(s -> s.getRect(data()))
-        .collect(ImmutableList.toImmutableList()));
+    Rect r = Rect.union(
+        placements.stream().map(s -> s.getRect(data())).collect(ImmutableList.toImmutableList()));
 
     center = r.center();
 
