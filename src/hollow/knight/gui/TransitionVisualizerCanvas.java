@@ -199,9 +199,9 @@ public final class TransitionVisualizerCanvas extends JPanel {
 
     parent.placements().placementsForScene(scene).forEach(currentSceneSelection::add);
     if (currentSceneSelection.isEmpty()) {
-      fit();
+      fitInternal(parent.placements().allScenePlacements().collect(ImmutableSet.toImmutableSet()));
     } else {
-      fit(currentSceneSelection);
+      fitInternal(currentSceneSelection);
     }
   }
 
@@ -209,13 +209,7 @@ public final class TransitionVisualizerCanvas extends JPanel {
     return (getWidth() / zoom) >= r.width() && (getHeight() / zoom) >= r.height();
   }
 
-  public void fit() {
-    fit(parent.placements().allScenePlacements().collect(ImmutableSet.toImmutableSet()));
-  }
-
-  public void fit(Set<ScenePlacement> placements) {
-    clear();
-
+  private void fitInternal(Set<ScenePlacement> placements) {
     // Find the bounding rect.
     if (placements.isEmpty()) {
       return;
@@ -231,6 +225,11 @@ public final class TransitionVisualizerCanvas extends JPanel {
       --zoomPower;
       zoom = Math.pow(ZOOM_SCALE, zoomPower);
     }
+  }
+
+  public void fit() {
+    clear();
+    fitInternal(parent.placements().allScenePlacements().collect(ImmutableSet.toImmutableSet()));
   }
 
   public Point center() {

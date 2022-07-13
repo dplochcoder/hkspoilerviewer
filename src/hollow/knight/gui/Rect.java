@@ -75,10 +75,10 @@ public final class Rect {
   }
 
   public static Rect union(Iterable<Rect> rects) {
-    double x1 = Double.MAX_VALUE;
-    double x2 = Double.MIN_VALUE;
-    double y1 = Double.MAX_VALUE;
-    double y2 = Double.MIN_VALUE;
+    double x1 = Double.POSITIVE_INFINITY;
+    double x2 = Double.NEGATIVE_INFINITY;
+    double y1 = Double.POSITIVE_INFINITY;
+    double y2 = Double.NEGATIVE_INFINITY;
 
     for (Rect rect : rects) {
       x1 = Math.min(x1, rect.x1());
