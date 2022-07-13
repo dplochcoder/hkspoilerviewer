@@ -218,6 +218,19 @@ public final class TransitionVisualizerCanvas extends JPanel {
     parent.updateChecksList();
   }
 
+  public void editTransition(ItemCheck check) {
+    String scene = check.location().scene();
+    Optional<ScenePlacement> p = parent.placements().placementsForScene(scene).findAny();
+
+    if (p.isPresent()) {
+      clear();
+
+      currentGate = GatePlacement.create(p.get(), Gate.parse(check.location().name()).gateName());
+      center = p.get().getTransitionRect(currentGate.gateName(), data()).center();
+      requestFocus();
+    }
+  }
+
   private boolean canSpan(Rect r) {
     return (getWidth() / zoom) >= r.width() && (getHeight() / zoom) >= r.height();
   }

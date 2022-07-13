@@ -233,9 +233,17 @@ public final class TransitionVisualizer extends JFrame implements ItemChecks.Lis
         SearchResult result = checksListModel.getResult(checksList.getSelectedIndex());
 
         if (e.getKeyCode() == KeyEvent.VK_E) {
-          // TODO: Support editing.
+          if (result.itemCheck().isTransition()) {
+            application.ensureRandomized(result.itemCheck());
+            canvas.editTransition(result.itemCheck());
+            repaint();
+          } else {
+            application.editCheck(result.itemCheck());
+          }
         } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-          // TODO: Support routing.
+          application.addToRoute(result.itemCheck());
+          updateChecksList();
+          e.consume();
         } else if (UP_DOWN_VALUES.containsKey(e.getKeyCode())) {
           int delta = UP_DOWN_VALUES.get(e.getKeyCode());
           int newIndex = checksList.getSelectedIndex() + delta;

@@ -330,7 +330,7 @@ public final class Application extends JFrame {
     return true;
   }
 
-  private boolean editCheck(ItemCheck check) {
+  public boolean editCheck(ItemCheck check) {
     if (!ensureCheckEditor().isOpen()) {
       return false;
     }
@@ -912,6 +912,9 @@ public final class Application extends JFrame {
     ImmutableList<SearchResult> results = searchEngine.getSearchResults(currentState());
     searchResultsListModel.updateResults(currentState(), results);
     routeCounters.forEach(c -> c.update(currentState()));
+    if (transitionVisualizer != null) {
+      transitionVisualizer.updateChecksList();
+    }
 
     if (needsExpansion(searchResultsPane) || needsExpansion(routePane)) {
       pack();
@@ -928,7 +931,7 @@ public final class Application extends JFrame {
     return routeList;
   }
 
-  private void addToRoute(ItemCheck check) {
+  public void addToRoute(ItemCheck check) {
     routeListModel.addToRoute(check);
 
     repopulateSearchResults();
