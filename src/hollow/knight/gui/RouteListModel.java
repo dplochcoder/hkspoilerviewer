@@ -391,7 +391,10 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
     this.resultStrings.clear();
     if (json != null) {
       for (JsonElement id : json.getAsJsonObject().get("Route").getAsJsonArray()) {
-        addToRoute(ctx.checks().get(CheckId.of(id.getAsInt())));
+        ItemCheck check = ctx.checks().get(CheckId.of(id.getAsInt()));
+        if (check != null) {
+          addToRoute(ctx.checks().get(CheckId.of(id.getAsInt())));
+        }
       }
     }
   }

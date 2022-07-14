@@ -292,11 +292,16 @@ public final class SearchResultsListModel
       JsonObject obj = json.getAsJsonObject();
       for (JsonElement bookmark : obj.get("Bookmarks").getAsJsonArray()) {
         ItemCheck check = ctx.checks().get(CheckId.of(bookmark.getAsInt()));
-        bookmarks.add(check);
-        bookmarksSet.add(check);
+        if (check != null) {
+          bookmarks.add(check);
+          bookmarksSet.add(check);
+        }
       }
       for (JsonElement hidden : obj.get("Hidden").getAsJsonArray()) {
-        hiddenResultsSet.add(ctx.checks().get(CheckId.of(hidden.getAsInt())));
+        ItemCheck check = ctx.checks().get(CheckId.of(hidden.getAsInt()));
+        if (check != null) {
+          hiddenResultsSet.add(check);
+        }
       }
     }
   }
