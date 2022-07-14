@@ -15,7 +15,7 @@ import hollow.knight.logic.StateContext;
 import hollow.knight.logic.Version;
 
 public final class Main {
-  private static final String VERSION = "2.5";
+  private static final String VERSION = "2.6";
 
   private static final Version TYPED_VERSION;
   static {
