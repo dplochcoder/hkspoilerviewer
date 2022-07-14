@@ -493,7 +493,7 @@ public final class TransitionVisualizer extends JFrame implements ItemChecks.Lis
 
     updateChecksList();
 
-    if (!removed) {
+    if (selected != null && !removed) {
       checksList.setSelectedIndex(checksListModel.indexOf(selected.itemCheck()));
     }
   }
