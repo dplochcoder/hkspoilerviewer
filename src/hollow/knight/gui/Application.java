@@ -44,6 +44,7 @@ import hollow.knight.logic.ICDLException;
 import hollow.knight.logic.Item;
 import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.ItemChecks;
+import hollow.knight.logic.ItemChecks.Missing;
 import hollow.knight.logic.ParseException;
 import hollow.knight.logic.Query;
 import hollow.knight.logic.SaveInterface;
@@ -690,10 +691,10 @@ public final class Application extends JFrame {
     FileOpener opener = new FileOpener(ImmutableList.of(newPlacements));
     StateContext newCtx = opener.openFile(c.getSelectedFile().toPath());
 
-    int missing = ctx().checks().overlayImportChecks(newCtx.checks());
-    if (missing > 0) {
-      JOptionPane.showMessageDialog(this,
-          "Failed to import " + missing + " checks due to missing locations.");
+    Missing missing = ctx().checks().overlayImportChecks(newCtx.checks());
+    if (!missing.empty()) {
+      JOptionPane.showMessageDialog(this, "Failed to import items at " + missing.locations()
+          + " unknown locations, and " + missing.items() + " items at known locations");
     }
     if (JOptionPane.showConfirmDialog(this, "Import notch costs?") == JOptionPane.OK_OPTION) {
       ctx().notchCosts().setCosts(newCtx.notchCosts().costs());

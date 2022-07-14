@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import com.google.auto.value.AutoValue;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.HashBiMap;
@@ -292,24 +293,29 @@ public final class ItemChecks {
     }
   }
 
+  @AutoValue
+  public abstract static class Missing {
+    public abstract int items();
+
+    public abstract int locations();
+
+    public boolean empty() {
+      return items() == 0 && locations() == 0;
+    }
+
+    public static Missing create(int items, int locations) {
+      return new AutoValue_ItemChecks_Missing(items, locations);
+    }
+  }
+
   // Returns the number of unimported checks.
-  public int overlayImportChecks(ItemChecks other) throws ICDLException {
-    // Check that the set of non-vanilla locations being imported is a subset of all our locations.
-    Set<String> ours =
-        allChecks().map(c -> c.location().name()).collect(Collectors.toCollection(HashSet::new));
-    Set<String> theirs = other.allChecks().filter(c -> !c.vanilla()).map(c -> c.location().name())
-        .collect(Collectors.toCollection(HashSet::new));
-
-    // Don't touch Start.
-    ours.remove("Start");
-    theirs.remove("Start");
-
-    Set<String> diff = ImmutableSet.copyOf(Sets.difference(theirs, ours));
-    int missing = (int) other.allChecks()
-        .filter(c -> !c.vanilla() && diff.contains(c.location().name())).count();
+  public Missing overlayImportChecks(ItemChecks other) throws ICDLException {
+    Set<String> locationsToReduce = other.allChecks().filter(c -> !c.vanilla())
+        .map(c -> c.location().name()).collect(Collectors.toCollection(HashSet::new));
+    locationsToReduce.remove("Start");
 
     // Remove all checks at the import locations.
-    reduceToNothing(c -> theirs.contains(c.location().name()));
+    reduceToNothing(c -> locationsToReduce.contains(c.location().name()));
 
     // Import all checks.
     Map<String, ItemCheck> defaultChecks = new HashMap<>();
@@ -319,8 +325,18 @@ public final class ItemChecks {
     Set<ItemCheck> massAdd = new HashSet<>();
 
     Iterable<ItemCheck> checks = () -> other.allChecks().iterator();
+    int missingItems = 0;
+    int missingLocations = 0;
     for (ItemCheck c : checks) {
-      if (c.vanilla() || diff.contains(c.location().name())) {
+      if (c.vanilla() || c.location().name().equals("Start")) {
+        continue;
+      }
+      if (!locationsByName.containsKey(c.location().name())) {
+        missingLocations++;
+        continue;
+      }
+      if (!itemsByName.containsKey(c.item().term())) {
+        missingItems++;
         continue;
       }
 
@@ -343,7 +359,7 @@ public final class ItemChecks {
     ImmutableMap<ItemCheck, ItemCheck> massReplacementFinal = ImmutableMap.copyOf(massReplacement);
     listeners.forEach(l -> l.multipleChecksReplaced(massReplacementFinal));
 
-    return missing;
+    return Missing.create(missingItems, missingLocations);
   }
 
   public ItemCheck get(CheckId id) {
