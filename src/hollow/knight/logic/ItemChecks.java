@@ -2,6 +2,7 @@ package hollow.knight.logic;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -375,7 +376,8 @@ public final class ItemChecks {
   public JsonObject toJson() {
     JsonObject obj = new JsonObject();
     JsonArray arr = new JsonArray();
-    checksById.values().forEach(c -> arr.add(c.toJson()));
+    checksById.values().stream().sorted(Comparator.comparing(c -> c.id()))
+        .forEach(c -> arr.add(c.toJson()));
     obj.add("checks", arr);
     return obj;
   }
