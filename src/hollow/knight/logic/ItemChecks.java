@@ -20,7 +20,6 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Sets;
-import com.google.common.collect.Sets.SetView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -285,7 +284,8 @@ public final class ItemChecks {
     }
   }
 
-  public void overlayImportChecks(ItemChecks other) throws ICDLException {
+  // Returns the number of unimported checks.
+  public int overlayImportChecks(ItemChecks other) throws ICDLException {
     // Check that the set of non-vanilla locations being imported is a subset of all our locations.
     Set<String> ours =
         allChecks().map(c -> c.location().name()).collect(Collectors.toCollection(HashSet::new));
@@ -296,12 +296,9 @@ public final class ItemChecks {
     ours.remove("Start");
     theirs.remove("Start");
 
-    SetView<String> diff = Sets.difference(theirs, ours);
-    if (!diff.isEmpty()) {
-      throw new ICDLException(
-          "Cannot import: " + diff.size() + " locations in the import are not randomized here: "
-              + diff.stream().sorted().collect(Collectors.joining("\n")));
-    }
+    Set<String> diff = ImmutableSet.copyOf(Sets.difference(theirs, ours));
+    int missing = (int) other.allChecks()
+        .filter(c -> !c.vanilla() && diff.contains(c.location().name())).count();
 
     // Remove all checks at the import locations.
     reduceToNothing(c -> theirs.contains(c.location().name()));
@@ -315,7 +312,7 @@ public final class ItemChecks {
 
     Iterable<ItemCheck> checks = () -> other.allChecks().iterator();
     for (ItemCheck c : checks) {
-      if (c.vanilla()) {
+      if (c.vanilla() || diff.contains(c.location().name())) {
         continue;
       }
 
@@ -337,6 +334,8 @@ public final class ItemChecks {
 
     ImmutableMap<ItemCheck, ItemCheck> massReplacementFinal = ImmutableMap.copyOf(massReplacement);
     listeners.forEach(l -> l.multipleChecksReplaced(massReplacementFinal));
+
+    return missing;
   }
 
   public ItemCheck get(CheckId id) {

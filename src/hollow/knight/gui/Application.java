@@ -686,12 +686,21 @@ public final class Application extends JFrame {
       return;
     }
 
-    FileOpener opener = new FileOpener(ImmutableList.of());
+    TransitionVisualizerPlacements newPlacements = new TransitionVisualizerPlacements();
+    FileOpener opener = new FileOpener(ImmutableList.of(newPlacements));
     StateContext newCtx = opener.openFile(c.getSelectedFile().toPath());
 
-    ctx().checks().overlayImportChecks(newCtx.checks());
+    int missing = ctx().checks().overlayImportChecks(newCtx.checks());
+    if (missing > 0) {
+      JOptionPane.showMessageDialog(this,
+          "Failed to import " + missing + " checks due to missing locations.");
+    }
     if (JOptionPane.showConfirmDialog(this, "Import notch costs?") == JOptionPane.OK_OPTION) {
       ctx().notchCosts().setCosts(newCtx.notchCosts().costs());
+    }
+    if (JOptionPane.showConfirmDialog(this,
+        "Import transition visualizer placements?") == JOptionPane.OK_OPTION) {
+      transitionVisualizerPlacements.reset(newPlacements);
     }
 
     if (checkEditor != null) {

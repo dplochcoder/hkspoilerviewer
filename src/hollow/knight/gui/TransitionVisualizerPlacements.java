@@ -54,6 +54,11 @@ public final class TransitionVisualizerPlacements implements SaveInterface {
     return scenePlacementsByName.get(scene).stream();
   }
 
+  public void reset(TransitionVisualizerPlacements other) {
+    clear();
+    other.allScenePlacements().forEach(this::addPlacementInternal);
+  }
+
   public void removePlacement(ScenePlacement p) {
     removePlacementInternal(p);
   }
