@@ -288,9 +288,9 @@ public final class ItemChecks {
   public void overlayImportChecks(ItemChecks other) throws ICDLException {
     // Check that the set of non-vanilla locations being imported is a subset of all our locations.
     Set<String> ours =
-        allChecks().map(c -> c.location().name()).collect(ImmutableSet.toImmutableSet());
+        allChecks().map(c -> c.location().name()).collect(Collectors.toCollection(HashSet::new));
     Set<String> theirs = other.allChecks().filter(c -> !c.vanilla()).map(c -> c.location().name())
-        .collect(ImmutableSet.toImmutableSet());
+        .collect(Collectors.toCollection(HashSet::new));
 
     // Don't touch Start.
     ours.remove("Start");

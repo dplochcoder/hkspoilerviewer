@@ -479,11 +479,18 @@ public final class TransitionVisualizer extends JFrame implements ItemChecks.Lis
 
   @Override
   public void multipleChecksRemoved(ImmutableSet<ItemCheck> checks) {
-    if (checksList.getSelectedIndex() != -1
-        && checks.contains(checksListModel.getResult(checksList.getSelectedIndex()).itemCheck())) {
-      checksList.setSelectedIndex(-1);
+    SearchResult selected = checksListModel.getResult(checksList.getSelectedIndex());
+    boolean removed = false;
+    if (selected != null && checks.contains(selected.itemCheck())) {
+      removed = true;
+      checksList.clearSelection();
     }
+
     updateChecksList();
+
+    if (!removed) {
+      checksList.setSelectedIndex(checksListModel.indexOf(selected.itemCheck()));
+    }
   }
 
   @Override
@@ -494,14 +501,17 @@ public final class TransitionVisualizer extends JFrame implements ItemChecks.Lis
   @Override
   public void multipleChecksReplaced(ImmutableMap<ItemCheck, ItemCheck> replacements) {
     ItemCheck repl = null;
-    if (checksList.getSelectedIndex() != -1) {
-      repl = replacements.get(checksListModel.getResult(checksList.getSelectedIndex()).itemCheck());
+    SearchResult selected = checksListModel.getResult(checksList.getSelectedIndex());
+    if (selected != null) {
+      repl = replacements.get(selected.itemCheck());
     }
 
     updateChecksList();
 
     if (repl != null) {
       checksList.setSelectedIndex(checksListModel.indexOf(repl));
+    } else if (selected != null) {
+      checksList.setSelectedIndex(checksListModel.indexOf(selected.itemCheck()));
     }
   }
 }

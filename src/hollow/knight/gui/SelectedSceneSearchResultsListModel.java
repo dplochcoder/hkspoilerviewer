@@ -29,12 +29,16 @@ public final class SelectedSceneSearchResultsListModel implements ListModel<Stri
   }
 
   public SearchResult getResult(int index) {
+    if (index < 0 | index >= results.size()) {
+      return null;
+    }
+
     return results.get(index);
   }
 
   public int indexOf(ItemCheck itemCheck) {
     for (int i = 0; i < results.size(); i++) {
-      if (results.get(i).equals(itemCheck)) {
+      if (results.get(i).itemCheck().equals(itemCheck)) {
         return i;
       }
     }
