@@ -1,10 +1,12 @@
 package hollow.knight.logic;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -265,6 +267,8 @@ public final class ItemChecks {
         .collect(ImmutableList.toImmutableList());
 
     ImmutableMap.Builder<ItemCheck, ItemCheck> replacedBuilder = ImmutableMap.builder();
+    List<CheckId> toRemove = new ArrayList<>();
+    List<ItemCheck> toAdd = new ArrayList<>();
     for (int i = 0; i < sorted.size(); i++) {
       CheckId id = sorted.get(i);
 
@@ -273,11 +277,14 @@ public final class ItemChecks {
         ItemCheck newCheck = ItemCheck.create(CheckId.of(i), check.location(), check.item(),
             check.costs(), check.vanilla());
 
-        removeInternal(check.id());
-        addInternal(newCheck);
+        toRemove.add(id);
+        toAdd.add(newCheck);
         replacedBuilder.put(check, newCheck);
       }
     }
+
+    toRemove.forEach(this::removeInternal);
+    toAdd.forEach(this::addInternal);
 
     ImmutableMap<ItemCheck, ItemCheck> replaced = replacedBuilder.build();
     if (!replaced.isEmpty()) {
