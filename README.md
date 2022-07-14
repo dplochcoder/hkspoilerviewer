@@ -94,6 +94,18 @@ Your current route can be saved in two formats:
   
 `*.hks` files will save your current route, bookmarks, and hidden results, allowing you to share a route with other users of the HKSpoilerViewer, or simply checkpoint it for yourself in case you want to modify or continue the route later. `*.hks` files are versioned and should be compatible with newer versions of HKSpoilerViewer, but this is not an absolute guarantee.  (Most likely, a 2.0 release will break compatibility with 1.0 save files.) 
 
+# Transition Visualizer
+
+See `View > Transition Visualizer` for a richly featured interactive canvas, for viewing the geometry of your seed. The transition visualizer serves several distinct purposes:
+
+  - Visualize the layout of a transition-rando seed, by moving scenes around manually
+  - Search items by room via visual search, instead of text
+  - Construct transition-rando plandos using ICDL features
+  
+Once the visualizer is open, see `About` for a detailed description of specific features and keyboard shortcuts. The canvas enables multi-select, similar ICDL edit shortcuts as described below, and other features designed to enable fluent search and editing.
+
+Cosmetic options exist in the `View` menu, including a built-in layout of vanilla Hallownest which can be used as a starting point for creating your own visualization. Saving an *.hks file will preserve the layout you have in Transition Visualizer for ease of use. The specific visual placement of scenes has no material effect on the functionality of the seed; they are merely design aides.
+
 # ICDL Edit Mode
 
 You can also use the HKSpoilerViewer to create Plandos, using the [ICDL](https://github.com/homothetyhk/ItemChangerDataLoader) format. To create a plando, or simply make small modifications to an existing seed, first:
