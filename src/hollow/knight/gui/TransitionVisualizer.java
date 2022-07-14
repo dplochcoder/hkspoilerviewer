@@ -247,6 +247,11 @@ public final class TransitionVisualizer extends JFrame implements ItemChecks.Lis
             application.refreshLogic();
           }
           e.consume();
+        } else if (e.getKeyCode() == KeyEvent.VK_D) {
+          application.duplicateCheck(result.itemCheck());
+          application.refreshLogic();
+
+          e.consume();
         } else if (e.getKeyCode() == KeyEvent.VK_Z) {
           application.deleteCheck(result.itemCheck());
           e.consume();
