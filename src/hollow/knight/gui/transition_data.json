@@ -319,18 +319,18 @@
             "Gate": "left1"
           }
         },
-        "right1": {
+        "right3": {
           "Alias": "Right-Exit_Void_Tendrils",
           "VanillaTarget": {
             "Scene": "Abyss_10",
-            "Gate": "left1"
+            "Gate": "left2"
           }
         },
-        "right3": {
+        "right1": {
           "Alias": "Right-Shade_Cloak",
           "VanillaTarget": {
             "Scene": "Abyss_10",
-            "Gate": "left2"
+            "Gate": "left1"
           }
         }
       }
