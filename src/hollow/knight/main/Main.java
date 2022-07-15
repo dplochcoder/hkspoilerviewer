@@ -48,7 +48,8 @@ public final class Main {
     j.setFileFilter(new FileFilter() {
       @Override
       public boolean accept(File pathname) {
-        return pathname.isDirectory() || pathname.getName().contentEquals("RawSpoiler.json");
+        return pathname.isDirectory() || pathname.getName().equals("RawSpoiler.json")
+            || pathname.getName().equals("ctx.json");
       }
 
       @Override

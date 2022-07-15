@@ -402,8 +402,10 @@ public final class StateContext {
         throw new ICDLException("Placement indices don't match ids");
       }
 
+      Item item = c.item();
       JsonObject placement = new JsonObject();
-      placement.add("Item", itemsJson.get(c.item().term()));
+      placement.add("Item",
+          item.isCustom() ? item.toRawSpoilerJson() : itemsJson.get(c.item().term()));
 
       JsonObject locObj = locationsJson.get(c.location().name()).deepCopy();
       locObj.add("costs", c.costs().toRawSpoilerJson());

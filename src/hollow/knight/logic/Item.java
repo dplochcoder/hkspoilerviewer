@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.MoreCollectors;
@@ -192,10 +193,9 @@ public final class Item {
 
     JsonObject obj = new JsonObject();
     obj.addProperty("pool", pool.get());
-    obj.add("term", new JsonPrimitive(term().name()));
-    JsonArray types = new JsonArray();
-    types().forEach(types::add);
-    obj.add("types", types);
+    obj.addProperty("term", term().name());
+    obj.addProperty("Name", term().name());
+    obj.addProperty("$type", types().stream().collect(Collectors.joining(", ")));
     Term effectTerm = effects.effectTerms().collect(MoreCollectors.onlyElement());
     obj.addProperty("effectTerm", effectTerm.name());
     obj.addProperty("value", effects.getEffectValue(effectTerm));

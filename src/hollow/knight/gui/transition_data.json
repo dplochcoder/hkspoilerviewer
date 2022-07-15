@@ -344,18 +344,18 @@
     },
     "Gates": {
       "Left": {
-        "left1": {
+        "left2": {
           "Alias": "Left-Void_Tendrils",
           "VanillaTarget": {
             "Scene": "Abyss_09",
-            "Gate": "right1"
+            "Gate": "right3"
           }
         },
-        "left2": {
+        "left1": {
           "Alias": "Left-Abyss_Lighthouse",
           "VanillaTarget": {
             "Scene": "Abyss_09",
-            "Gate": "right3"
+            "Gate": "right1"
           }
         }
       }
