@@ -14,9 +14,8 @@ public abstract class Location {
   private static final ImmutableMap<String, String> SCENE_OVERRIDES = ImmutableMap
       .of("Geo_Rock-Crossroads_Tram", "Crossroads_46", "Start", "Start", "Bench-Godhome_Roof", "");
 
-  private static final ImmutableSet<String> SHOPS =
-      ImmutableSet.of("Egg_Shop", "Grubfather", "Iselda", "Leg_Eater", "Salubra", "Seer", "Sly",
-          "Sly_(Key)", "Unbreakable_Greed", "Unbreakable_Heart", "Unbreakable_Strength");
+  private static final ImmutableSet<String> SHOPS = ImmutableSet.of("Egg_Shop", "Grubfather",
+      "Iselda", "Leg_Eater", "Salubra", "Seer", "Sly", "Sly_(Key)");
 
   public static ImmutableSet<String> shops() {
     return SHOPS;
