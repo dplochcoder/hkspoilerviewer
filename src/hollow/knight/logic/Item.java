@@ -1,14 +1,12 @@
 package hollow.knight.logic;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.MoreCollectors;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -177,9 +175,8 @@ public final class Item {
     JsonObject obj = json.getAsJsonObject();
     String pool = obj.get("pool").getAsString();
     Term term = Term.create(obj.get("term").getAsString());
-    Set<String> types = new HashSet<>();
-    JsonArray typesArr = obj.get("types").getAsJsonArray();
-    typesArr.forEach(s -> types.add(s.getAsString()));
+    ImmutableSet<String> types = Arrays.stream(obj.get("$type").getAsString().split(", "))
+        .collect(ImmutableSet.toImmutableSet());
     Term effectTerm = Term.create(obj.get("effectTerm").getAsString());
     int value = obj.get("value").getAsInt();
 
