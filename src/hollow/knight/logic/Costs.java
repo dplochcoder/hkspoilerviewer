@@ -116,12 +116,6 @@ public final class Costs {
         return new Costs(Cost.createTerm(Term.essence(), 1));
       case "Egg_Shop":
         return new Costs(Cost.createTerm(Term.rancidEggs(), 1));
-      case "Unbreakable_Greed":
-        return new Costs(Cost.createGeo(450));
-      case "Unbreakable_Heart":
-        return new Costs(Cost.createGeo(600));
-      case "Unbreakable_Strength":
-        return new Costs(Cost.createGeo(750));
       case "Crossroads_Stag":
         return new Costs(Cost.createGeo(50));
       case "Queen's_Station_Stag":
@@ -140,6 +134,14 @@ public final class Costs {
         return new Costs(Cost.createGeo(300));
       case "King's_Station_Stag":
         return new Costs(Cost.createGeo(300));
+      case "Stag_Nest_Stag":
+        return new Costs(Cost.createGeo(300));
+      case "Unbreakable_Greed":
+        return new Costs(Cost.createGeo(450));
+      case "Unbreakable_Heart":
+        return new Costs(Cost.createGeo(600));
+      case "Unbreakable_Strength":
+        return new Costs(Cost.createGeo(750));
       case "Dash_Slash":
         return new Costs(Cost.createGeo(800));
       default:
