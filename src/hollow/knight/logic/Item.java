@@ -30,13 +30,13 @@ public final class Item {
     this.fromOriginalJson = true;
   }
 
-  private Item(Term term, String pool, Set<String> types, Term effectTerm, int value) {
+  private Item(Term term, String pool, Set<String> types, Term effectTerm, int effectValue) {
     this.term = term;
     this.pool = Optional.of(pool);
     this.types = ImmutableSet.copyOf(types);
 
     MutableTermMap termMap = new MutableTermMap();
-    termMap.add(effectTerm, value);
+    termMap.add(effectTerm, effectValue);
     this.effects =
         new TermMapItemEffects(Condition.alwaysTrue(), termMap, TermMap.empty(), TermMap.empty());
 
@@ -178,9 +178,9 @@ public final class Item {
     LinkedHashSet<String> types = new LinkedHashSet<>();
     obj.get("types").getAsJsonArray().forEach(e -> types.add(e.getAsString()));
     Term effectTerm = Term.create(obj.get("effectTerm").getAsString());
-    int value = obj.get("effectValue").getAsInt();
+    int effectValue = obj.get("effectValue").getAsInt();
 
-    return new Item(term, pool, types, effectTerm, value);
+    return new Item(term, pool, types, effectTerm, effectValue);
   }
 
   public JsonElement toHKSJson() {
