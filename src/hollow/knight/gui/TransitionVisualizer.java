@@ -5,9 +5,6 @@ import java.awt.Dimension;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -46,7 +43,8 @@ import hollow.knight.logic.ItemChecks;
 import hollow.knight.logic.RoomLabels;
 import hollow.knight.logic.StateContext;
 
-public final class TransitionVisualizer extends JFrame implements ItemChecks.Listener {
+public final class TransitionVisualizer extends JFrame
+    implements SingletonWindow.Interface, ItemChecks.Listener {
   private static final long serialVersionUID = 1L;
 
 
@@ -94,8 +92,6 @@ public final class TransitionVisualizer extends JFrame implements ItemChecks.Lis
     rightPane.add(scenesPane);
     rightPane.add(new JSeparator());
     rightPane.add(checksPane);
-
-    this.addWindowListener(newWindowListener());
 
     getContentPane().add(canvas, BorderLayout.CENTER);
     getContentPane().add(rightPane, BorderLayout.EAST);
@@ -457,14 +453,9 @@ public final class TransitionVisualizer extends JFrame implements ItemChecks.Lis
     scenesListModel.updateScenes(newScenes);
   }
 
-  private WindowListener newWindowListener() {
-    return new WindowAdapter() {
-      @Override
-      public void windowClosing(WindowEvent e) {
-        application.transitionVisualizerClosed();
-        application.ctx().checks().removeListener(TransitionVisualizer.this);
-      }
-    };
+  @Override
+  public void onClose() {
+    application.ctx().checks().removeListener(TransitionVisualizer.this);
   }
 
   @Override

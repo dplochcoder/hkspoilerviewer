@@ -65,13 +65,11 @@ public final class Application extends JFrame {
   private final ImmutableList<SaveInterface> saveInterfaces;
   private final ImmutableList<ItemChecks.Listener> checksListeners;
 
-  private final JMenuItem openVisualizer;
-  private TransitionVisualizer transitionVisualizer = null;
+  private final SingletonWindow<TransitionVisualizer> transitionVisualizer;
 
   private boolean isICDL = false;
   private final JMenu icdlMenu;
-  private final JMenuItem openEditor;
-  private CheckEditor checkEditor;
+  private final SingletonWindow<CheckEditor> checkEditor;
   private final JMenuItem saveICDLFolder;
 
   private final TransitionRouting transitionRouting;
@@ -100,10 +98,11 @@ public final class Application extends JFrame {
     setTitle("HKSpoilerViewer");
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    openVisualizer = new JMenuItem("Open Transition Visualizer");
-    openEditor = new JMenuItem("Open Editor");
-    saveICDLFolder = new JMenuItem("Export As ICDL Pack Folder");
-    icdlMenu = createICDLMenu();
+    this.transitionVisualizer =
+        new SingletonWindow<>(this, "Transition Visualizer", () -> new TransitionVisualizer(this));
+    this.checkEditor = new SingletonWindow<>(this, "Check Editor", () -> new CheckEditor(this));
+    this.saveICDLFolder = new JMenuItem("Export As ICDL Pack Folder");
+    this.icdlMenu = createICDLMenu();
     setJMenuBar(createMenu());
 
     JPanel left = new JPanel();
@@ -233,10 +232,7 @@ public final class Application extends JFrame {
   public void refreshLogic() {
     routeListModel.refreshLogic();
     repopulateSearchResults();
-
-    if (checkEditor != null) {
-      checkEditor.repopulateItemResults();
-    }
+    checkEditor.ifOpen(e -> e.repopulateItemResults());
   }
 
   public ItemCheck getSelectedSearchResultCheck() {
@@ -260,15 +256,15 @@ public final class Application extends JFrame {
   }
 
   private CheckEditorPresence ensureCheckEditor() {
-    if (checkEditor != null) {
-      checkEditor.requestFocus();
+    if (checkEditor.isOpen()) {
+      checkEditor.getWithFocus();
       return CheckEditorPresence.ALREADY_OPEN;
     } else if (!isICDL) {
       JOptionPane.showMessageDialog(this, "Must open an ICDL ctx.json file for this action",
           "Requires ICDL", JOptionPane.ERROR_MESSAGE);
       return CheckEditorPresence.NONE;
     } else {
-      openEditor();
+      checkEditor.getWithFocus();
       return CheckEditorPresence.OPEN_NOW;
     }
   }
@@ -319,7 +315,7 @@ public final class Application extends JFrame {
       return false;
     }
 
-    checkEditor.editCheck(check);
+    checkEditor.get().editCheck(check);
     return true;
   }
 
@@ -349,7 +345,7 @@ public final class Application extends JFrame {
       return;
     }
 
-    Item item = checkEditor.selectedItem();
+    Item item = checkEditor.get().selectedItem();
     if (item == null || check == null || !ensureRandomizedNonTransition(check)) {
       return;
     }
@@ -464,8 +460,7 @@ public final class Application extends JFrame {
     menu.add(editTolerances);
 
     menu.add(new JSeparator());
-    openEditor.addActionListener(GuiUtil.newActionListener(this, this::openEditor));
-    menu.add(openEditor);
+    menu.add(checkEditor.getMenuItem());
 
     menu.add(new JSeparator());
     JMenuItem importHKS = new JMenuItem("Import HKS");
@@ -477,34 +472,6 @@ public final class Application extends JFrame {
     menu.add(saveICDLFolder);
 
     return menu;
-  }
-
-  private void openTransitionVisualizer() {
-    if (transitionVisualizer == null) {
-      transitionVisualizer = new TransitionVisualizer(this);
-    }
-
-    transitionVisualizer.requestFocus();
-    openVisualizer.setEnabled(false);
-    openVisualizer.setToolTipText("Visualizer is already open");
-  }
-
-  public void transitionVisualizerClosed() {
-    transitionVisualizer = null;
-    openVisualizer.setEnabled(true);
-    openVisualizer.setToolTipText("");
-  }
-
-  private void openEditor() {
-    checkEditor = new CheckEditor(Application.this);
-    openEditor.setEnabled(false);
-    openEditor.setToolTipText("Editor is already open");
-  }
-
-  public void editorClosed() {
-    checkEditor = null;
-    openEditor.setEnabled(true);
-    openEditor.setToolTipText("");
   }
 
   private JMenuBar createMenu() throws ParseException {
@@ -521,7 +488,7 @@ public final class Application extends JFrame {
     bar.add(file);
 
     JMenu view = new JMenu("View");
-    view.add(openVisualizer);
+    view.add(transitionVisualizer.getMenuItem());
     bar.add(view);
 
     JMenu query = new JMenu("Query");
@@ -551,9 +518,6 @@ public final class Application extends JFrame {
     save.addActionListener(GuiUtil.newActionListener(this, this::saveFile));
     saveToTxt
         .addActionListener(GuiUtil.newActionListener(this, () -> routeListModel.saveAsTxt(this)));
-
-    openVisualizer
-        .addActionListener(GuiUtil.newActionListener(this, this::openTransitionVisualizer));
 
     qFromFile.addActionListener(GuiUtil.newActionListener(this, this::executeQueryFromFile));
 
@@ -641,15 +605,8 @@ public final class Application extends JFrame {
       }
     }
 
-    if (transitionVisualizer != null) {
-      transitionVisualizer.dispose();
-      transitionVisualizer = null;
-    }
-    if (checkEditor != null) {
-      checkEditor.dispose();
-      checkEditor = null;
-    }
-
+    transitionVisualizer.close();
+    checkEditor.close();
     refreshLogic();
   }
 
@@ -886,9 +843,7 @@ public final class Application extends JFrame {
     ImmutableList<SearchResult> results = searchEngine.getSearchResults(currentState());
     searchResultsListModel.updateResults(currentState(), results);
     routeCounters.forEach(c -> c.update(currentState()));
-    if (transitionVisualizer != null) {
-      transitionVisualizer.updateChecksList();
-    }
+    transitionVisualizer.ifOpen(t -> t.updateChecksList());
 
     if (needsExpansion(searchResultsPane) || needsExpansion(routePane)) {
       pack();

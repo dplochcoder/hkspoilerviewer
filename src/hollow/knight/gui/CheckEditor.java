@@ -5,9 +5,6 @@ import java.awt.Dimension;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -36,7 +33,8 @@ import hollow.knight.logic.ItemChecks;
 import hollow.knight.logic.Term;
 
 // Free-floating UI for editing a single check.
-public final class CheckEditor extends JFrame implements ItemChecks.Listener {
+public final class CheckEditor extends JFrame
+    implements SingletonWindow.Interface, ItemChecks.Listener {
   private static final long serialVersionUID = 1L;
 
   private final Application application;
@@ -80,8 +78,6 @@ public final class CheckEditor extends JFrame implements ItemChecks.Listener {
     newCostButton
         .addActionListener(GuiUtil.newActionListener(this, () -> addCost(Cost.createGeo(1))));
     costButtons.add(newCostButton);
-
-    this.addWindowListener(newWindowListener());
 
     JPanel contentPane = new JPanel();
     contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
@@ -338,15 +334,6 @@ public final class CheckEditor extends JFrame implements ItemChecks.Listener {
     }
 
     application.duplicateCheck(check);
-  }
-
-  private WindowListener newWindowListener() {
-    return new WindowAdapter() {
-      @Override
-      public void windowClosing(WindowEvent e) {
-        application.editorClosed();
-      }
-    };
   }
 
   private static final ImmutableMap<Integer, Integer> UP_DOWN_VALUES = ImmutableMap.of(
