@@ -6,9 +6,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.swing.JOptionPane;
@@ -29,6 +31,14 @@ import hollow.knight.main.Main;
 /** Mostly immutable context for a State object. */
 public final class StateContext {
 
+  public interface Mutable {
+    String saveName();
+
+    JsonObject save() throws ICDLException;
+
+    void load(JsonObject obj) throws ICDLException;
+  }
+
   private final boolean isHKS;
   private final JsonObject rawSpoilerJson;
   private final JsonObject icdlJson;
@@ -41,6 +51,8 @@ public final class StateContext {
 
   private final MutableTermMap tolerances;
   private final ImmutableTermMap setters;
+
+  private final List<Mutable> mutables;
 
   public StateContext(boolean isHKS, JsonObject rawSpoilerJson, JsonObject icdlJson,
       CharmIds charmIds, RoomLabels roomLabels, Pools pools, NotchCosts notchCosts,
@@ -56,6 +68,11 @@ public final class StateContext {
     this.checks = checks;
     this.tolerances = new MutableTermMap(tolerances);
     this.setters = ImmutableTermMap.copyOf(setters);
+
+    this.mutables = new ArrayList<>();
+    this.mutables.add(checks);
+    this.mutables.add(notchCosts);
+    this.mutables.add(mutableTolerancesWrapper());
   }
 
   public boolean isHKS() {
@@ -102,6 +119,25 @@ public final class StateContext {
     return tolerances;
   }
 
+  private Mutable mutableTolerancesWrapper() {
+    return new Mutable() {
+      @Override
+      public String saveName() {
+        return "ICDLTolerances";
+      }
+
+      @Override
+      public JsonObject save() throws ICDLException {
+        return tolerances.toJson();
+      }
+
+      @Override
+      public void load(JsonObject obj) throws ICDLException {
+        setTolerances(TermMap.fromJson(obj));
+      }
+    };
+  }
+
   public void setTolerances(TermMap newTolerances) {
     tolerances.clear();
     tolerances.add(newTolerances);
@@ -119,20 +155,19 @@ public final class StateContext {
     return state;
   }
 
-  public void saveMutables(JsonObject obj) {
-    obj.add("ICDLItemChecks", checks().toJson());
-    obj.add("ICDLNotchCosts", notchCosts().toJson());
-    obj.add("ICDLTolerances", tolerances.toJson());
+  public void saveMutables(JsonObject obj) throws ICDLException {
+    for (Mutable m : mutables) {
+      obj.add(m.saveName(), m.save());
+    }
   }
 
   public void loadMutables(JsonObject obj) throws ICDLException {
-    if (!obj.has("ICDLItemChecks")) {
-      return;
+    for (Mutable m : mutables) {
+      JsonElement elem = obj.get(m.saveName());
+      if (elem != null) {
+        m.load(elem.getAsJsonObject());
+      }
     }
-
-    checks().fromJson(obj.get("ICDLItemChecks").getAsJsonObject());
-    notchCosts().parse(obj.get("ICDLNotchCosts").getAsJsonObject());
-    setTolerances(TermMap.fromJson(obj.get("ICDLTolerances").getAsJsonObject()));
   }
 
   public static StateContext parse(boolean isHKS, JsonObject rawSpoilerJson, JsonObject icdlJson)
@@ -162,7 +197,7 @@ public final class StateContext {
     setters.set(Term.create("$StartLocation[" + startLoc + "]"), 1);
 
     NotchCosts notchCosts = new NotchCosts();
-    notchCosts.parse(rawSpoilerJson);
+    notchCosts.load(rawSpoilerJson);
 
     return new StateContext(isHKS, rawSpoilerJson, icdlJson, charmIds, rooms, pools, notchCosts,
         Waypoints.parse(rawSpoilerJson), ItemChecks.parse(rawSpoilerJson, rooms), tolerances,

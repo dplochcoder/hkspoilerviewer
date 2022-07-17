@@ -653,7 +653,7 @@ public final class Application extends JFrame {
     refreshLogic();
   }
 
-  private void saveFile() throws IOException {
+  private void saveFile() throws IOException, ICDLException {
     JFileChooser c = new JFileChooser("Save");
     c.setFileFilter(HKS_SAVE_FILTER);
 

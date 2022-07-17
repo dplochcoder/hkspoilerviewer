@@ -29,7 +29,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 /** A mutable mapping of locations to items. */
-public final class ItemChecks {
+public final class ItemChecks implements StateContext.Mutable {
   public interface Listener {
     void checkAdded(ItemCheck check);
 
@@ -396,7 +396,13 @@ public final class ItemChecks {
     return idsByCondition.getValue(c).stream().map(checksById::get);
   }
 
-  public JsonObject toJson() {
+  @Override
+  public String saveName() {
+    return "ICDLItemChecks";
+  }
+
+  @Override
+  public JsonObject save() {
     JsonObject obj = new JsonObject();
     JsonArray arr = new JsonArray();
     checksById.values().stream().sorted(Comparator.comparing(c -> c.id()))
@@ -405,7 +411,8 @@ public final class ItemChecks {
     return obj;
   }
 
-  public void fromJson(JsonObject obj) throws ICDLException {
+  @Override
+  public void load(JsonObject obj) throws ICDLException {
     // Remove all item checks
     ImmutableSet<CheckId> ids = ImmutableSet.copyOf(checksById.keySet());
     ids.forEach(this::removeInternal);
