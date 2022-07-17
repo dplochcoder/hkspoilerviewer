@@ -1,12 +1,15 @@
 package hollow.knight.logic;
 
 import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.MoreCollectors;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -40,19 +43,16 @@ public final class Item {
     this.fromOriginalJson = false;
   }
 
-  private static final ImmutableSet<String> GEO_TYPES =
-      ImmutableSet.of("RandomizerMod.RC.CustomGeoItem", "RandomizerMod");
-
-  public static Item newGeoItem(int value) {
-    return new Item(Term.create(value + "_Geo"), "Geo", GEO_TYPES, Term.geo(), value);
-  }
-
-  private static final ImmutableSet<String> ESSENCE_TYPES =
+  private static final ImmutableSet<String> CUSTOM_ITEM_TYPES =
       ImmutableSet.of("RandomizerCore.LogicItems.SingleItem", "RandomizerCore");
 
+  public static Item newGeoItem(int value) {
+    return new Item(Term.create(value + "_Geo"), "Geo", CUSTOM_ITEM_TYPES, Term.geo(), value);
+  }
+
   public static Item newEssenceItem(int value) {
-    return new Item(Term.create(value + "_Essence"), "DreamWarrior", ESSENCE_TYPES, Term.essence(),
-        value);
+    return new Item(Term.create(value + "_Essence"), "DreamWarrior", CUSTOM_ITEM_TYPES,
+        Term.essence(), value);
   }
 
   public Term term() {
@@ -167,7 +167,7 @@ public final class Item {
     }
   }
 
-  public static Item fromRawSpoilerJson(ItemChecks checks, JsonElement json) throws ICDLException {
+  public static Item fromHKSJson(ItemChecks checks, JsonElement json) throws ICDLException {
     if (json.isJsonPrimitive()) {
       return checks.getItem(Term.create(json.getAsString()));
     }
@@ -175,15 +175,15 @@ public final class Item {
     JsonObject obj = json.getAsJsonObject();
     String pool = obj.get("pool").getAsString();
     Term term = Term.create(obj.get("term").getAsString());
-    ImmutableSet<String> types = Arrays.stream(obj.get("$type").getAsString().split(", "))
-        .collect(ImmutableSet.toImmutableSet());
+    LinkedHashSet<String> types = new LinkedHashSet<>();
+    obj.get("types").getAsJsonArray().forEach(e -> types.add(e.getAsString()));
     Term effectTerm = Term.create(obj.get("effectTerm").getAsString());
-    int value = obj.get("value").getAsInt();
+    int value = obj.get("effectValue").getAsInt();
 
     return new Item(term, pool, types, effectTerm, value);
   }
 
-  public JsonElement toRawSpoilerJson() {
+  public JsonElement toHKSJson() {
     if (fromOriginalJson) {
       return new JsonPrimitive(term().name());
     }
@@ -191,11 +191,44 @@ public final class Item {
     JsonObject obj = new JsonObject();
     obj.addProperty("pool", pool.get());
     obj.addProperty("term", term().name());
-    obj.addProperty("Name", term().name());
-    obj.addProperty("$type", types().stream().collect(Collectors.joining(", ")));
+    JsonArray jsonTypes = new JsonArray();
+    types().forEach(jsonTypes::add);
+    obj.add("types", jsonTypes);
     Term effectTerm = effects.effectTerms().collect(MoreCollectors.onlyElement());
     obj.addProperty("effectTerm", effectTerm.name());
-    obj.addProperty("value", effects.getEffectValue(effectTerm));
+    obj.addProperty("effectValue", effects.getEffectValue(effectTerm));
+    return obj;
+  }
+
+  public JsonObject toRawSpoilerJson(Map<Term, JsonObject> origJson) {
+    if (fromOriginalJson) {
+      return origJson.get(term());
+    }
+
+    JsonObject obj = new JsonObject();
+
+    JsonObject itemDef = new JsonObject();
+    itemDef.addProperty("Name", term().name());
+    itemDef.addProperty("Pool", pool.get());
+    itemDef.addProperty("PriceCap", 1);;
+    itemDef.addProperty("MajorItem", false);
+    obj.add("ItemDef", itemDef);
+
+    JsonObject item = new JsonObject();
+    item.addProperty("$type", types().stream().collect(Collectors.joining(", ")));
+    item.addProperty("Name", term.name());
+    Term effectTerm = effects.effectTerms().collect(MoreCollectors.onlyElement());
+    JsonObject effect = new JsonObject();
+    effect.addProperty("Term", effectTerm.name());
+    effect.addProperty("Value", effects.getEffectValue(effectTerm));
+    item.add("Effect", effect);
+    obj.add("item", item);
+
+    obj.addProperty("Name", term.name());
+    obj.addProperty("Placed", "Permanent");
+    obj.addProperty("Sphere", 1);;
+    obj.addProperty("Required", false);
+
     return obj;
   }
 
