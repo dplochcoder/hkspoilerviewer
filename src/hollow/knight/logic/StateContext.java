@@ -531,14 +531,14 @@ public final class StateContext {
     }
     String authorName = JOptionPane.showInputDialog(null, "Author?");
     if (authorName == null || authorName.trim().isEmpty()) {
-      authorName = "";
+      authorName = "<unknown> ";
     } else {
-      authorName = authorName.trim() + " + ";
+      authorName = authorName.trim() + " ";
     }
 
     JsonObject packJson = new JsonObject();
-    packJson.addProperty("Author", authorName + "HKSpoilerViewer v" + Main.version() + ", "
-        + LocalDate.now().format(DateTimeFormatter.ISO_DATE));
+    packJson.addProperty("Author", authorName + "(HKSV " + Main.version() + ", "
+        + LocalDate.now().format(DateTimeFormatter.ISO_DATE) + ")");
     packJson.addProperty("Name", packName.trim());
     packJson.addProperty("Description", packDesc.trim());
     packJson.addProperty("SupportsRandoTracking", true);
