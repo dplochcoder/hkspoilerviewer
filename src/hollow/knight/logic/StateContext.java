@@ -529,9 +529,15 @@ public final class StateContext {
     if (packDesc == null || packDesc.trim().isEmpty()) {
       packDesc = "Hollow Knight Plando (" + packName.trim() + ")";
     }
+    String authorName = JOptionPane.showInputDialog(null, "Author?");
+    if (authorName == null || authorName.trim().isEmpty()) {
+      authorName = "";
+    } else {
+      authorName = authorName.trim() + " + ";
+    }
 
     JsonObject packJson = new JsonObject();
-    packJson.addProperty("Author", "HKSPoilerViewer v" + Main.version() + ", "
+    packJson.addProperty("Author", authorName + "HKSpoilerViewer v" + Main.version() + ", "
         + LocalDate.now().format(DateTimeFormatter.ISO_DATE));
     packJson.addProperty("Name", packName.trim());
     packJson.addProperty("Description", packDesc.trim());
