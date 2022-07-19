@@ -26,12 +26,17 @@ import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
+import javax.swing.filechooser.FileFilter;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -797,18 +802,68 @@ public final class TransitionVisualizerCanvas extends JPanel {
     return new Dimension(400, 400);
   }
 
-  @Override
-  public void paintComponent(Graphics g) {
-    Graphics2D g2d = (Graphics2D) g;
+  private Rect getViewportRect() {
+    return new Rect(center, getWidth() / zoom, getHeight() / zoom);
+  }
+
+  private static final int EXPORT_PADDING = 50;
+
+  private Rect getCanvasRect() {
+    if (parent.placements().allScenePlacements().count() == 0) {
+      return new Rect(new Point(0, 0), 100, 100);
+    }
+
+    Rect bound = Rect.union(parent.placements().allScenePlacements().map(s -> s.getRect(data()))
+        .collect(ImmutableList.toImmutableList()));
+    return new Rect(bound.center(), bound.width() + EXPORT_PADDING * 2,
+        bound.height() + EXPORT_PADDING * 2);
+  }
+
+  private static final FileFilter PNG_FILTER = new FileFilter() {
+    @Override
+    public boolean accept(File pathname) {
+      return pathname.isDirectory() || pathname.getName().endsWith(".png");
+    }
+
+    @Override
+    public String getDescription() {
+      return "PNG Images";
+    }
+  };
+
+  public void exportImage(boolean viewport) {
+    Rect viewRect = viewport ? getViewportRect() : getCanvasRect();
+
+    BufferedImage img = new BufferedImage((int) viewRect.width(), (int) viewRect.height(),
+        BufferedImage.TYPE_3BYTE_BGR);
+    Graphics2D g2d = img.createGraphics();
     g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-    Rectangle bounds = g2d.getClipBounds();
-    g2d.setColor(Color.BLACK);
-    g2d.fillRect(bounds.x - 1, bounds.y - 1, bounds.width + 1, bounds.height + 1);
+    g2d.setColor(Color.black);
+    g2d.fillRect(-1, -1, (int) viewRect.width() + 2, (int) viewRect.height() + 2);
+    g2d.transform(AffineTransform.getTranslateInstance(viewRect.width() / 2 - viewRect.center().x(),
+        viewRect.height() / 2 - viewRect.center().y()));
+    paintInternal(g2d);
 
-    // Apply affine transform.
-    AffineTransform prev = g2d.getTransform();
-    g2d.transform(transform());
+    JFileChooser c = new JFileChooser("Save As");
+    c.setFileFilter(PNG_FILTER);
+    if (c.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) {
+      return;
+    }
+
+    File f = c.getSelectedFile();
+    if (!f.getName().endsWith(".png")) {
+      f = new File(f.getParentFile(), f.getName() + ".png");
+    }
+
+    try {
+      ImageIO.write(img, "png", f);
+    } catch (Exception ex) {
+      GuiUtil.showStackTrace(parent, "Failed to Export", ex);
+    }
+  }
+
+  private void paintInternal(Graphics2D g2d) {
     try {
       // Draw components in order.
       parent.placements().allScenePlacements().forEach(p -> renderScenePlacement(g2d, p));
@@ -839,6 +894,23 @@ public final class TransitionVisualizerCanvas extends JPanel {
       }
     } catch (ICDLException ex) {
       throw new AssertionError(ex);
+    }
+  }
+
+  @Override
+  public void paintComponent(Graphics g) {
+    Graphics2D g2d = (Graphics2D) g;
+    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+    Rectangle bounds = g2d.getClipBounds();
+    g2d.setColor(Color.BLACK);
+    g2d.fillRect(bounds.x - 1, bounds.y - 1, bounds.width + 1, bounds.height + 1);
+
+    // Apply affine transform.
+    AffineTransform prev = g2d.getTransform();
+    g2d.transform(transform());
+    try {
+      paintInternal(g2d);
     } finally {
       g2d.setTransform(prev);
     }

@@ -271,6 +271,21 @@ public final class TransitionVisualizer extends JFrame
     };
   }
 
+  private JMenu createAsImageMenu() {
+    JMenu out = new JMenu("Export as Image");
+
+    JMenuItem cView = new JMenuItem("Current View");
+    cView.addActionListener(GuiUtil.newActionListener(this, () -> canvas.exportImage(true)));
+    out.add(cView);
+
+    JMenuItem whole = new JMenuItem("Whole Canvas");
+    whole.addActionListener(GuiUtil.newActionListener(this, () -> canvas.exportImage(false)));
+    out.add(whole);
+
+    return out;
+  }
+
+
   private JMenuItem createViewResetMenu() {
     JMenuItem out = new JMenuItem("Reset to Origin");
     out.addActionListener(GuiUtil.newActionListener(this, () -> {
@@ -385,6 +400,10 @@ public final class TransitionVisualizer extends JFrame
 
   private JMenuBar createMenu() {
     JMenuBar menu = new JMenuBar();
+
+    JMenu export = new JMenu("Export");
+    export.add(createAsImageMenu());
+    menu.add(export);
 
     JMenu view = new JMenu("View");
     view.add(createViewResetMenu());
