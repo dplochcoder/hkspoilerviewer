@@ -53,7 +53,12 @@ public final class GuiUtil {
     	}
       }
       
-      if (Character.isWhitespace(in.charAt(i))) {
+      char ch = in.charAt(i);
+      if (ch == '\n') {
+    	out.append(in.substring(lineStart, i + 1));
+    	lineStart = i + 1;
+    	lastSpace = i;
+      } else if (Character.isWhitespace(in.charAt(i))) {
     	lastSpace = i;
     	if (lineStart == lastSpace - 1) {
     	  lineStart = lastSpace + 1;
@@ -69,6 +74,7 @@ public final class GuiUtil {
     try (StringWriter sw = new StringWriter(); PrintWriter pw = new PrintWriter(sw)) {
       ex.printStackTrace(pw);
       String msg = wrap(ex.getMessage(), 200) + ";\n" + wrap(sw.toString(), 200);
+      copyToClipboard(msg);
       
       JOptionPane.showMessageDialog(
         parentComponent, msg + "\n\n(Copied to Clipboard!)", header, JOptionPane.WARNING_MESSAGE);
