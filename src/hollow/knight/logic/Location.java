@@ -6,6 +6,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import hollow.knight.gui.TransitionData;
 
@@ -49,7 +50,8 @@ public abstract class Location {
 
     String scene;
     if (obj.has("LocationDef")) {
-      scene = obj.get("LocationDef").getAsJsonObject().get("SceneName").getAsString();
+      JsonElement sceneName = obj.get("LocationDef").getAsJsonObject().get("SceneName");
+      scene = sceneName.isJsonNull() ? "Unknown" : sceneName.getAsString();
     } else {
       scene = inferScene(rooms, name, locAccess);
     }
