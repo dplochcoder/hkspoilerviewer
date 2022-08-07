@@ -1003,8 +1003,7 @@ public final class Application extends JFrame {
   private void executeQuery(Query query) {
     // Copy to clipboard.
     String results = query.execute(currentState());
-    StringSelection sel = new StringSelection(results);
-    Toolkit.getDefaultToolkit().getSystemClipboard().setContents(sel, null);
+    GuiUtil.copyToClipboard(results);
 
     String msg = results + "\n\n(Copied to clipboard!)";
     JOptionPane.showMessageDialog(this, msg, "Query results", JOptionPane.INFORMATION_MESSAGE);
