@@ -109,7 +109,7 @@ namespace SpoilerViewerMod
             
             Process process = new();
             process.StartInfo.FileName = "java.exe";
-            process.StartInfo.Arguments = $"-jar \"{JarFile}\" \"{GetJsonPath(openICDL)}\"";
+            process.StartInfo.Arguments = $"-jar \"{JarFile}\" \"{path}\"";
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.CreateNoWindow = true;
             process.Start();
