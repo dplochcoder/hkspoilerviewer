@@ -4,7 +4,7 @@
   <artifactId>HKSpoilerViewer</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <build>
-    <sourceDirectory>src</sourceDirectory>
+    <sourceDirectory>SpoilerViewer/Application</sourceDirectory>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -14,9 +14,9 @@
           <target>1.8</target>
           <annotationProcessorPaths>
           	<path>
-				<groupId>com.google.auto.value</groupId>
-			  	<artifactId>auto-value</artifactId>
-			  	<version>1.8</version>
+			  <groupId>com.google.auto.value</groupId>
+			  <artifactId>auto-value</artifactId>
+			  <version>1.8</version>
           	</path>
           </annotationProcessorPaths>
         </configuration>
