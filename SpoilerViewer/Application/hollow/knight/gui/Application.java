@@ -103,6 +103,8 @@ public final class Application extends JFrame {
     this.icdlMenu = createICDLMenu();
     setJMenuBar(createMenu());
 
+    setICDLEnabled(ctx.icdlJson() != null);
+
     JPanel left = new JPanel();
     BoxLayout layout = new BoxLayout(left, BoxLayout.PAGE_AXIS);
     left.setLayout(layout);
@@ -435,8 +437,6 @@ public final class Application extends JFrame {
 
   private JMenu createICDLMenu() {
     JMenu menu = new JMenu("ICDL");
-    menu.setEnabled(false);
-    menu.setToolTipText("Open an ICDL ctx.json file to enable ICDL features");
 
     JMenu reset = new JMenu("Reset All");
     reset.add(icdlReset("All Randomized Checks", c -> !c.isTransition()));

@@ -15,7 +15,7 @@ import hollow.knight.logic.StateContext;
 import hollow.knight.logic.Version;
 
 public final class Main {
-  private static final String VERSION = "2.6.1";
+  private static final String VERSION = "2.6.2";
 
   private static final Version TYPED_VERSION;
   static {
@@ -31,14 +31,22 @@ public final class Main {
   }
 
   private static Config loadConfig(String[] args) {
-    if (args.length > 0) {
+    if (args.length > 0 && !args[0].toLowerCase().endsWith(".json")) {
       return Config.load(Paths.get(args[0]));
     } else {
       return Config.load();
     }
   }
 
-  private static Path findHkSpoiler(Config cfg) throws Exception {
+  private static boolean hasJson(String[] args) {
+    return args.length > 0 && args[0].toLowerCase().endsWith(".json");
+  }
+
+  private static Path findHkSpoiler(Config cfg, String[] args) throws Exception {
+    if (hasJson(args)) {
+      return Paths.get(args[0]);
+    }
+
     if (!cfg.get("RAW_SPOILER").isEmpty()) {
       return Paths.get(cfg.get("RAW_SPOILER"));
     }
@@ -74,7 +82,7 @@ public final class Main {
     StateContext ctx;
     while (true) {
       try {
-        Path rawSpoiler = findHkSpoiler(cfg);
+        Path rawSpoiler = findHkSpoiler(cfg, args);
         if (rawSpoiler == null) {
           return;
         }
@@ -85,8 +93,12 @@ public final class Main {
       } catch (Exception ex) {
         GuiUtil.showStackTrace(null, "Error opening RawSpoiler.json: ", ex);
 
-        cfg.set("RAW_SPOILER", "");
-        cfg.save();
+        if (hasJson(args)) {
+          args = new String[0];
+        } else {
+          cfg.set("RAW_SPOILER", "");
+          cfg.save();
+        }
       }
     }
 
