@@ -10,8 +10,9 @@
     <Product>SpoilerViewerMod</Product>
     <Description>HKSpoilerViewer Add-on</Description>
     <Copyright>Copyright ©  2022</Copyright>
-    <AssemblyVersion>2.6.2.1</AssemblyVersion>
-    <FileVersion>2.6.2.1</FileVersion>
+    <!-- TODO: Move version into a single, canonical location -->
+    <AssemblyVersion>2.6.2.2</AssemblyVersion>
+    <FileVersion>2.6.2.2</FileVersion>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>

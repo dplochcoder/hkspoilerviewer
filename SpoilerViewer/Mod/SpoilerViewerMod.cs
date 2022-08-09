@@ -108,7 +108,7 @@ namespace SpoilerViewerMod
             Log($"Opening {path} with {JarFile}...");
             
             Process process = new();
-            process.StartInfo.FileName = "java.exe";
+            process.StartInfo.FileName = "java";
             process.StartInfo.Arguments = $"-jar \"{JarFile}\" \"{path}\"";
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.CreateNoWindow = true;
