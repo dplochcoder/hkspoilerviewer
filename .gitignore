@@ -362,7 +362,7 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # C# files
-Mod.csproj
+**/LocalBuildProperties.props
 **/export
 
 ## Java files
