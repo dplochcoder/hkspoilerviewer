@@ -1,6 +1,9 @@
 package hollow.knight.main;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import javax.swing.JFileChooser;
@@ -10,24 +13,23 @@ import hollow.knight.gui.Application;
 import hollow.knight.gui.Config;
 import hollow.knight.gui.GuiUtil;
 import hollow.knight.io.FileOpener;
-import hollow.knight.logic.ParseException;
 import hollow.knight.logic.StateContext;
 import hollow.knight.logic.Version;
 
 public final class Main {
-  private static final String VERSION = "2.6.2.2";
-
-  private static final Version TYPED_VERSION;
+  private static final Version VERSION;
   static {
-    try {
-      TYPED_VERSION = Version.parse(VERSION);
-    } catch (ParseException ex) {
+    try (InputStream is = Main.class.getResourceAsStream("VERSION");
+        InputStreamReader isr = new InputStreamReader(is);
+        BufferedReader br = new BufferedReader(isr)) {
+      VERSION = Version.parse(br.readLine());
+    } catch (Exception ex) {
       throw new AssertionError(ex);
     }
   }
 
   public static final Version version() {
-    return TYPED_VERSION;
+    return VERSION;
   }
 
   private static Config loadConfig(String[] args) {

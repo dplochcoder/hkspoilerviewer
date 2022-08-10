@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <!-- See LocalBuildProperties_Example.props; copy and modify locally -->
   <Import Project="LocalBuildProperties.props" Condition="Exists('LocalBuildProperties.props')" />
-  
+
   <PropertyGroup>
     <RootNamespace>SpoilerViewerMod</RootNamespace>
     <AssemblyName>SpoilerViewerMod</AssemblyName>
@@ -10,14 +10,15 @@
     <Product>SpoilerViewerMod</Product>
     <Description>HKSpoilerViewer Add-on</Description>
     <Copyright>Copyright ©  2022</Copyright>
-    <!-- TODO: Move version into a single, canonical location -->
-    <AssemblyVersion>2.6.2.2</AssemblyVersion>
-    <FileVersion>2.6.2.2</FileVersion>
-    <RepoRoot>../../</RepoRoot>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <Target Name="CopyMod" AfterTargets="PostBuildEvent">
+    <ReadLinesFromFile File="$(RepoRoot)/SpoilerViewer/Application/hollow/knight/main/VERSION">
+      <Output TaskParameter="Lines" PropertyName="AssemblyVersion" />
+      <Output TaskParameter="Lines" PropertyName="FileVersion" />
+    </ReadLinesFromFile>
+
     <RemoveDir Condition="Exists('$(ExportDir)/$(TargetName)/')" Directories="$(ExportDir)/$(TargetName)/" />
     <MakeDir Directories="$(ExportDir)/$(TargetName)/" />
     <MakeDir Directories="$(ExportDir)/$(TargetName)/zip/" />
