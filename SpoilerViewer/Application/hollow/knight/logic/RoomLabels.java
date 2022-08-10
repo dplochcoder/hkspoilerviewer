@@ -50,10 +50,6 @@ public final class RoomLabels {
       String locName = loc.get("SceneName").getAsString();
       String mapName = loc.get("MapArea").getAsString();
       String titleName = loc.get("TitledArea").getAsString();
-
-      if (locName.contentEquals("Unknown")) {
-        continue;
-      }
       locToAreaNames.put(locName, ImmutableMap.of(Type.MAP, mapName, Type.TITLE, titleName));
     }
 
