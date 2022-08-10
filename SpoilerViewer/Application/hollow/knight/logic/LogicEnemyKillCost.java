@@ -44,7 +44,7 @@ public final class LogicEnemyKillCost implements Cost {
 
   @Override
   public String debugString() {
-    return amount + " " + enemyIcName + " defeated";
+    return "Kill " + amount + " " + enemyIcName;
   }
 
   @Override
