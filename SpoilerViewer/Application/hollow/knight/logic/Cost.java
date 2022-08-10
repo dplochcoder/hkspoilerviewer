@@ -23,14 +23,18 @@ public interface Cost {
     return 0;
   }
 
-  static Cost parse(JsonObject obj) {
+  static Cost parse(JsonObject obj) throws ParseException {
     if (obj.get("term") != null) {
       Term term = Term.create(obj.get("term").getAsString());
       int threshold = obj.get("threshold").getAsInt();
       return TermCost.create(term, threshold);
+    } else if (obj.get("GeoAmount") != null) {
+      int geo = obj.get("GeoAmount").getAsInt();
+      return GeoCost.create(geo);
+    } else if (obj.get("$type").getAsString().contains("TheRealJournalRando")) {
+      return LogicEnemyKillCost.parse(obj);
+    } else {
+      throw new ParseException("Unrecognized Cost type");
     }
-
-    int geo = obj.get("GeoAmount").getAsInt();
-    return GeoCost.create(geo);
   }
 }

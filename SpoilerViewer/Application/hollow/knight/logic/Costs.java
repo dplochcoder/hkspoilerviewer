@@ -83,7 +83,7 @@ public final class Costs {
     }
   }
 
-  public static Costs parse(JsonArray costs) {
+  public static Costs parse(JsonArray costs) throws ParseException {
     ImmutableSet.Builder<Cost> builder = ImmutableSet.builder();
     for (JsonElement elem : costs) {
       Cost cost = Cost.parse(elem.getAsJsonObject());

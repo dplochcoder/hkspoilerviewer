@@ -36,7 +36,7 @@ public final class StateContext {
 
     JsonObject save() throws ICDLException;
 
-    void load(JsonObject obj) throws ICDLException;
+    void load(JsonObject obj) throws ICDLException, ParseException;
   }
 
   private final boolean isHKS;
@@ -161,7 +161,7 @@ public final class StateContext {
     }
   }
 
-  public void loadMutables(JsonObject obj) throws ICDLException {
+  public void loadMutables(JsonObject obj) throws ICDLException, ParseException {
     for (Mutable m : mutables) {
       JsonElement elem = obj.get(m.saveName());
       if (elem != null) {

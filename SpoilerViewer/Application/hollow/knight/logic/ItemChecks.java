@@ -412,7 +412,7 @@ public final class ItemChecks implements StateContext.Mutable {
   }
 
   @Override
-  public void load(JsonObject obj) throws ICDLException {
+  public void load(JsonObject obj) throws ICDLException, ParseException {
     // Remove all item checks
     ImmutableSet<CheckId> ids = ImmutableSet.copyOf(checksById.keySet());
     ids.forEach(this::removeInternal);

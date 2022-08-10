@@ -38,7 +38,8 @@ public abstract class ItemCheck {
     return obj;
   }
 
-  public static ItemCheck fromJson(ItemChecks checks, JsonObject json) throws ICDLException {
+  public static ItemCheck fromJson(ItemChecks checks, JsonObject json)
+      throws ICDLException, ParseException {
     return create(CheckId.of(json.get("id").getAsInt()),
         checks.getLocation(json.get("location").getAsString()),
         Item.fromHKSJson(checks, json.get("item")), Costs.parse(json.get("costs").getAsJsonArray()),
