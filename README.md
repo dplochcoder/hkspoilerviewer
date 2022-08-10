@@ -2,9 +2,9 @@ HKSpoilerViewer is a desktop application for searching and routing checks in [Ra
 
 # Installation
 
-Download the latest JAR file from [Releases](https://github.com/dplochcoder/hkspoilerviewer/releases), and store it anywhere on your device. You must have [Java](https://www.java.com/en/) installed to run it.
+Use [Scarab](https://github.com/fifty-six/Scarab) to install SpoilerViewerMod. This will add a "Spoiler Viewer" section to your mod options, from which you can open the most recent `RawSpoiler.json` (from Randomizer) or `ctx.json` (from ICDL, if installed). You can also run the packaged `HKSpoilerViewer.jar` file as a standalone application without launching Hollow Knight. You must have [Java](https://www.java.com/en/) installed to run it either way.
 
-The first time you run it, it will ask you to locate the `RawSpoiler.json` file on your computer with a file-open dialog. After this, it will always open that file by default. If you want to select a different file, find the `HKSpoilerViewer.cfg` file in your AppData/Local/dplochcoder/HKSpoilerViewer directory (or OS-dependent equivalent) and delete it before re-opening the program.
+If you run the JAR as a standalone app, the first it will ask you to locate the `RawSpoiler.json` file on your computer with a file-open dialog. After this, it will always open that file by default. If you want to select a different file, find the `HKSpoilerViewer.cfg` file in your AppData/Local/dplochcoder/HKSpoilerViewer directory (or OS-dependent equivalent) and delete it before re-opening the program. If you run the JAR from the Hollow Knight mod menu, it will find the relevant file automatically.
 
 # Search Features
 
@@ -182,4 +182,3 @@ When you're ready to try out your save in Hollow Knight, select 'Export as ICDL 
   - Undo/Redo functionality, particularly for ICDL work
   - Proper integration with Transcendence (editing notches for Transcendence probably doesn't work right now)
   - Native support of multi-item check locations (i.e. area blitz)
-  - Graphical UI mode (very very far future, if ever)
