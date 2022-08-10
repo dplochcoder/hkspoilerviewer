@@ -177,6 +177,27 @@ At any point, you can save your progress as an hks file. The hks file is self-co
 
 When you're ready to try out your save in Hollow Knight, select 'Export as ICDL Pack Folder' from the ICDL menu. If there are no errors, you'll be asked for a name and description of the pack folder, which will appear in the UI when the user browses 'Past Randos'. You'll ideally want to save your pack folders in the Past Randos directory, but you can save them anywhere.
 
+# Contributions
+
+Contributions are welcome! I'll accept any bug fixes or straight-forward feature enhancements without resistance; if you want to make bigger changes, please discuss them with me first. Because this mod is written in both Java and C#, you will need to do a little extra setup to test local changes.
+
+## Java
+
+First, you'll want to use a Java IDE for working with the application itself. I use [Eclipse](https://www.eclipse.org/downloads/), but I can recommend [IntelliJ](https://www.jetbrains.com/idea/) as well. Dependencies are managed via [Apache Maven](https://maven.apache.org/) in the `pom.xml`, so you'll need to install an appropriate integration for it in your IDE. The code base makes heavy use of [AutoValue](https://github.com/google/auto/blob/master/value/userguide/index.md) so you'll need to take some extra steps to ensure that Annotation Processing is enabled, or you won't be able to build.
+
+Some pointers if you're learning the code base:
+
+  - hollow/knight/main/Main.java is the application entry point. hollow/knight/gui/Application.java contains most of the GUI
+  - hollow/knight/logic/State.java is similar to the rando ProgressionManager class, and is where most of 'Logic' happens
+  - hollow/knight/logic/StateContext.java contains the ~immutable parts of progression, like logic expressions and charm notch costs
+  - File saving and loading is managed through custom JSON representations, implemented with [https://github.com/google/gson](Gson). If you're creating new editable state, be mindful of serialization. Users can easily put in tens of hours into a designing a single plando, so save state needs to be robust against minor updates over time.
+  
+## C#
+
+The C# aspect of the mod can be managed through Visual Studio, like most other HK Mods. Use the provided .csproj file in the SpoilerViewer/Mod folder, and manage your local resource paths in a `LocalBuildProperties.props` file.
+
+If making a release, make sure you specify `<JarFile>` in the props file, and that it's built with dependencies included from the Java tree. I use Eclipse's 'Export Project' feature to make the JAR, and Visual Studio's default build to make the zip after.
+
 # Future features
 
   - Undo/Redo functionality, particularly for ICDL work
