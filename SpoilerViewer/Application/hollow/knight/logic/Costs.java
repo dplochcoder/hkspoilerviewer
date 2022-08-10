@@ -48,20 +48,12 @@ public final class Costs {
     return costs.stream().map(Cost::debugString).collect(Collectors.joining(", ", " (", ")"));
   }
 
-  public boolean hasGeoCost() {
-    return costs.stream().anyMatch(c -> c.type() == Cost.Type.GEO);
-  }
-
   public int getGeoCost() {
-    return costs.stream().filter(c -> c.type() == Cost.Type.GEO).mapToInt(Cost::value).sum();
-  }
-
-  public boolean hasCostTerm(Term term) {
-    return costs.stream().anyMatch(c -> c.hasCostTerm(term));
+    return costs.stream().mapToInt(Cost::geoCost).sum();
   }
 
   public int getCostTerm(Term term) {
-    return costs.stream().filter(c -> c.hasCostTerm(term)).mapToInt(Cost::value).sum();
+    return costs.stream().mapToInt(c -> c.termCost(term)).sum();
   }
 
   public JsonArray toRawSpoilerJson() {
@@ -107,43 +99,43 @@ public final class Costs {
       case "Leg_Eater":
       case "Sly":
       case "Sly_(Key)":
-        return new Costs(Cost.createGeo(1));
+        return new Costs(GeoCost.create(1));
       case "Salubra":
-        return new Costs(ImmutableSet.of(Cost.createGeo(1), Cost.createTerm(Term.charms(), 1)));
+        return new Costs(ImmutableSet.of(GeoCost.create(1), TermCost.create(Term.charms(), 1)));
       case "Grubfather":
-        return new Costs(Cost.createTerm(Term.grubs(), 1));
+        return new Costs(TermCost.create(Term.grubs(), 1));
       case "Seer":
-        return new Costs(Cost.createTerm(Term.essence(), 1));
+        return new Costs(TermCost.create(Term.essence(), 1));
       case "Egg_Shop":
-        return new Costs(Cost.createTerm(Term.rancidEggs(), 1));
+        return new Costs(TermCost.create(Term.rancidEggs(), 1));
       case "Crossroads_Stag":
-        return new Costs(Cost.createGeo(50));
+        return new Costs(GeoCost.create(50));
       case "Queen's_Station_Stag":
-        return new Costs(Cost.createGeo(120));
+        return new Costs(GeoCost.create(120));
       case "Greenpath_Stag":
-        return new Costs(Cost.createGeo(140));
+        return new Costs(GeoCost.create(140));
       case "Elevator_Pass":
-        return new Costs(Cost.createGeo(150));
+        return new Costs(GeoCost.create(150));
       case "City_Storerooms_Stag":
-        return new Costs(Cost.createGeo(200));
+        return new Costs(GeoCost.create(200));
       case "Queen's_Gardens_Stag":
-        return new Costs(Cost.createGeo(200));
+        return new Costs(GeoCost.create(200));
       case "Distant_Village_Stag":
-        return new Costs(Cost.createGeo(250));
+        return new Costs(GeoCost.create(250));
       case "Hidden_Station_Stag":
-        return new Costs(Cost.createGeo(300));
+        return new Costs(GeoCost.create(300));
       case "King's_Station_Stag":
-        return new Costs(Cost.createGeo(300));
+        return new Costs(GeoCost.create(300));
       case "Stag_Nest_Stag":
-        return new Costs(Cost.createGeo(300));
+        return new Costs(GeoCost.create(300));
       case "Unbreakable_Greed":
-        return new Costs(Cost.createGeo(450));
+        return new Costs(GeoCost.create(450));
       case "Unbreakable_Heart":
-        return new Costs(Cost.createGeo(600));
+        return new Costs(GeoCost.create(600));
       case "Unbreakable_Strength":
-        return new Costs(Cost.createGeo(750));
+        return new Costs(GeoCost.create(750));
       case "Dash_Slash":
-        return new Costs(Cost.createGeo(800));
+        return new Costs(GeoCost.create(800));
       default:
         return none();
     }

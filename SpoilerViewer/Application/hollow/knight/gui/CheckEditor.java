@@ -27,6 +27,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.primitives.Ints;
 import hollow.knight.logic.Cost;
 import hollow.knight.logic.Costs;
+import hollow.knight.logic.GeoCost;
 import hollow.knight.logic.Item;
 import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.ItemChecks;
@@ -76,7 +77,7 @@ public final class CheckEditor extends JFrame
 
     JButton newCostButton = new JButton("New Cost");
     newCostButton
-        .addActionListener(GuiUtil.newActionListener(this, () -> addCost(Cost.createGeo(1))));
+        .addActionListener(GuiUtil.newActionListener(this, () -> addCost(GeoCost.create(1))));
     costButtons.add(newCostButton);
 
     JPanel contentPane = new JPanel();
@@ -233,9 +234,8 @@ public final class CheckEditor extends JFrame
         return;
       }
 
-      Term term = c.type() == Cost.Type.GEO ? Term.geo() : c.term();
-      if (!costTerms.add(term)) {
-        JOptionPane.showMessageDialog(this, "Error: Duplicate costs for type " + term.name());
+      if (!costTerms.add(c.term())) {
+        JOptionPane.showMessageDialog(this, "Error: Duplicate costs for type " + c.term().name());
         return;
       }
 

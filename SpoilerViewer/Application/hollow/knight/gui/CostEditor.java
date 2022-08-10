@@ -10,7 +10,9 @@ import javax.swing.JTextField;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.common.primitives.Ints;
 import hollow.knight.logic.Cost;
+import hollow.knight.logic.GeoCost;
 import hollow.knight.logic.Term;
+import hollow.knight.logic.TermCost;
 
 public final class CostEditor {
   private static final ImmutableBiMap<String, Term> COST_TYPES = ImmutableBiMap.of("Charms",
@@ -96,8 +98,7 @@ public final class CostEditor {
   }
 
   public void setCost(Cost cost) {
-    costType.setSelectedIndex(COST_TYPES.values().asList()
-        .indexOf(cost.type() == Cost.Type.GEO ? Term.geo() : cost.term()));
+    costType.setSelectedIndex(COST_TYPES.values().asList().indexOf(cost.term()));
     numericField.setText(String.valueOf(cost.value()));
     numericField.setBackground(Color.white);
   }
@@ -110,9 +111,9 @@ public final class CostEditor {
 
     Term term = COST_TYPES.get(costType.getSelectedItem());
     if (term.equals(Term.geo())) {
-      return Cost.createGeo(value);
+      return GeoCost.create(value);
     } else {
-      return Cost.createTerm(term, value);
+      return TermCost.create(term, value);
     }
   }
 
