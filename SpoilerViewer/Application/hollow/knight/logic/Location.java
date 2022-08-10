@@ -12,8 +12,11 @@ import hollow.knight.gui.TransitionData;
 
 @AutoValue
 public abstract class Location {
-  private static final ImmutableMap<String, String> SCENE_OVERRIDES = ImmutableMap
-      .of("Geo_Rock-Crossroads_Tram", "Crossroads_46", "Start", "Start", "Bench-Godhome_Roof", "");
+  private static final ImmutableMap<String, String> SCENE_OVERRIDES =
+      ImmutableMap.of("Geo_Rock-Crossroads_Tram", "Crossroads_46", "Start", "Start",
+          "Bench-Godhome_Roof", "", "Journal_Entry-Weathered_Mask", "GG_Land_Of_Storms",
+          "Journal_Entry-Void_Idol_1", "GG_Workshop", "Journal_Entry-Void_Idol_2", "GG_Workshop",
+          "Journal_Entry-Void_Idol_3", "GG_Workshop");
 
   private static final ImmutableSet<String> SHOPS = ImmutableSet.of("Egg_Shop", "Grubfather",
       "Iselda", "Leg_Eater", "Salubra", "Seer", "Sly", "Sly_(Key)");
@@ -73,6 +76,9 @@ public abstract class Location {
     Set<String> both = new HashSet<>(Sets.intersection(potentialScenes, rooms.allScenes()));
     if (both.size() == 1) {
       return both.iterator().next();
+    } else if (both.isEmpty()
+        && accessCondition.locationTerms().anyMatch(t -> t.name().startsWith("Defeated_Any_"))) {
+      return "Unknown";
     } else if (!SCENE_OVERRIDES.containsKey(name)) {
       throw new ParseException("Unknown scene: " + name);
     } else {
