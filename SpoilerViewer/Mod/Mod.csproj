@@ -13,6 +13,7 @@
     <!-- TODO: Move version into a single, canonical location -->
     <AssemblyVersion>2.6.2.2</AssemblyVersion>
     <FileVersion>2.6.2.2</FileVersion>
+    <RepoRoot>../../</RepoRoot>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>

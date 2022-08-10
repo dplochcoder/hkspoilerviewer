@@ -1,7 +1,6 @@
 ﻿<Project>
   <PropertyGroup>
     <HollowKnightRefs>???/hollow_knight_Data/Managed</HollowKnightRefs>
-    <RepoRoot>???/github/repo/root/goes/here</RepoRoot>
     <JarFile>???/HKSpoilerViewer.jar</JarFile>
     <ExportDir>$(RepoRoot)/SpoilerViewer/Mod/export</ExportDir>
   </PropertyGroup>
