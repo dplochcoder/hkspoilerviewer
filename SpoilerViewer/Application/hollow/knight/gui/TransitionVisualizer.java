@@ -86,6 +86,11 @@ public final class TransitionVisualizer extends JFrame
 
     setJMenuBar(createMenu());
 
+    JPanel leftPane = new JPanel();
+    leftPane.setLayout(new BoxLayout(leftPane, BoxLayout.PAGE_AXIS));
+    leftPane.add(canvas);
+    leftPane.add(canvas.statusLabel());
+
     JPanel rightPane = new JPanel();
     rightPane.setLayout(new BoxLayout(rightPane, BoxLayout.PAGE_AXIS));
     rightPane.add(scenesFilter);
@@ -93,7 +98,7 @@ public final class TransitionVisualizer extends JFrame
     rightPane.add(new JSeparator());
     rightPane.add(checksPane);
 
-    getContentPane().add(canvas, BorderLayout.CENTER);
+    getContentPane().add(leftPane, BorderLayout.CENTER);
     getContentPane().add(rightPane, BorderLayout.EAST);
 
     updateScenesList();

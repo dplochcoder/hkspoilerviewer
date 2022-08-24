@@ -35,6 +35,7 @@ import java.util.Optional;
 import java.util.Set;
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 import com.google.auto.value.AutoValue;
@@ -143,6 +144,7 @@ public final class TransitionVisualizerCanvas extends JPanel {
   private static final long serialVersionUID = 1L;
 
   private final TransitionVisualizer parent;
+  private final JLabel statusLabel;
 
   // TODO: Convert each group here into an individual FSM
 
@@ -174,6 +176,11 @@ public final class TransitionVisualizerCanvas extends JPanel {
   public TransitionVisualizerCanvas(TransitionVisualizer parent) {
     this.parent = parent;
 
+    this.statusLabel = new JLabel("");
+    this.statusLabel.setFont(font);
+    this.statusLabel.setMinimumSize(new Dimension(500, 20));
+    this.statusLabel.setMaximumSize(new Dimension(500, 20));
+
     addMouseListener(newMouseListener());
     addMouseMotionListener(newMouseMotionListener());
     addMouseWheelListener(newMouseWheelListener());
@@ -181,6 +188,10 @@ public final class TransitionVisualizerCanvas extends JPanel {
 
     KeyboardFocusManager.getCurrentKeyboardFocusManager()
         .addKeyEventDispatcher(newKeyEventDispatcher());
+  }
+
+  public JLabel statusLabel() {
+    return this.statusLabel;
   }
 
   public void clear() {
@@ -197,6 +208,7 @@ public final class TransitionVisualizerCanvas extends JPanel {
     center = new Point(0, 0);
     zoom = 1.0;
     zoomPower = 0;
+    updateStatus("");
   }
 
   public void removeScenePlacement(ScenePlacement placement) {
@@ -308,6 +320,29 @@ public final class TransitionVisualizerCanvas extends JPanel {
     font = new Font("Arial", Font.BOLD, size);
   }
 
+  private void updateStatus(String s) {
+    statusLabel.setText(s);
+  }
+
+  private void updateStatus(GatePlacement g) {
+    SceneData sData = parent.transitionData().sceneData(g.scene().scene());
+    GateData gData = sData.getGate(g.gateName());
+    updateStatus(String.format("%s[%s] (%s[%s])", sData.alias(), gData.alias(), g.scene().scene(),
+        g.gateName()));
+  }
+
+  private void updateStatus(Set<ScenePlacement> selection) {
+    if (selection.isEmpty()) {
+      updateStatus("");
+    } else if (selection.size() == 1) {
+      ScenePlacement p = selection.iterator().next();
+      updateStatus(String.format("%s (%s)", parent.transitionData().sceneData(p.scene()).alias(),
+          p.scene()));
+    } else {
+      updateStatus(selection.size() + " scenes.");
+    }
+  }
+
   private void updateSelectedTransitionUnsafe() throws ICDLException {
     Gate source = currentGate.asGate();
     Gate target = highlightGate.asGate();
@@ -331,6 +366,7 @@ public final class TransitionVisualizerCanvas extends JPanel {
   private void updateSelectedTransitionSafe() {
     try {
       updateSelectedTransitionUnsafe();
+      updateStatus("");
     } catch (ICDLException ex) {
       GuiUtil.showStackTrace(this, "Error editing transition", ex);
     }
@@ -433,13 +469,17 @@ public final class TransitionVisualizerCanvas extends JPanel {
             if (currentGate == null) {
               currentGate = highlightGate;
               highlightGate = null;
+
+              updateStatus(currentGate);
             } else {
               // Set transition.
               updateSelectedTransitionSafe();
+              updateStatus("");
             }
           } else if (currentGate != null) {
             currentGate = null;
             highlightGate = null;
+            updateStatus("");
           } else if (isControlDown && isAltDown) {
             highlightedSceneSelection.forEach(h -> {
               if (currentSceneSelection.contains(h)) {
@@ -448,13 +488,18 @@ public final class TransitionVisualizerCanvas extends JPanel {
                 currentSceneSelection.add(h);
               }
             });
+
+            updateStatus(currentSceneSelection);
           } else if (isControlDown) {
             currentSceneSelection.addAll(highlightedSceneSelection);
+            updateStatus(currentSceneSelection);
           } else if (isAltDown) {
             currentSceneSelection.removeAll(highlightedSceneSelection);
+            updateStatus(currentSceneSelection);
           } else {
             currentSceneSelection.clear();
             currentSceneSelection.addAll(highlightedSceneSelection);
+            updateStatus(currentSceneSelection);
           }
 
           highlightedSceneSelection.clear();
