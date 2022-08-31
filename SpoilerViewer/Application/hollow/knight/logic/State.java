@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 /** Mutable state of a run; can be deep-copied. */
 public class State {
@@ -150,6 +151,15 @@ public class State {
     }
   }
 
+  private static final ImmutableSet<String> TRJR_HELPER_TERMS = ImmutableSet.of("Bluggsac",
+      "Crystal_Guardian", "Elder_Baldur", "Grimmkin_Master", "Grimmkin_Nightmare",
+      "Grimmkin_Novice", "Gruz_Mother", "Hornet", "Kingsmould", "Respawning_Gruz_Mother",
+      "Respawning_Kingsmould", "Respawning_Vengefly_King", "Vengefly_King");
+
+  private boolean autoAcquire(ItemCheck c) {
+    return transitionStrategy.autoAcquire(c) || TRJR_HELPER_TERMS.contains(c.item().term().name());
+  }
+
   // Iteratively apply logic to grant access to items / areas.
   public void normalize() {
     Set<Term> newWaypoints = new HashSet<>();
@@ -175,8 +185,8 @@ public class State {
       dirtyTerms.clear();
     }
 
-    recursivelyUpdateGraph(newWaypoints, newChecks, accessibleUnobtained,
-        transitionStrategy::autoAcquire, dirtyTerms);
+    recursivelyUpdateGraph(newWaypoints, newChecks, accessibleUnobtained, this::autoAcquire,
+        dirtyTerms);
 
     if (potentialState == null) {
       potentialState = this.deepCopy();
@@ -188,7 +198,7 @@ public class State {
     }
 
     potentialState.recursivelyUpdateGraph(newWaypoints, newChecks, accessibleUnobtained,
-        c -> !c.isTransition() || transitionStrategy.autoAcquire(c), Term.costTerms());
+        c -> !c.isTransition() || autoAcquire(c), Term.costTerms());
   }
 
   public TermMap termValues() {
