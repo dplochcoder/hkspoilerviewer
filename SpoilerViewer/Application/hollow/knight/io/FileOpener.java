@@ -1,5 +1,6 @@
 package hollow.knight.io;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -21,10 +22,15 @@ public final class FileOpener {
 
   public StateContext openFile(Path path) throws ParseException, ICDLException {
     boolean isHKS = path.toString().endsWith(".hks");
+    String parent = path.getParent().toAbsolutePath().toString();
 
     JsonObject saveData = new JsonObject();
     JsonObject rawSpoiler = JsonUtil.loadPath(path).getAsJsonObject();
     JsonObject rawICDL = null;
+
+    Path darknessPath = Paths.get(parent, "DarknessSpoiler.json");
+    JsonObject darknessJson = null;
+
     Version version = Main.version();
     if (isHKS) {
       saveData = rawSpoiler;
@@ -38,12 +44,19 @@ public final class FileOpener {
       if (saveData.has("RawICDL")) {
         rawICDL = saveData.get("RawICDL").getAsJsonObject();
       }
+      if (saveData.has("RawDarkness")) {
+        darknessJson = saveData.get("RawDarkness").getAsJsonObject();
+      }
     } else if (path.endsWith("ctx.json")) {
-      String parent = path.getParent().toString();
       rawICDL = JsonUtil.loadPath(Paths.get(parent, "ic.json")).getAsJsonObject();
+    } else {
+      if (new File(darknessPath.toString()).exists()) {
+        darknessJson =
+            JsonUtil.loadPath(Paths.get(parent, "DarknessSpoiler.json")).getAsJsonObject();
+      }
     }
 
-    StateContext newCtx = StateContext.parse(isHKS, rawSpoiler, rawICDL);
+    StateContext newCtx = StateContext.parse(isHKS, rawSpoiler, rawICDL, darknessJson);
     if (rawICDL != null) {
       newCtx.loadMutables(saveData);
     }

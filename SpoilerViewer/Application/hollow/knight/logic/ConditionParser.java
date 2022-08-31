@@ -219,6 +219,16 @@ public final class ConditionParser {
             return cond.get();
           }
         }
+        if (op == Atom.Type.LESS_THAN && left.type() == Atom.Type.TERM
+            && right.type() == Atom.Type.NUMERIC_LITERAL) {
+          TermAtom lTerm = (TermAtom) left;
+          int value = ((NumericAtom) right).value();
+
+          Optional<Condition> cond = DarknessCondition.tryParse(lTerm.term(), value);
+          if (cond.isPresent()) {
+            return cond.get();
+          }
+        }
         if (left.type() != Atom.Type.TERM || right.type() != Atom.Type.NUMERIC_LITERAL) {
           throw new ParseException("Unsupported operator (" + left + " " + op + " " + right + ")");
         }

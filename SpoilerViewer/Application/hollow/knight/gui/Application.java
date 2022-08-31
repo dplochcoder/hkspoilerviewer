@@ -619,6 +619,7 @@ public final class Application extends JFrame {
     JsonObject saveData = new JsonObject();
     saveData.add("Version", new JsonPrimitive(Main.version().toString()));
     saveData.add("RawSpoiler", ctx().rawSpoilerJson());
+    saveData.add("RawDarkness", ctx().darkness().toJson());
     if (isICDL) {
       saveData.add("RawICDL", ctx().icdlJson());
       ctx().checks().compact();

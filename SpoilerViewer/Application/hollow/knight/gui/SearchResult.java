@@ -104,7 +104,7 @@ public abstract class SearchResult {
       if (state.test(itemCheck.costs().asCondition())) {
         return LogicType.IN_LOGIC;
       } else if (itemCheck.costs().asCondition().test(state.purchaseTermValues(),
-          state.ctx().notchCosts())) {
+          state.ctx().notchCosts(), state.ctx().darkness())) {
         return LogicType.COST_ACCESSIBLE;
       }
     } else if (state.purchaseTest(itemCheck.condition())) {

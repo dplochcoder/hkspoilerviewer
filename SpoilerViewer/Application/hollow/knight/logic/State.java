@@ -100,7 +100,7 @@ public class State {
     if (dirtyTerms.isEmpty() && graph != null) {
       return graph.test(c);
     } else {
-      return c.test(termValues(), ctx().notchCosts());
+      return c.test(termValues(), ctx().notchCosts(), ctx().darkness());
     }
   }
 
@@ -156,7 +156,8 @@ public class State {
     Set<ItemCheck> newChecks = new HashSet<>();
     if (graph == null) {
       ConditionGraph.Builder builder = ConditionGraph.builder(new ConditionGraph.IndexContext(
-          new Condition.Context(termValues(), ctx().notchCosts()), ctx()::isMutableTerm));
+          new Condition.Context(termValues(), ctx().notchCosts(), ctx().darkness()),
+          ctx()::isMutableTerm));
       for (Term t : ctx.waypoints().allWaypoints()) {
         if (builder.index(ctx.waypoints().getCondition(t))) {
           newWaypoints.add(t);

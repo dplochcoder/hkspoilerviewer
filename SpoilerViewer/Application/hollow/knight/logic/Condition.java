@@ -16,10 +16,12 @@ public abstract class Condition {
   public static final class Context {
     private final TermMap values;
     private final NotchCosts notchCosts;
+    private final DarknessOverrides darknessOverrides;
 
-    public Context(TermMap values, NotchCosts notchCosts) {
+    public Context(TermMap values, NotchCosts notchCosts, DarknessOverrides darknessOverrides) {
       this.values = values;
       this.notchCosts = notchCosts;
+      this.darknessOverrides = darknessOverrides;
     }
 
     public TermMap values() {
@@ -28,6 +30,10 @@ public abstract class Condition {
 
     public NotchCosts notchCosts() {
       return notchCosts;
+    }
+
+    public DarknessOverrides darkness() {
+      return darknessOverrides;
     }
   }
 
@@ -42,8 +48,8 @@ public abstract class Condition {
   // Tests whether this condition evaluates to true.
   public abstract boolean test(Context ctx);
 
-  public final boolean test(TermMap values, NotchCosts notchCosts) {
-    return test(new Context(values, notchCosts));
+  public final boolean test(TermMap values, NotchCosts notchCosts, DarknessOverrides darkness) {
+    return test(new Context(values, notchCosts, darkness));
   }
 
   // Invoke appropriate methods on `builder` to index this Condition.
@@ -63,8 +69,9 @@ public abstract class Condition {
 
   public abstract String debugEvaluation(Context ctx);
 
-  public final String debugEvaluation(TermMap values, NotchCosts notchCosts) {
-    return debugEvaluation(new Context(values, notchCosts));
+  public final String debugEvaluation(TermMap values, NotchCosts notchCosts,
+      DarknessOverrides darkness) {
+    return debugEvaluation(new Context(values, notchCosts, darkness));
   }
 
   @Override

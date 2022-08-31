@@ -38,7 +38,9 @@ public final class TermMapItemEffects implements ItemEffects {
     // We can't do state.test() here because item conditions don't necessarily hold to the false ->
     // true paradigm.
     TermMap effects =
-        logic.test(state.termValues(), state.ctx().notchCosts()) ? trueEffects : falseEffects;
+        logic.test(state.termValues(), state.ctx().notchCosts(), state.ctx().darkness())
+            ? trueEffects
+            : falseEffects;
 
     for (Term t : effects.terms()) {
       int cap = Integer.MAX_VALUE;

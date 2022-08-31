@@ -68,7 +68,8 @@ public final class NotchCostCondition extends Condition {
       return false;
     }
 
-    return charmIds.equals(((NotchCostCondition) o).charmIds);
+    NotchCostCondition that = (NotchCostCondition) o;
+    return this.safe == that.safe && this.charmIds.equals(that.charmIds);
   }
 
   private static final String UNSAFE_PREFIX = "$NotchCost[";
