@@ -1,5 +1,6 @@
 package hollow.knight.logic;
 
+import java.util.Set;
 import java.util.stream.Stream;
 import com.google.common.collect.Streams;
 
@@ -34,13 +35,10 @@ public final class TermMapItemEffects implements ItemEffects {
   }
 
   @Override
-  public void apply(State state) {
+  public void apply(Condition.MutableContext ctx, Set<Term> dirtyTerms) {
     // We can't do state.test() here because item conditions don't necessarily hold to the false ->
     // true paradigm.
-    TermMap effects =
-        logic.test(state.termValues(), state.ctx().notchCosts(), state.ctx().darkness())
-            ? trueEffects
-            : falseEffects;
+    TermMap effects = logic.test(ctx) ? trueEffects : falseEffects;
 
     for (Term t : effects.terms()) {
       int cap = Integer.MAX_VALUE;
@@ -48,8 +46,9 @@ public final class TermMapItemEffects implements ItemEffects {
         cap = caps.get(t);
       }
 
-      int newVal = Math.min(state.get(t) + effects.get(t), cap);
-      state.set(t, newVal);
+      int newVal = Math.min(ctx.get(t) + effects.get(t), cap);
+      ctx.set(t, newVal);
+      dirtyTerms.add(t);
     }
   }
 }

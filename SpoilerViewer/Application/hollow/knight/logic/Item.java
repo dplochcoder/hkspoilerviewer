@@ -103,8 +103,8 @@ public final class Item {
     }
   }
 
-  void apply(State state) {
-    effects.apply(state);
+  void apply(Condition.MutableContext ctx, Set<Term> dirtyTerms) {
+    effects.apply(ctx, dirtyTerms);
   }
 
   public boolean isCustom() {

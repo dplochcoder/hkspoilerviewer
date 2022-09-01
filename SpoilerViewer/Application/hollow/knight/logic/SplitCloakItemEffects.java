@@ -1,5 +1,6 @@
 package hollow.knight.logic;
 
+import java.util.Set;
 import java.util.stream.Stream;
 
 public final class SplitCloakItemEffects implements ItemEffects {
@@ -29,20 +30,24 @@ public final class SplitCloakItemEffects implements ItemEffects {
   }
 
   @Override
-  public void apply(State state) {
-    boolean hasLeft = state.get(LEFT_DASH) > 0;
-    boolean hasRight = state.get(RIGHT_DASH) > 0;
-    boolean hasShade = state.get(LEFT_DASH) >= 2 || state.get(RIGHT_DASH) >= 2;
+  public void apply(Condition.MutableContext ctx, Set<Term> dirtyTerms) {
+    boolean hasLeft = ctx.get(LEFT_DASH) > 0;
+    boolean hasRight = ctx.get(RIGHT_DASH) > 0;
+    boolean hasShade = ctx.get(LEFT_DASH) >= 2 || ctx.get(RIGHT_DASH) >= 2;
 
     if (hasLeft && hasRight) {
       if (!hasShade) {
-        state.set(LEFT_DASH, 2);
-        state.set(RIGHT_DASH, 2);
+        ctx.set(LEFT_DASH, 2);
+        ctx.set(RIGHT_DASH, 2);
+        dirtyTerms.add(LEFT_DASH);
+        dirtyTerms.add(RIGHT_DASH);
       }
     } else if (leftBiased) {
-      state.set(LEFT_DASH, !hasLeft && !hasShade ? 1 : 2);
+      ctx.set(LEFT_DASH, !hasLeft && !hasShade ? 1 : 2);
+      dirtyTerms.add(LEFT_DASH);
     } else {
-      state.set(RIGHT_DASH, !hasRight && !hasShade ? 1 : 2);
+      ctx.set(RIGHT_DASH, !hasRight && !hasShade ? 1 : 2);
+      dirtyTerms.add(RIGHT_DASH);
     }
   }
 }

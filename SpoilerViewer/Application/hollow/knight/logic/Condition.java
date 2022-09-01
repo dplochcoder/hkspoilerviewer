@@ -13,7 +13,7 @@ import com.google.common.collect.Interners;
  * assumptions about logic progression, use a ConditionGraph.
  */
 public abstract class Condition {
-  public static final class Context {
+  public static class Context {
     private final TermMap values;
     private final NotchCosts notchCosts;
     private final DarknessOverrides darknessOverrides;
@@ -34,6 +34,30 @@ public abstract class Condition {
 
     public DarknessOverrides darkness() {
       return darknessOverrides;
+    }
+  }
+
+  public static class MutableContext extends Context {
+    public MutableContext(MutableTermMap values, NotchCosts notchCosts,
+        DarknessOverrides darknessOverrides) {
+      super(values, notchCosts, darknessOverrides);
+    }
+
+    @Override
+    public MutableTermMap values() {
+      return (MutableTermMap) super.values();
+    }
+
+    public void set(Term t, int value) {
+      values().set(t, value);
+    }
+
+    public int get(Term t) {
+      return values().get(t);
+    }
+
+    public void add(Term t, int value) {
+      values().add(t, value);;
     }
   }
 
