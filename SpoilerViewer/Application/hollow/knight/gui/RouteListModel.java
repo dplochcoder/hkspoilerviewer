@@ -58,7 +58,7 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
   }
 
   private State newInitialState() {
-    State state = ctx.newInitialState();
+    State state = new State(ctx);
     stateInitializers.forEach(i -> i.initializeState(state));
     state.normalize();
     return state;

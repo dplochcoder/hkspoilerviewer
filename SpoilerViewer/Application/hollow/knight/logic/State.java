@@ -39,12 +39,17 @@ public class State {
   private final MutableTermMap potentialTermValues = new MutableTermMap();
   private final TermMap toleranceValues;
 
-  State(StateContext ctx) {
+  public State(StateContext ctx) {
     this.ctx = ctx;
     this.toleranceValues = new SumTermMap(ImmutableList.of(potentialTermValues, ctx.tolerances()));
 
     // TRUE is always set.
     set(Term.true_(), 1);
+
+    ctx.checks().startChecks().forEach(this::acquireCheck);
+    for (Term t : ctx.setters().terms()) {
+      set(t, ctx.setters().get(t));
+    }
 
     Set<Term> newWaypoints = new HashSet<>();
     Set<ItemCheck> newChecks = new HashSet<>();
@@ -65,7 +70,7 @@ public class State {
     this.graph = builder.build();
 
     newWaypoints.forEach(this::acquireWaypoint);
-    newChecks.forEach(this::purchaseAcquire);
+    newChecks.forEach(this::maybeAutoAcquire);
     normalize();
   }
 
@@ -139,6 +144,14 @@ public class State {
       ctx().checks().getByCondition(c).forEach(checksOut::add);
     }
     dirtyTerms.clear();
+  }
+
+  private void maybeAutoAcquire(ItemCheck check) {
+    if (autoAcquire(check)) {
+      acquireCheck(check);
+    } else {
+      purchaseAcquire(check);
+    }
   }
 
   // Recursively acquire waypoints (all) and checks that match the predicate.

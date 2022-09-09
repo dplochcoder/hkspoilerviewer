@@ -118,6 +118,10 @@ public final class StateContext {
     return checks;
   }
 
+  public TermMap setters() {
+    return setters;
+  }
+
   public boolean isMutableTerm(Term term) {
     return waypoints.allWaypoints().contains(term) || checks.isEffectTerm(term);
   }
@@ -148,18 +152,6 @@ public final class StateContext {
   public void setTolerances(TermMap newTolerances) {
     tolerances.clear();
     tolerances.add(newTolerances);
-  }
-
-  public State newInitialState() {
-    State state = new State(this);
-
-    // Automatically acquire all items at Start
-    checks.startChecks().forEach(state::acquireCheck);
-    for (Term t : setters.terms()) {
-      state.set(t, setters.get(t));
-    }
-
-    return state;
   }
 
   public void saveMutables(JsonObject obj) throws ICDLException {

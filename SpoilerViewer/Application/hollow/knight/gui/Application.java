@@ -591,7 +591,7 @@ public final class Application extends JFrame {
     StateContext newCtx = opener.openFile(path);
 
     setICDLEnabled(newCtx.icdlJson() != null);
-    skips.inferDefaultSkips(newCtx.newInitialState());
+    skips.inferDefaultSkips(new State(newCtx));
     checksListeners.forEach(prevCtx.checks()::removeListener);
     checksListeners.forEach(newCtx.checks()::addListener);
 
@@ -682,7 +682,7 @@ public final class Application extends JFrame {
 
   private Skips createSkips() throws ParseException {
     Skips skips = Skips.load();
-    skips.inferDefaultSkips(ctx().newInitialState());
+    skips.inferDefaultSkips(new State(ctx()));
     skips.addListener(this::refreshLogic);
     routeListModel.addStateInitializer(skips);
     return skips;
