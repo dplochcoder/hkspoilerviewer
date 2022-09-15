@@ -4,6 +4,8 @@ import java.util.Optional;
 import com.google.auto.value.AutoValue;
 import hollow.knight.logic.CheckId;
 import hollow.knight.logic.Costs;
+import hollow.knight.logic.DarknessOverrides;
+import hollow.knight.logic.DarknessOverrides.Darkness;
 import hollow.knight.logic.Item;
 import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.Location;
@@ -66,7 +68,7 @@ public abstract class SearchResult {
 
   public abstract Optional<Integer> notchCost();
 
-  public final String render(TransitionData transitionData) {
+  public final String render(TransitionData transitionData, DarknessOverrides darkness) {
     StringBuilder sb = new StringBuilder();
     if (logicType() == LogicType.OUT_OF_LOGIC) {
       sb.append('*');
@@ -82,6 +84,9 @@ public abstract class SearchResult {
     sb.append(valueSuffix());
     sb.append("- ");
     sb.append(location().displayName(transitionData));
+    if (darkness.darknessLevel(location().scene()) == Darkness.DARK) {
+      sb.append(" [DARKROOM]");
+    }
     sb.append(costSuffix());
 
     return sb.toString();

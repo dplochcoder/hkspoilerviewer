@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import javax.swing.ListModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
@@ -15,6 +16,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import hollow.knight.logic.CheckId;
+import hollow.knight.logic.DarknessOverrides;
 import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.ItemChecks;
 import hollow.knight.logic.SaveInterface;
@@ -42,10 +44,13 @@ public final class SearchResultsListModel
   private final Set<ItemCheck> matchingResults = new HashSet<>();
 
   private final TransitionData transitionData;
+  private final Supplier<DarknessOverrides> darkness;
   private final Predicate<ItemCheck> isRouted;
 
-  public SearchResultsListModel(TransitionData transitionData, Predicate<ItemCheck> isRouted) {
+  public SearchResultsListModel(TransitionData transitionData, Supplier<DarknessOverrides> darkness,
+      Predicate<ItemCheck> isRouted) {
     this.transitionData = transitionData;
+    this.darkness = darkness;
     this.isRouted = isRouted;
   }
 
@@ -72,7 +77,8 @@ public final class SearchResultsListModel
   }
 
   private String render(SearchResult result) {
-    return (isRouted.test(result.itemCheck()) ? "(R) " : "") + result.render(transitionData);
+    return (isRouted.test(result.itemCheck()) ? "(R) " : "")
+        + result.render(transitionData, darkness.get());
   }
 
   public void updateResults(State state, List<SearchResult> newResults) {

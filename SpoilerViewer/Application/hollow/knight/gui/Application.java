@@ -85,7 +85,8 @@ public final class Application extends JFrame {
     this.transitionData = TransitionData.load(ctx.roomLabels());
     this.filterChangedListener = () -> repopulateSearchResults();
     this.routeListModel = new RouteListModel(transitionData, ctx);
-    this.searchResultsListModel = new SearchResultsListModel(transitionData, this::isRouted);
+    this.searchResultsListModel = new SearchResultsListModel(transitionData,
+        () -> routeListModel.ctx().darkness(), this::isRouted);
     this.transitionVisualizerPlacements = new TransitionVisualizerPlacements();
     this.saveInterfaces =
         ImmutableList.of(searchResultsListModel, routeListModel, transitionVisualizerPlacements);

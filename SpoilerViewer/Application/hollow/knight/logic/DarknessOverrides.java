@@ -8,6 +8,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 public final class DarknessOverrides {
@@ -47,11 +48,19 @@ public final class DarknessOverrides {
     this.darknessByScene = ImmutableMap.copyOf(darknessByScene);
   }
 
-  public Darkness darknessLevel(String scene) {
-    return darknessByScene.get(scene);
+  public boolean isEmpty() {
+    return darknessByScene.isEmpty();
   }
 
-  public JsonObject toJson() {
+  public Darkness darknessLevel(String scene) {
+    return darknessByScene.getOrDefault(scene, Darkness.BRIGHT);
+  }
+
+  public JsonElement toJson() {
+    if (isEmpty()) {
+      return JsonNull.INSTANCE;
+    }
+
     JsonObject ret = new JsonObject();
     JsonObject map = new JsonObject();
     darknessByScene.forEach((s, d) -> map.addProperty(s, d.jsonName()));;

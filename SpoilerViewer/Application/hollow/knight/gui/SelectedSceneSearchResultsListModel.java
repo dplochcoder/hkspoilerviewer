@@ -8,6 +8,7 @@ import java.util.function.Predicate;
 import javax.swing.ListModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
+import hollow.knight.logic.DarknessOverrides;
 import hollow.knight.logic.ItemCheck;
 import hollow.knight.logic.SynchronizedEntityManager;
 
@@ -20,11 +21,13 @@ public final class SelectedSceneSearchResultsListModel implements ListModel<Stri
   private final List<String> resultStrings = new ArrayList<>();
 
   private final TransitionData transitionData;
+  private final DarknessOverrides darkness;
   private final Predicate<ItemCheck> isRouted;
 
   public SelectedSceneSearchResultsListModel(TransitionData transitionData,
-      Predicate<ItemCheck> isRouted) {
+      DarknessOverrides darkness, Predicate<ItemCheck> isRouted) {
     this.transitionData = transitionData;
+    this.darkness = darkness;
     this.isRouted = isRouted;
   }
 
@@ -46,7 +49,8 @@ public final class SelectedSceneSearchResultsListModel implements ListModel<Stri
   }
 
   private String render(SearchResult result) {
-    return (isRouted.test(result.itemCheck()) ? "(R) " : "") + result.render(transitionData);
+    return (isRouted.test(result.itemCheck()) ? "(R) " : "")
+        + result.render(transitionData, darkness);
   }
 
   public void updateResults(List<SearchResult> newResults) {

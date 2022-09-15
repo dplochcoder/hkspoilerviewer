@@ -46,6 +46,7 @@ import com.google.common.collect.MoreCollectors;
 import com.google.common.collect.Sets;
 import hollow.knight.gui.TransitionData.GateData;
 import hollow.knight.gui.TransitionData.SceneData;
+import hollow.knight.logic.DarknessOverrides.Darkness;
 import hollow.knight.logic.ICDLException;
 import hollow.knight.logic.Item;
 import hollow.knight.logic.ItemCheck;
@@ -172,6 +173,7 @@ public final class TransitionVisualizerCanvas extends JPanel {
   private EditMode editMode = EditMode.COUPLED;
   private SnapToGrid snap = SnapToGrid.NONE;
   private VisibleTransitions visibleTransitions = VisibleTransitions.ALL;
+  private boolean showDarkness = false;
 
   public TransitionVisualizerCanvas(TransitionVisualizer parent) {
     this.parent = parent;
@@ -305,6 +307,10 @@ public final class TransitionVisualizerCanvas extends JPanel {
 
   public void setVisibleTransitions(VisibleTransitions visibleTransitions) {
     this.visibleTransitions = visibleTransitions;
+  }
+
+  public void setShowDarkness(boolean showDarkness) {
+    this.showDarkness = showDarkness;
   }
 
   public ImmutableSet<String> getSelectedScenes() {
@@ -648,14 +654,24 @@ public final class TransitionVisualizerCanvas extends JPanel {
   private static final int FONT_PADDING = 2;
 
   private int adjustBits(int b, double pct) {
-    return b + (int) ((255 - b) * pct);
+    return pct >= 0 ? (b + (int) ((255 - b) * pct)) : (b + (int) (pct * b));
+  }
+
+  private Color adjustColor(Color c, double pct) {
+    return new Color(adjustBits(c.getRed(), pct), adjustBits(c.getGreen(), pct),
+        adjustBits(c.getBlue(), pct));
   }
 
   private Color adjustSceneColor(ScenePlacement p, Color c) {
     double pct =
         highlightedSceneSelection.contains(p) ? 0.4 : (currentSceneSelection.contains(p) ? 0.2 : 0);
-    return new Color(adjustBits(c.getRed(), pct), adjustBits(c.getGreen(), pct),
-        adjustBits(c.getBlue(), pct));
+    c = adjustColor(c, pct);
+
+    if (showDarkness && parent.ctx().darkness().darknessLevel(p.scene()) == Darkness.DARK) {
+      c = adjustColor(c, -0.5);
+    }
+
+    return c;
   }
 
   private Color adjustGateColor(String scene, GateData gateData, Color c) {
@@ -680,31 +696,38 @@ public final class TransitionVisualizerCanvas extends JPanel {
   }
 
   private static final int TEXT_BUFFER = 20;
+  private static final int DARKNESS_BUFFER = 35;
+
+  private void drawString(Graphics2D g2d, String text, double cx, double y) {
+    FontMetrics fm = g2d.getFontMetrics(font);
+    int fh = fm.getAscent() + fm.getDescent();
+    int fw = fm.stringWidth(text);
+
+    g2d.setFont(font);
+    g2d.setColor(Color.black);
+    g2d.fillRect((int) (cx - fw / 2 - FONT_PADDING - 1), (int) (y - fh - FONT_PADDING * 2 - 1),
+        fw + 2 * FONT_PADDING + 1, fh + 2 * FONT_PADDING + 1);
+    g2d.setColor(Color.white);
+    g2d.drawString(text, (float) (cx - fw / 2), (float) (y - FONT_PADDING - fm.getDescent()));
+  }
 
   private void renderScenePlacement(Graphics2D g2d, ScenePlacement p) {
     SceneData sData = data().sceneData(p.scene());
     Rect r = p.getRect(data());
-
-    // Draw header.
-    String txt = parent.transitionData().sceneData(p.scene()).alias();
-    FontMetrics fm = g2d.getFontMetrics(font);
-    int fh = fm.getAscent() + fm.getDescent();
-    int fw = fm.stringWidth(txt);
-
-    g2d.setFont(font);
-    g2d.setColor(Color.black);
-    g2d.fillRect((int) r.center().x() - fw / 2 - FONT_PADDING - 1,
-        (int) r.y1() - TEXT_BUFFER - fh - FONT_PADDING * 2 - 1, fw + 2 * FONT_PADDING + 1,
-        fh + 2 * FONT_PADDING + 1);
-    g2d.setColor(Color.white);
-    g2d.drawString(txt, (float) (r.center().x() - fw / 2),
-        (float) (r.y1() - TEXT_BUFFER - FONT_PADDING - fm.getDescent()));
 
     g2d.setColor(adjustSceneColor(p, sData.color()));
     r.fill(g2d);
     g2d.setColor(adjustSceneColor(p, sData.edgeColor()));
     g2d.setStroke(new BasicStroke(strokeWidth(p)));
     r.draw(g2d);
+
+    // Draw header.
+    drawString(g2d, parent.transitionData().sceneData(p.scene()).alias(), r.center().x(),
+        r.y1() - TEXT_BUFFER);
+
+    if (showDarkness && parent.ctx().darkness().darknessLevel(p.scene()) == Darkness.DARK) {
+      drawString(g2d, "Dark Room", r.center().x(), r.y1() + DARKNESS_BUFFER);
+    }
 
     // Render transitions on top.
     sData.allGates().forEach(g -> renderGatePlacement(g2d, p, g));

@@ -16,6 +16,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JMenu;
@@ -78,7 +79,7 @@ public final class TransitionVisualizer extends JFrame
     scenesPane.setMinimumSize(new Dimension(300, 600));
 
     this.checksListModel = new SelectedSceneSearchResultsListModel(application.transitionData(),
-        application::isRouted);
+        application.ctx().darkness(), application::isRouted);
     this.checksList = createChecksList();
     this.checksPane = new JScrollPane(checksList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
         JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -332,6 +333,14 @@ public final class TransitionVisualizer extends JFrame
     return fSize;
   }
 
+  private JMenuItem createDarknessMenu() {
+    JCheckBoxMenuItem darkness = new JCheckBoxMenuItem("Darkness Randomization");
+    darkness.setSelected(false);
+    darkness.setEnabled(!ctx().darkness().isEmpty());
+    darkness.addActionListener(
+        GuiUtil.newActionListener(this, () -> canvas.setShowDarkness(darkness.isSelected())));
+    return darkness;
+  }
 
   private <E extends Enum<E> & CanvasEnum> JMenu createCanvasEnumMenu(Class<E> clazz, String name,
       Supplier<E> getter, Consumer<E> setter) {
@@ -415,6 +424,8 @@ public final class TransitionVisualizer extends JFrame
     view.add(createViewFitMenu());
     view.add(new JSeparator());
     view.add(createFontSizeMenu());
+    view.add(new JSeparator());
+    view.add(createDarknessMenu());
     view.add(new JSeparator());
     view.add(createCanvasEnumMenu(SnapToGrid.class, "Snap to Grid", canvas::snap, canvas::setSnap));
     view.add(new JSeparator());
