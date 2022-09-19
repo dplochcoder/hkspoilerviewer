@@ -50,28 +50,6 @@ public class State {
     for (Term t : ctx.setters().terms()) {
       set(t, ctx.setters().get(t));
     }
-
-    Set<Term> newWaypoints = new HashSet<>();
-    Set<ItemCheck> newChecks = new HashSet<>();
-    ConditionGraph.Builder builder = ConditionGraph.builder(new ConditionGraph.IndexContext(
-        new Condition.Context(termValues(), ctx().notchCosts(), ctx().darkness()),
-        ctx()::isMutableTerm));
-    for (Term t : ctx.waypoints().allWaypoints()) {
-      if (builder.index(ctx.waypoints().getCondition(t))) {
-        newWaypoints.add(t);
-      }
-    }
-    ctx().checks().allChecks().forEach(c -> {
-      builder.index(c.location().accessCondition());
-      if (builder.index(c.condition())) {
-        newChecks.add(c);
-      }
-    });
-    this.graph = builder.build();
-
-    newWaypoints.forEach(this::acquireWaypoint);
-    newChecks.forEach(this::maybeAutoAcquire);
-    normalize();
   }
 
   public StateContext ctx() {
@@ -195,6 +173,29 @@ public class State {
   public void normalize() {
     Set<Term> newWaypoints = new HashSet<>();
     Set<ItemCheck> newChecks = new HashSet<>();
+    if (graph == null) {
+      ConditionGraph.Builder builder = ConditionGraph.builder(new ConditionGraph.IndexContext(
+          new Condition.Context(termValues(), ctx().notchCosts(), ctx().darkness()),
+          ctx()::isMutableTerm));
+      for (Term t : ctx.waypoints().allWaypoints()) {
+        if (builder.index(ctx.waypoints().getCondition(t))) {
+          newWaypoints.add(t);
+        }
+      }
+      ctx().checks().allChecks().forEach(c -> {
+        builder.index(c.location().accessCondition());
+        if (builder.index(c.condition())) {
+          newChecks.add(c);
+        }
+      });
+      this.graph = builder.build();
+
+      newWaypoints.forEach(this::acquireWaypoint);
+      newChecks.forEach(this::maybeAutoAcquire);
+      newWaypoints.clear();
+      newChecks.clear();
+    }
+
     updateGraph(newWaypoints, newChecks);
     recursivelyUpdateGraph(newWaypoints, newChecks);
   }
