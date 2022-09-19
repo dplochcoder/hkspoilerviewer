@@ -62,12 +62,18 @@ public abstract class Location {
     return new AutoValue_Location(name, isTransition, locAccess, scene);
   }
 
+  private static final String PROXY_SUFFIX = "_Proxy";
+
   private static String inferScene(RoomLabels rooms, String name, Condition accessCondition)
       throws ParseException {
     Set<String> potentialScenes = new HashSet<>();
     for (Term t : accessCondition.locationTerms().collect(ImmutableSet.toImmutableSet())) {
       if (t.name().contains("[")) {
-        potentialScenes.add(t.name().substring(0, t.name().indexOf('[')));
+        String sName = t.name().substring(0, t.name().indexOf('['));
+        if (sName.endsWith(PROXY_SUFFIX)) {
+          sName = sName.substring(0, sName.length() - PROXY_SUFFIX.length());
+        }
+        potentialScenes.add(sName);
       } else {
         potentialScenes.add(t.name());
       }
