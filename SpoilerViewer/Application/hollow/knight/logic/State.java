@@ -101,6 +101,10 @@ public class State {
     if (obtains.add(check)) {
       check.item().apply(new Condition.MutableContext(termValues, ctx.notchCosts(), ctx.darkness()),
           dirtyTerms);
+
+      if (check.isTransition()) {
+        acquireWaypoint(Term.create(check.location().name()));
+      }
     }
   }
 
