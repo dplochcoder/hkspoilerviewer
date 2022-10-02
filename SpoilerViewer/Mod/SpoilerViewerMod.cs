@@ -63,7 +63,7 @@ namespace SpoilerViewerMod
             return builder.CreateMenuScreen();
         }
 
-        static string MostRecentlyModifiedDir(string path)
+        private static string MostRecentlyModifiedDir(string path)
         {
             var sortedDirs = new DirectoryInfo(path).GetDirectories()
                 .OrderByDescending(f => f.LastWriteTime)
@@ -77,11 +77,13 @@ namespace SpoilerViewerMod
             return sortedDirs[0].FullName;
         }
 
-        string GetJsonPath(bool openICDL)
+        private string ICDLDir() => MostRecentlyModifiedDir(ItemChangerDataLoader.ICDLMod.TempDirectory);
+
+        private string GetJsonPath(bool openICDL)
         {
             if (openICDL)
             {
-                var mostRecent = MostRecentlyModifiedDir(ItemChangerDataLoader.ICDLMod.TempDirectory);
+                var mostRecent = ICDLDir();
                 if (mostRecent != null)
                 {
                     mostRecent = MostRecentlyModifiedDir(mostRecent);
@@ -100,7 +102,7 @@ namespace SpoilerViewerMod
             }
         }
 
-        public void LaunchHKSV(bool openICDL)
+        private void LaunchHKSV(bool openICDL)
         {
             var path = GetJsonPath(openICDL);
             if (path == "") return;
