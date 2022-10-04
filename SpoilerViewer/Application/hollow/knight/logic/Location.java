@@ -66,6 +66,13 @@ public abstract class Location {
 
   private static String inferScene(RoomLabels rooms, String name, Condition accessCondition)
       throws ParseException {
+    if (name.contains("[")) {
+      String sName = name.substring(0, name.indexOf('['));
+      if (rooms.allScenes().contains(sName)) {
+        return sName;
+      }
+    }
+
     Set<String> potentialScenes = new HashSet<>();
     for (Term t : accessCondition.locationTerms().collect(ImmutableSet.toImmutableSet())) {
       if (t.name().contains("[")) {
