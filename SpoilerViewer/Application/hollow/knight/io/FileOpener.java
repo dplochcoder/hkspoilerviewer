@@ -44,7 +44,7 @@ public final class FileOpener {
       if (saveData.has("RawICDL")) {
         rawICDL = saveData.get("RawICDL").getAsJsonObject();
       }
-      if (saveData.has("RawDarkness")) {
+      if (saveData.has("RawDarkness") && !saveData.get("RawDarkness").isJsonNull()) {
         darknessJson = saveData.get("RawDarkness").getAsJsonObject();
       }
     } else if (path.endsWith("ctx.json")) {
