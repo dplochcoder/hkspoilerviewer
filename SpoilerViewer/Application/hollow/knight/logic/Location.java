@@ -52,7 +52,7 @@ public abstract class Location {
     Condition locAccess = ConditionParser.parse(logicObj.get("Logic").getAsString());
 
     String scene;
-    if (obj.has("LocationDef")) {
+    if (obj.has("LocationDef") && !obj.get("LocationDef").isJsonNull()) {
       JsonElement sceneName = obj.get("LocationDef").getAsJsonObject().get("SceneName");
       scene = sceneName.isJsonNull() ? "Unknown" : sceneName.getAsString();
     } else {
