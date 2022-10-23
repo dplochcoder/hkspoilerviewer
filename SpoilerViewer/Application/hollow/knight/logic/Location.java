@@ -93,7 +93,7 @@ public abstract class Location {
         && accessCondition.locationTerms().anyMatch(t -> t.name().startsWith("Defeated_Any_"))) {
       return "Unknown";
     } else if (!SCENE_OVERRIDES.containsKey(name)) {
-      throw new ParseException("Unknown scene: " + name);
+      return "UNKNOWN";
     } else {
       return SCENE_OVERRIDES.get(name);
     }
