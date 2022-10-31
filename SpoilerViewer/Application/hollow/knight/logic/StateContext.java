@@ -454,14 +454,15 @@ public final class StateContext {
     return arr;
   }
 
-  private JsonArray createNewSpoilerTransitionPlacements(JsonArray origPlacements)
-      throws ICDLException {
+  private JsonArray createNewSpoilerTransitionPlacements(JsonElement orig) throws ICDLException {
     Map<String, JsonObject> transitionsJson = new HashMap<>();
-    for (JsonElement elem : origPlacements) {
-      JsonObject target = elem.getAsJsonObject().get("Target").getAsJsonObject();
-      transitionsJson.put(target.get("Name").getAsString(), target);
-      JsonObject source = elem.getAsJsonObject().get("Source").getAsJsonObject();
-      transitionsJson.put(source.get("Name").getAsString(), source);
+    if (orig != null && !orig.isJsonNull()) {
+      for (JsonElement elem : orig.getAsJsonArray()) {
+        JsonObject target = elem.getAsJsonObject().get("Target").getAsJsonObject();
+        transitionsJson.put(target.get("Name").getAsString(), target);
+        JsonObject source = elem.getAsJsonObject().get("Source").getAsJsonObject();
+        transitionsJson.put(source.get("Name").getAsString(), source);
+      }
     }
 
     JsonArray arr = new JsonArray();
@@ -517,8 +518,8 @@ public final class StateContext {
     JsonObject newRawSpoilerJson = rawSpoilerJson.deepCopy();
     newRawSpoilerJson.add("itemPlacements",
         createNewSpoilerItemPlacements(rawSpoilerJson.get("itemPlacements").getAsJsonArray()));
-    newRawSpoilerJson.add("transitionPlacements", createNewSpoilerTransitionPlacements(
-        rawSpoilerJson.get("transitionPlacements").getAsJsonArray()));
+    newRawSpoilerJson.add("transitionPlacements",
+        createNewSpoilerTransitionPlacements(rawSpoilerJson.get("transitionPlacements")));
     newRawSpoilerJson.add("notchCosts", notchCosts().toRawSpoilerJsonArray());
     newRawSpoilerJson.add("InitialProgression",
         updateInitialProgression(newRawSpoilerJson.get("InitialProgression").getAsJsonObject()));
