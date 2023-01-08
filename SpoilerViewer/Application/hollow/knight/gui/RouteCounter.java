@@ -12,17 +12,6 @@ public final class RouteCounter {
     return state -> state.get(term);
   }
 
-  public static Function<State, Integer> purchaseTermFunction(Term term) {
-    return state -> state.purchaseTermValues().get(term);
-  }
-
-  public static Integer accessibleGeoMinusRocks(State state) {
-    return state.purchaseTermValues().get(Term.geo()) - state.accessible()
-        .filter(c -> c.vanilla() && !state.isAcquired(c)
-            && state.ctx().pools().getPool(c.item().term()).equals("Rock"))
-        .mapToInt(c -> c.item().getEffectValue(Term.geo())).sum();
-  }
-
   private static ImmutableMap<Term, Integer> RELIC_VALUES =
       ImmutableMap.of(Term.create("Wanderer's_Journal"), 200, Term.create("Hallownest_Seal"), 450,
           Term.create("King's_Idol"), 800, Term.create("Arcane_Egg"), 1200);
@@ -31,18 +20,9 @@ public final class RouteCounter {
     return state.obtained().mapToInt(c -> RELIC_VALUES.getOrDefault(c.item().term(), 0)).sum();
   }
 
-  public static Integer purchaseRelicGeoCounter(State state) {
-    return state.accessible().mapToInt(c -> RELIC_VALUES.getOrDefault(c.item().term(), 0)).sum();
-  }
-
   public static Integer spentGeoCounter(State state) {
     // TODO: Fix for area blitz
     return state.obtained().mapToInt(c -> c.costs().getGeoCost()).sum();
-  }
-
-  public static Integer spendableGeoCounter(State state) {
-    // TODO: Fix for area blitz
-    return state.accessible().mapToInt(c -> c.costs().getGeoCost()).sum();
   }
 
   public static final Function<TermMap, Integer> termMapFunction(Term term) {

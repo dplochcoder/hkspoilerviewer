@@ -53,7 +53,6 @@ public final class ItemChecks implements StateContext.Mutable {
   private final SynchronizedEntityManager<Listener> listeners = new SynchronizedEntityManager<>();
 
   private final BiMap<CheckId, ItemCheck> checksById = HashBiMap.create();
-  private final BiMultimap<Condition, CheckId> idsByCondition = new BiMultimap<>();
   private final BiMultimap<String, CheckId> idsByLocation = new BiMultimap<>();
 
   private final Map<String, Location> locationsByName = new HashMap<>();
@@ -123,7 +122,6 @@ public final class ItemChecks implements StateContext.Mutable {
 
   private void addInternal(ItemCheck check) {
     checksById.put(check.id(), check);
-    idsByCondition.put(check.condition(), check.id());
     idsByLocation.put(check.location().name(), check.id());
 
     locationsByName.put(check.location().name(), check.location());
@@ -135,7 +133,6 @@ public final class ItemChecks implements StateContext.Mutable {
 
   private void removeInternal(CheckId id) {
     ItemCheck check = checksById.remove(id);
-    idsByCondition.removeValue(id);
     idsByLocation.removeValue(id);
     idsByItemName.removeValue(id);
     itemCounts.remove(check.item().term().name());
@@ -390,10 +387,6 @@ public final class ItemChecks implements StateContext.Mutable {
 
   public Item nothing() throws ICDLException {
     return getItem(Term.nothing());
-  }
-
-  public Stream<ItemCheck> getByCondition(Condition c) {
-    return idsByCondition.getValue(c).stream().map(checksById::get);
   }
 
   @Override

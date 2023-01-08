@@ -7,8 +7,6 @@ public interface Cost {
 
   int value();
 
-  Condition asCondition();
-
   String debugString();
 
   JsonObject toRawSpoilerJson();

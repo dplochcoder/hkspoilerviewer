@@ -25,11 +25,6 @@ public final class GeoCost implements Cost {
   }
 
   @Override
-  public Condition asCondition() {
-    return Condition.canReplenishGeo();
-  }
-
-  @Override
   public int geoCost() {
     return value;
   }

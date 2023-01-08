@@ -33,8 +33,6 @@ public abstract class Location {
 
   public abstract boolean isTransition();
 
-  public abstract Condition accessCondition();
-
   public abstract String scene();
 
   public final boolean isShop() {
@@ -49,23 +47,25 @@ public abstract class Location {
     }
 
     String name = logicObj.get("Name").getAsString();
-    Condition locAccess = ConditionParser.parse(logicObj.get("Logic").getAsString());
 
     String scene;
     if (obj.has("LocationDef") && !obj.get("LocationDef").isJsonNull()) {
       JsonElement sceneName = obj.get("LocationDef").getAsJsonObject().get("SceneName");
       scene = sceneName.isJsonNull() ? "Unknown" : sceneName.getAsString();
     } else {
-      scene = inferScene(rooms, name, locAccess);
+      scene = inferScene(rooms, name);
     }
 
-    return new AutoValue_Location(name, isTransition, locAccess, scene);
+    return new AutoValue_Location(name, isTransition, scene);
   }
 
   private static final String PROXY_SUFFIX = "_Proxy";
 
-  private static String inferScene(RoomLabels rooms, String name, Condition accessCondition)
-      throws ParseException {
+  private static String inferScene(RoomLabels rooms, String name) throws ParseException {
+    if (SCENE_OVERRIDES.containsKey(name)) {
+      return SCENE_OVERRIDES.get(name);
+    }
+
     if (name.contains("[")) {
       String sName = name.substring(0, name.indexOf('['));
       if (rooms.allScenes().contains(sName)) {
@@ -73,29 +73,14 @@ public abstract class Location {
       }
     }
 
+    // TODO: Just get scene names.
     Set<String> potentialScenes = new HashSet<>();
-    for (Term t : accessCondition.locationTerms().collect(ImmutableSet.toImmutableSet())) {
-      if (t.name().contains("[")) {
-        String sName = t.name().substring(0, t.name().indexOf('['));
-        if (sName.endsWith(PROXY_SUFFIX)) {
-          sName = sName.substring(0, sName.length() - PROXY_SUFFIX.length());
-        }
-        potentialScenes.add(sName);
-      } else {
-        potentialScenes.add(t.name());
-      }
-    }
 
     Set<String> both = new HashSet<>(Sets.intersection(potentialScenes, rooms.allScenes()));
     if (both.size() == 1) {
       return both.iterator().next();
-    } else if (both.isEmpty()
-        && accessCondition.locationTerms().anyMatch(t -> t.name().startsWith("Defeated_Any_"))) {
-      return "Unknown";
-    } else if (!SCENE_OVERRIDES.containsKey(name)) {
-      return "UNKNOWN";
     } else {
-      return SCENE_OVERRIDES.get(name);
+      return "UNKNOWN";
     }
   }
 }

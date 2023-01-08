@@ -1,7 +1,6 @@
 package hollow.knight.logic;
 
 import com.google.auto.value.AutoValue;
-import com.google.auto.value.extension.memoized.Memoized;
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonObject;
 
@@ -21,11 +20,6 @@ public abstract class ItemCheck {
 
   public final boolean isTransition() {
     return location().isTransition();
-  }
-
-  @Memoized
-  public Condition condition() {
-    return Conjunction.of(location().accessCondition(), costs().asCondition());
   }
 
   public final JsonObject toJson() {

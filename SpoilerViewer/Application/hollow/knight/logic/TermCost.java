@@ -27,11 +27,6 @@ public final class TermCost implements Cost {
   }
 
   @Override
-  public Condition asCondition() {
-    return TermGreaterThanCondition.of(term, value - 1);
-  }
-
-  @Override
   public int termCost(Term term) {
     return this.term.equals(term) ? value : 0;
   }

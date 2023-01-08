@@ -60,7 +60,6 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
   private State newInitialState() {
     State state = new State(ctx);
     stateInitializers.forEach(i -> i.initializeState(state));
-    state.normalize();
     return state;
   }
 
@@ -130,7 +129,6 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
       for (int i = 0; i <= index; i++) {
         newState.acquireCheck(route.get(i));
       }
-      newState.normalize();
 
       return newState;
     } else {
@@ -138,7 +136,6 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
       for (int i = insertionPoint; i <= index; i++) {
         newState.acquireCheck(route.get(i));
       }
-      newState.normalize();
 
       return newState;
     }
@@ -166,7 +163,6 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
     for (int i = 0; i < insertionPoint; i++) {
       currentState.acquireCheck(route.get(i));
     }
-    currentState.normalize();
 
     ListDataEvent e = new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, 0, getSize());
     listeners.forEach(l -> l.contentsChanged(e));
@@ -178,7 +174,6 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
     }
 
     currentState.acquireCheck(check);
-    currentState.normalize();
 
     this.route.add(insertionPoint, check);
     this.resultStrings.add(insertionPoint,
@@ -191,7 +186,6 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
       resultStrings.set(i, newResult.render(transitionData, ctx.darkness()));
 
       finalState.acquireCheck(check);
-      finalState.normalize();
     }
 
     ListDataEvent e1 =
@@ -214,10 +208,8 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
     State prevState = getState(before - 1);
     State newState1 = prevState.deepCopy();
     newState1.acquireCheck(b);
-    newState1.normalize();
     State newState2 = newState1.deepCopy();
     newState2.acquireCheck(a);
-    newState2.normalize();
 
     route.set(before, b);
     route.set(after, a);
@@ -243,7 +235,6 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
     for (int i = index + 1; i < getSize(); i++) {
       ItemCheck check = route.get(i);
       finalState.acquireCheck(check);
-      finalState.normalize();
 
       route.set(i - 1, check);
       resultStrings.set(i - 1,
@@ -259,7 +250,6 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
       for (int i = 0; i < insertionPoint; i++) {
         currentState.acquireCheck(route.get(i));
       }
-      currentState.normalize();
     }
 
     ListDataEvent e1 = new ListDataEvent(this, ListDataEvent.INTERVAL_REMOVED, index, index + 1);
@@ -283,7 +273,6 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
           SearchResult.create(check, finalState).render(transitionData, ctx.darkness()));
 
       finalState.acquireCheck(check);
-      finalState.normalize();
     }
 
     if (index < insertionPoint) {
@@ -291,7 +280,6 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
       for (int i = 0; i < insertionPoint; i++) {
         currentState.acquireCheck(route.get(i));
       }
-      currentState.normalize();
     }
 
     ListDataEvent e = new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, index, getSize());
@@ -309,8 +297,7 @@ public final class RouteListModel implements ItemChecks.Listener, ListModel<Stri
         currentState = finalState.deepCopy();
       }
 
-      finalState.acquireCheck(check);;
-      finalState.normalize();
+      finalState.acquireCheck(check);
     }
 
     if (insertionPoint == getSize()) {

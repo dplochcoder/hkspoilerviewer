@@ -64,17 +64,10 @@ public abstract class SearchResult {
     return itemCheck().vanilla();
   }
 
-  public abstract LogicType logicType();
-
   public abstract Optional<Integer> notchCost();
 
   public final String render(TransitionData transitionData, DarknessOverrides darkness) {
     StringBuilder sb = new StringBuilder();
-    if (logicType() == LogicType.OUT_OF_LOGIC) {
-      sb.append('*');
-    } else if (logicType() == LogicType.COST_ACCESSIBLE) {
-      sb.append('$');
-    }
     if (vanilla()) {
       sb.append('#');
     }
@@ -104,18 +97,6 @@ public abstract class SearchResult {
     return costs().suffixString();
   }
 
-  private static LogicType getLogicType(ItemCheck itemCheck, State state) {
-    if (state.test(itemCheck.location().accessCondition())) {
-      if (state.test(itemCheck.costs().asCondition())) {
-        return LogicType.IN_LOGIC;
-      } else if (state.purchaseTest(itemCheck.costs().asCondition())) {
-        return LogicType.COST_ACCESSIBLE;
-      }
-    }
-
-    return LogicType.OUT_OF_LOGIC;
-  }
-
   public static SearchResult create(ItemCheck itemCheck, State state) {
     Optional<Integer> notchCost = Optional.empty();
     Integer charmId = state.ctx().charmIds().charmId(itemCheck.item().term());
@@ -123,6 +104,6 @@ public abstract class SearchResult {
       notchCost = Optional.of(state.ctx().notchCosts().notchCost(charmId));
     }
 
-    return new AutoValue_SearchResult(itemCheck, getLogicType(itemCheck, state), notchCost);
+    return new AutoValue_SearchResult(itemCheck, notchCost);
   }
 }

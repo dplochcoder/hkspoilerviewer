@@ -37,8 +37,7 @@ public final class Item {
 
     MutableTermMap termMap = new MutableTermMap();
     termMap.add(effectTerm, effectValue);
-    this.effects =
-        new TermMapItemEffects(Condition.alwaysTrue(), termMap, TermMap.empty(), TermMap.empty());
+    this.effects = new TermMapItemEffects(termMap, TermMap.empty());
 
     this.fromOriginalJson = false;
   }
@@ -103,8 +102,8 @@ public final class Item {
     }
   }
 
-  void apply(Condition.MutableContext ctx, Set<Term> dirtyTerms) {
-    effects.apply(ctx, dirtyTerms);
+  void apply(MutableTermMap ctx) {
+    effects.apply(ctx);
   }
 
   public boolean isCustom() {
@@ -123,32 +122,29 @@ public final class Item {
       MutableTermMap effects = new MutableTermMap();
       effects.add(Term.create(obj.get("Term").getAsString()), 1);
 
-      return new TermMapItemEffects(Condition.alwaysTrue(), effects, TermMap.empty(), effects);
+      return new TermMapItemEffects(effects, effects);
     }
 
     if (types.contains("RandomizerCore.Logic.LogicTransition")) {
       MutableTermMap effects = new MutableTermMap();
       effects.add(Term.create(obj.get("term").getAsString()), 1);
 
-      return new TermMapItemEffects(Condition.alwaysTrue(), effects, TermMap.empty(), effects);
+      return new TermMapItemEffects(effects, effects);
     }
 
-    Condition logic = Condition.alwaysTrue();
-    MutableTermMap trueEffects = new MutableTermMap();
-    MutableTermMap falseEffects = new MutableTermMap();
+    MutableTermMap effects = new MutableTermMap();
     MutableTermMap caps = new MutableTermMap();
     if (obj.get("Logic") != null) {
-      logic = ConditionParser.parse(obj.get("Logic").getAsJsonObject().get("Logic").getAsString());
-      parseEffectsMap(obj.get("TrueItem").getAsJsonObject(), trueEffects);
-      parseEffectsMap(obj.get("FalseItem").getAsJsonObject(), falseEffects);
+      // Ignore the condition.
+      parseEffectsMap(obj.get("FalseEffects").getAsJsonObject(), effects);
     } else {
-      parseEffectsMap(obj, trueEffects);
+      parseEffectsMap(obj, effects);
     }
     if (obj.get("Cap") != null) {
       parseEffectsMap(obj.get("Cap").getAsJsonObject(), caps);
     }
 
-    return new TermMapItemEffects(logic, trueEffects, falseEffects, caps);
+    return new TermMapItemEffects(effects, caps);
   }
 
   private static void parseSingleEffect(JsonObject obj, MutableTermMap out) {
@@ -303,7 +299,7 @@ public final class Item {
       terms.add(term, 1);
 
       return new Item(term, Optional.of("Transitions"), TRANSITION_TYPES,
-          new TermMapItemEffects(Condition.alwaysTrue(), terms, TermMap.empty(), terms));
+          new TermMapItemEffects(terms, terms));
     }
 
     Optional<String> pool = Optional.empty();

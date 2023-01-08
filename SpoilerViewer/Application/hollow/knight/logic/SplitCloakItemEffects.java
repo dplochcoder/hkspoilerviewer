@@ -1,6 +1,5 @@
 package hollow.knight.logic;
 
-import java.util.Set;
 import java.util.stream.Stream;
 
 public final class SplitCloakItemEffects implements ItemEffects {
@@ -30,7 +29,7 @@ public final class SplitCloakItemEffects implements ItemEffects {
   }
 
   @Override
-  public void apply(Condition.MutableContext ctx, Set<Term> dirtyTerms) {
+  public void apply(MutableTermMap ctx) {
     boolean hasLeft = ctx.get(LEFT_DASH) > 0;
     boolean hasRight = ctx.get(RIGHT_DASH) > 0;
     boolean hasShade = ctx.get(LEFT_DASH) >= 2 || ctx.get(RIGHT_DASH) >= 2;
@@ -39,15 +38,11 @@ public final class SplitCloakItemEffects implements ItemEffects {
       if (!hasShade) {
         ctx.set(LEFT_DASH, 2);
         ctx.set(RIGHT_DASH, 2);
-        dirtyTerms.add(LEFT_DASH);
-        dirtyTerms.add(RIGHT_DASH);
       }
     } else if (leftBiased) {
       ctx.set(LEFT_DASH, !hasLeft && !hasShade ? 1 : 2);
-      dirtyTerms.add(LEFT_DASH);
     } else {
       ctx.set(RIGHT_DASH, !hasRight && !hasShade ? 1 : 2);
-      dirtyTerms.add(RIGHT_DASH);
     }
   }
 }

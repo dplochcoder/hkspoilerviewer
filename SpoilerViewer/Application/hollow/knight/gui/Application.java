@@ -70,8 +70,6 @@ public final class Application extends JFrame {
   private final SingletonWindow<CheckEditor> checkEditor;
   private final JMenuItem saveICDLFolder;
 
-  private final TransitionRouting transitionRouting;
-  private final Skips skips;
   private final SearchEngine searchEngine;
 
   private final JList<String> searchResultsList;
@@ -109,8 +107,6 @@ public final class Application extends JFrame {
     JPanel left = new JPanel();
     BoxLayout layout = new BoxLayout(left, BoxLayout.PAGE_AXIS);
     left.setLayout(layout);
-    this.transitionRouting = createTransitionRouting();
-    this.skips = createSkips();
     List<SearchResult.Filter> resultFilters = addFilters(left);
 
     this.searchEngine = new SearchEngine(transitionData, ctx.roomLabels(), resultFilters);
@@ -592,7 +588,6 @@ public final class Application extends JFrame {
     StateContext newCtx = opener.openFile(path);
 
     setICDLEnabled(newCtx.icdlJson() != null);
-    skips.inferDefaultSkips(new State(newCtx));
     checksListeners.forEach(prevCtx.checks()::removeListener);
     checksListeners.forEach(newCtx.checks()::addListener);
 
@@ -681,21 +676,6 @@ public final class Application extends JFrame {
     ctx().saveICDL(c.getSelectedFile().toPath());
   }
 
-  private Skips createSkips() throws ParseException {
-    Skips skips = Skips.load();
-    skips.inferDefaultSkips(new State(ctx()));
-    skips.addListener(this::refreshLogic);
-    routeListModel.addStateInitializer(skips);
-    return skips;
-  }
-
-  private TransitionRouting createTransitionRouting() {
-    TransitionRouting transitionRouting = new TransitionRouting();
-    transitionRouting.addListener(this::refreshLogic);
-    routeListModel.addStateInitializer(transitionRouting);
-    return transitionRouting;
-  }
-
   private List<SearchResult.Filter> addFilters(JPanel parent) throws ParseException {
     ImmutableList.Builder<SearchResult.Filter> searchFilters = ImmutableList.builder();
 
@@ -715,12 +695,6 @@ public final class Application extends JFrame {
     roomsFilter.addListener(filterChangedListener);
     roomsFilter.addGuiToPanel(parent);
     searchFilters.add(roomsFilter);
-
-    parent.add(new JSeparator());
-    this.transitionRouting.addToGui(parent);
-
-    parent.add(new JSeparator());
-    this.skips.addToGui(parent);
 
     parent.add(new JSeparator());
     ExclusionFilters excFilters = new ExclusionFilters(ctx().roomLabels(), routeListModel);
@@ -950,27 +924,15 @@ public final class Application extends JFrame {
   private List<RouteCounter> createRouteCounters() {
     List<RouteCounter> list = new ArrayList<>();
     list.add(new RouteCounter("Grubs", RouteCounter.termFunction(Term.grubs())));
-    list.add(new RouteCounter("$Grubs", RouteCounter.purchaseTermFunction(Term.grubs())));
     list.add(new RouteCounter("Essence", RouteCounter.termFunction(Term.essence())));
-    list.add(new RouteCounter("$Essence", RouteCounter.purchaseTermFunction(Term.essence())));
     list.add(new RouteCounter("Charms", RouteCounter.termFunction(Term.charms())));
-    list.add(new RouteCounter("$Charms", RouteCounter.purchaseTermFunction(Term.charms())));
     list.add(new RouteCounter("Rancid Eggs", RouteCounter.termFunction(Term.rancidEggs())));
-    list.add(
-        new RouteCounter("$Rancid Eggs", RouteCounter.purchaseTermFunction(Term.rancidEggs())));
     list.add(new RouteCounter("Dream Nails", RouteCounter.termFunction(Term.dreamNail())));
-    list.add(new RouteCounter("$Dream Nails", RouteCounter.purchaseTermFunction(Term.dreamNail())));
     list.add(new RouteCounter("Dreamers", RouteCounter.termFunction(Term.dreamer())));
-    list.add(new RouteCounter("$Dreamers", RouteCounter.purchaseTermFunction(Term.dreamer())));
     list.add(new RouteCounter("White Fragments", RouteCounter.termFunction(Term.whiteFragment())));
-    list.add(new RouteCounter("$White Fragments",
-        RouteCounter.purchaseTermFunction(Term.whiteFragment())));
     list.add(new RouteCounter("Geo", RouteCounter.termFunction(Term.geo())));
-    list.add(new RouteCounter("$Geo", RouteCounter::accessibleGeoMinusRocks));
     list.add(new RouteCounter("Relic Geo", RouteCounter::relicGeoCounter));
-    list.add(new RouteCounter("$Relic Geo", RouteCounter::purchaseRelicGeoCounter));
     list.add(new RouteCounter("Spent Geo", RouteCounter::spentGeoCounter));
-    list.add(new RouteCounter("Spendable Geo", RouteCounter::spendableGeoCounter));
     return list;
   }
 

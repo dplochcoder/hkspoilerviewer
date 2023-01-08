@@ -31,18 +31,6 @@ public final class LogicEnemyKillCost implements Cost {
   }
 
   @Override
-  public Condition asCondition() {
-    if (amount <= 0) {
-      return Condition.alwaysTrue();
-    } else if (amount == 1 || respawns) {
-      return TermGreaterThanCondition.of(defeatWaypoint);
-    } else {
-      return Conjunction.of(TermGreaterThanCondition.of(canBenchWaypoint),
-          TermGreaterThanCondition.of(defeatWaypoint));
-    }
-  }
-
-  @Override
   public String debugString() {
     return "Kill " + amount + " " + enemyIcName;
   }

@@ -47,7 +47,6 @@ public final class StateContext {
   private final Pools pools;
   private final NotchCosts notchCosts;
   private final DarknessOverrides darkness;
-  private final Waypoints waypoints;
   private final ItemChecks checks;
 
   private final MutableTermMap tolerances;
@@ -57,8 +56,7 @@ public final class StateContext {
 
   public StateContext(boolean isHKS, JsonObject rawSpoilerJson, JsonObject icdlJson,
       CharmIds charmIds, RoomLabels roomLabels, Pools pools, NotchCosts notchCosts,
-      DarknessOverrides darkness, Waypoints waypoints, ItemChecks checks, TermMap tolerances,
-      TermMap setters) {
+      DarknessOverrides darkness, ItemChecks checks, TermMap tolerances, TermMap setters) {
     this.isHKS = isHKS;
     this.rawSpoilerJson = rawSpoilerJson;
     this.icdlJson = icdlJson;
@@ -67,7 +65,6 @@ public final class StateContext {
     this.pools = pools;
     this.notchCosts = notchCosts;
     this.darkness = darkness;
-    this.waypoints = waypoints;
     this.checks = checks;
     this.tolerances = new MutableTermMap(tolerances);
     this.setters = ImmutableTermMap.copyOf(setters);
@@ -110,20 +107,12 @@ public final class StateContext {
     return darkness;
   }
 
-  public Waypoints waypoints() {
-    return waypoints;
-  }
-
   public ItemChecks checks() {
     return checks;
   }
 
   public TermMap setters() {
     return setters;
-  }
-
-  public boolean isMutableTerm(Term term) {
-    return waypoints.allWaypoints().contains(term) || checks.isEffectTerm(term);
   }
 
   public TermMap tolerances() {
@@ -202,8 +191,7 @@ public final class StateContext {
         DarknessOverrides.parse((darknessJson != null) ? darknessJson : icdlJson);
 
     return new StateContext(isHKS, rawSpoilerJson, icdlJson, charmIds, rooms, pools, notchCosts,
-        darkness, Waypoints.parse(rawSpoilerJson), ItemChecks.parse(rawSpoilerJson, rooms),
-        tolerances, setters);
+        darkness, ItemChecks.parse(rawSpoilerJson, rooms), tolerances, setters);
   }
 
   private static ImmutableSet<String> getTypes(JsonObject tag) {

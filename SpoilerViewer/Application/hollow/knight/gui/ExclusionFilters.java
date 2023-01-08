@@ -45,15 +45,7 @@ public final class ExclusionFilters extends SearchResult.Filter {
             jcb("Randomized", true)),
         ExclusionFilter.create(this, "VANILLA", r -> r.itemCheck().vanilla(),
             jcb("Vanilla (#)", false)),
-        ExclusionFilter.create(this, "IN_LOGIC",
-            r -> r.logicType() == SearchResult.LogicType.IN_LOGIC, jcb("In Logic", true)),
-        ExclusionFilter.create(this, "OUT_OF_LOGIC",
-            r -> r.logicType() == SearchResult.LogicType.OUT_OF_LOGIC,
-            jcb("Out of Logic (*)", false)),
-        ExclusionFilter.create(this, "SHOPS", r -> r.location().isShop(), jcb("Shops", true)),
-        ExclusionFilter.create(this, "PURCHASE_LOGIC",
-            r -> r.logicType() == SearchResult.LogicType.COST_ACCESSIBLE,
-            jcb("Purchase Logic ($)", true)));
+        ExclusionFilter.create(this, "SHOPS", r -> r.location().isShop(), jcb("Shops", true)));
   }
 
   public ExclusionFilters(RoomLabels roomLabels, RouteListModel routeListModel) {

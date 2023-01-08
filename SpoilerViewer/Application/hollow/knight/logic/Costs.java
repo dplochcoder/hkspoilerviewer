@@ -16,13 +16,9 @@ public final class Costs {
   }
 
   private final ImmutableSet<Cost> costs;
-  private final Condition condition;
 
   public Costs(Set<Cost> costs) {
     this.costs = ImmutableSet.copyOf(costs);
-    this.condition = costs.isEmpty() ? Condition.alwaysTrue()
-        : Conjunction
-            .of(costs.stream().map(Cost::asCondition).collect(ImmutableSet.toImmutableSet()));
   }
 
   public Costs(Cost cost) {
@@ -35,10 +31,6 @@ public final class Costs {
 
   public ImmutableSet<Cost> costs() {
     return costs;
-  }
-
-  public Condition asCondition() {
-    return condition;
   }
 
   public String suffixString() {
