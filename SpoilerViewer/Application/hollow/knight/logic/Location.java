@@ -53,7 +53,7 @@ public abstract class Location {
       JsonElement sceneName = obj.get("LocationDef").getAsJsonObject().get("SceneName");
       scene = sceneName.isJsonNull() ? "Unknown" : sceneName.getAsString();
     } else {
-      scene = inferScene(rooms, name);
+      scene = inferScene(rooms, name, logicObj.get("Logic").getAsString());
     }
 
     return new AutoValue_Location(name, isTransition, scene);
@@ -61,7 +61,8 @@ public abstract class Location {
 
   private static final String PROXY_SUFFIX = "_Proxy";
 
-  private static String inferScene(RoomLabels rooms, String name) throws ParseException {
+  private static String inferScene(RoomLabels rooms, String name, String logic)
+      throws ParseException {
     if (SCENE_OVERRIDES.containsKey(name)) {
       return SCENE_OVERRIDES.get(name);
     }
@@ -74,13 +75,42 @@ public abstract class Location {
     }
 
     // TODO: Just get scene names.
-    Set<String> potentialScenes = new HashSet<>();
+    Set<String> potentialScenes = lexScenes(logic);
 
     Set<String> both = new HashSet<>(Sets.intersection(potentialScenes, rooms.allScenes()));
     if (both.size() == 1) {
       return both.iterator().next();
     } else {
       return "UNKNOWN";
+    }
+  }
+
+  private static Set<String> lexScenes(String logic) {
+    Set<String> out = new HashSet<>();
+
+    StringBuilder sb = new StringBuilder();
+    for (char ch : logic.toCharArray()) {
+      if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' || ch <= 'Z') || (ch >= '0' && ch <= '9')) {
+        sb.append(ch);
+      } else {
+        lexScene(sb.toString(), out);
+        sb = new StringBuilder();
+      }
+    }
+
+    lexScene(sb.toString(), out);
+    return out;
+  }
+
+  private static void lexScene(String t, Set<String> out) {
+    if (t.isEmpty()) {
+      return;
+    }
+
+    if (t.endsWith(PROXY_SUFFIX)) {
+      out.add(t.substring(0, t.length() - PROXY_SUFFIX.length()));
+    } else {
+      out.add(t);
     }
   }
 }

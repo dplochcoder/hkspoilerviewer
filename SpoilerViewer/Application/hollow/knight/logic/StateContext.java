@@ -42,6 +42,7 @@ public final class StateContext {
   private final boolean isHKS;
   private final JsonObject rawSpoilerJson;
   private final JsonObject icdlJson;
+  private final String startLoc;
   private final CharmIds charmIds;
   private final RoomLabels roomLabels;
   private final Pools pools;
@@ -55,11 +56,12 @@ public final class StateContext {
   private final List<Mutable> mutables;
 
   public StateContext(boolean isHKS, JsonObject rawSpoilerJson, JsonObject icdlJson,
-      CharmIds charmIds, RoomLabels roomLabels, Pools pools, NotchCosts notchCosts,
+      String startLoc, CharmIds charmIds, RoomLabels roomLabels, Pools pools, NotchCosts notchCosts,
       DarknessOverrides darkness, ItemChecks checks, TermMap tolerances, TermMap setters) {
     this.isHKS = isHKS;
     this.rawSpoilerJson = rawSpoilerJson;
     this.icdlJson = icdlJson;
+    this.startLoc = startLoc;
     this.charmIds = charmIds;
     this.roomLabels = roomLabels;
     this.pools = pools;
@@ -85,6 +87,10 @@ public final class StateContext {
 
   public JsonObject icdlJson() {
     return icdlJson;
+  }
+
+  public String startLoc() {
+    return startLoc;
   }
 
   public CharmIds charmIds() {
@@ -181,8 +187,8 @@ public final class StateContext {
       }
     }
 
-    String startLoc = rawSpoilerJson.get("StartDef").getAsJsonObject().get("Name").getAsString();
-    setters.set(Term.create("$StartLocation[" + startLoc + "]"), 1);
+    String startLoc = rawSpoilerJson.get("GenerationSettings").getAsJsonObject()
+        .get("StartLocationSettings").getAsJsonObject().get("StartLocation").getAsString();
 
     NotchCosts notchCosts = new NotchCosts();
     notchCosts.load(rawSpoilerJson);
@@ -190,8 +196,8 @@ public final class StateContext {
     DarknessOverrides darkness =
         DarknessOverrides.parse((darknessJson != null) ? darknessJson : icdlJson);
 
-    return new StateContext(isHKS, rawSpoilerJson, icdlJson, charmIds, rooms, pools, notchCosts,
-        darkness, ItemChecks.parse(rawSpoilerJson, rooms), tolerances, setters);
+    return new StateContext(isHKS, rawSpoilerJson, icdlJson, startLoc, charmIds, rooms, pools,
+        notchCosts, darkness, ItemChecks.parse(rawSpoilerJson, rooms), tolerances, setters);
   }
 
   private static ImmutableSet<String> getTypes(JsonObject tag) {

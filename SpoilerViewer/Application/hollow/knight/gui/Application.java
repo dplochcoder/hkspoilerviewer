@@ -18,6 +18,7 @@ import javax.swing.BoxLayout;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -76,6 +77,7 @@ public final class Application extends JFrame {
   private final JScrollPane searchResultsPane;
   private final JList<String> routeList;
   private final JScrollPane routePane;
+  private final JLabel startLocLabel;
   private final List<RouteCounter> routeCounters;
 
   public Application(StateContext ctx, Config cfg) throws ParseException {
@@ -126,7 +128,12 @@ public final class Application extends JFrame {
 
     this.routeCounters = createRouteCounters();
     JPanel countersPane = new JPanel();
-    countersPane.setLayout(new GridLayout(routeCounters.size() / 2, 2));
+    countersPane.setLayout(new GridLayout(routeCounters.size() + 1, 1));
+
+    startLocLabel = new JLabel();
+    updateStartLoc(ctx);
+    countersPane.add(startLocLabel);
+
     routeCounters.forEach(c -> countersPane.add(c.getLabel()));
     countersPane.setMaximumSize(new Dimension(1_000_000, 160));
     rightPane.add(countersPane);
@@ -161,24 +168,11 @@ public final class Application extends JFrame {
     return routeListModel.finalState().isAcquired(c);
   }
 
-  private static final ImmutableList<String> PL_INFO = ImmutableList.<String>builder().add(
-      "A check is in Purchase Logic ($) if it has a cost which is not yet met by the current route, ")
-      .add(
-          "but which *could* be met if the player acquired all immediately accessible items affecting the cost, including tolerance.")
-      .add("-")
-      .add(
-          "I.e., an item at Grubfather for N grubs is in Purchase Logic if the player has immediate access to N+TOLERANCE grubs with their current moveset and keys. ")
-      .add(
-          "Adding N or more grubs to the route explicitly will put the check in normal logic and remove the '$'.")
-      .build();
-
   private static final ImmutableList<String> INSERT_INFO = ImmutableList.<String>builder().add(
-      "Insertion allows you to rewind Logic to an earlier point in the route to insert earlier checks.")
-      .add(
-          "Your search results will reflect Logic at the point just prior to insertion, and any acquired item checks ")
-      .add(
-          "will be inserted into the middle of the route at that point. Grayed-out route items after the insertion ")
-      .add("point will not appear in search results.").add("-")
+      "Insertion allows you to rewind to an earlier point in the route to insert earlier checks.")
+      .add("Any acquired item checks will be inserted into the middle of the route at that point. ")
+      .add("Grayed-out route items after the insertion point will not appear in search results.")
+      .add("-")
       .add("Route items before and after the insertion point can still be removed or swapped.")
       .build();
 
@@ -496,8 +490,6 @@ public final class Application extends JFrame {
     bar.add(icdlMenu);
 
     JMenu about = new JMenu("About");
-    about.add(GuiUtil.newInfoMenuItem(this, "Purchase Logic ($)", PL_INFO));
-    about.add(new JSeparator());
     about.add(GuiUtil.newInfoMenuItem(this, "Insertions / Rewind", INSERT_INFO));
     about.add(new JSeparator());
     about.add(GuiUtil.newInfoMenuItem(this, "ICDL", ICDL_INFO));
@@ -587,6 +579,7 @@ public final class Application extends JFrame {
     FileOpener opener = new FileOpener(saveInterfaces);
     StateContext newCtx = opener.openFile(path);
 
+    updateStartLoc(newCtx);
     setICDLEnabled(newCtx.icdlJson() != null);
     checksListeners.forEach(prevCtx.checks()::removeListener);
     checksListeners.forEach(newCtx.checks()::addListener);
@@ -919,6 +912,10 @@ public final class Application extends JFrame {
         return c;
       }
     };
+  }
+
+  private void updateStartLoc(StateContext ctx) {
+    startLocLabel.setText("Start: " + ctx.startLoc());
   }
 
   private List<RouteCounter> createRouteCounters() {

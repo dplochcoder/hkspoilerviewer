@@ -136,7 +136,7 @@ public final class Item {
     MutableTermMap caps = new MutableTermMap();
     if (obj.get("Logic") != null) {
       // Ignore the condition.
-      parseEffectsMap(obj.get("FalseEffects").getAsJsonObject(), effects);
+      parseEffectsMap(obj.get("FalseItem").getAsJsonObject(), effects);
     } else {
       parseEffectsMap(obj, effects);
     }
