@@ -30,7 +30,7 @@ public final class JsonUtil {
       String txt = lines.stream().collect(Collectors.joining("\n"));
       return JsonParser.parseString(txt);
     } catch (IOException ex) {
-      throw new ParseException("Failed to load " + path + ": " + ex.getMessage());
+      throw new ParseException("Failed to load " + path, ex);
     }
   }
 
