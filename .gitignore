@@ -373,3 +373,4 @@ FodyWeavers.xsd
 /.factorypath
 /.project
 /HKSpoilerViewer.cfg
+/.apt_generated_tests/
