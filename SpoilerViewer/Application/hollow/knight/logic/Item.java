@@ -127,7 +127,7 @@ public final class Item {
 
     if (types.contains("RandomizerCore.Logic.LogicTransition")) {
       MutableTermMap effects = new MutableTermMap();
-      effects.add(Term.create(obj.get("term").getAsString()), 1);
+      effects.add(Term.create(obj.get("Name").getAsString()), 1);
 
       return new TermMapItemEffects(effects, effects);
     }

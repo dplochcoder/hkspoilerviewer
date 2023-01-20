@@ -416,17 +416,17 @@ public final class ItemChecks implements StateContext.Mutable {
     }
   }
 
-  private void parseCheckUnsafe(JsonElement elem, RoomLabels rooms, boolean vanilla)
-      throws ParseException {
+  private void parseCheckUnsafe(JsonElement elem, ImmutableMap<String, String> logicMap,
+      RoomLabels rooms, boolean vanilla) throws ParseException {
     Item item = Item.parse(elem.getAsJsonObject().get("Item").getAsJsonObject());
     if (!item.types().contains("RandomizerMod.RC.SplitCloakItem")
         && !item.types().contains("RandomizerCore.Logic.LogicTransition")
-        && item.types().stream().noneMatch(s -> s.startsWith("RandomizerCore.LogicItems."))) {
+        && item.types().stream().noneMatch(s -> s.startsWith("RandomizerCore.LogicItem"))) {
       return;
     }
 
     JsonObject locObj = elem.getAsJsonObject().get("Location").getAsJsonObject();
-    Location loc = Location.parse(rooms, locObj, item.isTransition());
+    Location loc = Location.parse(rooms, logicMap, locObj, item.isTransition());
 
     Costs costs = Costs.none();
     JsonElement costsObj = locObj.get("costs");
@@ -437,48 +437,62 @@ public final class ItemChecks implements StateContext.Mutable {
     placeNew(loc, item, costs, vanilla);
   }
 
-  private void parseCheckSafe(JsonElement elem, RoomLabels rooms, boolean vanilla)
-      throws ParseException {
+  private void parseCheckSafe(JsonElement elem, ImmutableMap<String, String> logicMap,
+      RoomLabels rooms, boolean vanilla) throws ParseException {
     try {
-      parseCheckUnsafe(elem, rooms, vanilla);
+      parseCheckUnsafe(elem, logicMap, rooms, vanilla);
     } catch (Exception ex) {
       throw new ParseException(ex.getMessage() + ": " + elem, ex);
     }
   }
 
-  private void parseTransitionUnsafe(JsonElement elem, RoomLabels rooms) throws ParseException {
+  private void parseTransitionUnsafe(JsonElement elem, ImmutableMap<String, String> logicMap,
+      RoomLabels rooms) throws ParseException {
     JsonObject target = elem.getAsJsonObject().get("Target").getAsJsonObject();
     JsonObject source = elem.getAsJsonObject().get("Source").getAsJsonObject();
 
     Item item = Item.parse(target);
-    Location loc = Location.parse(rooms, source.get("lt").getAsJsonObject(), true);
+    Location loc = Location.parse(rooms, logicMap, source.get("lt").getAsJsonObject(), true);
 
     placeNew(loc, item, Costs.none(), false);
   }
 
-  private void parseTransitionSafe(JsonElement elem, RoomLabels rooms) throws ParseException {
+  private void parseTransitionSafe(JsonElement elem, ImmutableMap<String, String> logicMap,
+      RoomLabels rooms) throws ParseException {
     try {
-      parseTransitionUnsafe(elem, rooms);
+      parseTransitionUnsafe(elem, logicMap, rooms);
     } catch (Exception ex) {
       throw new ParseException(ex.getMessage() + ": " + elem, ex);
     }
   }
 
+  private static ImmutableMap<String, String> parseLogicMap(JsonObject json) {
+    ImmutableMap.Builder<String, String> builder = ImmutableMap.builder();
+    for (JsonElement elem : json.get("LM").getAsJsonObject().get("Logic").getAsJsonArray()) {
+      JsonObject obj = elem.getAsJsonObject();
+      String name = obj.get("name").getAsString();
+      String logic = obj.get("logic").getAsString();
+      builder.put(name, logic);
+    }
+    return builder.build();
+  }
+
   public static ItemChecks parse(JsonObject json, RoomLabels roomLabels) throws ParseException {
     ItemChecks checks = new ItemChecks();
+    ImmutableMap<String, String> logicMap = parseLogicMap(json);
 
     // Parse locations.
     for (JsonElement elem : json.get("itemPlacements").getAsJsonArray()) {
-      checks.parseCheckSafe(elem, roomLabels, false);
+      checks.parseCheckSafe(elem, logicMap, roomLabels, false);
     }
     JsonElement transitionPlacements = json.get("transitionPlacements");
     if (!transitionPlacements.isJsonNull()) {
       for (JsonElement elem : transitionPlacements.getAsJsonArray()) {
-        checks.parseTransitionSafe(elem, roomLabels);
+        checks.parseTransitionSafe(elem, logicMap, roomLabels);
       }
     }
     for (JsonElement elem : json.get("Vanilla").getAsJsonArray()) {
-      checks.parseCheckSafe(elem, roomLabels, true);
+      checks.parseCheckSafe(elem, logicMap, roomLabels, true);
     }
 
     checks.calculateOriginalItemCounts();

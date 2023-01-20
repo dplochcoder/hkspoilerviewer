@@ -39,8 +39,8 @@ public abstract class Location {
     return SHOPS.contains(name());
   }
 
-  public static Location parse(RoomLabels rooms, JsonObject obj, boolean isTransition)
-      throws ParseException {
+  public static Location parse(RoomLabels rooms, ImmutableMap<String, String> logicMap,
+      JsonObject obj, boolean isTransition) throws ParseException {
     JsonObject logicObj = obj;
     if (logicObj.has("logic")) {
       logicObj = logicObj.get("logic").getAsJsonObject();
@@ -53,7 +53,7 @@ public abstract class Location {
       JsonElement sceneName = obj.get("LocationDef").getAsJsonObject().get("SceneName");
       scene = sceneName.isJsonNull() ? "Unknown" : sceneName.getAsString();
     } else {
-      scene = inferScene(rooms, name, logicObj.get("Logic").getAsString());
+      scene = inferScene(rooms, name, logicMap.get(name));
     }
 
     return new AutoValue_Location(name, isTransition, scene);
@@ -72,6 +72,9 @@ public abstract class Location {
       if (rooms.allScenes().contains(sName)) {
         return sName;
       }
+    }
+    if (logic == null) {
+      return "UNKNOWN";
     }
 
     // TODO: Just get scene names.
