@@ -15,11 +15,9 @@ import java.util.Map;
 import java.util.Set;
 import javax.swing.JOptionPane;
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.HashMultiset;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
-import com.google.common.collect.Multiset;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -258,15 +256,6 @@ public final class StateContext {
       Map<String, JsonObject> locationJsons) throws ICDLException {
     JsonObject placements = new JsonObject();
 
-    // Assign ItemSync ids.
-    Multiset<String> assignedSyncIds = HashMultiset.create();
-    Map<ItemCheck, String> syncIds = new HashMap<>();
-    checks().allChecks().filter(c -> !c.isTransition()).forEach(c -> {
-      String id = c.location().name() + ";" + c.item().term().name();
-      int prev = assignedSyncIds.add(id, 1);
-      syncIds.put(c, id + ((prev > 0) ? String.valueOf(prev + 1) : ""));
-    });
-
     // Group ItemChecks by Location.
     Multimap<String, ItemCheck> checksByLocation = HashMultimap.create();
     checks().allChecks().filter(c -> !c.vanilla() && !c.isTransition())
@@ -324,18 +313,6 @@ public final class StateContext {
         randoTag.addProperty("id", check.id().id());
         randoTag.addProperty("obtained", false);
         tagsArr.add(randoTag);
-
-        // TODO: Only do this if ItemSync is enabled? Maybe?
-        JsonObject syncTag = new JsonObject();
-        syncTag.addProperty("$type", "ItemSyncMod.Items.SyncedItemTag, ItemSync");
-        syncTag.addProperty("ItemID", syncIds.get(check));
-        syncTag.add("From", JsonNull.INSTANCE);
-        syncTag.addProperty("Given", false);
-        syncTag.addProperty("WasObtainedLocallySet", false);
-        syncTag.addProperty("WasObtainedLocally", false);
-        syncTag.addProperty("GetWasObtainedLocally", false);
-        syncTag.addProperty("Message", "SyncedItemTag");
-        tagsArr.add(syncTag);
 
         itemObj.add("tags", tagsArr);
         itemsArr.add(itemObj);
