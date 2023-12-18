@@ -322,6 +322,13 @@ public final class StateContext {
       placements.add(locName, locObj);
     }
 
+    JsonObject origPlacements = icdlJson.get("Placements").getAsJsonObject();
+    for (String name : origPlacements.keySet()) {
+      if (!placements.keySet().contains(name)) {
+        placements.add(name, origPlacements.get(name));
+      }
+    }
+
     return placements;
   }
 
