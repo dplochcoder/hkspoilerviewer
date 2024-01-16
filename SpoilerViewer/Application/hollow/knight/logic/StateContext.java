@@ -8,16 +8,17 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.swing.JOptionPane;
-import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -252,14 +253,33 @@ public final class StateContext {
     return false;
   }
 
+  private static int containerCompare(ItemCheck c1, ItemCheck c2) {
+    boolean mimic1 = c1.item().term().name().toLowerCase().contains("mimic_grub");
+    boolean mimic2 = c2.item().term().name().toLowerCase().contains("mimic_grub");
+    if (mimic1 != mimic2) {
+      return mimic1 ? -1 : 1;
+    }
+
+    boolean soul1 = c1.item().term().name().toLowerCase().contains("soul_totem");
+    boolean soul2 = c2.item().term().name().toLowerCase().contains("soul_totem");
+    if (soul1 != soul2) {
+      return soul1 ? -1 : 1;
+    }
+
+    return Integer.compare(c1.id().id(), c2.id().id());
+  }
+
   private JsonObject calculatePlacementsJson(Map<Term, JsonObject> itemJsons,
       Map<String, JsonObject> locationJsons) throws ICDLException {
     JsonObject placements = new JsonObject();
 
     // Group ItemChecks by Location.
-    Multimap<String, ItemCheck> checksByLocation = HashMultimap.create();
+    ListMultimap<String, ItemCheck> checksByLocation = ArrayListMultimap.create();
     checks().allChecks().filter(c -> !c.vanilla() && !c.isTransition())
         .forEach(c -> checksByLocation.put(c.location().name(), c));
+    for (String k : checksByLocation.keySet()) {
+      Collections.sort(checksByLocation.get(k), StateContext::containerCompare);
+    }
 
     // Output by location.
     for (String locName : checksByLocation.keySet()) {
