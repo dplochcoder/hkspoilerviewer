@@ -316,8 +316,14 @@ public final class StateContext {
       // Add items
       JsonArray itemsArr = new JsonArray();
       for (ItemCheck check : checksByLocation.get(locName)) {
-        JsonObject itemObj = check.item().isCustom() ? check.item().toICDLJson()
-            : itemJsons.get(check.item().term()).deepCopy();
+        JsonObject itemObj;
+        if (check.item().isCustom()) {
+          itemObj = check.item().toICDLJson();
+        } else if (itemJsons.containsKey(check.item().term())) {
+          itemObj = itemJsons.get(check.item().term()).deepCopy();
+        } else {
+          throw new ICDLException("No item json for: " + check.item().term());
+        }
         tagsArr =
             itemObj.has("tags") ? itemObj.get("tags").getAsJsonArray().deepCopy() : new JsonArray();
 
@@ -497,15 +503,19 @@ public final class StateContext {
     Map<String, JsonObject> locationJsons = new HashMap<>();
     JsonObject placements = icdlJson.get("Placements").getAsJsonObject();
     for (String locName : placements.keySet()) {
-      JsonObject locJson = placements.get(locName).getAsJsonObject().deepCopy();
-      for (JsonElement item : locJson.get("Items").getAsJsonArray()) {
-        JsonObject itemObj = item.getAsJsonObject().deepCopy();
-        String itemName = itemObj.get("name").getAsString();
-        sanitizeItem(itemObj);
-        itemJsons.put(Term.create(itemName), itemObj);
+      try {
+        JsonObject locJson = placements.get(locName).getAsJsonObject().deepCopy();
+        for (JsonElement item : locJson.get("Items").getAsJsonArray()) {
+          JsonObject itemObj = item.getAsJsonObject().deepCopy();
+          String itemName = itemObj.get("name").getAsString();
+          sanitizeItem(itemObj);
+          itemJsons.put(Term.create(itemName), itemObj);
+        }
+        sanitizeLocation(locJson);
+        locationJsons.put(locName, locJson);
+      } catch (RuntimeException ex) {
+        throw new RuntimeException("Location: " + locName, ex);
       }
-      sanitizeLocation(locJson);
-      locationJsons.put(locName, locJson);
     }
 
     JsonObject newICDLJson = icdlJson.deepCopy();

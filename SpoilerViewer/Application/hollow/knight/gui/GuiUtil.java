@@ -25,49 +25,53 @@ public final class GuiUtil {
   public interface Action {
     void run() throws Exception;
   }
-  
+
   public static void copyToClipboard(String s) {
-	StringSelection sel = new StringSelection(s);
-	Toolkit.getDefaultToolkit().getSystemClipboard().setContents(sel, null);
+    StringSelection sel = new StringSelection(s);
+    Toolkit.getDefaultToolkit().getSystemClipboard().setContents(sel, null);
   }
-  
+
   public static String wrap(String in, int maxCols) {
-	StringBuilder out = new StringBuilder();
-	
-	int lineStart = 0;
-	int lastSpace = -1;
-	for (int i = 0; i < in.length(); i++) {
+    if (in == null) {
+      return "null";
+    }
+
+    StringBuilder out = new StringBuilder();
+
+    int lineStart = 0;
+    int lastSpace = -1;
+    for (int i = 0; i < in.length(); i++) {
       if (i - lineStart >= maxCols) {
-    	if (lastSpace < lineStart) {
-    	  out.append(in.substring(lineStart, i));
-    	  lineStart = i;
-    	  lastSpace = i - 1;
-    	} else {
+        if (lastSpace < lineStart) {
+          out.append(in.substring(lineStart, i));
+          lineStart = i;
+          lastSpace = i - 1;
+        } else {
           out.append(in.substring(lineStart, lastSpace));
           lineStart = lastSpace + 1;
           lastSpace = lineStart - 1;
-    	}
-    	
-    	if (i < in.length() - 1) {
-    	  out.append('\n');
-    	}
+        }
+
+        if (i < in.length() - 1) {
+          out.append('\n');
+        }
       }
-      
+
       char ch = in.charAt(i);
       if (ch == '\n') {
-    	out.append(in.substring(lineStart, i + 1));
-    	lineStart = i + 1;
-    	lastSpace = i;
+        out.append(in.substring(lineStart, i + 1));
+        lineStart = i + 1;
+        lastSpace = i;
       } else if (Character.isWhitespace(in.charAt(i))) {
-    	lastSpace = i;
-    	if (lineStart == lastSpace - 1) {
-    	  lineStart = lastSpace + 1;
-    	}
+        lastSpace = i;
+        if (lineStart == lastSpace - 1) {
+          lineStart = lastSpace + 1;
+        }
       }
-	}
-	
-	out.append(in.substring(lineStart));
-	return out.toString();
+    }
+
+    out.append(in.substring(lineStart));
+    return out.toString();
   }
 
   public static void showStackTrace(Component parentComponent, String header, Exception ex) {
@@ -75,9 +79,9 @@ public final class GuiUtil {
       ex.printStackTrace(pw);
       String msg = wrap(ex.getMessage(), 200) + ";\n" + wrap(sw.toString(), 200);
       copyToClipboard(msg);
-      
-      JOptionPane.showMessageDialog(
-        parentComponent, msg + "\n\n(Copied to Clipboard!)", header, JOptionPane.WARNING_MESSAGE);
+
+      JOptionPane.showMessageDialog(parentComponent, msg + "\n\n(Copied to Clipboard!)", header,
+          JOptionPane.WARNING_MESSAGE);
     } catch (IOException ignore) {
     }
   }
