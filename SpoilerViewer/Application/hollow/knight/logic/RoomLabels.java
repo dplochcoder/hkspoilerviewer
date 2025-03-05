@@ -23,6 +23,9 @@ public final class RoomLabels {
     for (ImmutableMap<Type, String> map : this.locToAreaNames.values()) {
       builder.putAll(map.entrySet());
     }
+    for (Type type : Type.values()) {
+      builder.put(type, "Unknown");
+    }
     this.allAreaNames = builder.build();
   }
 
@@ -37,7 +40,7 @@ public final class RoomLabels {
   private static ImmutableMap<Type, String> EMPTY_MAP = ImmutableMap.of();
 
   public String get(String scene, Type label) {
-    return locToAreaNames.getOrDefault(scene, EMPTY_MAP).getOrDefault(label, "");
+    return locToAreaNames.getOrDefault(scene, EMPTY_MAP).getOrDefault(label, "Unknown");
   }
 
   public static RoomLabels load() throws ParseException {
