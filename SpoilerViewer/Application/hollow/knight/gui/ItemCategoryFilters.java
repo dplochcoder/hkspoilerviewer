@@ -6,7 +6,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import com.google.common.collect.ImmutableMap;
 import hollow.knight.logic.StateContext;
-import hollow.knight.logic.Term;
 
 // Canonical filters with check box toggles.
 public final class ItemCategoryFilters extends SearchResult.Filter {
@@ -44,11 +43,11 @@ public final class ItemCategoryFilters extends SearchResult.Filter {
         .put("Levers", ItemCategoryFilter.forPools("Levers"))
         .put("Benches", ItemCategoryFilter.forPools("Benches"))
         .put("Transitions", (ctx, check) -> check.isTransition())
-        .put("Essence", ItemCategoryFilter.forEffect(Term.essence()))
+        .put("Essence", ItemCategoryFilter.forPools("DreamWarrior", "DreamBoss", "WhisperingRoots"))
         .put("Charms", ItemCategoryFilter.forPools("Charm"))
-        .put("Rancid Eggs", ItemCategoryFilter.forEffect(Term.rancidEggs()))
+        .put("Rancid Eggs", ItemCategoryFilter.forPools("Egg"))
         .put("Grubs & Mimics", ItemCategoryFilter.forTerms("Grub", "Mimic_Grub"))
-        .put("Geo", ItemCategoryFilter.forEffect(Term.geo()))
+        .put("Geo", ItemCategoryFilter.forPools("Geo"))
         .put("Relics", ItemCategoryFilter.forTerms("Relics", "Wanderer's_Journal",
             "Hallownest_Seal", "King's_Idol", "Arcane_Egg"))
         .build();
