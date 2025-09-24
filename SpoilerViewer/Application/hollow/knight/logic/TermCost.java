@@ -51,6 +51,9 @@ public final class TermCost implements Cost {
     if (term.equals(Term.rancidEggs())) {
       obj.addProperty("$type", "ItemChanger.Modules.CumulativeRancidEggCost, ItemChanger");
       obj.addProperty("Total", value);
+    } else if (term.equals(Term.maps())) {
+      obj.addProperty("$type", "BugPrince.IC.MapCost, BugPrince");
+      obj.addProperty("Cost", value);
     } else {
       obj.addProperty("$type", "ItemChanger.PDIntCost, ItemChanger");
       obj.addProperty("amount", value);

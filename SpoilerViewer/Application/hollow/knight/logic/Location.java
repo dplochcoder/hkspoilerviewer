@@ -18,8 +18,9 @@ public abstract class Location {
       "GG_Workshop", "Journal_Entry-Void_Idol_2", "GG_Workshop", "Journal_Entry-Void_Idol_3",
       "GG_Workshop", "Bench-Upper_Tram", "Room_Tram_RG", "Bench-Lower_Tram", "Room_Tram");
 
-  private static final ImmutableSet<String> SHOPS = ImmutableSet.of("Egg_Shop", "Grubfather",
-      "Iselda", "Leg_Eater", "Salubra", "Seer", "Sly", "Sly_(Key)");
+  private static final ImmutableSet<String> SHOPS =
+      ImmutableSet.of("BugPrince-Iselda_(Requires_Maps)", "Egg_Shop", "Grubfather", "Iselda",
+          "Leg_Eater", "Salubra", "Seer", "Sly", "Sly_(Key)");
 
   public static ImmutableSet<String> shops() {
     return SHOPS;

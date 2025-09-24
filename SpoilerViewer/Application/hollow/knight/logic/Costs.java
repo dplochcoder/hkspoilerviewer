@@ -92,6 +92,8 @@ public final class Costs {
       case "Sly":
       case "Sly_(Key)":
         return new Costs(GeoCost.create(1));
+      case "BugPrince-Iselda_(Requires_Maps)":
+        return new Costs(ImmutableSet.of(GeoCost.create(1), TermCost.create(Term.maps(), 1)));
       case "Salubra":
         return new Costs(ImmutableSet.of(GeoCost.create(1), TermCost.create(Term.charms(), 1)));
       case "Grubfather":

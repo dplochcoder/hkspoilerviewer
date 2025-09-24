@@ -82,6 +82,12 @@ public abstract class Term implements Comparable<Term> {
     return RANCID_EGGS;
   }
 
+  private static final Term MAPS = Term.create("MAPS");
+
+  public static Term maps() {
+    return MAPS;
+  }
+
   private static final Term CHARMS = Term.create("CHARMS");
 
   public static Term charms() {
