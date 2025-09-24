@@ -5,116 +5,115 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
-namespace SpoilerViewerMod
+namespace SpoilerViewerMod;
+
+public class SpoilerViewerMod : Mod, ICustomMenuMod
 {
-    public class SpoilerViewerMod : Mod, ICustomMenuMod
+    public SpoilerViewerMod() : base("Spoiler Viewer") { }
+
+    public override string GetVersion() => Version;
+
+    public static string JarFile { get; }
+
+    public static string Version { get; }
+
+    static int ComputeHashCode(string path)
     {
-        public SpoilerViewerMod() : base("Spoiler Viewer") { }
+        var sha1 = System.Security.Cryptography.SHA1.Create();
+        var bytes = sha1.ComputeHash(File.OpenRead(path));
 
-        public override string GetVersion() => Version;
-
-        public static string JarFile { get; }
-
-        public static string Version { get; }
-
-        static int ComputeHashCode(string path)
+        // Hash the entire integer.
+        int sum = 0;
+        for (int i = 0; i < bytes.Length; i++)
         {
-            var sha1 = System.Security.Cryptography.SHA1.Create();
-            var bytes = sha1.ComputeHash(File.OpenRead(path));
-
-            // Hash the entire integer.
-            int sum = 0;
-            for (int i = 0; i < bytes.Length; i++)
+            int op = bytes[i];
+            for (int j = 1; j < bytes.Length; j++)
             {
-                int op = bytes[i];
-                for (int j = 1; j < bytes.Length; j++)
-                {
-                    op = (op * 256) % 997;
-                }
-                sum = (sum + op) % 997;
+                op = (op * 256) % 997;
+            }
+            sum = (sum + op) % 997;
+        }
+
+        return sum;
+    }
+
+    static SpoilerViewerMod()
+    {
+        var asm = typeof(SpoilerViewerMod).Assembly;
+        var folder = Path.GetDirectoryName(asm.Location);
+        JarFile = Path.Combine(folder, "HKSpoilerViewer.jar");
+
+        var hash = (ComputeHashCode(JarFile) + ComputeHashCode(asm.Location)) % 997;
+        System.Version v = asm.GetName().Version;
+        Version = $"{v.Major}.{v.Minor}.{v.Build}+{hash.ToString().PadLeft(3, '0')}";
+    }
+
+    public bool ToggleButtonInsideMenu => false;
+
+    public MenuScreen GetMenuScreen(MenuScreen modListMenu, ModToggleDelegates? _)
+    {
+        ModMenuScreenBuilder builder = new(Localization.Localize("Spoiler Viewer"), modListMenu);
+        builder.AddButton(Localization.Localize("Open RawSpoiler.json"), null, () => LaunchHKSV(false));
+
+        if (ModHooks.GetMod("ICDL Mod") is Mod)
+        {
+            builder.AddButton(Localization.Localize("Open ICDL ctx.json"), null, () => LaunchHKSV(true));
+        }
+
+        return builder.CreateMenuScreen();
+    }
+
+    private static string MostRecentlyModifiedDir(string path)
+    {
+        var sortedDirs = new DirectoryInfo(path).GetDirectories()
+            .OrderByDescending(f => f.LastWriteTime)
+            .ToList();
+
+        if (sortedDirs.Count == 0)
+        {
+            return null;
+        }
+
+        return sortedDirs[0].FullName;
+    }
+
+    private string ICDLDir() => MostRecentlyModifiedDir(ItemChangerDataLoader.ICDLMod.TempDirectory);
+
+    private string GetJsonPath(bool openICDL)
+    {
+        if (openICDL)
+        {
+            var mostRecent = ICDLDir();
+            if (mostRecent != null)
+            {
+                mostRecent = MostRecentlyModifiedDir(mostRecent);
             }
 
-            return sum;
-        }
-
-        static SpoilerViewerMod()
-        {
-            var asm = typeof(SpoilerViewerMod).Assembly;
-            var folder = Path.GetDirectoryName(asm.Location);
-            JarFile = Path.Combine(folder, "HKSpoilerViewer.jar");
-
-            var hash = (ComputeHashCode(JarFile) + ComputeHashCode(asm.Location)) % 997;
-            System.Version v = asm.GetName().Version;
-            Version = $"{v.Major}.{v.Minor}.{v.Build}+{hash.ToString().PadLeft(3, '0')}";
-        }
-
-        public bool ToggleButtonInsideMenu => false;
-
-        public MenuScreen GetMenuScreen(MenuScreen modListMenu, ModToggleDelegates? _)
-        {
-            ModMenuScreenBuilder builder = new(Localization.Localize("Spoiler Viewer"), modListMenu);
-            builder.AddButton(Localization.Localize("Open RawSpoiler.json"), null, () => LaunchHKSV(false));
-
-            if (ModHooks.GetMod("ICDL Mod") is Mod)
+            if (mostRecent == null)
             {
-                builder.AddButton(Localization.Localize("Open ICDL ctx.json"), null, () => LaunchHKSV(true));
+                LogError("No recent ctx.json to open");
+                return "";
             }
 
-            return builder.CreateMenuScreen();
-        }
-
-        private static string MostRecentlyModifiedDir(string path)
+            return Path.GetFullPath(Path.Combine(mostRecent, "ctx.json"));
+        } else
         {
-            var sortedDirs = new DirectoryInfo(path).GetDirectories()
-                .OrderByDescending(f => f.LastWriteTime)
-                .ToList();
-
-            if (sortedDirs.Count == 0)
-            {
-                return null;
-            }
-
-            return sortedDirs[0].FullName;
+            return Path.GetFullPath(Path.Combine(RandomizerMod.Logging.LogManager.RecentDirectory, "RawSpoiler.json"));
         }
+    }
 
-        private string ICDLDir() => MostRecentlyModifiedDir(ItemChangerDataLoader.ICDLMod.TempDirectory);
+    private void LaunchHKSV(bool openICDL)
+    {
+        var path = GetJsonPath(openICDL);
+        if (path == "") return;
 
-        private string GetJsonPath(bool openICDL)
-        {
-            if (openICDL)
-            {
-                var mostRecent = ICDLDir();
-                if (mostRecent != null)
-                {
-                    mostRecent = MostRecentlyModifiedDir(mostRecent);
-                }
-
-                if (mostRecent == null)
-                {
-                    LogError("No recent ctx.json to open");
-                    return "";
-                }
-
-                return Path.GetFullPath(Path.Combine(mostRecent, "ctx.json"));
-            } else
-            {
-                return Path.GetFullPath(Path.Combine(RandomizerMod.Logging.LogManager.RecentDirectory, "RawSpoiler.json"));
-            }
-        }
-
-        private void LaunchHKSV(bool openICDL)
-        {
-            var path = GetJsonPath(openICDL);
-            if (path == "") return;
-
-            Log($"Opening {path} with {JarFile}...");
-            
-            Process process = new();
-            process.StartInfo.FileName = "java";
-            process.StartInfo.Arguments = $"-jar \"{JarFile}\" \"{path}\"";
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.CreateNoWindow = true;
-            process.Start();
-        }
+        Log($"Opening {path} with {JarFile}...");
+        
+        Process process = new();
+        process.StartInfo.FileName = "java";
+        process.StartInfo.Arguments = $"-jar \"{JarFile}\" \"{path}\"";
+        process.StartInfo.UseShellExecute = false;
+        process.StartInfo.CreateNoWindow = true;
+        process.Start();
     }
 }
