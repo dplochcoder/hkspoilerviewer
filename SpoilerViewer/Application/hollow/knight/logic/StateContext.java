@@ -46,6 +46,7 @@ public final class StateContext {
   private final RoomLabels roomLabels;
   private final Pools pools;
   private final NotchCosts notchCosts;
+  private final LogicEdits logicEdits;
   private final DarknessOverrides darkness;
   private final ItemChecks checks;
 
@@ -56,7 +57,8 @@ public final class StateContext {
 
   public StateContext(boolean isHKS, JsonObject rawSpoilerJson, JsonObject icdlJson,
       String startLoc, CharmIds charmIds, RoomLabels roomLabels, Pools pools, NotchCosts notchCosts,
-      DarknessOverrides darkness, ItemChecks checks, TermMap tolerances, TermMap setters) {
+      LogicEdits logicEdits, DarknessOverrides darkness, ItemChecks checks, TermMap tolerances,
+      TermMap setters) {
     this.isHKS = isHKS;
     this.rawSpoilerJson = rawSpoilerJson;
     this.icdlJson = icdlJson;
@@ -65,6 +67,7 @@ public final class StateContext {
     this.roomLabels = roomLabels;
     this.pools = pools;
     this.notchCosts = notchCosts;
+    this.logicEdits = logicEdits;
     this.darkness = darkness;
     this.checks = checks;
     this.tolerances = new MutableTermMap(tolerances);
@@ -73,6 +76,7 @@ public final class StateContext {
     this.mutables = new ArrayList<>();
     this.mutables.add(checks);
     this.mutables.add(notchCosts);
+    this.mutables.add(logicEdits);
     this.mutables.add(mutableTolerancesWrapper());
   }
 
@@ -106,6 +110,10 @@ public final class StateContext {
 
   public NotchCosts notchCosts() {
     return notchCosts;
+  }
+
+  public LogicEdits logicEdits() {
+    return logicEdits;
   }
 
   public DarknessOverrides darkness() {
@@ -196,7 +204,8 @@ public final class StateContext {
         DarknessOverrides.parse((darknessJson != null) ? darknessJson : icdlJson);
 
     return new StateContext(isHKS, rawSpoilerJson, icdlJson, startLoc, charmIds, rooms, pools,
-        notchCosts, darkness, ItemChecks.parse(rawSpoilerJson, rooms), tolerances, setters);
+        notchCosts, new LogicEdits(), darkness, ItemChecks.parse(rawSpoilerJson, rooms), tolerances,
+        setters);
   }
 
   private static ImmutableSet<String> getTypes(JsonObject tag) {
@@ -531,6 +540,7 @@ public final class StateContext {
     newRawSpoilerJson.add("notchCosts", notchCosts().toRawSpoilerJsonArray());
     newRawSpoilerJson.add("InitialProgression",
         updateInitialProgression(newRawSpoilerJson.get("InitialProgression").getAsJsonObject()));
+    logicEdits.updateLM(newRawSpoilerJson.get("LM").getAsJsonObject());
 
     String packName = JOptionPane.showInputDialog(null, "Name?");
     if (packName == null || packName.trim().isEmpty()) {

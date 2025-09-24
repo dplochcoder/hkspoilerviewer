@@ -69,6 +69,7 @@ public final class Application extends JFrame {
   private boolean isICDL = false;
   private final JMenu icdlMenu;
   private final SingletonWindow<CheckEditor> checkEditor;
+  private final SingletonWindow<LogicEditor> logicEditor;
   private final JMenuItem saveICDLFolder;
 
   private final SearchEngine searchEngine;
@@ -100,6 +101,7 @@ public final class Application extends JFrame {
     this.transitionVisualizer =
         new SingletonWindow<>(this, "Transition Visualizer", () -> new TransitionVisualizer(this));
     this.checkEditor = new SingletonWindow<>(this, "Check Editor", () -> new CheckEditor(this));
+    this.logicEditor = new SingletonWindow<>(this, "Logic Editor", () -> new LogicEditor(this));
     this.saveICDLFolder = new JMenuItem("Export As ICDL Pack Folder");
     this.icdlMenu = createICDLMenu();
     setJMenuBar(createMenu());
@@ -440,6 +442,10 @@ public final class Application extends JFrame {
     missingItems.addActionListener(GuiUtil.newActionListener(this, this::showItemDiffReport));
     menu.add(missingItems);
 
+    JMenuItem editLogic = new JMenuItem("Edit Logic");
+    editLogic.addActionListener(GuiUtil.newActionListener(this, () -> logicEditor.getWithFocus()));
+    menu.add(editLogic);
+
     JMenuItem editNotches = new JMenuItem("Edit Charm Costs");
     editNotches.addActionListener(GuiUtil.newActionListener(this, this::editNotchCosts));
     menu.add(editNotches);
@@ -742,6 +748,11 @@ public final class Application extends JFrame {
           ItemCheck check = getSelectedSearchResultCheck();
           if (editCheck(check) && getSelectedRouteCheck() != check) {
             routeList.clearSelection();
+          }
+        } else if (e.getKeyCode() == KeyEvent.VK_L) {
+          ItemCheck check = getSelectedSearchResultCheck();
+          if (check != null) {
+            logicEditor.getWithFocus().editLogic(check.location().name());
           }
         } else if (e.getKeyCode() == KeyEvent.VK_C) {
           ItemCheck check = getSelectedSearchResultCheck();
