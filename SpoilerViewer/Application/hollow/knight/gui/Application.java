@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListCellRenderer;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -74,6 +75,7 @@ public final class Application extends JFrame {
 
   private final SearchEngine searchEngine;
 
+  private final JCheckBoxMenuItem showRawTransitions;
   private final JList<String> searchResultsList;
   private final JScrollPane searchResultsPane;
   private final JList<String> routeList;
@@ -84,10 +86,11 @@ public final class Application extends JFrame {
   public Application(StateContext ctx, Config cfg) throws ParseException {
     this.cfg = cfg;
     this.transitionData = TransitionData.load(ctx.roomLabels());
+    this.showRawTransitions = new JCheckBoxMenuItem("Raw Transitions");
     this.filterChangedListener = () -> repopulateSearchResults();
     this.routeListModel = new RouteListModel(transitionData, ctx);
     this.searchResultsListModel = new SearchResultsListModel(transitionData,
-        () -> routeListModel.ctx().darkness(), this::isRouted);
+        () -> showRawTransitions.getState(), () -> routeListModel.ctx().darkness(), this::isRouted);
     this.transitionVisualizerPlacements = new TransitionVisualizerPlacements();
     this.saveInterfaces =
         ImmutableList.of(searchResultsListModel, routeListModel, transitionVisualizerPlacements);
@@ -484,6 +487,7 @@ public final class Application extends JFrame {
 
     JMenu view = new JMenu("View");
     view.add(transitionVisualizer.getMenuItem());
+    view.add(showRawTransitions);
     bar.add(view);
 
     JMenu query = new JMenu("Query");

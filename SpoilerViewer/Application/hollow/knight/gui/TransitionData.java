@@ -261,6 +261,12 @@ public final class TransitionData {
   private final ImmutableSet<Gate> sources;
   private final ImmutableSet<Gate> targets;
 
+  private static final TransitionData EMPTY = new TransitionData(new HashMap<>());
+
+  public static TransitionData empty() {
+    return EMPTY;
+  }
+
   private TransitionData(Map<String, SceneData> scenes) {
     this.scenes = ImmutableMap.copyOf(scenes);
     this.sources = scenes.values().stream().flatMap(s -> s.allGates().stream())

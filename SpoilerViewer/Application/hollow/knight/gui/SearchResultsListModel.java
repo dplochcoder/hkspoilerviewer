@@ -44,12 +44,14 @@ public final class SearchResultsListModel
   private final Set<ItemCheck> matchingResults = new HashSet<>();
 
   private final TransitionData transitionData;
+  private final Supplier<Boolean> showRawTransitions;
   private final Supplier<DarknessOverrides> darkness;
   private final Predicate<ItemCheck> isRouted;
 
-  public SearchResultsListModel(TransitionData transitionData, Supplier<DarknessOverrides> darkness,
-      Predicate<ItemCheck> isRouted) {
+  public SearchResultsListModel(TransitionData transitionData, Supplier<Boolean> showRawTransitions,
+      Supplier<DarknessOverrides> darkness, Predicate<ItemCheck> isRouted) {
     this.transitionData = transitionData;
+    this.showRawTransitions = showRawTransitions;
     this.darkness = darkness;
     this.isRouted = isRouted;
   }
@@ -77,8 +79,8 @@ public final class SearchResultsListModel
   }
 
   private String render(SearchResult result) {
-    return (isRouted.test(result.itemCheck()) ? "(R) " : "")
-        + result.render(transitionData, darkness.get());
+    return (isRouted.test(result.itemCheck()) ? "(R) " : "") + result
+        .render(showRawTransitions.get() ? TransitionData.empty() : transitionData, darkness.get());
   }
 
   public void updateResults(State state, List<SearchResult> newResults) {
