@@ -358,7 +358,7 @@ public final class Application extends JFrame {
     ItemCheck routeCheck = getSelectedRouteCheck();
 
     try {
-      ctx().checks().reduceToNothing(c -> c == check);
+      ctx().checks().reduceToNothing(transitionData, c -> c == check);
     } catch (ICDLException ex) {
       GuiUtil.showStackTrace(this, "Failed to delete", ex);
       return;
@@ -424,7 +424,7 @@ public final class Application extends JFrame {
   private JMenuItem icdlReset(String name, Predicate<ItemCheck> filter) {
     JMenuItem item = new JMenuItem(name);
     item.addActionListener(GuiUtil.newActionListener(this, () -> {
-      ctx().checks().reduceToNothing(filter);
+      ctx().checks().reduceToNothing(transitionData, filter);
       refreshLogic();
     }));
 
@@ -646,7 +646,7 @@ public final class Application extends JFrame {
     FileOpener opener = new FileOpener(ImmutableList.of(newPlacements));
     StateContext newCtx = opener.openFile(c.getSelectedFile().toPath());
 
-    Missing missing = ctx().checks().overlayImportChecks(newCtx.checks());
+    Missing missing = ctx().checks().overlayImportChecks(transitionData, newCtx.checks());
     if (!missing.empty()) {
       JOptionPane.showMessageDialog(this, "Failed to import items at " + missing.locations()
           + " unknown locations, and " + missing.items() + " items at known locations");

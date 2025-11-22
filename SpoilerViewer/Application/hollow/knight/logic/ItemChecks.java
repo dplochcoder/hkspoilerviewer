@@ -27,6 +27,8 @@ import com.google.common.collect.Sets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import hollow.knight.gui.Gate;
+import hollow.knight.gui.TransitionData;
 
 /** A mutable mapping of locations to items. */
 public final class ItemChecks implements StateContext.Mutable {
@@ -221,7 +223,15 @@ public final class ItemChecks implements StateContext.Mutable {
     return item;
   }
 
-  public void reduceToNothing(Predicate<ItemCheck> filter) throws ICDLException {
+  private Item vanillaTarget(TransitionData transitionData, String srcName) throws ICDLException {
+    Gate src = Gate.parse(srcName);
+    Gate target =
+        transitionData.sceneData(src.sceneName()).getGate(src.gateName()).vanillaTarget().get();
+    return getItem(Term.create(target.termString()));
+  }
+
+  public void reduceToNothing(TransitionData transitionData, Predicate<ItemCheck> filter)
+      throws ICDLException {
     // Keep at least one instance of each location alive.
     ImmutableSet<ItemCheck> toRemove = checksById.values().stream().filter(filter)
         .filter(c -> !c.vanilla()).collect(ImmutableSet.toImmutableSet());
@@ -236,7 +246,7 @@ public final class ItemChecks implements StateContext.Mutable {
       removing.forEach(c -> removeInternal(c.id()));
       if (!idsByLocation.containsKey(loc)) {
         ItemCheck toAdd = ItemCheck.create(newId(), template.location(),
-            template.isTransition() ? kingsPassTransition() : nothing(),
+            template.isTransition() ? vanillaTarget(transitionData, loc) : nothing(),
             Costs.defaultCosts(template.location().name()), false);
         addedBuilder.add(toAdd);
         addInternal(toAdd);
@@ -306,13 +316,14 @@ public final class ItemChecks implements StateContext.Mutable {
   }
 
   // Returns the number of unimported checks.
-  public Missing overlayImportChecks(ItemChecks other) throws ICDLException {
+  public Missing overlayImportChecks(TransitionData transitionData, ItemChecks other)
+      throws ICDLException {
     Set<String> locationsToReduce = other.allChecks().filter(c -> !c.vanilla())
         .map(c -> c.location().name()).collect(Collectors.toCollection(HashSet::new));
     locationsToReduce.remove("Start");
 
     // Remove all checks at the import locations.
-    reduceToNothing(c -> locationsToReduce.contains(c.location().name()));
+    reduceToNothing(transitionData, c -> locationsToReduce.contains(c.location().name()));
 
     // Import all checks.
     Map<String, ItemCheck> defaultChecks = new HashMap<>();

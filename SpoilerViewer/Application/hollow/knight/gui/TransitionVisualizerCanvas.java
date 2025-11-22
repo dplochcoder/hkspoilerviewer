@@ -357,6 +357,11 @@ public final class TransitionVisualizerCanvas extends JPanel {
 
     ItemCheck sourceCheck = parent.ctx().checks().getChecksAtLocation(source.termString())
         .collect(MoreCollectors.onlyElement());
+    if (sourceCheck.vanilla()) {
+      updateStatus("Cannot edit vanilla transitions.");
+      return;
+    }
+
     Item targetItem = parent.ctx().checks().getItem(Term.create(target.termString()));
     parent.app().copyItemToCheck(targetItem, sourceCheck);
 
@@ -367,12 +372,13 @@ public final class TransitionVisualizerCanvas extends JPanel {
       Item sourceItem = parent.ctx().checks().getItem(Term.create(source.termString()));
       parent.app().copyItemToCheck(sourceItem, targetCheck);
     }
+
+    updateStatus("");
   }
 
   private void updateSelectedTransitionSafe() {
     try {
       updateSelectedTransitionUnsafe();
-      updateStatus("");
     } catch (ICDLException ex) {
       GuiUtil.showStackTrace(this, "Error editing transition", ex);
     }
@@ -480,7 +486,6 @@ public final class TransitionVisualizerCanvas extends JPanel {
             } else {
               // Set transition.
               updateSelectedTransitionSafe();
-              updateStatus("");
             }
           } else if (currentGate != null) {
             currentGate = null;

@@ -27,7 +27,6 @@ public final class FileOpener {
     JsonObject saveData = new JsonObject();
     JsonObject rawSpoiler = JsonUtil.loadPath(path).getAsJsonObject();
     JsonObject rawICDL = null;
-    JsonObject logicEdits = null;
 
     Path darknessPath = Paths.get(parent, "DarknessSpoiler.json");
     JsonObject darknessJson = null;
