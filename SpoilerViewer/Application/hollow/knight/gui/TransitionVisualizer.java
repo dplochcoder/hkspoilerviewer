@@ -255,7 +255,7 @@ public final class TransitionVisualizer extends JFrame
 
           e.consume();
         } else if (e.getKeyCode() == KeyEvent.VK_Z) {
-          application.deleteCheck(result.itemCheck());
+          application.removeCheck(result.itemCheck(), false);
           e.consume();
         } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
           application.addToRoute(result.itemCheck());

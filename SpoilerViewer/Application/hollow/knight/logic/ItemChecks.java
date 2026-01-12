@@ -229,11 +229,21 @@ public final class ItemChecks implements StateContext.Mutable {
     }
   }
 
-  public void reduceToNothing(TransitionData transitionData, Predicate<ItemCheck> filter)
-      throws ICDLException {
+  public void removeChecks(TransitionData transitionData, Predicate<ItemCheck> filter,
+      boolean force) throws ICDLException {
     // Keep at least one instance of each location alive.
     ImmutableSet<ItemCheck> toRemove = checksById.values().stream().filter(filter)
         .filter(c -> !c.vanilla()).collect(ImmutableSet.toImmutableSet());
+    if (toRemove.isEmpty()) {
+      return;
+    }
+
+    if (force) {
+      toRemove.forEach(c -> removeInternal(c.id()));
+      listeners.forEach(l -> l.multipleChecksRemoved(toRemove));
+      return;
+    }
+
     Multimap<String, ItemCheck> modifiedLocations =
         Multimaps.index(toRemove, c -> checksById.get(c.id()).location().name());
 
@@ -252,9 +262,7 @@ public final class ItemChecks implements StateContext.Mutable {
       }
     }
 
-    if (!toRemove.isEmpty()) {
-      listeners.forEach(l -> l.multipleChecksRemoved(toRemove));
-    }
+    listeners.forEach(l -> l.multipleChecksRemoved(toRemove));
     ImmutableSet<ItemCheck> added = addedBuilder.build();
     if (!added.isEmpty()) {
       listeners.forEach(l -> l.multipleChecksAdded(added));
@@ -322,7 +330,7 @@ public final class ItemChecks implements StateContext.Mutable {
     locationsToReduce.remove("Start");
 
     // Remove all checks at the import locations.
-    reduceToNothing(transitionData, c -> locationsToReduce.contains(c.location().name()));
+    removeChecks(transitionData, c -> locationsToReduce.contains(c.location().name()), false);
 
     // Import all checks.
     Map<String, ItemCheck> defaultChecks = new HashMap<>();

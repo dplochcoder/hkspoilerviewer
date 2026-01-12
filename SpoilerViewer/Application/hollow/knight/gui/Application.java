@@ -205,6 +205,8 @@ public final class Application extends JFrame {
       .add("H - hide selected item").add("U - un-hide selected item").add("-")
       .add("E - (ICDL) edit selected check in the check editor") // FIXME
       .add("Z - (ICDL) delete selected check")
+      .add(
+          "DELETE - (ICDL) really delete selected check, removing from randomization (cannot undo!!)")
       .add("C - (ICDL) copy current item onto selected check")
       .add("D - (ICDL) duplicate the selected check (mostly for shops)").build();
 
@@ -349,7 +351,7 @@ public final class Application extends JFrame {
     copyItemToCheck(item, check);
   }
 
-  public void deleteCheck(ItemCheck check) {
+  public void removeCheck(ItemCheck check, boolean force) {
     if (!ensureICDL() || check == null || !ensureRandomized(check)) {
       return;
     }
@@ -358,7 +360,7 @@ public final class Application extends JFrame {
     ItemCheck routeCheck = getSelectedRouteCheck();
 
     try {
-      ctx().checks().reduceToNothing(transitionData, c -> c == check);
+      ctx().checks().removeChecks(transitionData, c -> c == check, force);
     } catch (ICDLException ex) {
       GuiUtil.showStackTrace(this, "Failed to delete", ex);
       return;
@@ -424,7 +426,7 @@ public final class Application extends JFrame {
   private JMenuItem icdlReset(String name, Predicate<ItemCheck> filter) {
     JMenuItem item = new JMenuItem(name);
     item.addActionListener(GuiUtil.newActionListener(this, () -> {
-      ctx().checks().reduceToNothing(transitionData, filter);
+      ctx().checks().removeChecks(transitionData, filter, false);
       refreshLogic();
     }));
 
@@ -771,7 +773,7 @@ public final class Application extends JFrame {
           duplicateCheck(getSelectedSearchResultCheck());
           repopulateSearchResults();
         } else if (e.getKeyCode() == KeyEvent.VK_Z) {
-          deleteCheck(getSelectedSearchResultCheck());
+          removeCheck(getSelectedSearchResultCheck(), false);
           repopulateSearchResults();
         } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
           ItemCheck check = getSelectedSearchResultCheck();
@@ -786,6 +788,9 @@ public final class Application extends JFrame {
             routeListModel.removeCheck(routeListModel.getSize() - 1);
             repopulateSearchResults();
           }
+        } else if (e.getKeyCode() == KeyEvent.VK_DELETE) {
+          removeCheck(getSelectedSearchResultCheck(), true);
+          repopulateSearchResults();
         } else if (UP_DOWN_VALUES.containsKey(e.getKeyCode())) {
           // Navigate up or down.
           int delta = UP_DOWN_VALUES.get(e.getKeyCode());
@@ -892,7 +897,10 @@ public final class Application extends JFrame {
           duplicateCheck(getSelectedRouteCheck());
           repopulateSearchResults();
         } else if (e.getKeyCode() == KeyEvent.VK_Z) {
-          deleteCheck(getSelectedRouteCheck());
+          removeCheck(getSelectedRouteCheck(), false);
+          refreshLogic();
+        } else if (e.getKeyCode() == KeyEvent.VK_DELETE) {
+          removeCheck(getSelectedRouteCheck(), true);
           refreshLogic();
         } else if (e.getKeyCode() == KeyEvent.VK_K) {
           routeListModel.setInsertionPoint(routeListModel.getSize());
