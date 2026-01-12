@@ -201,13 +201,8 @@ public final class ItemChecks implements StateContext.Mutable {
     return loc;
   }
 
-  public Stream<ItemCheck> getChecksAtLocation(String loc) throws ICDLException {
-    Set<CheckId> ids = idsByLocation.getValue(loc);
-    if (ids.isEmpty()) {
-      throw new ICDLException("Unknown location: " + loc);
-    }
-
-    return ids.stream().map(checksById::get);
+  public Stream<ItemCheck> getChecksAtLocation(String loc) {
+    return idsByLocation.getValue(loc).stream().map(checksById::get);
   }
 
   public boolean hasItem(Term term) {
@@ -224,10 +219,14 @@ public final class ItemChecks implements StateContext.Mutable {
   }
 
   private Item vanillaTarget(TransitionData transitionData, String srcName) throws ICDLException {
-    Gate src = Gate.parse(srcName);
-    Gate target =
-        transitionData.sceneData(src.sceneName()).getGate(src.gateName()).vanillaTarget().get();
-    return getItem(Term.create(target.termString()));
+    try {
+      Gate src = Gate.parse(srcName);
+      Gate target =
+          transitionData.sceneData(src.sceneName()).getGate(src.gateName()).vanillaTarget().get();
+      return getItem(Term.create(target.termString()));
+    } catch (Exception ex) {
+      return getItem(Term.create("Tutorial_01[top1]"));
+    }
   }
 
   public void reduceToNothing(TransitionData transitionData, Predicate<ItemCheck> filter)
@@ -244,7 +243,7 @@ public final class ItemChecks implements StateContext.Mutable {
       ItemCheck template = removing.iterator().next();
 
       removing.forEach(c -> removeInternal(c.id()));
-      if (!idsByLocation.containsKey(loc)) {
+      if (!getChecksAtLocation(loc).anyMatch(c -> !c.vanilla())) {
         ItemCheck toAdd = ItemCheck.create(newId(), template.location(),
             template.isTransition() ? vanillaTarget(transitionData, loc) : nothing(),
             Costs.defaultCosts(template.location().name()), false);
