@@ -24,15 +24,24 @@ public interface Cost {
   static Cost parse(JsonObject obj) throws ParseException {
     if (obj.get("term") != null) {
       Term term = Term.create(obj.get("term").getAsString());
-      int threshold = obj.get("threshold").getAsInt();
-      return TermCost.create(term, threshold);
-    } else if (obj.get("GeoAmount") != null) {
+      if (obj.get("threshold") != null) {
+        int threshold = obj.get("threshold").getAsInt();
+        return TermCost.create(term, threshold);
+      } else if (obj.get("realCost") != null) {
+        int threshold = obj.get("realCost").getAsInt();
+        return TermCost.create(term, threshold);
+      }
+    }
+
+    if (obj.get("GeoAmount") != null) {
       int geo = obj.get("GeoAmount").getAsInt();
       return GeoCost.create(geo);
-    } else if (obj.get("$type").getAsString().contains("TheRealJournalRando")) {
-      return LogicEnemyKillCost.parse(obj);
-    } else {
-      throw new ParseException("Unrecognized Cost type");
     }
+
+    if (obj.get("$type").getAsString().contains("TheRealJournalRando")) {
+      return LogicEnemyKillCost.parse(obj);
+    }
+
+    throw new ParseException("Unrecognized Cost type");
   }
 }
