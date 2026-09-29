@@ -1,15 +1,16 @@
-﻿using ItemChanger.Internal.Menu;
-using Modding;
-using RandomizerMod;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using ItemChanger.Internal.Menu;
+using Modding;
+using RandomizerMod;
 
 namespace SpoilerViewerMod;
 
 public class SpoilerViewerMod : Mod, ICustomMenuMod
 {
-    public SpoilerViewerMod() : base("Spoiler Viewer") { }
+    public SpoilerViewerMod()
+        : base("Spoiler Viewer") { }
 
     public override string GetVersion() => Version;
 
@@ -53,11 +54,19 @@ public class SpoilerViewerMod : Mod, ICustomMenuMod
     public MenuScreen GetMenuScreen(MenuScreen modListMenu, ModToggleDelegates? _)
     {
         ModMenuScreenBuilder builder = new(Localization.Localize("Spoiler Viewer"), modListMenu);
-        builder.AddButton(Localization.Localize("Open RawSpoiler.json"), null, () => LaunchHKSV(false));
+        builder.AddButton(
+            Localization.Localize("Open RawSpoiler.json"),
+            null,
+            () => LaunchHKSV(false)
+        );
 
         if (ModHooks.GetMod("ICDL Mod") is Mod)
         {
-            builder.AddButton(Localization.Localize("Open ICDL ctx.json"), null, () => LaunchHKSV(true));
+            builder.AddButton(
+                Localization.Localize("Open ICDL ctx.json"),
+                null,
+                () => LaunchHKSV(true)
+            );
         }
 
         return builder.CreateMenuScreen();
@@ -65,7 +74,8 @@ public class SpoilerViewerMod : Mod, ICustomMenuMod
 
     private static string MostRecentlyModifiedDir(string path)
     {
-        var sortedDirs = new DirectoryInfo(path).GetDirectories()
+        var sortedDirs = new DirectoryInfo(path)
+            .GetDirectories()
             .OrderByDescending(f => f.LastWriteTime)
             .ToList();
 
@@ -77,7 +87,8 @@ public class SpoilerViewerMod : Mod, ICustomMenuMod
         return sortedDirs[0].FullName;
     }
 
-    private string ICDLDir() => MostRecentlyModifiedDir(ItemChangerDataLoader.ICDLMod.TempDirectory);
+    private string ICDLDir() =>
+        MostRecentlyModifiedDir(ItemChangerDataLoader.ICDLMod.TempDirectory);
 
     private string GetJsonPath(bool openICDL)
     {
@@ -96,19 +107,23 @@ public class SpoilerViewerMod : Mod, ICustomMenuMod
             }
 
             return Path.GetFullPath(Path.Combine(mostRecent, "ctx.json"));
-        } else
+        }
+        else
         {
-            return Path.GetFullPath(Path.Combine(RandomizerMod.Logging.LogManager.RecentDirectory, "RawSpoiler.json"));
+            return Path.GetFullPath(
+                Path.Combine(RandomizerMod.Logging.LogManager.RecentDirectory, "RawSpoiler.json")
+            );
         }
     }
 
     private void LaunchHKSV(bool openICDL)
     {
         var path = GetJsonPath(openICDL);
-        if (path == "") return;
+        if (path == "")
+            return;
 
         Log($"Opening {path} with {JarFile}...");
-        
+
         Process process = new();
         process.StartInfo.FileName = "java";
         process.StartInfo.Arguments = $"-jar \"{JarFile}\" \"{path}\"";

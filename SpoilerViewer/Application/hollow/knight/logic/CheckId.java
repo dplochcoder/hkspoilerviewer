@@ -21,5 +21,4 @@ public abstract class CheckId implements Comparable<CheckId> {
   public static CheckId of(int id) {
     return new AutoValue_CheckId(id);
   }
-
 }

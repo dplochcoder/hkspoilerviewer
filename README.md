@@ -185,6 +185,27 @@ Contributions are welcome! I'll accept any bug fixes or straight-forward feature
 
 First, you'll want to use a Java IDE for working with the application itself. I use [Eclipse](https://www.eclipse.org/downloads/), but I can recommend [IntelliJ](https://www.jetbrains.com/idea/) as well. Dependencies are managed via [Apache Maven](https://maven.apache.org/) in the `pom.xml`, so you'll need to install an appropriate integration for it in your IDE. The code base makes heavy use of [AutoValue](https://github.com/google/auto/blob/master/value/userguide/index.md) so you'll need to take some extra steps to ensure that Annotation Processing is enabled, or you won't be able to build.
 
+### Building and importing into Eclipse
+
+The Java Maven project is `SpoilerViewer/Application/pom.xml`, alongside its
+Eclipse `.project` file. The repository-root POM aggregates that project, so
+`mvn clean package` works from either the repository root or `Application`.
+Use a JDK (Java 8 or newer), not just a JRE, for command-line Maven builds.
+The resulting JAR is in `SpoilerViewer/Application/target`; it is a normal
+library JAR, so use the Eclipse export workflow below to bundle dependencies.
+
+In Eclipse, use **File > Import > Maven > Existing Maven Projects** and select
+`SpoilerViewer/Application`. If `Application` is already in your workspace,
+refresh it with **F5**, close and reopen the project, then use
+**Maven > Update Project (Alt+F5)** and select **Force Update of Snapshots/Releases**.
+If Maven actions are still absent, use **Configure > Convert to Maven Project**.
+Ensure Maven's Offline option is disabled. Run **Project > Clean** afterward.
+
+The POM enables JDT annotation processing for AutoValue through m2e, and Maven
+Update Project configures the processor path and generated sources. Current
+Eclipse Java packages include this support. Dependencies come from Maven Central;
+no manually downloaded JARs or machine-specific paths are required. Build outputs
+live under `target`, while JSON data and `VERSION` are copied onto the classpath.
 Some pointers if you're learning the code base:
 
   - hollow/knight/main/Main.java is the application entry point. hollow/knight/gui/Application.java contains most of the GUI

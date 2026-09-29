@@ -63,3 +63,7 @@
 /UndoHistory$Listener.class
 /UndoHistory$StateContextView.class
 /UndoHistory.class
+/LogicEditor.class
+/LogicEditorListModel.class
+/LogicEditorSearchField$Listener.class
+/LogicEditorSearchField.class
